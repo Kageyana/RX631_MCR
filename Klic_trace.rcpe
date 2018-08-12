@@ -11,6 +11,7 @@
         <Path>Klic_trace\E2dataFlash.c</Path>
         <Path>Klic_trace\hwsetup.c</Path>
         <Path>Klic_trace\I2C_LCD.c</Path>
+        <Path>Klic_trace\I2C_MPU-9255.c</Path>
         <Path>Klic_trace\Klic_trace.c</Path>
         <Path>Klic_trace\LineChase.c</Path>
         <Path>Klic_trace\MicroSD.c</Path>
@@ -33,6 +34,7 @@
       <Category Name="header">
         <Path>header\E2dataFlash.h</Path>
         <Path>header\I2C_LCD.h</Path>
+        <Path>header\I2C_MPU-9255.h</Path>
         <Path>header\LineChase.h</Path>
         <Path>header\MicroSD.h</Path>
         <Path>header\PeripheralFunctions.h</Path>
@@ -250,6 +252,7 @@
           <Path>DefaultBuild\Interrupt_INTC.obj</Path>
           <Path>DefaultBuild\Interrupt_CMT.obj</Path>
           <Path>DefaultBuild\Interrupt_ADC_12.obj</Path>
+          <Path>DefaultBuild\I2C_MPU-9255.obj</Path>
         </LinkOrder>
         <CommonOptions>
           <IncludePathForC>RX631_mcr_ver3.0</IncludePathForC>

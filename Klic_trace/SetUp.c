@@ -105,9 +105,11 @@ void setup( void )
 	
 	if ( cnt_setup2 >= 600 ) cnt_setup2 = 0;
 	if ( cnt_setup2 < 300 ) {
-		led_out( 0x02 );
+		if ( EncoderTotal % 2 == 1 ) led_out( 0x12 );
+		else led_out( 0x02 );
 	} else {
-		led_out( 0x01 );
+		if ( EncoderTotal % 2 == 1 ) led_out( 0x11 );
+		else led_out( 0x01 );
 	}
 	
 	// ディップスイッチで項目選択
@@ -673,8 +675,8 @@ void setup( void )
 			data_tuning ( &pattern_sensor, 1, LEFT );
 			angle_mode = 0;
 			
-			if ( pattern_sensor == 16 ) pattern_sensor = 1;
-			else if ( pattern_sensor == 0 ) pattern_sensor = 15;
+			if ( pattern_sensor == 17 ) pattern_sensor = 1;
+			else if ( pattern_sensor == 0 ) pattern_sensor = 16;
 			
 			switch( pattern_sensor ) {
 				case 1:
@@ -799,19 +801,28 @@ void setup( void )
 					lcdPrintf("Text   %d", reverr);
 					lcdPosition( 0, 1 );
 					lcdPrintf("%s",txt_data);
-					if ( tasw_get() == 0x1 ) integral_rad = 0;
 					break;
 					
 				case 11:
 					// 旋回角度;
 					lcdPosition( 0, 0 );
-					lcdPrintf("TurAngle");
+					lcdPrintf("IMU%4d", (short)TurningAngleIMU);
 					lcdPosition( 0, 1 );
-					lcdPrintf("%4d",TurningAngle);
-					if ( tasw_get() == 0x1 ) integral_rad = 0;
+					lcdPrintf("Enc%4d", (short)TurningAngleEnc);
+					if ( tasw_get() == 0x1 ) TurningAngleEnc = 0;
+					if ( tasw_get() == 0x2 ) TurningAngleIMU = 0;
 					break;
 					
 				case 12:
+					// ロール角度;
+					lcdPosition( 0, 0 );
+					lcdPrintf("Roll%3d", (short)RollAngleIMU);
+					lcdPosition( 0, 1 );
+					lcdPrintf("        ");
+					if ( tasw_get() == 0x1 ) RollAngleIMU = 0;
+					break;
+					
+				case 13:
 					// IMU;
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;
@@ -822,7 +833,7 @@ void setup( void )
 					}
 					break;
 					
-				case 13:
+				case 14:
 					// IMU;
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;
@@ -833,7 +844,7 @@ void setup( void )
 					}
 					break;
 					
-				case 14:
+				case 15:
 					// IMU;
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;
@@ -844,7 +855,7 @@ void setup( void )
 					}
 					break;
 					
-				case 15:
+				case 16:
 					// who am i;
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;

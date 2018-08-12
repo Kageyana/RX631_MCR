@@ -6,6 +6,7 @@
 #include "R_PG_RX631_mcr_ver3.0.h"
 #include "PeripheralFunctions.h"
 #include "SCI.h"
+#include "I2C_MPU-9255.h"
 #include <stdio.h>
 #include <string.h>
 //======================================//
@@ -947,34 +948,34 @@ void msd_sendToPC ( void )
 			case 1:
 				i = 0;
 				// タイトル
-				printf(		"Time,"			);
+				printf(		"Time[ms],"		);
 				printf(		"pattern,"		);
 				printf(		"MotorPwm,"		);
 				printf(		"accele_fL,"		);
 				printf(		"accele_fR,"		);
 				printf(		"accele_rL,"		);
 				printf(		"accele_rR,"		);
-				printf(		"sPwm,"			);
 				printf(		"ServoPwm,"		);
 				printf(		"ServoPwm2,"		);
 				printf(		"sensor_inp(),"		);
 				printf(		"slope_mode,"		);
-				printf(		"msdlibError,"		);
 				
 				printf(		"getServoAngle,"	);
 				printf(		"SetAngle,"		);
 				printf(		"getAnalogSensor,"	);
-				printf(		"sensorL,"		);
-				printf(		"sensorR,"		);
-				printf(		"getGyro,"		);
 				printf(		"Degrees,"		);
-				printf(		"TurningAngle,"		);
+				printf(		"TurningAngleEnc,"	);
+				printf(		"TurningAngleIMU,"	);
+				printf(		"RollAngleIMU,"		);
 				printf(		"Encoder,"		);
 				printf(		"target_speed,"		);
+				printf(		"xg[degrees/sec],"	);
+				printf(		"yg[degrees/sec],"	);
+				printf(		"zg[degrees/sec],"	);
 				
 				printf(		"EncoderTotal,"		);
 				printf(		"enc1,"			);
-				printf(		"cnt_log"		);
+				printf(		"cnt_log[ms]"		);
 				printf("\n");
 				
 				msdEndAddress = msdWorkAddress2;	// 読み込み終了アドレス
@@ -1009,34 +1010,33 @@ void msd_sendToPC ( void )
 				
 			case 3:
 				// データ転送
-				printf( "%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d\n",
-					i,
-					msdBuff[ msdBuffAddress + 0 ],
-					msdBuff[ msdBuffAddress + 1 ],
-					msdBuff[ msdBuffAddress + 2 ],
-					msdBuff[ msdBuffAddress + 3 ],
-					msdBuff[ msdBuffAddress + 4 ],
-					msdBuff[ msdBuffAddress + 5 ],
-					msdBuff[ msdBuffAddress + 6 ],
-					msdBuff[ msdBuffAddress + 7 ],
-					msdBuff[ msdBuffAddress + 8 ],
-					msdBuff[ msdBuffAddress + 9 ],
-					msdBuff[ msdBuffAddress + 10 ],
-					msdBuff[ msdBuffAddress + 11 ],
-					CharToShort(12),
-					CharToShort(14),
-					CharToShort(16),
-					CharToShort(18),
-					CharToShort(20),
-					CharToShort(22),
-					CharToShort(24),
-					CharToShort(26),
-					CharToShort(28),
-					CharToShort(30),
-					CharTouInt (32),
-					CharTouInt (36),
-					CharTouInt (40)
-					);
+				printf("%5d,", i);
+				printf("%5d,", msdBuff[ msdBuffAddress + 0 ]);	// pattern
+				printf("%5d,", msdBuff[ msdBuffAddress + 1 ]);	// motorPwm
+				printf("%5d,", msdBuff[ msdBuffAddress + 2 ]);	// accele_fL
+				printf("%5d,", msdBuff[ msdBuffAddress + 3 ]);	// accele_fR
+				printf("%5d,", msdBuff[ msdBuffAddress + 4 ]);	// accele_rL
+				printf("%5d,", msdBuff[ msdBuffAddress + 5 ]);	// accele_rR
+				printf("%5d,", msdBuff[ msdBuffAddress + 6 ]);	// ServoPwm
+				printf("%5d,", msdBuff[ msdBuffAddress + 7 ]);	// ServoPwm2
+				printf("%5d,", msdBuff[ msdBuffAddress + 8 ]);	// sensor_inp()
+				printf("%5d,", msdBuff[ msdBuffAddress + 9 ]);	// slope_mode
+				printf("%5d,", CharToShort(10));		// getServoAngle()
+				printf("%5d,", CharToShort(12));		// SetAngle
+				printf("%5d,", CharToShort(14));		// getAnalogSensor()
+				printf("%5d,", CharToShort(16));		// Degrees
+				printf("%5d,", CharToShort(18));		// TurningAngleEnc
+				printf("%5d,", CharToShort(20));		// TurningAngleIMU
+				printf("%5d,", CharToShort(22));		// RollAngleIMU
+				printf("%5d,", CharToShort(24));		// Encoder
+				printf("%5d,", CharToShort(26) / 10);		// target_speed
+				printf("%4.4f,", (double)(CharToShort(28)*GYRO_RANGE)/MAXDATA_RANGE);// xg
+				printf("%4.4f,", (double)(CharToShort(30)*GYRO_RANGE)/MAXDATA_RANGE);// yg
+				printf("%4.4f,", (double)(CharToShort(32)*GYRO_RANGE)/MAXDATA_RANGE);// zg
+				printf("%6d,", CharTouInt (34));		// EncoderTotal
+				printf("%6d,", CharTouInt (38));		// enc1
+				printf("%6d", CharTouInt (42));			// cnt_log
+				printf("\n");
 				i += WRITINGTIME;
 				msdBuffAddress += DATA_BYTE;
 				

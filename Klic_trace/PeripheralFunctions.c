@@ -28,7 +28,7 @@ unsigned short 		cnt_setup2;	// セットアップで使用
 static char		ADTimer10;	// AD変換カウント用
 // 1msタイマ
 unsigned short		cnt_flash;	// フラッシュ用タイマカウント
-unsigned short 		cnt_gyro;	// 角度計算用タイマカウント
+char			cnt_gyro;	// 角度計算用カウンタ
 static char		Timer10;	// 1msカウント用
 short			cnt_swR;	// スイッチ長押し判定用右
 short			cnt_swL;	// スイッチ長押し判定用左
@@ -111,6 +111,7 @@ void Timer (void) {
 		cnt_flash++;
 	}
 	cnt1++;
+	cnt_gyro++;
 	cnt_swR++;
 	cnt_swL++;
 			
@@ -136,8 +137,11 @@ void Timer (void) {
 	motorControl();
 	
 	// 角度計算
-	get_degrees();
-	get_TurningAngle();
+	getdegrees();
+	getTurningAngleEnc();
+	getTurningAngleIMU();
+	getRollAngleIMU();
+	if( cnt_gyro == INTEGRAL_LIMIT ) cnt_gyro = 0;
 
 	// MicroSD書き込み
 	microSDProcess();
@@ -152,22 +156,22 @@ void Timer (void) {
 			send_Char	(	accele_fR 	);
 			send_Char	(	accele_rL 	);
 			send_Char	(	accele_rR 	);
-			send_Char	(	sPwm	 	);
 			send_Char	(	ServoPwm 	);
 			send_Char	(	ServoPwm2 	);
 			send_Char	(	sensor_inp() 	);
 			send_Char	( 	slope_mode	);
-			send_Char	( 	msdlibError	);
 			send_ShortToChar(	getServoAngle()	);
 			send_ShortToChar(	SetAngle	);
 			send_ShortToChar(	getAnalogSensor());
-			send_ShortToChar(	sensorL		);
-			send_ShortToChar(	sensorR		);
-			send_ShortToChar(	getGyro()	);
 			send_ShortToChar(	Degrees		);
-			send_ShortToChar(	TurningAngle	);
+			send_ShortToChar((short)TurningAngleEnc);
+			send_ShortToChar((short)TurningAngleIMU);
+			send_ShortToChar((short)RollAngleIMU	);
 			send_ShortToChar(	Encoder		);
-			send_ShortToChar(	target_speed/10	);
+			send_ShortToChar(	target_speed	);
+			send_ShortToChar(	xg		);
+			send_ShortToChar(	yg		);
+			send_ShortToChar(	zg		);
 			send_uIntToChar (	EncoderTotal	);
 			send_uIntToChar (	enc1		);
 			send_uIntToChar (	cnt_log		);
@@ -217,6 +221,11 @@ void Timer (void) {
 	} else {
 		// 加速度及び角速度を取得
 		IMUProcess();
+	}
+	
+	if(strcmp( (const char *)txt, (const char *)txt_stop) == 0 ) {
+		pattern = 101;
+		*txt = 0;
 	}
 	
 	Timer10++;
@@ -369,7 +378,7 @@ unsigned char tasw_get(void)
 	return ( tasw[0] + tasw[1] + tasw[2] + tasw[3] );
 }
 //////////////////////////////////////////////////////////////////////////
-// モジュール名 getGyro						//
+// モジュール名 getGyro							//
 // 処理概要     ジャイロセンサのアナログ値で取得			//
 // 引数         なし							//
 // 戻り値       センサ値						//

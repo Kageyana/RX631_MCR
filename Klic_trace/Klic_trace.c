@@ -82,8 +82,11 @@ void main(void){
 	}
 	
 	// IMUの初期化
+	IMUSet = 0;
+	#ifdef USED_IMU
 	init_IMU();
 	IMUSet = 1;
+	#endif
 	//if ( init_IMU() == 1 ) IMUSet == 1;
 	//else	IMUSet == 0;
 	
@@ -129,9 +132,8 @@ void main(void){
 				// 手押しモードON
 				lcdPosition( 0, 0 );
 				lcdPrintf("case %3d", pattern);
-				//lcdPrintf("%s", txt);
 				lcdPosition( 0, 1 );
-				lcdPrintf("%d", enc1);
+				lcdPrintf("%4d", (short)TurningAngleIMU);
 			}
 		} else if( pattern >= 100 ) {
 			lcd_mode = 1;
@@ -304,7 +306,6 @@ void main(void){
 			// カーブチェック
 			if( i >=  CURVE_R600_START || i <= - CURVE_R600_START ) {
 				enc1 = 0;
-				setBeepPatternS( 0x8000 );
 				curve_moed = 1;
 				pattern = 12;
 				break;
@@ -320,6 +321,8 @@ void main(void){
 			
 			if( enc1 > enc_mm( 60 ) ) {		// 60mm進む
 				enc1 = 0;
+				TurningAngleEnc = 0;
+				TurningAngleIMU = 0;
 				pattern = 13;
 				break;
 			}
@@ -520,8 +523,7 @@ void main(void){
 				setBeepPatternS( 0xa000 );
 				SetAngle = angle_rightclank;
 				angle_mode = 1;
-				integral_rad = 0;
-				TurningAngle = 0;
+				TurningAngleIMU = 0;
 				pattern = 31;
 				break;
 			}
@@ -532,8 +534,7 @@ void main(void){
 				setBeepPatternS( 0xa800 );
 				SetAngle = angle_leftclank;
 				angle_mode = 1;
-				integral_rad = 0;
-				TurningAngle = 0;
+				TurningAngleIMU = 0;
 				pattern = 41;
 				break;
 			}
@@ -544,37 +545,43 @@ void main(void){
 		//-------------------------------------------------------------------
 		case 31:
 			SetAngle = angle_rightclank;
+			servoPwmOut( ServoPwm2 );
 			target_speed = speed_rightclank_curve * SPEED_CURRENT;
-			i = (Encoder * 10) - target_speed;
+			i = (Encoder * 10) - target_speed;	// 目標値との偏差
 			j = getAnalogSensor();
-			
-			if( getServoAngle() > angle_rightclank + 80 ) {	// 目標角度手前まで最大出力
-				servoPwmOut( -100 );
-			}else{
-				servoPwmOut( ServoPwm2 );
-			}
 			
 			if( i >= 200 && enc1 <= enc_mm( 40 ) ) {
 				// 速度超過なら急ブレーキ
-				motor_f( 0, -100 );
-				motor_r( 0, -100 );
-			}else{
+				motor_f( -100, 0 );
+				motor_r( -100, 0 );
+			} else {
 				// 左を加速、右を減速のみに使用する
-				if( motorPwm > 0 ) rpwm = 0;
-				else rpwm = motorPwm;
-				if( motorPwm < 0 ) lpwm = 0;
-				else lpwm = motorPwm;
+				if( motorPwm > 0 ) rpwm = 0;		// 加速時　右0
+				else rpwm = motorPwm;			// 減速時　右減速
+				if( motorPwm > 0 ) lpwm = motorPwm;	// 加速時　左加速
+				else lpwm = 0;				// 減速時　左0
 				motor_f( lpwm, rpwm);
 				motor_r( lpwm, rpwm);	
 			}
-			
-			if( TurningAngle >= 90-20 ) {
+			if( -TurningAngleIMU <= 30 ) {
 				if( sensor_inp() == 0x2 ) {
 					enc1 = 0;
-					i = -(70-TurningAngle)*13;	// 435/35 目標角-20°
+					angle_mode = 0;
+					pattern = 36;
+					break;
+				}
+			} else if ( -TurningAngleIMU >= 20 ) {
+				if( j <= -1800 ) {
+					enc1 = 0;
+					i = (short)-TurningAngleIMU;
 					pattern = 34;
 					break;
 				}
+			}
+			if ( sensor_inp() == 0x4 ) {
+				enc1 = 0;
+				pattern = 32;
+				break;
 			}
 			break;
 			
@@ -583,82 +590,44 @@ void main(void){
 			SetAngle = angle_rightclank;
 			target_speed = speed_rightclank_curve * SPEED_CURRENT;
 			servoPwmOut( ServoPwm2 );
+			j = getAnalogSensor();
 			
-			// 左を加速、右を減速のみに使用する
-			if( motorPwm > 0 ) rpwm = 0;
-			else rpwm = motorPwm;
-			if( motorPwm < 0 ) lpwm = 0;
-			else lpwm = motorPwm;
+			// 左を減速、右を加速のみに使用する
+			if( motorPwm > 0 ) rpwm = 0;		// 加速時　右0
+			else rpwm = motorPwm;			// 減速時　右減速
+			if( motorPwm > 0 ) lpwm = motorPwm;	// 加速時　左加速
+			else lpwm = 0;				// 減速時　左0
 			motor_f( lpwm, rpwm);
 			motor_r( lpwm, rpwm);
 			
-			if( sensor_inp() == 0x1 && enc1 >= enc_mm( 80 ) ) {
-				enc1 = 0;
-				pattern = 33;
-				break;
-			}
-			break;
-
-		case 33:
-			// 外線読み飛ばし2
-			SetAngle = angle_rightclank;
-			target_speed = speed_rightclank_escape * SPEED_CURRENT;
-			servoPwmOut( ServoPwm2 );
-			
-			// 左を加速、右を減速のみに使用する
-			if( motorPwm > 0 ) rpwm = 0;
-			else rpwm = motorPwm;
-			if( motorPwm < 0 ) lpwm = 0;
-			else lpwm = motorPwm;
-			motor_f( lpwm, rpwm);
-			motor_r( lpwm, rpwm);
-			
-			if( sensor_inp() == 0x2 ) {
-				enc1 = 0;
-				if( getServoAngle() >= angle_rightclank ) {
-					i = angle_rightclank;
-				}else{
-					i = getServoAngle();
+			//if( -TurningAngleIMU <= 90 && -TurningAngleIMU >= 40) {
+				if( j <= -1800 ) {
+					enc1 = 0;
+					i = (short)-TurningAngleIMU;
+					pattern = 34;
+					break;
 				}
-				pattern = 34;
-				break;
-			}
+			//}
 			break;
 			
 		case 34:
 			// 角度維持
 			// sensor_inp() == 2を読んだあとに実行
-			SetAngle = i;
+			SetAngle = -( 90 - 10 - i ) * (435/35);	// ラインからの角度20°
 			target_speed = speed_rightclank_escape * SPEED_CURRENT;
 			servoPwmOut( ServoPwm2 );
 			j = getAnalogSensor();
 			
-			// 左を加速、右を減速のみに使用する
-			if( motorPwm > 0 ) rpwm = 0;
-			else rpwm = motorPwm;
-			if( motorPwm < 0 ) lpwm = 0;
-			else lpwm = motorPwm;
+			// 左を減速、右を加速のみに使用する
+			if( motorPwm > 0 ) rpwm = 0;		// 加速時　右0
+			else rpwm = motorPwm;			// 減速時　右減速
+			if( motorPwm > 0 ) lpwm = motorPwm;	// 加速時　左加速
+			else lpwm = 0;				// 減速時　左0
 			motor_f( lpwm, rpwm);
 			motor_r( lpwm, rpwm);
 			led_out(0x18);
 			
-			//if( sensor_inp() == 0x0 && enc1 >= ( 30 * PALSE_MILLIMETER ) ) {
-			if( sensor_inp() == 0x2 && j <= 2100 && j >= -2100 ) {
-				enc1 = 0;
-				pattern = 36;
-				break;
-			}
-			break;
-			
-		case 35:
-			servoPwmOut( 90 );
-			target_speed = speed_rightclank_escape * SPEED_CURRENT;
-			diff( motorPwm );
-			j = getAnalogSensor();
-			led_out(0x18);
-			
-			if( sensor_inp() == 0x2 && j <= 2100 && j >= -2100 ) {
-				
+			if( sensor_inp() == 0x2 && j >= -1800) {
 				enc1 = 0;
 				angle_mode = 0;
 				pattern = 36;
@@ -715,24 +684,24 @@ void main(void){
 				motor_r( -100, 0 );
 			} else {
 				// 左を加速、右を減速のみに使用する
-				if( motorPwm > 0 ) rpwm = 0;
+				if( motorPwm < 0 ) rpwm = 0;
 				else rpwm = motorPwm;
-				if( motorPwm < 0 ) lpwm = 0;
+				if( motorPwm > 0 ) lpwm = 0;
 				else lpwm = motorPwm;
 				motor_f( lpwm, rpwm);
 				motor_r( lpwm, rpwm);	
 			}
-			if( TurningAngle <= 30 ) {
+			if( TurningAngleIMU <= 30 ) {
 				if( sensor_inp() == 0x2 ) {
 					enc1 = 0;
 					angle_mode = 0;
 					pattern = 46;
 					break;
 				}
-			} else if ( TurningAngle >= 20 ) {
+			} else if ( TurningAngleIMU >= 20 ) {
 				if( j >= 1800 ) {
 					enc1 = 0;
-					i = TurningAngle;
+					i = TurningAngleIMU;
 					pattern = 44;
 					break;
 				}
@@ -759,14 +728,14 @@ void main(void){
 			motor_f( lpwm, rpwm);
 			motor_r( lpwm, rpwm);
 			
-			if( TurningAngle <= 90 && TurningAngle >= 60) {
+			//if( TurningAngleIMU <= 90 && TurningAngleIMU >= 40) {
 				if( j >= 1800 ) {
 					enc1 = 0;
-					i = TurningAngle;
+					i = TurningAngleIMU;
 					pattern = 44;
 					break;
 				}
-			}
+			//}
 			break;
 
 		case 43:
@@ -813,22 +782,6 @@ void main(void){
 			led_out(0x18);
 			
 			if( sensor_inp() == 0x2 && j <= 1800) {
-				enc1 = 0;
-				angle_mode = 0;
-				pattern = 46;
-				break;
-			}
-			break;
-			
-		case 45:
-			servoPwmOut( -90 );
-			target_speed = speed_leftclank_escape * SPEED_CURRENT;
-			diff( motorPwm );
-			j = getAnalogSensor();
-			led_out(0x18);
-			
-			if( sensor_inp() == 0x2 && j <= 2100 && j >= -2100 ) {
-			//if( sensor_inp() == 0x2 && s <= 2100 && s >= -2100 ) {
 				enc1 = 0;
 				angle_mode = 0;
 				pattern = 46;

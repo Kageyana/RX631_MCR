@@ -4,6 +4,7 @@
 #include "R_PG_RX631_mcr_ver3.0.h"
 #include "PeripheralFunctions.h"
 #include "LineChase.h"
+#include "I2C_MPU-9255.h"
 #include <stdio.h>
 //======================================//
 // グローバル変数の宣言                 //
@@ -12,11 +13,10 @@
 short 	Degrees;
 double 	Degrees_double;
 short 	gyVoltageBefore;
-char	cntgy;
 
-double	angularVelocity;	// 理論角速度[rad/s]
-double	integral_rad;		// 角度積算値
-short 	TurningAngle;		// 旋回角度
+double 	TurningAngleEnc;	// エンコーダから求めた旋回角度
+double 	TurningAngleIMU;	// IMUから求めた旋回角度
+double	RollAngleIMU;		// IMUから求めたロール方向角度
 
 // サーボ関連
 // 白線トレース
@@ -114,7 +114,6 @@ signed char check_slope( void ) {
 	
 	if ( deg >= upperline ) ret = 1;
 	if ( deg <= lowerline ) ret = -1;
-	//if ( pushcart_mode == 1 ) ret = 0; 
 	
 	return ret;
 }
@@ -133,7 +132,7 @@ unsigned int enc_mm( short mm ) {
 // 引数         なし							//
 // 戻り値       なし							//
 //////////////////////////////////////////////////////////////////////////
-void get_degrees( void ) {
+void getdegrees( void ) {
 	short s;
 	double gy_voltage, gyro;
 	
@@ -142,10 +141,9 @@ void get_degrees( void ) {
 	gyro = gy_voltage * GYROVOLTAGE;	// 角加速度算出
 	
 	Degrees_double += (double)( gyro + gyVoltageBefore ) * 0.001 / 2;	// 角加速度を積算
-	if( cntgy == 4 ) Degrees_double = 0;	// 10msごとに積算値リセット
+	if( cnt_gyro == INTEGRAL_LIMIT ) Degrees_double = 0;	// 4msごとに積算値リセット
 	Degrees = Degrees_double;
 	
-	cntgy++;
 	gyVoltageBefore = gyro;
 }
 //////////////////////////////////////////////////////////////////////////
@@ -408,14 +406,15 @@ void diff ( signed char pwm )
 	}
 }
 //////////////////////////////////////////////////////////////////////////
-// モジュール名 diff							//
-// 処理概要   	旋回角度の計算						//
+// モジュール名 getTurningAngleEnc					//
+// 処理概要   	ポテンションメータとエンコーダから旋回角度の計算	//
 // 引数         なし							//
 // 戻り値       なし							//
 //////////////////////////////////////////////////////////////////////////
-void get_TurningAngle(void) {
+void getTurningAngleEnc(void) {
 	int r1;
 	short angle,v;
+	double	angularVelocity;	// 理論角速度[rad/s]
 	const unsigned int rev_radius[] = {       // 旋回半径テーブル　エンコーダまでの距離を足す	
 		0, 193477, 73051, 45009, 32516, 25447, 20899, 17727, 
 		15390, 13595, 12175, 11022, 10067, 9264, 8579, 7988, 
@@ -481,21 +480,52 @@ void get_TurningAngle(void) {
 		130, 130, 129, 128, 128, 127, 126, 126, 
 		};
 
-	angle = getServoAngle();	// ステアリング角取得
-	if ( angle < 0 ) {
-		angle = -angle;// 負なら正にする
-		r1 = rev_radius[angle] + RIGHTCURVE_ENCODER;	// 後輪からエンコーダまでの距離を足す
+	if ( pattern != 11 ) {
+		angle = getServoAngle();	// ステアリング角取得
+		if ( angle < 0 ) {
+			angle = -angle;// 負なら正にする
+			r1 = rev_radius[angle] + RIGHTCURVE_ENCODER;	// 後輪からエンコーダまでの距離を足す
+		} else {
+			r1 = rev_radius[angle] + LEFTCURVE_ENCODER;	// 後輪からエンコーダまでの距離を足す
+		}
+		v = Encoder;	// 速度取得
+		if ( angle != 0 ) {
+			angularVelocity = (double)( 180 * v) / (r1 * SPEED_CURRENT_DETAIL * PI);// 角速度計算 ω = (v/r)*(180/pi)
+		} else {
+			angularVelocity = 0;
+		}
+		
+		TurningAngleEnc += angularVelocity;
 	} else {
-		r1 = rev_radius[angle] + LEFTCURVE_ENCODER;	// 後輪からエンコーダまでの距離を足す
+		TurningAngleEnc += 0;
 	}
-	v = Encoder;	// 速度取得
-	if ( angle != 0 ) {
-		angularVelocity = (double)v / (r1 * SPEED_CURRENT_DETAIL);	// 角速度計算
-	} else {
-		angularVelocity = 0;
-	}
-	integral_rad += angularVelocity;
-	TurningAngle = integral_rad *(180/PI);
+}
+//////////////////////////////////////////////////////////////////////////
+// モジュール名 getTurningAngleUIMU					//
+// 処理概要   	IMUから旋回角度の計算					//
+// 引数         なし							//
+// 戻り値       なし							//
+//////////////////////////////////////////////////////////////////////////
+void getTurningAngleIMU(void) {
+	double angularVelocity;
+	
+	angularVelocity = (double)(zg * GYRO_RANGE ) / MAXDATA_RANGE;	// IMUのデータを角速度[deg/s]に変換
+	TurningAngleIMU += angularVelocity * 0.001;
+	
+}
+//////////////////////////////////////////////////////////////////////////
+// モジュール名 getRollAngleIMU						//
+// 処理概要   	IMUから旋回角度の計算					//
+// 引数         なし							//
+// 戻り値       なし							//
+//////////////////////////////////////////////////////////////////////////
+void getRollAngleIMU(void) {
+	double angularVelocity;
+	
+	angularVelocity = (double)(yg * GYRO_RANGE ) / MAXDATA_RANGE;	// IMUのデータを角速度[deg/s]に変換
+	RollAngleIMU += angularVelocity * 0.001;
+	if ( cnt_gyro == INTEGRAL_LIMIT ) RollAngleIMU = 0;
+	
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 motorControl						//
@@ -557,9 +587,9 @@ void motorControl( void )
 		iRet = iP + iI + iD;
 		iRet = iRet >> 4;
 		
-		v = rev_voltage[target_speed / SPEED_CURRENT];
-		if ( Dev < 0 ) v = -v;
-		iRet += v;
+		//v = rev_voltage[target_speed / SPEED_CURRENT];
+		//if ( Dev < 0 ) v = -v;
+		//iRet += v;
 		// PWMの上限の設定
 		if ( iRet >  100 )	iRet =  100;
 		if ( iRet <  -100 )	iRet = -100;

@@ -37,7 +37,7 @@
 #define ANGLE_LEFTCHANGE		160	// 右レーンチェンジ旋回角度
 
 // カーブ関連
-#define CURVE_R600_START	40		// R600開始AD値
+#define CURVE_R600_START	60		// R600開始AD値
 #define CURVE_R450_START	140		// R450開始AD値
 
 // ジャイロ関連
@@ -46,6 +46,7 @@
 #define GYROVOLTAGE		0.67		// 電圧毎角加速度[mV/deg/s]
 #define SLOPEUPPERLINE		17		// 上り坂検出角度
 #define SLOPELOWERLINE		-14		// 下り坂検出角度
+#define INTEGRAL_LIMIT		200		// 角速度積算時間
 
 #define PI			3.141592	// 円周率
 #define RIGHTCURVE_ENCODER	78.5		// 右輪中心からエンコーダーの中心までの距離
@@ -128,13 +129,14 @@ extern unsigned short	cnt_out;	// コースアウト判定用タイマカウント
 extern unsigned short	cnt_out2;	// コースアウト判定用タイマカウント2
 extern unsigned short	cnt_out3;	// コースアウト判定用タイマカウント3
 extern unsigned short	cnt_out4;	// コースアウト判定用タイマカウント4
-extern unsigned short 	cnt_gyro;	// 角度計算用タイマカウント
 
 // 角度関連
 extern short 		Degrees;	// ジャイロセンサから計算した角度(degrees)
-extern double		integral_rad;	// 角速度積算値
-extern double		angularVelocity;// 理論角速度[rad/s]
-extern short 		TurningAngle;	// 旋回角度
+extern double 		TurningAngleEnc;// エンコーダから求めた旋回角度
+extern double 		TurningAngleIMU;// IMUから求めた旋回角度
+extern double		RollAngleIMU;	// IMUから求めたロール方向角度
+extern char		cnt_gyro;	// 角度計算用カウンタ
+
 
 // モーター関連
 extern signed char 	motorPwm;	// モーター制御PWM
@@ -163,8 +165,10 @@ signed char check_leftline( void );
 signed char check_slope( void );
 
 // 角度関連
-void get_degrees( void );
-void get_TurningAngle(void);
+void getdegrees( void );
+void getTurningAngleEnc(void);
+void getTurningAngleIMU(void);
+void getRollAngleIMU(void);
 
 // エンコーダ関連
 unsigned int enc_mm( short mm );

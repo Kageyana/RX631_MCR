@@ -18,7 +18,7 @@
 #define	RATE_1500000	0xa
 #define	RATE_3000000	0xb
 
-#define USED_IMU
+//#define USED_IMU
 
 //======================================//
 // ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾                 //

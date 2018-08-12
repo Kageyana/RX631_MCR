@@ -186,7 +186,6 @@ void Excep_SCI1_RXI1(void) {
 		}
 	} else {		// データモードのとき
 		*txt++ = c;
-		//printf("%c",c);
 		cnt_byte++;
 		if ( cnt_byte == 4 ) {	// 4文字で終了
 			cnt_byte = 0;	// データ数リセット
