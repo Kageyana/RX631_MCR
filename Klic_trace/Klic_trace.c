@@ -64,6 +64,16 @@ void main(void){
 	
 	init_BeepS();			// ブザー初期化
 	
+	// SCI1初期化
+	if( tasw_get() == 0x2 ) {
+		init_SCI1(RATE_230400);
+		IMUSet = 0;
+	} else {
+		R_PG_SCI_Set_C1();
+		init_IMU();
+		IMUSet = 1;
+	}
+	
 	// フラッシュ初期化
 	if( initFlash() == 0 ) {
 		setBeepPatternS( 0x8000 );
@@ -80,19 +90,7 @@ void main(void){
 		setBeepPatternS( 0xaa00 );
 		msdset = 0;
 	}
-	
-	// IMUの初期化
-	IMUSet = 0;
-	#ifdef USED_IMU
-	init_IMU();
-	IMUSet = 1;
-	#endif
-	//if ( init_IMU() == 1 ) IMUSet == 1;
-	//else	IMUSet == 0;
-	
-	// ボーレート230400bps
-	txt_rate = "$br";
-	txt_rate += 0x5;
+
 	while(1){
 		if( pattern >= 11 && pattern <= 99 ) {
 			if( !pushcart_mode ) {		

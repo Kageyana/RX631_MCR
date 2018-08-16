@@ -40,13 +40,6 @@ void HardwareSetup(void)
 	R_PG_Timer_Set_MTU_U0_C2();
 	R_PG_Timer_Set_MTU_U0_C3();
 	
-	#ifdef USED_IMU
-	R_PG_SCI_Set_C1(); 				// シリアルI/Oチャネルを設定(I2C)
-	#endif 
-	#ifndef USED_IMU
-	init_SCI1(RATE_230400);				// シリアルI/Oチャネルを設定(UART)
-	#endif
-	
 	R_PG_SCI_Set_C5(); 				// シリアルI/Oチャネルを設定(SPI)
 	R_PG_SCI_Set_C12(); 				// シリアルI/Oチャネルを設定(I2C)
 	
