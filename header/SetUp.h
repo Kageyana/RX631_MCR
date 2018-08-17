@@ -1,6 +1,17 @@
 #ifndef SETUP_H_
 #define SETUP_H_
 //======================================//
+// インクルード                         //
+//======================================//
+#include "PeripheralFunctions.h"
+#include "LineChase.h"
+#include "E2dataFlash.h"
+#include "I2C_LCD.h"
+#include "MicroSD.h"
+#include "SCI.h"
+#include "I2C_MPU-9255.h"
+#include <stdio.h>
+//======================================//
 // シンボル定義                         //
 //======================================//
 

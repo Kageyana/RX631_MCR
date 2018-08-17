@@ -2,9 +2,6 @@
 // インクルード                         //
 //======================================//
 #include "I2C_MPU-9255.h"
-#include "R_PG_RX631_mcr_ver3.0.h"
-#include <stdio.h>
-
 //======================================//
 // グローバル変数の宣言                 //
 //======================================//
@@ -19,10 +16,13 @@ char	IMUset = 0;		// 0:初期化失敗		1:初期化完了
 // 戻り値       0:　書き込み失敗 1: 書き込み成功					//
 //////////////////////////////////////////////////////////////////////////////////////////
 char IMUWriteByte(short slaveAddr, char reg, char data ) {
-	uint8_t ret, sendData[2] = { reg, data };
+	uint8_t ret, sendData[1] = { reg };
     
-	ret = R_PG_SCI_I2CMode_Send_C1(0, slaveAddr, sendData, 2);
-    
+	ret = I2C_IMU_SEND
+	
+	sendData[0] = data;
+    	ret = I2C_IMU_SEND
+	
 	return ret;
 }
 //////////////////////////////////////////////////////////////////////////
@@ -32,12 +32,12 @@ char IMUWriteByte(short slaveAddr, char reg, char data ) {
 // 戻り値       指定レジスタのデータ 					//
 //////////////////////////////////////////////////////////////////////////
 char IMUReadByte(short slaveAddr, char reg ) {
-	uint8_t data[1] = { reg }, data2[1];
+	uint8_t sendData[1] = { reg }, reciveData[1];
     
-	R_PG_SCI_I2CMode_Send_C1(0, slaveAddr, data, 1);
-	R_PG_SCI_I2CMode_Receive_C1(0, slaveAddr, data2, 1);
+	I2C_IMU_SEND
+	I2C_IMU_READ
     
-	return data2[0];
+	return reciveData[0];
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // モジュール名 IMUReadArry											//
@@ -46,11 +46,11 @@ char IMUReadByte(short slaveAddr, char reg ) {
 // 戻り値       なし 												//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void IMUReadArry(short slaveAddr, char addr, char num, char* dataArry ) {
-	uint8_t data[1] = { addr };
+	uint8_t sendData[1] = { addr };
     
-	data[0] = addr;
-	R_PG_SCI_I2CMode_Send_C1(0, slaveAddr, data, 1);
-	R_PG_SCI_I2CMode_Receive_C1(0, slaveAddr, (uint8_t*)dataArry, num);
+	sendData[0] = addr;
+	I2C_IMU_SEND
+	I2C_IMU_ARRY
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 init_IMU						//
@@ -81,7 +81,7 @@ char init_IMU (void) {
 // 戻り値       なし 							//
 //////////////////////////////////////////////////////////////////////////
 void IMUProcess (void) {
-	char 	axisAccelData[6];	// 加速度の8bit分割データ格納先
+	//char 	axisAccelData[6];	// 加速度の8bit分割データ格納先
 	char 	axisGyroData[6];	// 角加速度の8bit分割データ格納先
 	
 	//IMUReadArry(MPU9255_ADDRESS, ACCEL_XOUT_H, 6, axisAccelData);	// 3軸加速度取得

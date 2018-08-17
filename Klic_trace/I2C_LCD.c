@@ -27,7 +27,7 @@ static volatile int	lcdRefreshFlag;					// リフレッシュフラグ
 void lcd_put( unsigned char data )
 {
 	uint8_t word[] = { RSBIT1, data };
-	R_PG_SCI_I2CMode_Send_C12(0, 0x007c, word, 2);
+	I2C_LCD_SEND
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 lcd_CMD	                                                //
@@ -38,7 +38,7 @@ void lcd_put( unsigned char data )
 void lcd_CMD( unsigned char cmd ) 
 {
 	uint8_t Command[] = { RSBIT0, cmd };
- 	R_PG_SCI_I2CMode_Send_C12(0, 0x007c, Command, 2);
+ 	I2C_LCD_READ
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 inti_lcd						//

@@ -1,14 +1,7 @@
 //======================================//
 // インクルード                         //
 //======================================//
-#include "iodefine.h"
 #include "E2dataFlash.h"
-#include "PeripheralFunctions.h"
-#include "SetUp.h"
-#include "LineChase.h"
-#include "MicroSD.h"
-#include <stdio.h>
-
 //======================================//
 // グローバル変数の宣言                 //
 //======================================//

@@ -2,14 +2,6 @@
 // インクルード                         //
 //======================================//
 #include "SCI.h"
-#include "iodefine.h"
-#include <machine.h>
-#include "vect.h"
-#include "R_PG_RX631_mcr_ver3.0.h"
-#include "PeripheralFunctions.h"
-
-//TXD PB1
-//RXD PB0
 //======================================//
 // グローバル変数の宣言                 //
 //======================================//

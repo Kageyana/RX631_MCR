@@ -1,17 +1,39 @@
 #ifndef MICROSD_H_
 #define MICROSD_H_
 //======================================//
+// インクルード                         //
+//======================================//
+#include "MicroSD.h"
+#include "R_PG_RX631_mcr_ver3.0.h"
+#include "PeripheralFunctions.h"
+#include "SCI.h"
+#include "I2C_MPU-9255.h"
+#include <string.h>
+//======================================//
 // シンボル定義                         //
 //======================================//
-// CS端子
-#define MSD_CS_TERMINAL_HIGH	R_PG_IO_PORT_Write_PA0( 1 );
-#define MSD_CS_TERMINAL_LOW	R_PG_IO_PORT_Write_PA0( 0 );
-
 #define WRITINGTIME		2		// ログ取得周期(ms)
 #define DATA_BYTE		64		// 一回に保存するデータ数(byte)
 #define RECODTIME		30000		// 記録時間(ms)
 #define MSD_STARTADDRESS	0		// 開始アドレス
 #define MSD_ENDADDRESS		1920000		// 終了アドレス　RECODTIME * DATA_BYTE / WRITINGTIME
+
+/******************************************** 自動生成関数 *****************************************/
+#define SET_SCI_C5	R_PG_SCI_Set_C5();		// シリアルI/Oチャネルを設定(SPI)
+#define SET_CMT_C2	R_PG_Timer_Set_CMT_U1_C2();	// コンペアマッチタイマ初期化(ch2)
+#define START_CMT_C2	R_PG_Timer_StartCount_CMT_U1_C2();	// カウントスタート(ch2)
+
+// CS端子
+#define MSD_CS_TERMINAL_HIGH	R_PG_IO_PORT_Write_PA0( 1 );	// HIGHT
+#define MSD_CS_TERMINAL_LOW	R_PG_IO_PORT_Write_PA0( 0 );	// LOW
+
+// SPI
+#define SPI_SEND		R_PG_SCI_SPIMode_Transfer_C5( data_tr, data_re, 1);
+
+// SDスイッチ
+#define GET_SDSWITCH		R_PG_IO_PORT_Read_PA6(&sd_sw)
+
+/****************************************************************************************************/
 //======================================//
 // グローバル変数の宣言                 //
 //======================================//

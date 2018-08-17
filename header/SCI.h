@@ -1,6 +1,13 @@
 #ifndef SCI_H_
 #define SCI_H_
 //======================================//
+// インクルード                         //
+//======================================//
+#include "iodefine.h"
+#include <machine.h>
+#include "vect.h"
+#include "PeripheralFunctions.h"
+//======================================//
 // シンボル定義                         //
 //======================================//
 #define BUNDRATE	"$br,"
@@ -18,7 +25,7 @@
 #define	RATE_1500000	0xa
 #define	RATE_3000000	0xb
 
-//#define USED_IMU
+#define SET_SCI_C1	init_SCI1(RATE_230400);
 
 //======================================//
 // グローバル変数の宣言                 //

@@ -2,15 +2,6 @@
 // インクルード                         //
 //======================================//
 #include "SetUp.h"
-#include "R_PG_RX631_mcr_ver3.0.h"
-#include "PeripheralFunctions.h"
-#include "LineChase.h"
-#include "E2dataFlash.h"
-#include "I2C_LCD.h"
-#include "MicroSD.h"
-#include "SCI.h"
-#include "I2C_MPU-9255.h"
-#include <stdio.h>
 //======================================//
 // シンボル定義                         //
 //======================================//

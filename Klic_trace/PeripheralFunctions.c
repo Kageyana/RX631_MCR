@@ -1,7 +1,6 @@
 //======================================//
 // インクルード                         //
 //======================================//
-#include "R_PG_RX631_mcr_ver3.0.h"
 #include "PeripheralFunctions.h"
 #include "LineChase.h"
 #include "I2C_LCD.h"
@@ -121,7 +120,7 @@ void Timer (void) {
 	}
 
 	// エンコーダカウント
-	R_PG_Timer_GetCounterValue_MTU_U0_C1( &cnt_Encoder );
+	ENCODER_COUNT
 	Encoder = cnt_Encoder - encbuff;
 	EncoderTotal += Encoder;
 	enc1 += Encoder;
@@ -237,17 +236,17 @@ void Timer (void) {
 		break;
 	case 2:
 		// タクトスイッチ読み込み
-		R_PG_IO_PORT_Read_PC4(&tasw_d[1]);	// タクトスイッチ右上
-		R_PG_IO_PORT_Read_PC5(&tasw_d[0]);	// タクトスイッチ右下
-		R_PG_IO_PORT_Read_PC6(&tasw_d[2]);	// タクトスイッチ左上
-		R_PG_IO_PORT_Read_P50(&tasw_d[3]);	// タクトスイッチ左下
+		TACTSWITCH1	// タクトスイッチ右上
+		TACTSWITCH2	// タクトスイッチ右下
+		TACTSWITCH3	// タクトスイッチ左上
+		TACTSWITCH4	// タクトスイッチ左下
 		break;
 	case 3:
 		// ディップスイッチ読み込み
-		R_PG_IO_PORT_Read_PC3(&dpsw_d[0]);
-		R_PG_IO_PORT_Read_PC2(&dpsw_d[1]);
-		R_PG_IO_PORT_Read_PC1(&dpsw_d[2]);
-		R_PG_IO_PORT_Read_PC0(&dpsw_d[3]);
+		DIPSWITCH1
+		DIPSWITCH2
+		DIPSWITCH3
+		DIPSWITCH4
 		break;
 	case 5:
 		if (SCI1.SSR.BIT.ORER) {
@@ -285,7 +284,7 @@ void Timer (void) {
 void ADconverter ( void )
 {
 	__setpsw_i();
-	R_PG_ADC_12_GetResult_S12AD0( result );
+	GET_ADC
 	
 	ADTimer10++;
 	if ( ADTimer10 == 10 ) {
@@ -304,6 +303,30 @@ void ADconverter ( void )
 	
 }
 //////////////////////////////////////////////////////////////////////////
+// モジュール名 init_IO	                                                //
+// 処理概要     IOポートの初期化					//
+// 引数         なし							//
+// 戻り値       なし                                                    //
+//////////////////////////////////////////////////////////////////////////
+void init_IO(void) {
+	// I/Oポートを設定
+	R_PG_IO_PORT_Set_P1();
+	R_PG_IO_PORT_Set_P2();
+	R_PG_IO_PORT_Set_P5();
+	R_PG_IO_PORT_Set_PA();
+	R_PG_IO_PORT_Set_PB();
+	R_PG_IO_PORT_Set_PC();
+	R_PG_IO_PORT_Set_PD();
+	
+	// すべてのIOポートをLOWにする
+	R_PG_IO_PORT_Write_P1(0);
+	R_PG_IO_PORT_Write_P2(0);
+	R_PG_IO_PORT_Write_P5(0);
+	R_PG_IO_PORT_Write_PA(0);
+	R_PG_IO_PORT_Write_PB(0);
+	R_PG_IO_PORT_Write_PC(0);
+}
+//////////////////////////////////////////////////////////////////////////
 // モジュール名 delay	                                                //
 // 処理概要     遅延処理 1 = 1ms					//
 // 引数         delaytime						//
@@ -313,7 +336,7 @@ void delay(unsigned short delaytime)
 {
 	cnt0 = 0;
 	while( cnt0 <= delaytime ) {
-		R_PG_IO_PORT_Write_P27(0);
+		DELAY
 	}
 }
 //////////////////////////////////////////////////////////////////////////
@@ -351,7 +374,7 @@ void led_out ( unsigned char led )
 	unsigned char led2;
 
 	led2 = led << 1;
-	R_PG_IO_PORT_Write_P5( led2 );
+	LED_OUT
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 tasw_get						//
@@ -497,16 +520,16 @@ void beepProcessS( void )
 	if ( BeepMode ) {
 		if ( BeepTimer % 5 == 0 ) {
 			if ( BeepPattern & 0x8000 ) {
-				R_PG_IO_PORT_Write_P23(1);
+				BEEP_ON
 			} else {
-				R_PG_IO_PORT_Write_P23(0);
+				BEEP_OFF
 			}
 			BeepPattern <<= 1;
 		}
 		BeepTimer++;
 		if ( BeepTimer == 17 * 5 ) {
 			BeepMode = 0;
-			R_PG_IO_PORT_Write_P23(0);
+			BEEP_OFF
 		}
 	}
 }
@@ -530,34 +553,46 @@ void motor_f( signed char accelefL, signed char accelefR ){
 	pwmfl = TGR_MOTOR * accelefL / 100;
 	pwmfr = TGR_MOTOR * accelefR / 100;
 	
-	if( accelefL >= 0) {					// 正転
-		R_PG_IO_PORT_Write_PB2( 0 );
-		R_PG_Timer_SetTGR_D_MTU_U0_C0( pwmfl );
-	} else if ( accelefL == 100 || accelefL == -100 ) {	// 100%
+	// 左前輪
+	if( accelefL >= 0) {					
+		// 正転
+		DIR_FL_FOR
+		PWM_FL_OUT
+	} else if ( accelefL == 100 || accelefL == -100 ) {	
+		// 100%
 		if ( accelefL > 0 ) {
-			R_PG_IO_PORT_Write_PB2( 0 );
+			DIR_FL_FOR
 		} else {
-			R_PG_IO_PORT_Write_PB2( 1 );
+			DIR_FL_REV
 		}
-		R_PG_Timer_SetTGR_D_MTU_U0_C0( TGR_MOTOR + 2 );
-	} else {						// 逆転
-		R_PG_IO_PORT_Write_PB2( 1 );
-		R_PG_Timer_SetTGR_D_MTU_U0_C0( -pwmfl );
+		pwmfl = TGR_MOTOR + 2;
+		PWM_FL_OUT
+	} else {						
+		// 逆転
+		pwmfl = -pwmfl;
+		DIR_FL_REV
+		PWM_FL_OUT
 	}
 	
-	if( accelefR >= 0) {					// 正転
-		R_PG_IO_PORT_Write_PB4( 0 );
-		R_PG_Timer_SetTGR_B_MTU_U0_C0( pwmfr );
-	} else if ( accelefR == 100 || accelefR == -100 ) {	// 100%
+	// 右前輪
+	if( accelefR >= 0) {					
+		// 正転
+		DIR_FR_FOR
+		PWM_FR_OUT
+	} else if ( accelefR == 100 || accelefR == -100 ) {	
+		// 100%
 		if ( accelefR > 0 ) {
-			R_PG_IO_PORT_Write_PB4( 0 );
+			DIR_FR_FOR
 		} else {
-			R_PG_IO_PORT_Write_PB4( 1 );
+			DIR_FR_REV
 		}
-		R_PG_Timer_SetTGR_B_MTU_U0_C0( TGR_MOTOR + 2 );
-	} else {						// 逆転
-		R_PG_IO_PORT_Write_PB4( 1 );
-		R_PG_Timer_SetTGR_B_MTU_U0_C0( -pwmfr );
+		pwmfr = TGR_MOTOR + 2;
+		PWM_FR_OUT
+	} else {						
+		// 逆転
+		pwmfr = -pwmfr;
+		DIR_FR_REV
+		PWM_FR_OUT
 	}
 }
 //////////////////////////////////////////////////////////////////////////
@@ -580,34 +615,46 @@ void motor_r( signed char accelerL, signed char accelerR ){
 	pwmrl = TGR_MOTOR * accelerL / 100;
 	pwmrr = TGR_MOTOR * accelerR / 100;
 	
-	if( accelerL >= 0 ) {					// 正転
-		R_PG_IO_PORT_Write_P20( 0 );
-		R_PG_Timer_SetTGR_B_MTU_U0_C3( pwmrl );
-	} else if ( accelerL == 100 || accelerL == -100 ) {	// 100%
+	// 左後輪
+	if( accelerL >= 0 ) {					
+		// 正転
+		DIR_RL_FOR
+		PWM_RL_OUT
+	} else if ( accelerL == 100 || accelerL == -100 ) {	
+		// 100%
 		if (accelerL > 0) {
-			R_PG_IO_PORT_Write_P20( 0 );
+			DIR_RL_FOR
 		} else {
-			R_PG_IO_PORT_Write_P20( 1 );
+			DIR_RL_REV
 		}
-		R_PG_Timer_SetTGR_B_MTU_U0_C3( TGR_MOTOR + 2 );
-	} else {						// 逆転
-		R_PG_IO_PORT_Write_P20( 1 );
-		R_PG_Timer_SetTGR_B_MTU_U0_C3( -pwmrl );
+		pwmrl = TGR_MOTOR + 2;
+		PWM_RL_OUT
+	} else {						
+		// 逆転
+		pwmrl = -pwmrl;
+		DIR_RL_REV
+		PWM_RL_OUT
 	}
 	
-	if( accelerR >= 0 ) {					// 正転
-		R_PG_IO_PORT_Write_P15( 0 );
-		R_PG_Timer_SetTGR_D_MTU_U0_C3( pwmrr );
-	} else if ( accelerR == 100 || accelerR == -100 ) {	// 100%
+	// 右後輪
+	if( accelerR >= 0 ) {					
+		// 正転
+		DIR_RR_FOR
+		PWM_RR_OUT
+	} else if ( accelerR == 100 || accelerR == -100 ) {	
+		// 100%
 		if ( accelerR > 0 ) {
-			R_PG_IO_PORT_Write_P15( 0 );
+			DIR_RR_FOR
 		} else {
-			R_PG_IO_PORT_Write_P15( 1 );
+			DIR_RR_REV
 		}
-		R_PG_Timer_SetTGR_D_MTU_U0_C3( TGR_MOTOR + 2 );
-	} else {						// 逆転
-		R_PG_IO_PORT_Write_P15( 1 );
-		R_PG_Timer_SetTGR_D_MTU_U0_C3( -pwmrr );
+		pwmrr = TGR_MOTOR + 2;
+		PWM_RR_OUT
+	} else {						
+		// 逆転
+		pwmrr = -pwmrr;
+		DIR_RR_REV
+		PWM_RR_OUT
 	}
 }
 //////////////////////////////////////////////////////////////////////////
@@ -636,11 +683,14 @@ void servoPwmOut( signed char servopwm )
 
 	pwm = (uint16_t)TGR_SERVO * servopwm / 100;
 	// サーボモータ制御
-	if( servopwm > 0) {				// 正転
-		R_PG_IO_PORT_Write_PB6( 0 );
-		R_PG_Timer_SetTGR_B_MTU_U0_C2( pwm );
-	} else {				// 逆転
-		R_PG_IO_PORT_Write_PB6( 1 );
-		R_PG_Timer_SetTGR_B_MTU_U0_C2( -pwm );
+	if( servopwm > 0) {				
+		// 正転
+		DIR_SERVO_FOR
+		PWM_SERVO_OUT
+	} else {				
+		// 逆転
+		pwm = -pwm;
+		DIR_SERVO_REV
+		PWM_SERVO_OUT
 	}
 }

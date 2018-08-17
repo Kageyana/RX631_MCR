@@ -1,14 +1,7 @@
 //======================================//
 // インクルード                         //
 //======================================//
-#include "iodefine.h"
 #include "MicroSD.h"
-#include "R_PG_RX631_mcr_ver3.0.h"
-#include "PeripheralFunctions.h"
-#include "SCI.h"
-#include "I2C_MPU-9255.h"
-#include <stdio.h>
-#include <string.h>
 //======================================//
 // グローバル変数の宣言                 //
 //======================================//
@@ -42,10 +35,9 @@ unsigned int 		msdAddrBuff[25];	// MicroSDカードの最終書き込みアドレス保存用
 //////////////////////////////////////////////////////////////////////////
 void msd_write( unsigned char data )
 {
-	uint8_t data_tr[] = { data }, data_re_dummy[ 1 ];
+	uint8_t data_tr[] = { data }, data_re[ 1 ];
 	
-	R_PG_SCI_SPIMode_Transfer_C5( data_tr, data_re_dummy, 1);
-	//printf("msd_write = 0x%x\n", data_tr[ 0 ]);
+	SPI_SEND
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 msd_read						//
@@ -55,15 +47,14 @@ void msd_write( unsigned char data )
 //////////////////////////////////////////////////////////////////////////
 unsigned char msd_read( void )
 {
-	uint8_t data_tr_dummy[] = { 0xff }, data_re[ 1 ] = { 0x00 }, ret;
+	uint8_t data_tr[] = { 0xff }, data_re[ 1 ] = { 0x00 }, ret;
 	volatile short data;
 	
-	R_PG_SCI_SPIMode_Transfer_C5( data_tr_dummy, data_re, 1);
+	SPI_SEND
 	
 	data = data_re[0];
 	ret = data & 0x00ff;
 	
-	//printf("msd_read = 0x%x\n", ret);
 	return  ret;
 }
 //////////////////////////////////////////////////////////////////////////
@@ -96,7 +87,6 @@ unsigned char msd_CMD ( unsigned char cmd, unsigned char arg1, unsigned char arg
 		ret = msd_read();
 		if ( ret != 0xff ) break;	// 0xff以外で終了
 	}
-	//printf("response = 0x%x\n", ret);
 	return ret;
 }
 //////////////////////////////////////////////////////////////////////////
@@ -112,7 +102,7 @@ char init_msd ( void )
 	volatile short receive, i;
 	
 	while ( ret == 0 && pattern_intimsd <= 8 ) {
-		R_PG_IO_PORT_Read_PA6(&sd_sw);
+		GET_SDSWITCH;
 		if ( sd_sw == 0 ) {
 			switch ( pattern_intimsd ) {
 				case 1:
@@ -662,13 +652,6 @@ char setMicroSDdata( signed char *p )
 		return msdlibMode;
 	} else {
 		// 512バイト msdlibBuffへ転送
-		//msdlibRead = msdlibBuff;		// 転送元アドレス取得 msdlibReadにmsdlibBuffの先頭アドレス代入
-		
-		/*while ( i < 512 ) {
-			*msdlibRead++ = *p++;
-			i++;
-		}*/
-		
 		memcpy( msdlibBuff, p, 512 );
 		
 		msdlibBuff[512] = 0xff;

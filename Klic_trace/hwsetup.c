@@ -16,7 +16,9 @@
 ************************************************************************/
 
 #include "iodefine.h"
-#include "R_PG_RX631_mcr_ver3.0.h"
+#include "PeripheralFunctions.h"
+#include "MicroSD.h"
+#include "I2C_LCD.h"
 #include "SCI.h"
 
 extern void HardwareSetup(void);
@@ -32,47 +34,28 @@ const unsigned long id_code[4] = {
 
 void HardwareSetup(void)
 {
-	R_PG_IO_PORT_SetPortNotAvailable();		// 存在しないポートを設定
-	R_PG_Clock_WaitSet(0.01); 			// クロックを設定し0.01秒後にクロックソース切り替え
+	R_PG_IO_PORT_SetPortNotAvailable();	// 存在しないポートを設定
+	R_PG_Clock_WaitSet(0.01); 		// クロックを設定し0.01秒後にクロックソース切り替え
 	
-	R_PG_Timer_Set_MTU_U0_C0();			// マルチファンクションタイマを設定
-	R_PG_Timer_Set_MTU_U0_C1();
-	R_PG_Timer_Set_MTU_U0_C2();
-	R_PG_Timer_Set_MTU_U0_C3();
+	SET_MTU_C0		// マルチファンクションタイマを設定
+	SET_MTU_C1
+	SET_MTU_C2
+	SET_MTU_C3
 	
-	R_PG_SCI_Set_C5(); 				// シリアルI/Oチャネルを設定(SPI)
-	R_PG_SCI_Set_C12(); 				// シリアルI/Oチャネルを設定(I2C)
+	//SET_SCI_C1
+	SET_SCI_C5 		// シリアルI/Oチャネルを設定(SPI)
+	SET_SCI_C12 		// シリアルI/Oチャネルを設定(I2C)
 	
-	R_PG_Timer_Set_CMT_U0_C0(); 			// コンペアマッチタイマを設定
-	R_PG_Timer_Set_CMT_U1_C2(); 			// コンペアマッチタイマを設定
+	SET_CMT_C0		// コンペアマッチタイマを設定(ch0)
+	SET_CMT_C2		// コンペアマッチタイマを設定(ch2)
 	
-	// I/Oポートを設定
-	R_PG_IO_PORT_Set_P1();
-	R_PG_IO_PORT_Set_P2();
-	R_PG_IO_PORT_Set_P5();
-	R_PG_IO_PORT_Set_PA();
-	R_PG_IO_PORT_Set_PB();
-	R_PG_IO_PORT_Set_PC();
-	R_PG_IO_PORT_Set_PD();
+	init_IO();		// IOポートの初期化
 	
-	R_PG_IO_PORT_Write_P1(0);
-	R_PG_IO_PORT_Write_P2(0);
-	R_PG_IO_PORT_Write_P5(0);
-	R_PG_IO_PORT_Write_P5(0);
-	R_PG_IO_PORT_Write_PA(0);
-	R_PG_IO_PORT_Write_PB(0);
-	R_PG_IO_PORT_Write_PC(0);
+	SET_ADC			// 12ビットA/Dコンバータ(S12AD0)を設定
 	
-	R_PG_ADC_12_Set_S12AD0(); 			// 12ビットA/Dコンバータ(S12AD0)を設定
+	START_MTU		// MTU0,2,3,4のカウント開始
 	
-	R_PG_Timer_SynchronouslyStartCount_MTU_U0(	// MTU0,2,3,4のカウント開始
-	1, //ch0
-	1, //ch1 
-	1, //ch2
-	1, //ch3 
-	0  //ch4 0固定
-	);
-	R_PG_ADC_12_StartConversionSW_S12AD0();		// A/D変換開始
-	R_PG_Timer_StartCount_CMT_U0_C0(); 		// カウントスタート
-	R_PG_Timer_StartCount_CMT_U1_C2(); 		// カウントスタート
+	START_ADC		// A/D変換開始
+	START_CMT_C0 		// カウントスタート(ch0)
+	START_CMT_C2 		// カウントスタート(ch2)
 }

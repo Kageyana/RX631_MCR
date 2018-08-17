@@ -23,6 +23,16 @@
 #ifndef E2DATAFLASH_H_
 #define E2DATAFLASH_H_
 //======================================//
+// インクルード                         //
+//======================================//
+#include "iodefine.h"
+#include "E2dataFlash.h"
+#include "PeripheralFunctions.h"
+#include "SetUp.h"
+#include "LineChase.h"
+#include "MicroSD.h"
+#include <stdio.h>
+//======================================//
 // シンボル定義                         //
 //======================================//
 #define NUMDATA		24			// 要素数
