@@ -3,9 +3,10 @@
 //======================================//
 // インクルード                         //
 //======================================//
-#include "MicroSD.h"
-#include "R_PG_RX631_mcr_ver3.0.h"
 #include "PeripheralFunctions.h"
+#include "LineChase.h"
+#include "E2dataFlash.h"
+#include "I2C_LCD.h"
 #include "SCI.h"
 #include "I2C_MPU-9255.h"
 #include <string.h>
@@ -37,6 +38,9 @@
 //======================================//
 // グローバル変数の宣言                 //
 //======================================//
+// タイマ関連
+extern unsigned int		cnt_log;		// ログ漏れ確認用カウント
+
 // microSD関連
 extern signed char		msdBuff[ 512 ];         // 一時保存バッファ
 extern short			msdBuffAddress;         // 一時記録バッファ書込アドレス
@@ -71,9 +75,10 @@ char microSDProcessStart( unsigned int address );
 char microSDProcessEnd( void );
 void microSDProcess( void );
 char checkMicroSDProcess( void );
+void sendLog (void);
 void msd_send_data (void);
 void send_Char ( char data );
-void send_CharToShort ( short data );
+void send_ShortToChar ( short data );
 void send_uIntToChar ( unsigned int data );
 short CharToShort( unsigned char offsetAddress );
 unsigned int CharTouInt( unsigned char offsetAddress );

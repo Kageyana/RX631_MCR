@@ -5,10 +5,12 @@
 //======================================//
 // グローバル変数の宣言                 //
 //======================================//
+// タイマ関連
+unsigned int			cnt_log;			// ログ漏れ確認用カウント
+
 static unsigned char		msdlibBuff[512 + 128];		// 一時保管バッファ
 static volatile short		msdlibMode;			// 状態
 volatile short			msdlibCnt;			// 書き込み数
-//static volatile unsigned char*	msdlibRead;			// 読み込みデータのアドレス
 static volatile unsigned char*	msdlibWrite;			// 書き込みデータのアドレス
 volatile char			msdlibError;			// エラー番号
 static volatile unsigned int	msdSize;			// microSDのサイズ(kB単位)
@@ -913,6 +915,56 @@ void init_log ( void )
 				break;
 		}
 	} 
+}
+//////////////////////////////////////////////////////////////////////////
+// モジュール名 msd_sendToPC						//
+// 処理概要     PCへデータ転送						//
+// 引数         なし							//
+// 戻り値       なし							//
+//////////////////////////////////////////////////////////////////////////
+void sendLog (void) {
+	msdTimer++;
+	if( msdTimer == WRITINGTIME ) {
+		msdTimer = 0;
+		msdBuffPointa = msdBuff + msdBuffAddress;
+		// ここから記録
+		send_Char	(	pattern		);
+		send_Char	(	motorPwm 	);
+		send_Char	(	accele_fL 	);
+		send_Char	(	accele_fR 	);
+		send_Char	(	accele_rL 	);
+		send_Char	(	accele_rR 	);
+		send_Char	(	ServoPwm 	);
+		send_Char	(	ServoPwm2 	);
+		send_Char	(	sensor_inp() 	);
+		send_Char	( 	slope_mode	);
+		send_ShortToChar(	getServoAngle()	);
+		send_ShortToChar(	SetAngle	);
+		send_ShortToChar(	getAnalogSensor());
+		send_ShortToChar(	Degrees		);
+		send_ShortToChar((short)TurningAngleEnc	);
+		send_ShortToChar((short)TurningAngleIMU	);
+		send_ShortToChar((short)RollAngleIMU	);
+		send_ShortToChar(	Encoder		);
+		send_ShortToChar(	targetSpeed	);
+		send_ShortToChar(	xg		);
+		send_ShortToChar(	yg		);
+		send_ShortToChar(	zg		);
+		send_uIntToChar (	EncoderTotal	);
+		send_uIntToChar (	enc1		);
+		send_uIntToChar (	cnt_log		);
+		// ここまで
+		cnt_log += WRITINGTIME;
+		msdBuffAddress += DATA_BYTE;       // RAMの記録アドレスを次へ
+		if( msdBuffAddress >= 512 ) {
+			msdBuffAddress = 0;
+			setMicroSDdata( msdBuff ); 
+			msdWorkAddress += 512;
+			if( msdWorkAddress >= msdEndAddress ) {
+				msdFlag = 0;
+			}
+		}
+	}
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 msd_sendToPC						//
