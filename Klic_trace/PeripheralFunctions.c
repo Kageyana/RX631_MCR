@@ -15,24 +15,8 @@
 // グローバル変数の宣言                 //
 //======================================//
 // タイマ関連
-// 100usタイマ
-unsigned int		cnt0;		// 関数用タイマカウント
-unsigned int 		cnt1;		// 走行用タイマカウント
-unsigned short	 	cnt_out;	// コースアウト判定用タイマカウント
-unsigned short	 	cnt_out2;	// コースアウト判定用タイマカウント2
-unsigned short	 	cnt_out3;	// コースアウト判定用タイマカウント3
-unsigned short	 	cnt_out4;	// コースアウト判定用タイマカウント4
-unsigned short 		cnt_setup;	// セットアップで使用
-unsigned short 		cnt_setup2;	// セットアップで使用
 static char		ADTimer10;	// AD変換カウント用
-// 1msタイマ
-unsigned short		cnt_flash;	// フラッシュ用タイマカウント
-char			cnt_gyro;	// 角度計算用カウンタ
-static char		Timer10;	// 1msカウント用
-short			cnt_swR;	// スイッチ長押し判定用右
-short			cnt_swL;	// スイッチ長押し判定用左
-// 2msタイマ
-unsigned int		cnt_log = 0;	// ログ漏れ用カウント
+unsigned int		cnt0;		// 関数用タイマカウント
 
 // スイッチ関連
 static unsigned char 	dpsw_d[4];	// ディップスイッチの格納先
@@ -76,205 +60,6 @@ signed char		accele_rR;	// 右後モーターPWM値
 signed char		accele_rL;	// 左後モーターPWM値
 signed char		sPwm;		// サーボモーターPWM値
 
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 Timer							//
-// 処理概要     1msごとにタイマ割り込み					//
-// 引数         なし							//
-// 戻り値       なし							//
-//////////////////////////////////////////////////////////////////////////
-void Timer (void) {
-	short s,i;
-	
-	__setpsw_i();
-	//　タイマカウント
-	if ( pattern >= 11 && pattern <= 99 ) {	
-		if ( pattern != 21 ) {				// クロスライン通過時は無視
-			if ( sensor_inp() == 0x7 || sensor_inp() == 0x5 ) {	// センサ全灯
-				cnt_out++;	
-			} else {
-				cnt_out = 0;
-			}
-		}
-		if ( sensor_inp() == 0x0 && pattern != 53 && pattern != 63 ) cnt_out2++;	// センサ全消灯
-		else cnt_out2 = 0;
-		if ( Encoder == 0 ) cnt_out3++;		// エンコーダ停止(ひっくり返った？)
-		else cnt_out3 = 0;
-		if ( slope_mode != 0 || slope_mode != 1 ) {
-			if ( check_slope() == -1 ) cnt_out4++;
-			else	cnt_out4 = 0;
-		}
-	} else if ( pattern < 11 ) {
-		cnt0++;
-		cnt_setup++;
-		cnt_setup2++;
-		cnt_flash++;
-	}
-	cnt1++;
-	cnt_gyro++;
-	cnt_swR++;
-	cnt_swL++;
-			
-	// LCD表示
-	if ( lcd_mode ) {
-		lcdShowProcess();
-	}
-
-	// エンコーダカウント
-	ENCODER_COUNT
-	Encoder = cnt_Encoder - encbuff;
-	EncoderTotal += Encoder;
-	enc1 += Encoder;
-	enc_slope += Encoder;
-	encbuff = cnt_Encoder;
-
-	// PID制御値算出
-	if ( angle_mode == 0 ) {
-		servoControl();
-	} else {
-		servoControl2();
-	}
-	motorControl();
-	
-	// 角度計算
-	getdegrees();
-	getTurningAngleEnc();
-	getTurningAngleIMU();
-	getRollAngleIMU();
-	if( cnt_gyro == INTEGRAL_LIMIT ) cnt_gyro = 0;
-
-	// MicroSD書き込み
-	microSDProcess();
-	if( msdFlag == 1 ) {
-		msdTimer++;
-		if( msdTimer == WRITINGTIME ) {
-			msdTimer = 0;
-			msdBuffPointa = msdBuff + msdBuffAddress;
-			send_Char	(	pattern		);
-			send_Char	(	motorPwm 	);
-			send_Char	(	accele_fL 	);
-			send_Char	(	accele_fR 	);
-			send_Char	(	accele_rL 	);
-			send_Char	(	accele_rR 	);
-			send_Char	(	ServoPwm 	);
-			send_Char	(	ServoPwm2 	);
-			send_Char	(	sensor_inp() 	);
-			send_Char	( 	slope_mode	);
-			send_ShortToChar(	getServoAngle()	);
-			send_ShortToChar(	SetAngle	);
-			send_ShortToChar(	getAnalogSensor());
-			send_ShortToChar(	Degrees		);
-			send_ShortToChar((short)TurningAngleEnc);
-			send_ShortToChar((short)TurningAngleIMU);
-			send_ShortToChar((short)RollAngleIMU	);
-			send_ShortToChar(	Encoder		);
-			send_ShortToChar(	target_speed	);
-			send_ShortToChar(	xg		);
-			send_ShortToChar(	yg		);
-			send_ShortToChar(	zg		);
-			send_uIntToChar (	EncoderTotal	);
-			send_uIntToChar (	enc1		);
-			send_uIntToChar (	cnt_log		);
-			cnt_log += WRITINGTIME;
-			msdBuffAddress += DATA_BYTE;       // RAMの記録アドレスを次へ
-			if( msdBuffAddress >= 512 ) {
-				msdBuffAddress = 0;
-				setMicroSDdata( msdBuff ); 
-				msdWorkAddress += 512;
-				if( msdWorkAddress >= msdEndAddress ) {
-					msdFlag = 0;
-				}
-			}
-		}
-	}
-
-	// UART受信
-	if ( strcmp( txt_data, txt_stop) == 0 ) {
-		stopWord = 1;
-	}
-	
-	if ( IMUSet == 0 ) {
-		if ( commandEnd == 1 ) {	// コマンド終了時に実行
-			if ( cmderr == 1 ) {
-				printf("commandERROR\n");
-				commandEnd = 0;
-			} else {
-				switch ( cmmandMode ) {
-				case 1:
-					// ボーレート設定(br)
-					for ( s = 0; s < 15; s++ ) {
-						i = ascii_num[s];
-						if ( txt_command[0] == i ) {
-							printf("br=%d\n", s);
-							init_SCI1( s );
-							break;
-						}
-					}
-					break;
-					
-				default:
-					break;
-				}
-				commandEnd = 0;
-			}
-		}
-	} else {
-		// 加速度及び角速度を取得
-		IMUProcess();
-	}
-	
-	if(strcmp( (const char *)txt, (const char *)txt_stop) == 0 ) {
-		pattern = 101;
-		*txt = 0;
-	}
-	
-	Timer10++;
-	// 10ｍごとに実行
-	switch ( Timer10 ) {	
-	case 1:
-		// ブザー
-		beepProcessS();
-		break;
-	case 2:
-		// タクトスイッチ読み込み
-		TACTSWITCH1	// タクトスイッチ右上
-		TACTSWITCH2	// タクトスイッチ右下
-		TACTSWITCH3	// タクトスイッチ左上
-		TACTSWITCH4	// タクトスイッチ左下
-		break;
-	case 3:
-		// ディップスイッチ読み込み
-		DIPSWITCH1
-		DIPSWITCH2
-		DIPSWITCH3
-		DIPSWITCH4
-		break;
-	case 5:
-		if (SCI1.SSR.BIT.ORER) {
-			reverr = 1;
-		} else if (SCI1.SSR.BIT.FER) {
-			reverr = 2;
-		} else if (SCI1.SSR.BIT.PER) {
-			reverr = 3;
-		} else {
-			//reverr = 0;
-		}
-		break;
-	case 6:
-		break;
-	case 7:
-		break;
-	case 8:
-		break;
-	case 9:
-		break;
-	case 10:
-		Timer10 = 0;
-		break;
-	default:
-		break;
-	}
-
-}
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 ADconverter						//
 // 処理概要     AD変換割り込み						//
@@ -327,6 +112,19 @@ void init_IO(void) {
 	R_PG_IO_PORT_Write_PC(0);
 }
 //////////////////////////////////////////////////////////////////////////
+// モジュール名 led_out							//
+// 処理概要     LEDの点灯						//
+// 引数         led(対応するLED番号)					//
+// 戻り値       なし							//
+//////////////////////////////////////////////////////////////////////////
+void led_out ( unsigned char led )
+{
+	unsigned char led2;
+
+	led2 = led << 1;
+	LED_OUT
+}
+//////////////////////////////////////////////////////////////////////////
 // モジュール名 delay	                                                //
 // 処理概要     遅延処理 1 = 1ms					//
 // 引数         delaytime						//
@@ -340,12 +138,48 @@ void delay(unsigned short delaytime)
 	}
 }
 //////////////////////////////////////////////////////////////////////////
+// モジュール名 getEncoder						//
+// 処理概要     エンコーダのカウントを取得し積算する(1msごとに実行)	//
+// 引数         なし							//
+// 戻り値       なし							//
+//////////////////////////////////////////////////////////////////////////
+void getEncoder (void) {
+	ENCODER_COUNT			// エンコーダカウント値取得
+	Encoder = cnt_Encoder - encbuff;// 現在地から1ms前の値を引いて1ms間のカウントを計算
+	
+	// 積算
+	EncoderTotal += Encoder;
+	enc1 += Encoder;
+	enc_slope += Encoder;
+	
+	encbuff = cnt_Encoder;	// 次回はこの値が1ms前の値となる
+}
+//////////////////////////////////////////////////////////////////////////
+// モジュール名 getSwitch						//
+// 処理概要     スイッチの読み込み(10msごとに実行)			//
+// 引数         なし							//
+// 戻り値       なし							//
+//////////////////////////////////////////////////////////////////////////
+void getSwitch(void) {
+	// タクトスイッチ読み込み
+	TACTSWITCH1	// タクトスイッチ右上
+	TACTSWITCH2	// タクトスイッチ右下
+	TACTSWITCH3	// タクトスイッチ左上
+	TACTSWITCH4	// タクトスイッチ左下
+	
+	// ディップスイッチ読み込み
+	DIPSWITCH1
+	DIPSWITCH2
+	DIPSWITCH3
+	DIPSWITCH4
+}
+//////////////////////////////////////////////////////////////////////////
 // モジュール名 dipsw_get						//
 // 処理概要     ディップスイッチ値を16進数で取得			//
 // 引数         なし							//
 // 戻り値       スイッチ値 0～15					//
 //////////////////////////////////////////////////////////////////////////
-unsigned char dipsw_get( void ) 
+unsigned char dipsw_get(void) 
 {
 	char	dpsw[4];
 	
@@ -362,19 +196,6 @@ unsigned char dipsw_get( void )
 	else			dpsw[3] = 0x0;
 
 	return ( dpsw[0] + dpsw[1] + dpsw[2] + dpsw[3] );
-}
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 led_out							//
-// 処理概要     LEDの点灯						//
-// 引数         led(対応するLED番号)					//
-// 戻り値       なし							//
-//////////////////////////////////////////////////////////////////////////
-void led_out ( unsigned char led )
-{
-	unsigned char led2;
-
-	led2 = led << 1;
-	LED_OUT
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 tasw_get						//

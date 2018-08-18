@@ -29,13 +29,19 @@ char 	countdown = 4;
 short 	angle_center;
 
 // モード関連
-char 	lcd_mode = 1;	// LCD表示可否		1:表示		0:消灯		
-char 	slope_mode;	// 坂チェック		0:上り坂始め	1:上り坂終わり	2:下り坂始め	3:下り坂終わり
-char 	angle_mode;	// サーボPWM変更	0:白線トレース	1:角度制御
-char	curve_moed;	// カーブ判定		0:カーブ以外	1:カーブ走行中
-char	msdset;		// MicroSDが初期化されたか
-char	IMUSet;		// IMUが初期化されたか	0: 初期化失敗	1:初期化成功
+char	curve_moed;	// カーブ判定	0:カーブ以外	1:カーブ走行中
 char	error_mode;	// 0:距離停止 1:センサ全灯 2:センサ全消灯 3:エンコーダ停止 4:ジャイロ反応
+
+// タイマ関連
+// 1msタイマ
+unsigned int 		cnt1;		// 走行用タイマカウント
+unsigned short	 	cnt_out;	// コースアウト判定用タイマ
+unsigned short	 	cnt_out2;	// コースアウト判定用タイマ2
+unsigned short	 	cnt_out3;	// コースアウト判定用タイマ3
+unsigned short	 	cnt_out4;	// コースアウト判定用タイマ4
+static char		Timer10;	// 1msカウント用
+// 2msタイマ
+unsigned int		cnt_log = 0;	// ログ漏れ用カウント
 
 //======================================//
 // メインプログラム	                //
@@ -175,7 +181,7 @@ void main(void){
 				flashDataBuff[ 0 ] = stopping_meter;
 				writeFlashData( STOPMETER_STARTAREA, STOPMETER_ENDAREA, STOPMETER_DATA, 1 );
 				
-				target_speed = speed_straight * SPEED_CURRENT; // 目標速度設定
+				targetSpeed = speed_straight * SPEED_CURRENT; // 目標速度設定
 				cnt1 = 0;		// タイマリセット
 				pattern = 1;
 				break;
@@ -271,7 +277,7 @@ void main(void){
 		//-------------------------------------------------------------------
 		case 11:
 			servoPwmOut( ServoPwm );
-			target_speed = speed_straight * SPEED_CURRENT;
+			targetSpeed = speed_straight * SPEED_CURRENT;
 			diff( motorPwm );
 			i = getServoAngle();
 			led_out( 0x00 );
@@ -313,7 +319,7 @@ void main(void){
 		case 12:
 			// カーブブレーキ
 			servoPwmOut( ServoPwm );
-			target_speed = speed_curve_brake * SPEED_CURRENT;
+			targetSpeed = speed_curve_brake * SPEED_CURRENT;
 			led_out( 0x1e );
 			diff( motorPwm );
 			
@@ -360,7 +366,7 @@ void main(void){
 		case 13:
 			// R600カーブ走行
 			servoPwmOut( ServoPwm );
-			target_speed = speed_curve_r600 * SPEED_CURRENT;
+			targetSpeed = speed_curve_r600 * SPEED_CURRENT;
 			diff( motorPwm );
 			i = getServoAngle();
 			
@@ -413,7 +419,7 @@ void main(void){
 		case 14:
 			// R450カーブ走行
 			servoPwmOut( ServoPwm );
-			target_speed = speed_curve_r450 * SPEED_CURRENT;
+			targetSpeed = speed_curve_r450 * SPEED_CURRENT;
 			diff( motorPwm );
 			i = getServoAngle();
 			
@@ -447,7 +453,7 @@ void main(void){
 		case 15:
 			// カーブ継ぎ目走行
 			servoPwmOut( ServoPwm );
-			target_speed = speed_curve_straight * SPEED_CURRENT;
+			targetSpeed = speed_curve_straight * SPEED_CURRENT;
 			diff( motorPwm );
 			i = getServoAngle();
 			
@@ -497,7 +503,7 @@ void main(void){
 		//-------------------------------------------------------------------
 		case 21:
 			servoPwmOut( 0 );
-			target_speed = speed_crossline* SPEED_CURRENT;
+			targetSpeed = speed_crossline* SPEED_CURRENT;
 			diff( motorPwm );
 			led_out( 0x03 );
 			
@@ -510,7 +516,7 @@ void main(void){
 			
 		case 22:
 			servoPwmOut( ServoPwm );
-			target_speed = speed_ckank_trace * SPEED_CURRENT;
+			targetSpeed = speed_ckank_trace * SPEED_CURRENT;
 			diff( motorPwm );
 			led_out( 0x06 );
 			
@@ -544,8 +550,8 @@ void main(void){
 		case 31:
 			SetAngle = angle_rightclank;
 			servoPwmOut( ServoPwm2 );
-			target_speed = speed_rightclank_curve * SPEED_CURRENT;
-			i = (Encoder * 10) - target_speed;	// 目標値との偏差
+			targetSpeed = speed_rightclank_curve * SPEED_CURRENT;
+			i = (Encoder * 10) - targetSpeed;	// 目標値との偏差
 			j = getAnalogSensor();
 			
 			if( i >= 200 && enc1 <= enc_mm( 40 ) ) {
@@ -586,7 +592,7 @@ void main(void){
 		case 32:
 			// 外線読み飛ばし
 			SetAngle = angle_rightclank;
-			target_speed = speed_rightclank_curve * SPEED_CURRENT;
+			targetSpeed = speed_rightclank_curve * SPEED_CURRENT;
 			servoPwmOut( ServoPwm2 );
 			j = getAnalogSensor();
 			
@@ -612,7 +618,7 @@ void main(void){
 			// 角度維持
 			// sensor_inp() == 2を読んだあとに実行
 			SetAngle = -( 90 - 10 - i ) * (435/35);	// ラインからの角度20°
-			target_speed = speed_rightclank_escape * SPEED_CURRENT;
+			targetSpeed = speed_rightclank_escape * SPEED_CURRENT;
 			servoPwmOut( ServoPwm2 );
 			j = getAnalogSensor();
 			
@@ -636,7 +642,7 @@ void main(void){
 		case 36:
 			// 復帰
 			servoPwmOut( ServoPwm );
-			target_speed = speed_rightclank_escape * SPEED_CURRENT;
+			targetSpeed = speed_rightclank_escape * SPEED_CURRENT;
 			diff( motorPwm );
 			led_out(0x06);
 			
@@ -672,8 +678,8 @@ void main(void){
 		case 41:
 			SetAngle = angle_leftclank;
 			servoPwmOut( ServoPwm2 );
-			target_speed = speed_leftclank_curve * SPEED_CURRENT;
-			i = (Encoder * 10) - target_speed;	// 目標値との偏差
+			targetSpeed = speed_leftclank_curve * SPEED_CURRENT;
+			i = (Encoder * 10) - targetSpeed;	// 目標値との偏差
 			j = getAnalogSensor();
 			
 			if( i >= 200 && enc1 <= enc_mm( 40 ) ) {
@@ -714,7 +720,7 @@ void main(void){
 		case 42:
 			// 外線読み飛ばし
 			SetAngle = angle_leftclank;
-			target_speed = speed_leftclank_curve * SPEED_CURRENT;
+			targetSpeed = speed_leftclank_curve * SPEED_CURRENT;
 			servoPwmOut( ServoPwm2 );
 			j = getAnalogSensor();
 			
@@ -739,7 +745,7 @@ void main(void){
 		case 43:
 			// 外線読み飛ばし2
 			SetAngle = angle_leftclank;
-			target_speed = speed_leftclank_escape * SPEED_CURRENT;
+			targetSpeed = speed_leftclank_escape * SPEED_CURRENT;
 			servoPwmOut( ServoPwm2 );
 			
 			// 左を減速、右を加速のみに使用する
@@ -766,7 +772,7 @@ void main(void){
 			// 角度維持
 			// sensor_inp() == 2を読んだあとに実行
 			SetAngle = ( 90 - 10 - i ) * (435/35);	// ラインからの角度20°
-			target_speed = speed_leftclank_escape * SPEED_CURRENT;
+			targetSpeed = speed_leftclank_escape * SPEED_CURRENT;
 			servoPwmOut( ServoPwm2 );
 			j = getAnalogSensor();
 			
@@ -790,7 +796,7 @@ void main(void){
 		case 46:
 			// 復帰
 			servoPwmOut( ServoPwm );
-			target_speed = speed_leftclank_escape * SPEED_CURRENT;
+			targetSpeed = speed_leftclank_escape * SPEED_CURRENT;
 			diff( motorPwm );
 			led_out(0x06);
 			
@@ -825,7 +831,7 @@ void main(void){
 		//-------------------------------------------------------------------
 		case 51:
 			servoPwmOut( 0 );
-			target_speed = speed_halfine * SPEED_CURRENT;
+			targetSpeed = speed_halfine * SPEED_CURRENT;
 			diff( motorPwm );
 			
 			if( enc1 > enc_mm( 60 ) ) {
@@ -852,7 +858,7 @@ void main(void){
 			
 		case 52:
 			servoPwmOut( ServoPwm );
-			target_speed = speed_rightchange_trace * SPEED_CURRENT;
+			targetSpeed = speed_rightchange_trace * SPEED_CURRENT;
 			diff( motorPwm );
 			led_out( 0x04 );
 			
@@ -867,7 +873,7 @@ void main(void){
 		case 53:
 			SetAngle = angle_rightchange;
 			servoPwmOut( ServoPwm2 );
-			target_speed = speed_rightchange_curve * SPEED_CURRENT;
+			targetSpeed = speed_rightchange_curve * SPEED_CURRENT;
 			diff( motorPwm );
 			
 			if( sensor_inp() == 0x1 ) {
@@ -880,7 +886,7 @@ void main(void){
 		case 54:
 			SetAngle = 0;
 			servoPwmOut( ServoPwm2 );
-			target_speed = speed_rightchange_curve * SPEED_CURRENT;
+			targetSpeed = speed_rightchange_curve * SPEED_CURRENT;
 			motor_f( motorPwm, motorPwm );
 			motor_r( motorPwm, motorPwm );
 			
@@ -894,7 +900,7 @@ void main(void){
 			
 		case 55:
 			servoPwmOut( 90 );
-			target_speed = speed_rightchange_curve * SPEED_CURRENT;
+			targetSpeed = speed_rightchange_curve * SPEED_CURRENT;
 			diff( motorPwm );
 			
 			if( sensor_inp() == 0x2 ) {
@@ -908,7 +914,7 @@ void main(void){
 		case 56:
 			SetAngle = angle_center;
 			servoPwmOut( ServoPwm2 );
-			target_speed = speed_rightchange_escape * SPEED_CURRENT;
+			targetSpeed = speed_rightchange_escape * SPEED_CURRENT;
 			diff( motorPwm );
 			
 			if( enc1 >= enc_mm( 10 ) ) {
@@ -922,7 +928,7 @@ void main(void){
 			
 		case 57:
 			servoPwmOut( ServoPwm );
-			target_speed = speed_rightchange_escape * SPEED_CURRENT;
+			targetSpeed = speed_rightchange_escape * SPEED_CURRENT;
 			diff( motorPwm );
 			
 			// クロスラインチェック
@@ -963,7 +969,7 @@ void main(void){
 		//-------------------------------------------------------------------
 		case 61:
 			servoPwmOut( 0 );
-			target_speed = speed_halfine * SPEED_CURRENT;
+			targetSpeed = speed_halfine * SPEED_CURRENT;
 			diff( motorPwm );
 			
 			if( enc1 > enc_mm( 60 ) ) {
@@ -990,7 +996,7 @@ void main(void){
 			
 		case 62:
 			servoPwmOut( ServoPwm );
-			target_speed = speed_leftchange_trace * SPEED_CURRENT;
+			targetSpeed = speed_leftchange_trace * SPEED_CURRENT;
 			diff( motorPwm );
 			led_out( 0x08 );
 			
@@ -1005,7 +1011,7 @@ void main(void){
 		case 63:
 			SetAngle = angle_leftchange;
 			servoPwmOut( ServoPwm2 );
-			target_speed = speed_leftchange_curve * SPEED_CURRENT;
+			targetSpeed = speed_leftchange_curve * SPEED_CURRENT;
 			diff( motorPwm );
 			
 			if( sensor_inp() == 0x4 ) {
@@ -1018,7 +1024,7 @@ void main(void){
 		case 64:
 			SetAngle = 0;
 			servoPwmOut( ServoPwm2 );
-			target_speed = speed_leftchange_curve * SPEED_CURRENT;
+			targetSpeed = speed_leftchange_curve * SPEED_CURRENT;
 			motor_f( motorPwm, motorPwm );
 			motor_r( motorPwm, motorPwm );
 
@@ -1032,7 +1038,7 @@ void main(void){
 			
 		case 65:
 			servoPwmOut( -90 );
-			target_speed = speed_leftchange_curve * SPEED_CURRENT;
+			targetSpeed = speed_leftchange_curve * SPEED_CURRENT;
 			diff( motorPwm );
 			
 			if( sensor_inp() == 0x2 ) {
@@ -1046,7 +1052,7 @@ void main(void){
 		case 66:
 			SetAngle = angle_center;
 			servoPwmOut( ServoPwm2 );
-			target_speed = speed_leftchange_escape * SPEED_CURRENT;
+			targetSpeed = speed_leftchange_escape * SPEED_CURRENT;
 			diff( motorPwm );
 			
 			if( enc1 >= enc_mm( 10 ) ) {
@@ -1059,7 +1065,7 @@ void main(void){
 			
 		case 67:
 			servoPwmOut( ServoPwm );
-			target_speed = speed_leftchange_escape * SPEED_CURRENT;
+			targetSpeed = speed_leftchange_escape * SPEED_CURRENT;
 			diff( motorPwm );
 			
 			// クロスラインチェック
@@ -1101,7 +1107,7 @@ void main(void){
 		case 71:
 			// 誤検知判断
 			servoPwmOut( ServoPwm );
-			//target_speed = ( speed_slope_trace / 10 ) * SPEED_CURRENT;
+			//targetSpeed = ( speed_slope_trace / 10 ) * SPEED_CURRENT;
 			diff( motorPwm );
 			//if( cnt1 >= 10 ) {
 				if( check_slope() == 1 ) {
@@ -1151,7 +1157,7 @@ void main(void){
 		case 72:
 			// 坂頂点まで走行
 			servoPwmOut( ServoPwm );
-			target_speed = speed_slope_trace * SPEED_CURRENT;
+			targetSpeed = speed_slope_trace * SPEED_CURRENT;
 			diff( motorPwm );
 			
 			if( enc1 >= enc_mm( 660 ) ) {
@@ -1180,7 +1186,7 @@ void main(void){
 		case 74:
 			// 下り坂終点ブレーキ
 			servoPwmOut( ServoPwm );
-			target_speed = speed_slope_brake * SPEED_CURRENT;
+			targetSpeed = speed_slope_brake * SPEED_CURRENT;
 			diff( motorPwm );
 			if( enc1 >= enc_mm( 40 ) ) {
 				enc1 = 0;
@@ -1193,7 +1199,7 @@ void main(void){
 		case 75:
 			// ジャイロセンサが安定するまで読み飛ばし
 			servoPwmOut( ServoPwm );
-			target_speed = speed_slope_trace * SPEED_CURRENT;
+			targetSpeed = speed_slope_trace * SPEED_CURRENT;
 			diff( motorPwm );
 			
 			if( enc1 >= enc_mm( 150 ) ) {
@@ -1206,7 +1212,7 @@ void main(void){
 		case 76:
 			// ジャイロセンサが安定するまで読み飛ばし
 			servoPwmOut( ServoPwm );
-			target_speed = speed_slope_trace * SPEED_CURRENT;
+			targetSpeed = speed_slope_trace * SPEED_CURRENT;
 			diff( motorPwm );
 			
 			// クロスラインチェック
@@ -1256,7 +1262,7 @@ void main(void){
 			
 		case 102:
 			servoPwmOut( ServoPwm );
-			target_speed = 0;
+			targetSpeed = 0;
 			motor_f( motorPwm, motorPwm );
 			motor_r( motorPwm, motorPwm );
 			
@@ -1331,4 +1337,150 @@ void main(void){
 			
 	} // end of "switch ( pattern )"
 	} // end of "while ( 1 )"
+}
+//////////////////////////////////////////////////////////////////////////
+// モジュール名 Timer							//
+// 処理概要     1msごとにタイマ割り込み					//
+// 引数         なし							//
+// 戻り値       なし							//
+//////////////////////////////////////////////////////////////////////////
+void Timer (void) {
+	__setpsw_i();
+	//　タイマカウント
+	if ( pattern >= 11 && pattern <= 99 ) {	
+		if ( pattern != 21 ) {				// クロスライン通過時は無視
+			if ( sensor_inp() == 0x7 || sensor_inp() == 0x5 ) {	// センサ全灯
+				cnt_out++;	
+			} else {
+				cnt_out = 0;
+			}
+		}
+		if ( sensor_inp() == 0x0 && pattern != 53 && pattern != 63 ) cnt_out2++;	// センサ全消灯
+		else cnt_out2 = 0;
+		if ( Encoder == 0 ) cnt_out3++;		// エンコーダ停止(ひっくり返った？)
+		else cnt_out3 = 0;
+		if ( slope_mode != 0 || slope_mode != 1 ) {
+			if ( check_slope() == -1 ) cnt_out4++;
+			else	cnt_out4 = 0;
+		}
+	} else if ( pattern < 11 ) {
+		cnt0++;
+		cnt_setup++;
+		cnt_setup2++;
+		cnt_setup3++;
+		cnt_swR++;
+		cnt_swL++;
+		cnt_flash++;
+	}
+	cnt1++;
+	cnt_gyro++;
+			
+	// LCD表示
+	if ( lcd_mode ) {
+		lcdShowProcess();
+	}
+
+	// エンコーダカウント
+	getEncoder();
+
+	// PID制御値算出
+	if ( angle_mode == 0 ) {
+		servoControl();
+	} else {
+		servoControl2();
+	}
+	motorControl();
+	
+	// 角度計算
+	getDegrees();
+	getTurningAngleEnc();
+	getTurningAngleIMU();
+	getRollAngleIMU();
+	if( cnt_gyro == INTEGRAL_LIMIT ) cnt_gyro = 0;
+
+	// MicroSD書き込み
+	microSDProcess();
+	if( msdFlag == 1 ) {
+		msdTimer++;
+		if( msdTimer == WRITINGTIME ) {
+			msdTimer = 0;
+			msdBuffPointa = msdBuff + msdBuffAddress;
+			// ここから記録
+			send_Char	(	pattern		);
+			send_Char	(	motorPwm 	);
+			send_Char	(	accele_fL 	);
+			send_Char	(	accele_fR 	);
+			send_Char	(	accele_rL 	);
+			send_Char	(	accele_rR 	);
+			send_Char	(	ServoPwm 	);
+			send_Char	(	ServoPwm2 	);
+			send_Char	(	sensor_inp() 	);
+			send_Char	( 	slope_mode	);
+			send_ShortToChar(	getServoAngle()	);
+			send_ShortToChar(	SetAngle	);
+			send_ShortToChar(	getAnalogSensor());
+			send_ShortToChar(	Degrees		);
+			send_ShortToChar((short)TurningAngleEnc	);
+			send_ShortToChar((short)TurningAngleIMU	);
+			send_ShortToChar((short)RollAngleIMU	);
+			send_ShortToChar(	Encoder		);
+			send_ShortToChar(	targetSpeed	);
+			send_ShortToChar(	xg		);
+			send_ShortToChar(	yg		);
+			send_ShortToChar(	zg		);
+			send_uIntToChar (	EncoderTotal	);
+			send_uIntToChar (	enc1		);
+			send_uIntToChar (	cnt_log		);
+			// ここまで
+			cnt_log += WRITINGTIME;
+			msdBuffAddress += DATA_BYTE;       // RAMの記録アドレスを次へ
+			if( msdBuffAddress >= 512 ) {
+				msdBuffAddress = 0;
+				setMicroSDdata( msdBuff ); 
+				msdWorkAddress += 512;
+				if( msdWorkAddress >= msdEndAddress ) {
+					msdFlag = 0;
+				}
+			}
+		}
+	}
+
+	if ( IMUSet == 0 ) {
+		// UART受信
+		commandSCI1();
+	} else {
+		// 加速度及び角速度を取得
+		IMUProcess();
+	}
+	
+	Timer10++;
+	// 10ｍごとに実行
+	switch ( Timer10 ) {	
+	case 1:
+		// ブザー
+		beepProcessS();
+		break;
+	case 2:
+		// スイッチ読み込み
+		getSwitch();
+		break;
+	case 3:
+		break;
+	case 5:
+		break;
+	case 6:
+		break;
+	case 7:
+		break;
+	case 8:
+		break;
+	case 9:
+		break;
+	case 10:
+		Timer10 = 0;
+		break;
+	default:
+		break;
+	}
+
 }

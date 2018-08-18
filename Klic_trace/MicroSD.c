@@ -91,9 +91,9 @@ unsigned char msd_CMD ( unsigned char cmd, unsigned char arg1, unsigned char arg
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 init_msd						//
-// 処理概要     コマンド送信						//
-// 引数         コマンド、引数1,引数2,引数3,引数4,CRC			//
-// 戻り値       microSDからの戻り値					//
+// 処理概要     MicroSDの初期化						//
+// 引数         なし							//
+// 戻り値       0:初期化成功	1以上:初期化失敗			//
 //////////////////////////////////////////////////////////////////////////
 char init_msd ( void )
 {
@@ -951,7 +951,7 @@ void msd_sendToPC ( void )
 				printf(		"TurningAngleIMU,"	);
 				printf(		"RollAngleIMU,"		);
 				printf(		"Encoder,"		);
-				printf(		"target_speed,"		);
+				printf(		"targetSpeed,"		);
 				printf(		"xg[degrees/sec],"	);
 				printf(		"yg[degrees/sec],"	);
 				printf(		"zg[degrees/sec],"	);
@@ -1012,7 +1012,7 @@ void msd_sendToPC ( void )
 				printf("%5d,", CharToShort(20));		// TurningAngleIMU
 				printf("%5d,", CharToShort(22));		// RollAngleIMU
 				printf("%5d,", CharToShort(24));		// Encoder
-				printf("%5d,", CharToShort(26) / 10);		// target_speed
+				printf("%5d,", CharToShort(26) / 10);		// targetSpeed
 				printf("%4.4f,", (double)(CharToShort(28)*GYRO_RANGE)/MAXDATA_RANGE);// xg
 				printf("%4.4f,", (double)(CharToShort(30)*GYRO_RANGE)/MAXDATA_RANGE);// yg
 				printf("%4.4f,", (double)(CharToShort(32)*GYRO_RANGE)/MAXDATA_RANGE);// zg

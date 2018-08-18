@@ -213,3 +213,41 @@ void chaek_SCI1_Error( void ) {
 		SCI1.SSR.BIT.PER = 0;
 	}
 }
+//////////////////////////////////////////////////////////////////////////
+// モジュール名 commandSCI1						//
+// 処理概要     SCI1で受信したコマンドを処理する			//
+// 引数         なし							//
+// 戻り値       なし							//
+//////////////////////////////////////////////////////////////////////////
+void commandSCI1 (void) {
+	short s,i;
+	
+	if ( commandEnd == 1 ) {	// コマンド終了時に実行
+		if ( cmderr == 1 ) {
+			printf("commandERROR\n");
+			commandEnd = 0;
+		} else {
+			switch ( cmmandMode ) {
+			case 1:
+				// ボーレート設定(br)
+				for ( s = 0; s < 15; s++ ) {
+					i = ascii_num[s];
+					if ( txt_command[0] == i ) {
+						printf("br=%d\n", s);
+						init_SCI1( s );
+						break;
+					}
+				}
+				break;
+				
+			default:
+				break;
+			}
+			commandEnd = 0;
+		}
+	}
+	// 緊急停止
+	if ( strcmp( txt_data, txt_stop) == 0 ) {
+		stopWord = 1;
+	}
+}

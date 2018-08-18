@@ -5,6 +5,9 @@
 //======================================//
 // グローバル変数の宣言                 //
 //======================================//
+// タイマ関連
+unsigned short	cnt_flash;	// フラッシュ用カウント
+
 // フラッシュ関連
 static volatile short 		BeforeBlockNumber;	// 前回保存時のブロック番号
 static volatile short 		BeforeAddrNumber;	// 前回保存時のオフセット値
@@ -120,7 +123,7 @@ char checkFRDY ( unsigned short waittime )
 	return timeout;
 }
 //////////////////////////////////////////////////////////////////////////
-// モジュール名 checkErrorFlash					//
+// モジュール名 checkErrorFlash						//
 // 処理概要     エラー確認						//
 // 引数         なし							//
 // 戻り値       0: エラーなし 1:エラーあり				//

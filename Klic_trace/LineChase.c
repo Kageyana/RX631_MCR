@@ -4,11 +4,55 @@
 #include "LineChase.h"
 //======================================//
 // グローバル変数の宣言                 //
-//======================================//
+// モード関連
+char 	lcd_mode = 1;	// LCD表示可否		1:表示		0:消灯		
+char 	slope_mode;	// 坂チェック		0:上り坂始め	1:上り坂終わり	2:下り坂始め
+char 	angle_mode;	// サーボPWM変更	0:白線トレース	1:角度制御
+char	pushcart_mode;	// 手押しモード可否	0:自動走行	1:手押し
+char	msdset;		// MicroSDが初期化されたか	0:初期化失敗	1:初期化成功
+char	IMUSet;		// IMUが初期化されたか	0: 初期化失敗	1:初期化成功
+
+// パラメータ関連
+// 距離
+short	stopping_meter;			// 停止距離
+// 速度
+short	speed_straight;			// 通常トレース
+short	speed_curve_brake;		// カーブブレーキ
+short	speed_curve_r600;		// R600カーブ速度
+short	speed_curve_r450;		// R450カーブ速度
+short	speed_curve_straight;		// S字カーブ直線速度
+
+short	speed_crossline;		// クロスライン進入速度
+short	speed_ckank_trace;		// クランク進入速度
+short	speed_rightclank_curve;		// 右クランク旋回速度
+short	speed_rightclank_escape;	// 右クランク復帰速度
+short	speed_leftclank_curve;		// 左クランク旋回速度
+short	speed_leftclank_escape;		// 左クランク復帰速度
+
+short	speed_halfine;			// ハーフライン進入速度
+short	speed_rightchange_trace;	// 右レーンチェンジ進入速度
+short	speed_rightchange_curve;	// 右レーンチェンジ旋回速度
+short	speed_rightchange_escape;	// 右レーンチェンジ復帰速度
+
+short	speed_leftchange_trace;		// 左レーンチェンジ進入速度
+short	speed_leftchange_curve;		// 左レーンチェンジ旋回速度
+short	speed_leftchange_escape;	// 左レーンチェンジ旋回速度
+
+short	speed_slope_brake;		// 下り坂終点速度
+short	speed_slope_trace;		// 坂読み飛ばし速度
+
+// サーボ角度
+short	angle_rightclank;		// 右クランク旋回角度
+short	angle_leftclank;		// 左クランク旋回角度
+short	angle_rightchange;		// 右レーンチェンジ旋回角度
+short	angle_leftchange;		// 右レーンチェンジ旋回角度
+
+// タイマ関連
+char	cnt_gyro;			// 角度計算用カウンタ
+
 // 角度関連
-short 	Degrees;
-double 	Degrees_double;
-short 	gyVoltageBefore;
+short 	Degrees;		// 圧電ジャイロから計算した機体のピッチ角度
+short 	gyVoltageBefore;	// 1ms前の角度
 
 double 	TurningAngleEnc;	// エンコーダから求めた旋回角度
 double 	TurningAngleIMU;	// IMUから求めた旋回角度
@@ -17,25 +61,24 @@ double	RollAngleIMU;		// IMUから求めたロール方向角度
 // サーボ関連
 // 白線トレース
 signed char	ServoPwm;		// 白線トレースサーボPWM
-short 		SensorBefore;
-char		DevBefore;
-double		Int;
+short 		SensorBefore;		// 1ms前のセンサ値
+char		DevBefore;		// I成分リセット用
+double		Int;			// I成分積算値(白線トレース)
 // 角度制御
 signed char	ServoPwm2;		// 角度サーボPWM
 short 		SetAngle;		// 目標角度
-short		SetAngleBefore;
-short 		AngleBefore2;
-char		AngleBefore3;
-double		Int2;
+short		SetAngleBefore;		// 1ms前の目標角度
+short 		AngleBefore2;		// 1ms前の角度
+char		AngleBefore3;		// I成分リセット用
+double		Int2;			// I成分積算値(角度制御)
 
 // モーター関連
 signed char 	motorPwm;		// モーター制御PWM
-char 		AccelefBefore;
-short		EncoderBefore;
-short		EncoderBefore2;
-double 		target_speedBefore;
-double 		Int3;
-short		target_speed;		// 目標速度
+char 		AccelefBefore;		// I成分リセット用
+short		EncoderBefore;		// 1ms前の速度
+int 		targetSpeedBefore;	// 1ms前の目標速度	
+double 		Int3;			// I成分積算値(速度制御)
+short		targetSpeed;		// 目標速度
 
 // デモ関連
 char 	demo;
@@ -128,7 +171,7 @@ unsigned int enc_mm( short mm ) {
 // 引数         なし							//
 // 戻り値       なし							//
 //////////////////////////////////////////////////////////////////////////
-void getdegrees( void ) {
+void getDegrees( void ) {
 	short s;
 	double gy_voltage, gyro;
 	
@@ -136,9 +179,8 @@ void getdegrees( void ) {
 	gy_voltage = (double)s * AD_3V3VOLTAGE;	// ジャイロセンサから出力された電圧[mV]
 	gyro = gy_voltage * GYROVOLTAGE;	// 角加速度算出
 	
-	Degrees_double += (double)( gyro + gyVoltageBefore ) * 0.001 / 2;	// 角加速度を積算
-	if( cnt_gyro == INTEGRAL_LIMIT ) Degrees_double = 0;	// 4msごとに積算値リセット
-	Degrees = Degrees_double;
+	Degrees += (double)( gyro + gyVoltageBefore ) * 0.001 / 2;	// 角加速度を積算
+	if( cnt_gyro == INTEGRAL_LIMIT ) Degrees = 0;	// 200msごとに積算値リセット
 	
 	gyVoltageBefore = gyro;
 }
@@ -184,7 +226,7 @@ void servoControl( void )
 	if ( Dev >= 0 )		DevBefore = 0;
 	else			DevBefore = 1;
 	ServoPwm = iRet;
-	SensorBefore = Dev;				// 次回はこの値が100μs前の値となる
+	SensorBefore = Dev;				// 次回はこの値が1ms前の値となる
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 servoControl2						//
@@ -230,7 +272,7 @@ void servoControl2( void )
 	else 			AngleBefore3 = 1;
 	SetAngleBefore = i;
 	ServoPwm2 = iRet;
-	AngleBefore2 = Dev;			// 次回はこの値が100μs前の値となる
+	AngleBefore2 = Dev;			// 次回はこの値が1ms前の値となる
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 diff							//
@@ -546,7 +588,7 @@ void motorControl( void )
 		105, 107, 108, 110, 111, 113, 114, 116
 		};
 	
-	i = target_speed;		// 目標値
+	i = targetSpeed;		// 目標値
 	j = Encoder * 10;		// 現在値
 	
 	// デモモードのときゲイン変更
@@ -571,11 +613,10 @@ void motorControl( void )
 			Int3 = 0;
 		}
 		// 目標値を変更したらI成分リセット
-		if ( i != target_speedBefore ) Int3 = 0;
+		if ( i != targetSpeedBefore ) Int3 = 0;
 		
 		Int3 += (double)Dev * 0.001;		// 積分
 		Dif = Dev - EncoderBefore;		// 微分　dゲイン1/1000倍
-		//acceleration = (j - EncoderBefore2);	// 速度偏差 * 時間偏差(0.001s) * 1000
 		
 		iP = (int)kp3 * Dev;			// 比例
 		iI = (double)ki3 * Int3;		// 積分
@@ -583,14 +624,14 @@ void motorControl( void )
 		iRet = iP + iI + iD;
 		iRet = iRet >> 4;
 		
-		//v = rev_voltage[target_speed / SPEED_CURRENT];
+		//v = rev_voltage[targetSpeed / SPEED_CURRENT];
 		//if ( Dev < 0 ) v = -v;
 		//iRet += v;
 		// PWMの上限の設定
 		if ( iRet >  100 )	iRet =  100;
 		if ( iRet <  -100 )	iRet = -100;
 	} else {
-		v = rev_voltage[target_speed / SPEED_CURRENT];
+		v = rev_voltage[targetSpeed / SPEED_CURRENT];
 		if ( Dev < 0 ) v = -v;
 		iRet = v;
 	}
@@ -600,8 +641,7 @@ void motorControl( void )
 	
 	motorPwm = iRet;
 	EncoderBefore = Dev;
-	EncoderBefore2 = j;
-	target_speedBefore = i;
+	targetSpeedBefore = i;
 	
 	
 }

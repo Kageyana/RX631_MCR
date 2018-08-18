@@ -14,14 +14,21 @@
 //======================================//
 // シンボル定義                         //
 //======================================//
+#define RIGHT	0
+#define LEFT	1
 
 //======================================//
 // グローバル変数の宣言                 //
 //======================================//
 // パターン関連
 extern char		start;
+
+// タイマ関連
 extern unsigned short 	cnt_setup;
 extern unsigned short 	cnt_setup2;
+extern unsigned short 	cnt_setup3;	
+extern short		cnt_swR;	// スイッチ長押し判定用右
+extern short		cnt_swL;	// スイッチ長押し判定用左
 
 // パラメータ関連
 extern char fixSpeed;

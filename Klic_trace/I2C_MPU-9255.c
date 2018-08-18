@@ -13,17 +13,15 @@ char	IMUset = 0;		// 0:初期化失敗		1:初期化完了
 // モジュール名 IMUWriteByte								//
 // 処理概要     指定したレジスタにデータを書き込む					//
 // 引数         slaveAddr:スレーブアドレス reg:レジスタのアドレス data:書き込みデータ	//
-// 戻り値       0:　書き込み失敗 1: 書き込み成功					//
+// 戻り値       なし									//
 //////////////////////////////////////////////////////////////////////////////////////////
-char IMUWriteByte(short slaveAddr, char reg, char data ) {
-	uint8_t ret, sendData[1] = { reg };
+void IMUWriteByte(short slaveAddr, char reg, char data ) {
+	uint8_t sendData[1] = { reg };
     
-	ret = I2C_IMU_SEND
+	I2C_IMU_SEND
 	
 	sendData[0] = data;
-    	ret = I2C_IMU_SEND
-	
-	return ret;
+    	I2C_IMU_SEND
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 IMUReadByte						//
@@ -56,10 +54,10 @@ void IMUReadArry(short slaveAddr, char addr, char num, char* dataArry ) {
 // モジュール名 init_IMU						//
 // 処理概要     IMUの初期化を行う					//
 // 引数         なし							//
-// 戻り値       0: 初期化失敗　1:初期化成功				//
+// 戻り値       0: 初期化成功1:初期化失敗				//
 //////////////////////////////////////////////////////////////////////////
 char init_IMU (void) {
-	char ret, whoami;
+	char ret  = 0, whoami;
 	
 	whoami = IMUReadByte(MPU9255_ADDRESS, WHO_AM_I);
 	if ( whoami == 0x71 || whoami == 0x73 ) {
@@ -67,9 +65,8 @@ char init_IMU (void) {
 		IMUWriteByte(MPU9255_ADDRESS, INT_PIN_CFG, 0x02);   // 内蔵プルアップ無効化
 		IMUWriteByte(MPU9255_ADDRESS, ACCEL_CONFIG, 0x18);  // レンジ±16gに変更
 		IMUWriteByte(MPU9255_ADDRESS, GYRO_CONFIG, 0x18);   // レンジ±2000deg/sに変更
-		ret = 1;
 	} else {
-		ret = 0;
+		ret = 1;
 	}
 	
 	return ret;

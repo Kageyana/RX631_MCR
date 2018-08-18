@@ -89,10 +89,6 @@
 //======================================//
 // タイマ関連
 extern unsigned int	cnt0;		// 関数用タイマカウント
-extern unsigned short	cnt_flash;	// フラッシュ用カウント
-extern unsigned int	cnt_log;	// フラッシュ用カウント
-extern short		cnt_swR;	// スイッチ長押し判定用右
-extern short		cnt_swL;	// スイッチ長押し判定用左
 
 // センサ関連
 extern short		sensorR;	// 右アナログセンサ
@@ -126,10 +122,14 @@ void init_IO(void);
 // タイマ関連
 void delay( unsigned short delaytime );
 
+// エンコーダ関連
+void getEncoder (void);
+
 // LED関連
 void led_out( unsigned char led );
 
 // スイッチ関連
+void getSwitch(void);
 unsigned char tasw_get ( void );
 unsigned char dipsw_get( void );
 

@@ -3,57 +3,22 @@
 //======================================//
 #include "SetUp.h"
 //======================================//
-// シンボル定義                         //
-//======================================//
-#define RIGHT	0
-#define LEFT	1
-//======================================//
 // グローバル変数の宣言                 //
 //======================================//
-// パターン関連
-char 	start;
+char 	start;		// 0:セットアップ中	1:セットアップ完了
 
-// モード関連
-char 	pushcart_mode;	// 手押しモード可否	0:自動走行	1:手押し
-
-// パラメータ関連
-// 距離
-short	stopping_meter;			// 停止距離
-// 速度
-short	speed_straight;			// 通常トレース
-short	speed_curve_brake;		// カーブブレーキ
-short	speed_curve_r600;		// R600カーブ速度
-short	speed_curve_r450;		// R450カーブ速度
-short	speed_curve_straight;		// S字カーブ直線速度
-
-short	speed_crossline;		// クロスライン進入速度
-short	speed_ckank_trace;		// クランク進入速度
-short	speed_rightclank_curve;		// 右クランク旋回速度
-short	speed_rightclank_escape;	// 右クランク復帰速度
-short	speed_leftclank_curve;		// 左クランク旋回速度
-short	speed_leftclank_escape;		// 左クランク復帰速度
-
-short	speed_halfine;			// ハーフライン進入速度
-short	speed_rightchange_trace;	// 右レーンチェンジ進入速度
-short	speed_rightchange_curve;	// 右レーンチェンジ旋回速度
-short	speed_rightchange_escape;	// 右レーンチェンジ復帰速度
-
-short	speed_leftchange_trace;		// 左レーンチェンジ進入速度
-short	speed_leftchange_curve;		// 左レーンチェンジ旋回速度
-short	speed_leftchange_escape;	// 左レーンチェンジ旋回速度
-
-short	speed_slope_brake;		// 下り坂終点速度
-short	speed_slope_trace;		// 坂読み飛ばし速度
-
-// 角度
-short	angle_rightclank;		// 右クランク旋回角度
-short	angle_leftclank;		// 左クランク旋回角度
-short	angle_rightchange;		// 右レーンチェンジ旋回角度
-short	angle_leftchange;		// 右レーンチェンジ旋回角度
+// タイマ関連
+unsigned short 		cnt_setup;	// セットアップで使用
+unsigned short 		cnt_setup2;	// セットアップで使用
+unsigned short 		cnt_setup3;	// セットアップで使用
+short			cnt_swR;	// スイッチ長押し判定用右
+short			cnt_swL;	// スイッチ長押し判定用左
 
 // スイッチ関連
 signed char pushL = 0;
 signed char pushR = 0;
+
+// パターン関連
 char push = 0;
 char push1 = 0;
 char pattern_sensor = 1;
@@ -864,7 +829,7 @@ void setup( void )
 		case 0xc:
 			lcdPosition( 0, 0 );
 			lcdPrintf("DEMO%4d",motorPwm);
-			target_speed  = 0;
+			targetSpeed  = 0;
 			
 			data_select ( &demo, 1 );
 			if ( demo == 1 ) {
@@ -1202,20 +1167,20 @@ void data_tuning ( void *data, char add , char lr )
 			} else if ( pushL != 0 ) {
 				// 長押しモード
 				if ( cnt_swL >= 400 && cnt_swL < 2000) {
-					if ( ( cnt1 % 400 ) == 0 ) {
-						cnt1 = 0;
+					if ( ( cnt_setup3 % 400 ) == 0 ) {
+						cnt_setup3 = 0;
 						if ( pushL == 1) *data2 += add;
 						else *data2 -= add;
 					}
 				} else if ( cnt_swL >= 2000 && cnt_swL < 4000 ) {
-					if ( ( cnt1 % 200 ) == 0 ) {
-						cnt1 = 0;
+					if ( ( cnt_setup3 % 200 ) == 0 ) {
+						cnt_setup3 = 0;
 						if ( pushL == 1) *data2 += add;
 						else *data2 -= add;
 					}
 				} else if ( cnt_swL >= 4000 ) {
-					if ( ( cnt1 % 100 ) == 0 ) {
-						cnt1 = 0;
+					if ( ( cnt_setup3 % 100 ) == 0 ) {
+						cnt_setup3 = 0;
 						if ( pushL == 1) *data2 += add;
 						else *data2 -= add;
 					}
@@ -1237,20 +1202,20 @@ void data_tuning ( void *data, char add , char lr )
 				// 長押しモード
 				if ( cnt_swR >= 400 && cnt_swR < 2000 ) {
 					
-					if ( ( cnt1 % 400 ) == 0 ) {
-						cnt1 = 0;
+					if ( ( cnt_setup3 % 400 ) == 0 ) {
+						cnt_setup3 = 0;
 						if ( pushR == 1) *data2 += add;
 						else *data2 -= add;
 					}
 				} else if ( cnt_swR >= 2000 && cnt_swR < 4000 ) {
-					if ( ( cnt1 % 200 ) == 0 ) {
-						cnt1 = 0;
+					if ( ( cnt_setup3 % 200 ) == 0 ) {
+						cnt_setup3 = 0;
 						if ( pushR == 1) *data2 += add;
 						else *data2 -= add;
 					}
 				} else if ( cnt_swR >= 4000 ) {
-					if ( ( cnt1 % 100 ) == 0 ) {
-						cnt1 = 0;
+					if ( ( cnt_setup3 % 100 ) == 0 ) {
+						cnt_setup3 = 0;
 						if ( pushR == 1) *data2 += add;
 						else *data2 -= add;
 					}

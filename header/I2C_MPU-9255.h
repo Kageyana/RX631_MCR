@@ -138,7 +138,7 @@ extern char	IMUset;			// 0:初期化失敗		1:初期化完了
 //======================================//
 // プロトタイプ宣言                     //
 //======================================//
-char IMUWriteByte(short slaveAddr, char reg, char data );
+void IMUWriteByte(short slaveAddr, char reg, char data );
 char IMUReadByte(short slaveAddr, char reg );
 void IMUReadArry(short slaveAddr, char addr, char num, char* dataArry );
 char init_IMU (void);

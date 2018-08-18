@@ -87,9 +87,9 @@
 extern char 	pattern;			// パターン番号
 extern char	lcd_mode;			// LCD表示選択
 extern char	slope_mode;			// 坂チェック		0:上り坂始め	1:上り坂終わり	2:下り坂始め	3:下り坂終わり
-extern char	angle_mode;
-extern char	pushcart_mode;			// 手押しモード
-extern char	msdset;				// MicroSDが初期化されたか
+extern char	angle_mode;			// サーボPWM変更	0:白線トレース	1:角度制御
+extern char	pushcart_mode;			// 手押しモード可否	0:自動走行	1:手押し
+extern char	msdset;				// MicroSDが初期化されたか	0:初期化失敗	1:初期化成功
 extern char	IMUSet;				// IMUが初期化されたか	0: 初期化失敗	1:初期化成功
 
 
@@ -122,31 +122,24 @@ extern short	speed_leftchange_escape;	// 左レーンチェンジ旋回速度
 extern short	speed_slope_brake;		// 下り坂終点速度
 extern short	speed_slope_trace;		// 坂読み飛ばし速度
 
-// 角度
+// サーボ角度
 extern short	angle_rightclank;		// 右クランク旋回角度
 extern short	angle_leftclank;		// 左クランク旋回角度
 extern short	angle_rightchange;		// 右レーンチェンジ旋回角度
 extern short	angle_leftchange;		// 右レーンチェンジ旋回角度
 
 // タイマ関連
-extern unsigned int	cnt1;		// 走行用タイマカウント
-extern unsigned int	cnt_log;	// 走行用タイマカウント
-extern unsigned short	cnt_out;	// コースアウト判定用タイマカウント
-extern unsigned short	cnt_out2;	// コースアウト判定用タイマカウント2
-extern unsigned short	cnt_out3;	// コースアウト判定用タイマカウント3
-extern unsigned short	cnt_out4;	// コースアウト判定用タイマカウント4
+extern char		cnt_gyro;		// 角度計算用カウンタ
 
 // 角度関連
-extern short 		Degrees;	// ジャイロセンサから計算した角度(degrees)
-extern double 		TurningAngleEnc;// エンコーダから求めた旋回角度
-extern double 		TurningAngleIMU;// IMUから求めた旋回角度
-extern double		RollAngleIMU;	// IMUから求めたロール方向角度
-extern char		cnt_gyro;	// 角度計算用カウンタ
-
+extern short 		Degrees;		// ジャイロセンサから計算した角度(degrees)
+extern double 		TurningAngleEnc;	// エンコーダから求めた旋回角度
+extern double 		TurningAngleIMU;	// IMUから求めた旋回角度
+extern double		RollAngleIMU;		// IMUから求めたロール方向角度
 
 // モーター関連
 extern signed char 	motorPwm;	// モーター制御PWM
-extern short		target_speed;	// 目標速度
+extern short		targetSpeed;	// 目標速度
 
 // ゲイン関連
 extern signed char	kp_buff, ki_buff, kd_buff;
@@ -171,7 +164,7 @@ signed char check_leftline( void );
 signed char check_slope( void );
 
 // 角度関連
-void getdegrees( void );
+void getDegrees( void );
 void getTurningAngleEnc(void);
 void getTurningAngleIMU(void);
 void getRollAngleIMU(void);

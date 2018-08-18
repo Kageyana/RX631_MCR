@@ -49,5 +49,6 @@ extern char ascii_num[];
 void init_SCI1( char rate );
 void Excep_SCI1_RXI1( void );
 void chaek_SCI1_Error( void );
+void commandSCI1 (void);
 
 #endif /* SCI_H_ */
