@@ -5,8 +5,8 @@
 //======================================//
 // グローバル変数の宣言                 //
 //======================================//
-short 	xa, ya, za;		// 加速度
-short 	xg, yg, zg;		// 角加速度
+volatile short 	xa, ya, za;		// 加速度
+volatile short 	xg, yg, zg;		// 角加速度
 char	IMUset = 0;		// 0:初期化失敗		1:初期化完了
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -46,7 +46,6 @@ char IMUReadByte(short slaveAddr, char reg ) {
 void IMUReadArry(short slaveAddr, char addr, char num, char* dataArry ) {
 	uint8_t sendData[1] = { addr };
     
-	sendData[0] = addr;
 	I2C_IMU_SEND
 	I2C_IMU_ARRY
 }
@@ -91,7 +90,13 @@ void IMUProcess (void) {
 	//za = (short)((axisAccelData[4] << 8 ) | axisAccelData[5]);
 	
 	// 角速度
+	/*
 	xg = (short)((axisGyroData[0] << 8 ) | axisGyroData[1]);
 	yg = (short)((axisGyroData[2] << 8 ) | axisGyroData[3]);
 	zg = (short)((axisGyroData[4] << 8 ) | axisGyroData[5]);
+	*/
+	
+	xg = (short)(axisGyroData[0] * 0x100 + axisGyroData[1]);
+	yg = (short)(axisGyroData[2] * 0x100 + axisGyroData[3]);
+	zg = (short)(axisGyroData[4] * 0x100 + axisGyroData[5]);
 }

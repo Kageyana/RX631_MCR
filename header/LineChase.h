@@ -13,29 +13,29 @@
 #define	STOPPING_METER		23		// 停止距離
 
 // 各セクションでの目標速度　x/10[m/s]
-#define SPEED_STRAIGHT			44	// 通常トレース
-#define SPEED_CURVE_BRAKE		38	// カーブブレーキ
-#define SPEED_CURVE_R600		38	// R600カーブ速度
-#define SPEED_CURVE_R450		34	// R450カーブ速度
-#define SPEED_CURVE_STRAIGHT		38	// S字カーブ直線速度
+#define SPEED_STRAIGHT			48	// 通常トレース
+#define SPEED_CURVE_BRAKE		36	// カーブブレーキ
+#define SPEED_CURVE_R600		46	// R600カーブ速度
+#define SPEED_CURVE_R450		42	// R450カーブ速度
+#define SPEED_CURVE_STRAIGHT		44	// S字カーブ直線速度
 
-#define SPEED_CROSSLINE			12	// クロスライン進入速度
-#define SPEED_CLANK_TRACE		30	// クランク進入速度
+#define SPEED_CROSSLINE			28	// クロスライン進入速度
+#define SPEED_CLANK_TRACE		32	// クランク進入速度
 #define SPEED_RIGHTCLANK_CURVE		22	// 右クランク旋回速度
-#define SPEED_RIGHTCLANK_ESCAPE		36	// 右クランク復帰速度
+#define SPEED_RIGHTCLANK_ESCAPE		40	// 右クランク復帰速度
 #define SPEED_LEFTCLANK_CURVE		22	// 左クランク旋回速度
-#define SPEED_LEFTCLANK_ESCAPE		36	// 左クランク復帰速度
+#define SPEED_LEFTCLANK_ESCAPE		40	// 左クランク復帰速度
 
 #define SPEED_HALFLINE			30	// ハーフライン進入速度
-#define SPEED_RIGHTCHANGE_TRACE		42	// 右レーンチェンジ進入速度
-#define SPEED_RIGHTCHANGE_CURVE		42	// 右レーンチェンジ旋回速度
-#define SPEED_RIGHTCHANGE_ESCAPE	42	// 右レーンチェンジ復帰速度
-#define SPEED_LEFTCHANGE_TRACE		42	// 左レーンチェンジ進入速度
-#define SPEED_LEFTCHANGE_CURVE		42	// 左レーンチェンジ旋回速度
-#define SPEED_LEFTCHANGE_ESCAPE		42	// 左レーンチェンジ復帰速度
+#define SPEED_RIGHTCHANGE_TRACE		44	// 右レーンチェンジ進入速度
+#define SPEED_RIGHTCHANGE_CURVE		44	// 右レーンチェンジ旋回速度
+#define SPEED_RIGHTCHANGE_ESCAPE	44	// 右レーンチェンジ復帰速度
+#define SPEED_LEFTCHANGE_TRACE		44	// 左レーンチェンジ進入速度
+#define SPEED_LEFTCHANGE_CURVE		44	// 左レーンチェンジ旋回速度
+#define SPEED_LEFTCHANGE_ESCAPE		44	// 左レーンチェンジ復帰速度
 
-#define SPEED_SLOPE_BRAKE		20	// 下り坂終点速度
-#define SPEED_SLOPE_TRACE		36	// 坂読み飛ばし速度
+#define SPEED_SLOPE_BRAKE		30	// 下り坂終点速度
+#define SPEED_SLOPE_TRACE		40	// 坂読み飛ばし速度
 // 角度
 #define ANGLE_RIGHTCLANK		-420	// 右クランク旋回角度
 #define ANGLE_LEFTCLANK			420	// 左クランク旋回角度

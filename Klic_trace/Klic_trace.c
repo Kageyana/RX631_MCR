@@ -525,6 +525,7 @@ void main(void){
 				setBeepPatternS( 0xa000 );
 				SetAngle = angle_rightclank;
 				angle_mode = 1;
+				TurningAngleEnc = 0;
 				TurningAngleIMU = 0;
 				pattern = 31;
 				break;
@@ -536,6 +537,7 @@ void main(void){
 				setBeepPatternS( 0xa800 );
 				SetAngle = angle_leftclank;
 				angle_mode = 1;
+				TurningAngleEnc = 0;
 				TurningAngleIMU = 0;
 				pattern = 41;
 				break;

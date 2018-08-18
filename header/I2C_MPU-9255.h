@@ -130,8 +130,8 @@
 //======================================//
 // グローバル変数の宣言                 //
 //======================================//
-extern short 	xa, ya, za;		// 加速度
-extern short 	xg, yg, zg;		// 角加速度
+extern volatile short 	xa, ya, za;	// 加速度
+extern volatile short 	xg, yg, zg;	// 角加速度
 
 extern char	IMUset;			// 0:初期化失敗		1:初期化完了
 
