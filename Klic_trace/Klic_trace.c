@@ -9,7 +9,6 @@
 //======================================//
 // インクルード                         //
 //======================================//
-#include "R_PG_RX631_mcr_ver3.0.h" 
 #include "PeripheralFunctions.h"
 #include "LineChase.h"
 #include "SetUp.h"
