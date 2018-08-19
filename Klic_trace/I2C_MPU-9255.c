@@ -16,12 +16,9 @@ char	IMUset = 0;		// 0:初期化失敗		1:初期化完了
 // 戻り値       なし									//
 //////////////////////////////////////////////////////////////////////////////////////////
 void IMUWriteByte(short slaveAddr, char reg, char data ) {
-	uint8_t sendData[1] = { reg };
+	uint8_t sendData[2] = { reg, data };
     
-	I2C_IMU_SEND
-	
-	sendData[0] = data;
-    	I2C_IMU_SEND
+	I2C_IMU_COMMAND
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 IMUReadByte						//
@@ -32,7 +29,7 @@ void IMUWriteByte(short slaveAddr, char reg, char data ) {
 char IMUReadByte(short slaveAddr, char reg ) {
 	uint8_t sendData[1] = { reg }, reciveData[1];
     
-	I2C_IMU_SEND
+	I2C_IMU_DATA
 	I2C_IMU_READ
     
 	return reciveData[0];
@@ -43,10 +40,10 @@ char IMUReadByte(short slaveAddr, char reg ) {
 // 引数         slaveAddr:スレーブアドレス addr:レジスタのアドレス num:読み取るデータ数 dataArry:データの格納先	//
 // 戻り値       なし 												//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void IMUReadArry(short slaveAddr, char addr, char num, char* dataArry ) {
-	uint8_t sendData[1] = { addr };
+void IMUReadArry(short slaveAddr, char reg, char num, char* dataArry ) {
+	uint8_t sendData[1] = { reg };
     
-	I2C_IMU_SEND
+	I2C_IMU_DATA
 	I2C_IMU_ARRY
 }
 //////////////////////////////////////////////////////////////////////////

@@ -1,12 +1,9 @@
 #ifndef I2C_MPU9255_H_
 #define I2C_MPU9255_H_
-
 //======================================//
 // インクルード                         //
 //======================================//
-#include "I2C_MPU-9255.h"
 #include "R_PG_RX631_mcr_ver3.0.h"
-
 //======================================//
 // シンボル定義                         //
 //======================================//
@@ -122,7 +119,8 @@
 #define G_ACCELERATION		9.80665	// 重力加速度
 
 /******************************************** 自動生成関数 *****************************************/
-#define I2C_IMU_SEND		R_PG_SCI_I2CMode_Send_C1(0, slaveAddr, sendData, 1);
+#define I2C_IMU_DATA		R_PG_SCI_I2CMode_Send_C1(0, slaveAddr, sendData, 1);
+#define I2C_IMU_COMMAND		R_PG_SCI_I2CMode_Send_C1(0, slaveAddr, sendData, 2);
 #define I2C_IMU_READ		R_PG_SCI_I2CMode_Receive_C1(0, slaveAddr, reciveData, 1);
 #define I2C_IMU_ARRY		R_PG_SCI_I2CMode_Receive_C1(0, slaveAddr, (uint8_t*)dataArry, num);
 
@@ -130,9 +128,11 @@
 //======================================//
 // グローバル変数の宣言                 //
 //======================================//
-extern volatile short 	xa, ya, za;	// 加速度
-extern volatile short 	xg, yg, zg;	// 角加速度
+// IMUから取得したデータ
+extern volatile short 	xa, ya, za;	// 加速度(16bitデータ)
+extern volatile short 	xg, yg, zg;	// 角加速度(16bitデータ)
 
+// モード関連
 extern char	IMUset;			// 0:初期化失敗		1:初期化完了
 
 //======================================//
@@ -140,7 +140,7 @@ extern char	IMUset;			// 0:初期化失敗		1:初期化完了
 //======================================//
 void IMUWriteByte(short slaveAddr, char reg, char data );
 char IMUReadByte(short slaveAddr, char reg );
-void IMUReadArry(short slaveAddr, char addr, char num, char* dataArry );
+void IMUReadArry(short slaveAddr, char reg, char num, char* dataArry );
 char init_IMU (void);
 void IMUProcess (void);
 
