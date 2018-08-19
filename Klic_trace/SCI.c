@@ -30,7 +30,8 @@ char commandDataSelect = 0;
 // 引数         rate:ボーレートをbpsで入力				//
 // 戻り値       なし							//
 //////////////////////////////////////////////////////////////////////////
-void init_SCI1( char rate ){
+void init_SCI1( char rate )
+{
 	unsigned char brr,abcs;
 	
 	// ボーレート選択
@@ -141,7 +142,8 @@ void charput( uint8_t data )
 // 引数         なし							//
 // 戻り値       data:入力した一文字					//
 //////////////////////////////////////////////////////////////////////////
-char charget(void){
+char charget(void)
+{
 	uint8_t data;
 	return data;
 }
@@ -151,7 +153,8 @@ char charget(void){
 // 引数         なし							//
 // 戻り値       なし							//
 //////////////////////////////////////////////////////////////////////////
-void Excep_SCI1_RXI1(void) {
+void Excep_SCI1_RXI1(void)
+{
 	char c;
 	
 	__clrpsw_i();
@@ -191,7 +194,8 @@ void Excep_SCI1_RXI1(void) {
 // 引数         なし							//
 // 戻り値       なし							//
 //////////////////////////////////////////////////////////////////////////
-void chaek_SCI1_Error( void ) {
+void chaek_SCI1_Error( void )
+{
 	if ( SCI1.SSR.BIT.ORER ) {		
 		// オーバーランエラー処理
 		*txt++ = SCI1.RDR;
@@ -219,7 +223,8 @@ void chaek_SCI1_Error( void ) {
 // 引数         なし							//
 // 戻り値       なし							//
 //////////////////////////////////////////////////////////////////////////
-void commandSCI1 (void) {
+void commandSCI1 (void)
+{
 	short s,i;
 	
 	if ( commandEnd == 1 ) {	// コマンド終了時に実行

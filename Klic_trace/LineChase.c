@@ -94,7 +94,8 @@ signed char 	kp3_buff, ki3_buff, kd3_buff;
 // 引数         なし							//
 // 戻り値       0:クロスラインなし 1:あり				//
 //////////////////////////////////////////////////////////////////////////
-signed char check_crossline( void ) {
+signed char check_crossline( void )
+{
 	unsigned char digital_sensor;
 	char ret = 0;
 
@@ -110,7 +111,8 @@ signed char check_crossline( void ) {
 // 引数         なし							//
 // 戻り値       0:右ハーフラインなし 1:あり				//
 //////////////////////////////////////////////////////////////////////////
-signed char check_rightline( void ) {
+signed char check_rightline( void )
+{
 	unsigned char digital_sensor;
 	char ret = 0;
 
@@ -126,7 +128,8 @@ signed char check_rightline( void ) {
 // 引数         なし							//
 // 戻り値       0:左ハーフラインなし 1:あり				//
 //////////////////////////////////////////////////////////////////////////
-signed char check_leftline( void ) {
+signed char check_leftline( void )
+{
 	unsigned char digital_sensor;
 	char ret = 0;
 
@@ -142,7 +145,8 @@ signed char check_leftline( void ) {
 // 引数         なし							//
 // 戻り値       0:坂道なし 1:上り坂　-1:下り坂				//
 //////////////////////////////////////////////////////////////////////////
-signed char check_slope( void ) {
+signed char check_slope( void )
+{
 	short deg, upperline, lowerline;
 	signed char ret = 0;
 
@@ -162,7 +166,8 @@ signed char check_slope( void ) {
 // 引数         mm:変換する長さ[mm]					//
 // 戻り値       変換したパルス数					//
 //////////////////////////////////////////////////////////////////////////
-unsigned int enc_mm( short mm ) {
+unsigned int enc_mm( short mm )
+{
 	return PALSE_MILLIMETER * mm;
 }
 //////////////////////////////////////////////////////////////////////////
@@ -171,7 +176,8 @@ unsigned int enc_mm( short mm ) {
 // 引数         なし							//
 // 戻り値       なし							//
 //////////////////////////////////////////////////////////////////////////
-void getDegrees( void ) {
+void getDegrees( void )
+{
 	short s;
 	double gy_voltage, gyro;
 	
@@ -449,7 +455,8 @@ void diff ( signed char pwm )
 // 引数         なし							//
 // 戻り値       なし							//
 //////////////////////////////////////////////////////////////////////////
-void getTurningAngleEnc(void) {
+void getTurningAngleEnc(void)
+{
 	int r1;
 	short angle,v;
 	double	angularVelocity;	// 理論角速度[rad/s]
@@ -544,7 +551,8 @@ void getTurningAngleEnc(void) {
 // 引数         なし							//
 // 戻り値       なし							//
 //////////////////////////////////////////////////////////////////////////
-void getTurningAngleIMU(void) {
+void getTurningAngleIMU(void)
+{
 	double angularVelocity;
 	
 	angularVelocity = (double)(zg * GYRO_RANGE ) / MAXDATA_RANGE;	// IMUのデータを角速度[deg/s]に変換
@@ -557,7 +565,8 @@ void getTurningAngleIMU(void) {
 // 引数         なし							//
 // 戻り値       なし							//
 //////////////////////////////////////////////////////////////////////////
-void getRollAngleIMU(void) {
+void getRollAngleIMU(void)
+{
 	double angularVelocity;
 	
 	angularVelocity = (double)(yg * GYRO_RANGE ) / MAXDATA_RANGE;	// IMUのデータを角速度[deg/s]に変換

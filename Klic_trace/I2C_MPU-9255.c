@@ -15,7 +15,8 @@ char	IMUset = 0;		// 0:初期化失敗		1:初期化完了
 // 引数         slaveAddr:スレーブアドレス reg:レジスタのアドレス data:書き込みデータ	//
 // 戻り値       なし									//
 //////////////////////////////////////////////////////////////////////////////////////////
-void IMUWriteByte(short slaveAddr, char reg, char data ) {
+void IMUWriteByte(short slaveAddr, char reg, char data )
+{
 	uint8_t sendData[2] = { reg, data };
     
 	I2C_IMU_COMMAND
@@ -26,7 +27,8 @@ void IMUWriteByte(short slaveAddr, char reg, char data ) {
 // 引数         slaveAddr:スレーブアドレス reg:レジスタのアドレス	//
 // 戻り値       指定レジスタのデータ 					//
 //////////////////////////////////////////////////////////////////////////
-char IMUReadByte(short slaveAddr, char reg ) {
+char IMUReadByte(short slaveAddr, char reg )
+{
 	uint8_t sendData[1] = { reg }, reciveData[1];
     
 	I2C_IMU_DATA
@@ -40,7 +42,8 @@ char IMUReadByte(short slaveAddr, char reg ) {
 // 引数         slaveAddr:スレーブアドレス addr:レジスタのアドレス num:読み取るデータ数 dataArry:データの格納先	//
 // 戻り値       なし 												//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void IMUReadArry(short slaveAddr, char reg, char num, char* dataArry ) {
+void IMUReadArry(short slaveAddr, char reg, char num, char* dataArry )
+{
 	uint8_t sendData[1] = { reg };
     
 	I2C_IMU_DATA
@@ -52,7 +55,8 @@ void IMUReadArry(short slaveAddr, char reg, char num, char* dataArry ) {
 // 引数         なし							//
 // 戻り値       0: 初期化成功1:初期化失敗				//
 //////////////////////////////////////////////////////////////////////////
-char init_IMU (void) {
+char init_IMU (void)
+{
 	char ret  = 0, whoami;
 	
 	whoami = IMUReadByte(MPU9255_ADDRESS, WHO_AM_I);
@@ -73,7 +77,8 @@ char init_IMU (void) {
 // 引数         なし							//
 // 戻り値       なし 							//
 //////////////////////////////////////////////////////////////////////////
-void IMUProcess (void) {
+void IMUProcess (void)
+{
 	//char 	axisAccelData[6];	// 加速度の8bit分割データ格納先
 	char 	axisGyroData[6];	// 角加速度の8bit分割データ格納先
 	

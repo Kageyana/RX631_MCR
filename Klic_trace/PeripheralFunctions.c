@@ -92,7 +92,8 @@ void ADconverter ( void )
 // 引数         なし							//
 // 戻り値       なし                                                    //
 //////////////////////////////////////////////////////////////////////////
-void init_IO(void) {
+void init_IO(void)
+{
 	// I/Oポートを設定
 	R_PG_IO_PORT_Set_P1();
 	R_PG_IO_PORT_Set_P2();
@@ -129,7 +130,8 @@ void led_out ( unsigned char led )
 // 引数         なし							//
 // 戻り値       なし							//
 //////////////////////////////////////////////////////////////////////////
-void getEncoder (void) {
+void getEncoder (void)
+{
 	ENCODER_COUNT			// エンコーダカウント値取得
 	Encoder = cnt_Encoder - encbuff;// 現在地から1ms前の値を引いて1ms間のカウントを計算
 	
@@ -146,7 +148,8 @@ void getEncoder (void) {
 // 引数         なし							//
 // 戻り値       なし							//
 //////////////////////////////////////////////////////////////////////////
-void getSwitch(void) {
+void getSwitch(void)
+{
 	// タクトスイッチ読み込み
 	TACTSWITCH1	// タクトスイッチ右上
 	TACTSWITCH2	// タクトスイッチ右下
@@ -346,7 +349,8 @@ void beepProcessS( void )
 // 引数         accelefL, accelefR(PWMを1～100%で指定)			//
 // 戻り値       なし							//
 //////////////////////////////////////////////////////////////////////////
-void motor_f( signed char accelefL, signed char accelefR ){
+void motor_f( signed char accelefL, signed char accelefR )
+{
 	uint16_t pwmfl, pwmfr;
 	
 	if ( pushcart_mode ) {
@@ -408,7 +412,8 @@ void motor_f( signed char accelefL, signed char accelefR ){
 // 引数         acelerL, accelerR(PWMを1～100%で指定)			//
 // 戻り値       なし							//
 //////////////////////////////////////////////////////////////////////////
-void motor_r( signed char accelerL, signed char accelerR ){
+void motor_r( signed char accelerL, signed char accelerR )
+{
 	uint16_t pwmrl, pwmrr;
 	
 	if ( pushcart_mode ) {
