@@ -1364,7 +1364,6 @@ void Timer (void) {
 			else	cnt_out4 = 0;
 		}
 	} else if ( pattern < 11 ) {
-		cnt0++;
 		cnt_setup++;
 		cnt_setup2++;
 		cnt_setup3++;

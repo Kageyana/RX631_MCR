@@ -644,19 +644,11 @@ void setup( void )
 					lcdPrintf("        ");
 					cnt_led = 0x00;
 					if ( tasw_get() == 0x1) {
-						while(1) {
-							led_out(0x03);
-							wait2(500);
-							led_out(0);
-							wait2(500);
-						}
-						/*
 						while( cnt_led <= 0x1f ) {
 							led_out( cnt_led );
 							cnt_led++;
-							delay(200);
+							wait_lcd(200);
  						}
-						*/
 					}
 					break;
 					
@@ -1330,15 +1322,4 @@ char fix_speedsetting ( void )
 	}
 	
 	return ret;
-}
-
-void wait2 ( int waittime ) 
-{
-	volatile int i, i2 = 0;
-	
-	i = waittime * ( CLOCK * 1000 )/ 16;
-
-	for ( i2 = 0; i2 < i; i2++) {
-		__nop();
-	}
 }

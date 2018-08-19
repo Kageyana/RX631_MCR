@@ -1,12 +1,7 @@
 //======================================//
 // インクルード                         //
 //======================================//
-#include "R_PG_RX631_mcr_ver3.0.h"
-#include "PeripheralFunctions.h"
 #include "I2C_LCD.h"
-#include <stdio.h>
-#include <stdarg.h>
-
 //======================================//
 // グローバル変数の宣言                 //
 //======================================//
@@ -41,6 +36,19 @@ void lcd_CMD( unsigned char cmd )
  	I2C_LCD_READ
 }
 //////////////////////////////////////////////////////////////////////////
+// モジュール名 wait_lcd						//
+// 処理概要     遅延処理						//
+// 引数         遅延時間(ms)						//
+// 戻り値       なし                                                    //
+//////////////////////////////////////////////////////////////////////////
+void wait_lcd ( short waitTime )
+{
+	volatile int time, i = 0;
+	
+	time = (int)waitTime * ( CLOCK * 1000 )/ 16;
+	for ( i = 0; i < time; i++) __nop();
+}
+//////////////////////////////////////////////////////////////////////////
 // モジュール名 inti_lcd						//
 // 処理概要     LCDの初期化						//
 // 引数         なし							//
@@ -48,25 +56,25 @@ void lcd_CMD( unsigned char cmd )
 //////////////////////////////////////////////////////////////////////////
  void inti_lcd(void)
  {
-	delay(4);
+	wait_lcd(4);
 	lcd_CMD(0x38);	// function set			: データ線は8本・表示は２行・フォントは5x8ドット
-	delay(1);
+	wait_lcd(1);
 	lcd_CMD(0x39);	// function set           	: 拡張コマンドの設定を有効にする
-	delay(1);
+	wait_lcd(1);
 	lcd_CMD(0x14);	// Internal OSC frequency 	: バイアスの選択と内部OSC周波数の調整
-	delay(1);
+	wait_lcd(1);
 	lcd_CMD(0x70);	// Contrast set          	: コントラスト調整データ(下位4ビット)
-	delay(1);
+	wait_lcd(1);
 	lcd_CMD(0x56);	// Power/ICON/Contrast control	: 昇圧回路有効、コントラスト調整データ(上位2ビット)
-	delay(1);
+	wait_lcd(1);
 	lcd_CMD(0x6c);	// Follower control     	: フォロア回路をON、増幅率の調整を行う
-	delay(200);
+	wait_lcd(200);
 	lcd_CMD(0x38);	// function set         	: 拡張コマンドを設定を無効にする
-	delay(1);
+	wait_lcd(1);
 	lcd_CMD(0x0c);	// display ON/OFF control      	: 画面表示はON・カーソル表示はOFF・カーソル点滅はOFF
-	delay(1);
+	wait_lcd(1);
 	lcd_CMD(0x01);	// Clear Display 		: 画面全体に20Hのｽﾍﾟｰｽで表示、ｶｰｿﾙはcol=0,row=0に移動
-	delay(2);
+	wait_lcd(2);
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 lcdLocate						//

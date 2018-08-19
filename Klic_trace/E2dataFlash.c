@@ -18,12 +18,25 @@ short 				flashDataBuff[45];	// 一時保存バッファ
 static volatile short 		NowBlockNumber;		// 現在の書き込まれているブロック番号
 static volatile short 		NowAddrOffset;		// 現在の書き込まれているオフセット値
 //////////////////////////////////////////////////////////////////////////
-// モジュール名 firmwarecopy						//
+// モジュール名 wait_flash						//
+// 処理概要     遅延処理						//
+// 引数         遅延時間(ms)						//
+// 戻り値       なし                                                    //
+//////////////////////////////////////////////////////////////////////////
+void wait_flash ( short waitTime )
+{
+	volatile int time, i = 0;
+	
+	time = (int)waitTime * ( CLOCK * 1000 )/ 16;
+	for ( i = 0; i < time; i++) __nop();
+}
+//////////////////////////////////////////////////////////////////////////
+// モジュール名 FirmWareCopy						//
 // 処理概要     FCU RAMへのファームウェアコピー				//
 // 引数         なし							//
 // 戻り値       なし							//
 //////////////////////////////////////////////////////////////////////////
-void firmwarecopy ( void )
+void FirmWareCopy ( void )
 {
 	short i;
 	static const int fcu_ram_size = 8 * 1024;				// ファームウェアサイズ
@@ -112,7 +125,7 @@ char checkFRDY ( unsigned short waittime )
 			FLASH.FRESETR.BIT.FRESET = 1;
 			if ( cnt_flash >= 5 ) {
 				FLASH.FRESETR.BIT.FRESET = 0;
-				firmwarecopy();
+				FirmWareCopy();
 				printf("FCU初期化完了\n");
 				break;
 			}
@@ -172,7 +185,7 @@ char initFlash ( void )
 	char ret = 0;
 	
 	// FCUファームウェアをコピー
-	firmwarecopy();
+	FirmWareCopy();
 	
 	// 周辺クロック通知コマンド発行
 	// P/Eモードに移行

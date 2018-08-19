@@ -123,7 +123,6 @@
 #define I2C_IMU_COMMAND		R_PG_SCI_I2CMode_Send_C1(0, slaveAddr, sendData, 2);
 #define I2C_IMU_READ		R_PG_SCI_I2CMode_Receive_C1(0, slaveAddr, reciveData, 1);
 #define I2C_IMU_ARRY		R_PG_SCI_I2CMode_Receive_C1(0, slaveAddr, (uint8_t*)dataArry, num);
-
 /****************************************************************************************************/
 //======================================//
 // ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾                 //

@@ -26,7 +26,6 @@
 // インクルード                         //
 //======================================//
 #include "iodefine.h"
-#include "E2dataFlash.h"
 #include "PeripheralFunctions.h"
 #include "SetUp.h"
 #include "LineChase.h"
@@ -37,7 +36,9 @@
 //======================================//
 #define NUMDATA		24			// 要素数
 #define DATASIZE	( 2 * NUMDATA ) + 2	// ( 2バイト　* 要素数 ) + 2バイト
+#define CLOCK		96			// 動作周波数[MHz]
 
+// 記録領域
 #define PARAMETER_AREA	879			// パラメータ保存領域
 
 #define ANGLE0_DATA	1023			// Angle0保存領域
@@ -68,11 +69,12 @@
 // タイマ関連
 extern unsigned short	cnt_flash;	// フラッシュ用カウント
 
-extern short flashDataBuff[45];			// 一時保存バッファ
+extern short flashDataBuff[45];		// 一時保存バッファ
 //======================================//
 // プロトタイプ宣言                     //
 //======================================//
-void firmwarecopy ( void );
+void wait_flash ( short waitTime );
+void FirmWareCopy ( void );
 void fcuCommandByte ( unsigned short block_number, unsigned char command, char addr_number );
 void fcuCommandWord ( unsigned short block_number, unsigned short command, char addr_number );
 char checkFRDY ( unsigned short waittime );

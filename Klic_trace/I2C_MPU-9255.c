@@ -87,13 +87,7 @@ void IMUProcess (void) {
 	//za = (short)((axisAccelData[4] << 8 ) | axisAccelData[5]);
 	
 	// Šp‘¬“x
-	/*
 	xg = (short)((axisGyroData[0] << 8 ) | axisGyroData[1]);
 	yg = (short)((axisGyroData[2] << 8 ) | axisGyroData[3]);
 	zg = (short)((axisGyroData[4] << 8 ) | axisGyroData[5]);
-	*/
-	
-	xg = (short)(axisGyroData[0] * 0x100 + axisGyroData[1]);
-	yg = (short)(axisGyroData[2] * 0x100 + axisGyroData[3]);
-	zg = (short)(axisGyroData[4] * 0x100 + axisGyroData[5]);
 }

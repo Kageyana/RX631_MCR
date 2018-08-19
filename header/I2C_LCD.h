@@ -1,6 +1,12 @@
 #ifndef I2C_LCD_H_
 #define I2C_LCD_H_
 //======================================//
+// インクルード                         //
+//======================================//
+#include "R_PG_RX631_mcr_ver3.0.h"
+#include <stdio.h>
+#include <stdarg.h>
+//======================================//
 // シンボル定義                         //
 //======================================//
 // スレーブアドレス
@@ -11,11 +17,12 @@
 #define	RSBIT0		0x80		// コマンド送信ビット
 #define RSBIT1		0xc0		// データ送信ビット
 
+#define CLOCK		96		// 動作周波数[MHz]
+
 /******************************************** 自動生成関数 ******************************************/
 #define SET_SCI_C12	R_PG_SCI_Set_C12();	// I2C初期化
 #define I2C_LCD_SEND	R_PG_SCI_I2CMode_Send_C12(0, LCD_SLAVEADDRESS, word, 2);
 #define	I2C_LCD_READ	R_PG_SCI_I2CMode_Send_C12(0, LCD_SLAVEADDRESS, Command, 2);
-
 /****************************************************************************************************/
 //======================================//
 // グローバル変数の宣言                 //
@@ -24,8 +31,8 @@
 //======================================//
 // プロトタイプ宣言                     //
 //======================================//
-
 // LCD関連
+void wait_lcd ( short waitTime );
 void lcdShowProcess( void );
 void lcdPosition( char x ,char y );
 void inti_lcd( void );
