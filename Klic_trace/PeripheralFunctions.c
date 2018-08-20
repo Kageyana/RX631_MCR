@@ -480,7 +480,8 @@ void servoPwmOut( signed char servopwm )
 	uint16_t pwm;
 	short angle;
 	
-	sPwm = servopwm;
+	sPwm = servopwm;		// ログ用変数に代入
+	//servopwm = -servopwm;		// 回転方向を変える
 	
 	// サーボリミット制御
 	angle = getServoAngle();

@@ -1,18 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <MicomToolCommonProjectFile Version="1.00">
-  <CreatorType Name="CubeSuite+" Version="V7.00.00  [13 Jun 2018]" />
+  <CreatorType Name="CubeSuite+" Version="V6.01.00  [01 Dec 2017]" />
   <Placeholders>
     <PlaceholderPrefix>%</PlaceholderPrefix>
     <PlaceholderPostfix>%</PlaceholderPostfix>
   </Placeholders>
-  <Project Name="Klic_trace" Type="Application">
+  <Project Name="RX631_MCR_ver1.0" Type="Application">
     <Files>
       <Category Name="Klic_trace">
         <Path>Klic_trace\E2dataFlash.c</Path>
         <Path>Klic_trace\hwsetup.c</Path>
         <Path>Klic_trace\I2C_LCD.c</Path>
         <Path>Klic_trace\I2C_MPU-9255.c</Path>
-        <Path>Klic_trace\Klic_trace.c</Path>
+        <Path>Klic_trace\main.c</Path>
         <Path>Klic_trace\LineChase.c</Path>
         <Path>Klic_trace\MicroSD.c</Path>
         <Path>Klic_trace\PeripheralFunctions.c</Path>
@@ -124,11 +124,6 @@
         <Path>RX631_mcr_ver3.0\R_PG_RPDL_headers.h</Path>
       </Category>
     </Files>
-    <DebugOptions>
-      <DebugTool>Simulator</DebugTool>
-      <ConnectSettings />
-      <DebugToolSettings />
-    </DebugOptions>
     <Device Series="RX">R5F5631FDxFP</Device>
     <BuildOptions Name="CC-RX" Version="V2.08.00">
       <BuildMode Name="DefaultBuild" Active="True">
@@ -219,7 +214,7 @@
           <Path>DefaultBuild\E2dataFlash.obj</Path>
           <Path>DefaultBuild\hwsetup.obj</Path>
           <Path>DefaultBuild\I2C_LCD.obj</Path>
-          <Path>DefaultBuild\Klic_trace.obj</Path>
+          <Path>DefaultBuild\main.obj</Path>
           <Path>DefaultBuild\LineChase.obj</Path>
           <Path>DefaultBuild\MicroSD.obj</Path>
           <Path>DefaultBuild\PeripheralFunctions.obj</Path>

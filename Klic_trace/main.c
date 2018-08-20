@@ -68,6 +68,8 @@ void main(void){
 	init_BeepS();			// ブザー初期化
 	
 	// SCI1初期化
+	init_SCI1(RATE_230400);
+	/* 9軸ジャイロを使う場合に解除する
 	if( tasw_get() == 0x2 ) {
 		init_SCI1(RATE_230400);
 		IMUSet = 0;
@@ -76,6 +78,7 @@ void main(void){
 		init_IMU();
 		IMUSet = 1;
 	}
+	*/
 	
 	// フラッシュ初期化
 	if( initFlash() == 0 ) {
