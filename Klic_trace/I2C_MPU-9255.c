@@ -95,4 +95,5 @@ void IMUProcess (void)
 	xg = (short)((axisGyroData[0] << 8 ) | axisGyroData[1]);
 	yg = (short)((axisGyroData[2] << 8 ) | axisGyroData[3]);
 	zg = (short)((axisGyroData[4] << 8 ) | axisGyroData[5]);
+
 }

@@ -941,7 +941,7 @@ void sendLog (void) {
 		send_ShortToChar(	getServoAngle()	);
 		send_ShortToChar(	SetAngle	);
 		send_ShortToChar(	getAnalogSensor());
-		send_ShortToChar(	Degrees		);
+		send_ShortToChar((short)Degrees		);
 		send_ShortToChar((short)TurningAngleEnc	);
 		send_ShortToChar((short)TurningAngleIMU	);
 		send_ShortToChar((short)RollAngleIMU	);

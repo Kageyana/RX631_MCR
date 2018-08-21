@@ -68,8 +68,6 @@ void main(void){
 	init_BeepS();			// ブザー初期化
 	
 	// SCI1初期化
-	init_SCI1(RATE_230400);
-	/* 9軸ジャイロを使う場合に解除する
 	if( tasw_get() == 0x2 ) {
 		init_SCI1(RATE_230400);
 		IMUSet = 0;
@@ -78,7 +76,6 @@ void main(void){
 		init_IMU();
 		IMUSet = 1;
 	}
-	*/
 	
 	// フラッシュ初期化
 	if( initFlash() == 0 ) {
@@ -113,10 +110,10 @@ void main(void){
 						pattern = 101;
 					} else if( cnt_out3 >= STOP_ENCODER ) {	// エンコーダ停止(ひっくり返った？)
 						error_mode = 3;
-						pattern = 101;
+						//pattern = 101;
 					} else if( cnt_out4 >= STOP_GYRO ) {	// マイナスの加速度検知(コースから落ちた？)
 						error_mode = 4;	
-						//pattern = 101;
+						pattern = 101;
 					} else if ( stopWord == 1 ) {
 						error_mode = 5;
 						pattern = 101;
@@ -185,7 +182,7 @@ void main(void){
 				cnt1 = 0;		// タイマリセット
 				pattern = 1;
 				break;
-			}else if( start >= 1 && pushcart_mode ) {
+			} else if ( start >= 1 && pushcart_mode ) {
 				// 手押しモードの場合すぐに通常トレース
 				// 白線トレース用PIDゲイン保存
 				flashDataBuff[ 0 ] = kp_buff;
@@ -211,6 +208,7 @@ void main(void){
 			break;
 			
 		case 1:
+			servoPwmOut( ServoPwm );
 			if( start == 1 ) {
 				// カウントダウンスタート
 				if( cnt1 >= 1500 && countdown == 4 ) {
@@ -247,7 +245,7 @@ void main(void){
 					pattern = 11;
 					break;
 				}
-			}else if( start == 2 ) {
+			} else if ( start == 2 ) {
 				// スタートゲート開放スタート
 				pattern = 2;
 				break;
@@ -255,6 +253,7 @@ void main(void){
 			break;
 			
 		case 2:
+			servoPwmOut( ServoPwm );
 			// スタートバー開閉待ち
 			if( !startbar_get() ) {
 				EncoderTotal = 10;		// 総走行距離
@@ -308,7 +307,7 @@ void main(void){
 				}
 			}
 			// カーブチェック
-			if( i >=  CURVE_R600_START || i <= - CURVE_R600_START ) {
+			if( i >=  CURVE_R600_START || i <= -CURVE_R600_START ) {
 				enc1 = 0;
 				curve_moed = 1;
 				pattern = 12;
@@ -1111,49 +1110,47 @@ void main(void){
 			servoPwmOut( ServoPwm );
 			//targetSpeed = ( speed_slope_trace / 10 ) * SPEED_CURRENT;
 			diff( motorPwm );
-			//if( cnt1 >= 10 ) {
-				if( check_slope() == 1 ) {
-					if( slope_mode == 0 ) {
-						// 上り始め
-						enc1 = 0;
-						led_out( 0x18 );
-						setBeepPatternS( 0xe000 );
-						pattern = 72;
-						break;
-					}else if( slope_mode == 2 && enc_slope >= enc_mm( 600 ) ) {
-						// 下り終わり
-						enc1 = 0;
-						led_out( 0x05 );
-						setBeepPatternS( 0xe000 );
-						slope_mode = 0;
-						pattern = 74;
-						break;
-					}else{
-						enc1 = 0;
-						pattern = 11;
-						break;
-					}
-				}else if( check_slope() == -1 ) {
-					if( slope_mode == 1 && enc_slope >= enc_mm( 1000 ) ) {
-						// 上り終わり、下り始め
-						enc1 = 0;
-						led_out( 0x05 );
-						setBeepPatternS( 0xe000 );
-						slope_mode = 2;
-						pattern = 75;
-						break;
-					}else{
-						enc1 = 0;
-						pattern = 11;
-						break;
-					}
+			if( check_slope() == 1 ) {
+				if( slope_mode == 0 ) {
+					// 上り始め
+					enc1 = 0;
+					led_out( 0x18 );
+					setBeepPatternS( 0xe000 );
+					pattern = 72;
 					break;
-				}else{
+				} else if ( slope_mode == 2 && enc_slope >= enc_mm( 600 ) ) {
+					// 下り終わり
+					enc1 = 0;
+					led_out( 0x05 );
+					setBeepPatternS( 0xe000 );
+					slope_mode = 0;
+					pattern = 74;
+					break;
+				} else {
 					enc1 = 0;
 					pattern = 11;
 					break;
 				}
-			//}
+			} else if ( check_slope() == -1 ) {
+				if( slope_mode == 1 && enc_slope >= enc_mm( 1000 ) ) {
+					// 上り終わり、下り始め
+					enc1 = 0;
+					led_out( 0x05 );
+					setBeepPatternS( 0xe000 );
+					slope_mode = 2;
+					pattern = 75;
+					break;
+				} else {
+					enc1 = 0;
+					pattern = 11;
+					break;
+				}
+				break;
+			}else{
+				enc1 = 0;
+				pattern = 11;
+				break;
+			}
 			break;
 			
 		case 72:
@@ -1162,7 +1159,7 @@ void main(void){
 			targetSpeed = speed_slope_trace * SPEED_CURRENT;
 			diff( motorPwm );
 			
-			if( enc1 >= enc_mm( 660 ) ) {
+			if( enc1 >= enc_mm( 1200 ) ) {
 				enc1 = 0;
 				setBeepPatternS( 0xe000 );
 				led_out( 0x03 );
@@ -1347,6 +1344,8 @@ void main(void){
 // 戻り値       なし							//
 //////////////////////////////////////////////////////////////////////////
 void Timer (void) {
+	short s;
+	
 	__setpsw_i();
 	//　タイマカウント
 	if ( pattern >= 11 && pattern <= 99 ) {	
@@ -1361,10 +1360,9 @@ void Timer (void) {
 		else cnt_out2 = 0;
 		if ( Encoder == 0 ) cnt_out3++;		// エンコーダ停止(ひっくり返った？)
 		else cnt_out3 = 0;
-		if ( slope_mode != 0 || slope_mode != 1 ) {
-			if ( check_slope() == -1 ) cnt_out4++;
-			else	cnt_out4 = 0;
-		}
+		s = (short)RollAngleIMU;
+		if ( s >= 10 || s <= -10 ) cnt_out4++;
+		else	cnt_out4 = 0;
 	} else if ( pattern < 11 ) {
 		cnt_setup++;
 		cnt_setup2++;

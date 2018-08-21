@@ -78,7 +78,14 @@ void setup( void )
 			lcdPosition( 0, 0 );
 			lcdPrintf("START   ");
 			lcdPosition( 0, 1 );
-			lcdPrintf("   READY");
+			lcdPrintf("%d  READY", startbar_get());
+			
+			//0x8を押すと白線追従
+			angle_mode = 0;
+			data_select( &servo_test, 8 );
+			if ( servo_test == 1 ) servoPwmOut( ServoPwm );
+			else servoPwmOut( 0 );
+			
 			// プッシュスイッチ押下待ち
 			if ( tasw_get() == 0x1 ) start = 2;
 			else if ( tasw_get() == 0x2 ) start = 1;
@@ -659,8 +666,7 @@ void setup( void )
 					if ( cnt_setup >= 100 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 1 );
-						//lcdPrintf("   %5d",getGyro());
-						lcdPrintf("   %5d",Degrees);
+						lcdPrintf("   %5d",(short)Degrees);
 					}
 					break;
 					

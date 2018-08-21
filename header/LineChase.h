@@ -50,8 +50,8 @@
 #define AD_3V3VOLTAGE		0.806		// 3V時の1AD値あたりの電圧[mV]
 #define AD_5VOLTAGE		1.22		// 5V時の1AD値あたりの電圧[mV]
 #define GYROVOLTAGE		0.67		// 電圧毎角加速度[mV/deg/s]
-#define SLOPEUPPERLINE		17		// 上り坂検出角度
-#define SLOPELOWERLINE		-14		// 下り坂検出角度
+#define SLOPEUPPERLINE		5		// 上り坂検出角度
+#define SLOPELOWERLINE		-5		// 下り坂検出角度
 #define INTEGRAL_LIMIT		200		// 角速度積算時間
 
 #define PI			3.141592	// 円周率
@@ -78,7 +78,7 @@
 #define STOP_SENSOR1		60		// センサ全灯
 #define STOP_SENSOR2		800		// センサ全消灯
 #define STOP_ENCODER		10		// エンコーダ停止(ひっくり返った？)
-#define STOP_GYRO		30		// マイナスの加速度検知(コースから落ちた？)
+#define STOP_GYRO		20		// マイナスの加速度検知(コースから落ちた？)
 #define STOP_COUNT		10000		// 時間停止
 //======================================//
 // グローバル変数の宣言                 //
@@ -129,10 +129,10 @@ extern short	angle_rightchange;		// 右レーンチェンジ旋回角度
 extern short	angle_leftchange;		// 右レーンチェンジ旋回角度
 
 // タイマ関連
-extern char		cnt_gyro;		// 角度計算用カウンタ
+extern short		cnt_gyro;		// 角度計算用カウンタ
 
 // 角度関連
-extern short 		Degrees;		// ジャイロセンサから計算した角度(degrees)
+extern double 		Degrees;		// ジャイロセンサから計算した角度(degrees)
 extern double 		TurningAngleEnc;	// エンコーダから求めた旋回角度
 extern double 		TurningAngleIMU;	// IMUから求めた旋回角度
 extern double		RollAngleIMU;		// IMUから求めたロール方向角度

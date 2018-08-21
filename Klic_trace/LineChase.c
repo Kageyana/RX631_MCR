@@ -48,10 +48,10 @@ short	angle_rightchange;		// 右レーンチェンジ旋回角度
 short	angle_leftchange;		// 右レーンチェンジ旋回角度
 
 // タイマ関連
-char	cnt_gyro;			// 角度計算用カウンタ
+short	cnt_gyro;			// 角度計算用カウンタ
 
 // 角度関連
-short 	Degrees;		// 圧電ジャイロから計算した機体のピッチ角度
+double 	Degrees;		// 圧電ジャイロから計算した機体のピッチ角度
 short 	gyVoltageBefore;	// 1ms前の角度
 
 double 	TurningAngleEnc;	// エンコーダから求めた旋回角度
@@ -178,6 +178,7 @@ unsigned int enc_mm( short mm )
 //////////////////////////////////////////////////////////////////////////
 void getDegrees( void )
 {
+	/*
 	short s;
 	double gy_voltage, gyro;
 	
@@ -185,10 +186,16 @@ void getDegrees( void )
 	gy_voltage = (double)s * AD_3V3VOLTAGE;	// ジャイロセンサから出力された電圧[mV]
 	gyro = gy_voltage * GYROVOLTAGE;	// 角加速度算出
 	
-	Degrees += (double)( gyro + gyVoltageBefore ) * 0.001 / 2;	// 角加速度を積算
+	Degrees += (doublev)( gyro + gyVoltageBefore ) * 0.001 / 2;	// 角加速度を積算
 	if( cnt_gyro == INTEGRAL_LIMIT ) Degrees = 0;	// 200msごとに積算値リセット
 	
 	gyVoltageBefore = gyro;
+	*/
+	double angularVelocity;
+	
+	angularVelocity = (double)(xg * GYRO_RANGE ) / MAXDATA_RANGE;	// IMUのデータを角速度[deg/s]に変換
+	Degrees += angularVelocity * 0.001;
+	if ( cnt_gyro == INTEGRAL_LIMIT ) Degrees = 0;
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 servoControl						//
@@ -203,7 +210,6 @@ void servoControl( void )
 	
 	//サーボモータ用PWM値計算
 	Dev = getAnalogSensor();
-	if ( Dev <= 60 && Dev >= -60 ) Dev = 0;
 	// 目標値を変更したらI成分リセット
 	if ( Dev >= 0 && DevBefore == 1 ) {
 		Int = 0;
