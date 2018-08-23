@@ -6,6 +6,7 @@
 #include "PeripheralFunctions.h"
 #include "LineChase.h"
 #include "I2C_MPU-9255.h"
+#include <math.h>
 //======================================//
 // ƒVƒ“ƒ{ƒ‹’è‹`                         //
 //======================================//

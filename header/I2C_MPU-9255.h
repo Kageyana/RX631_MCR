@@ -4,6 +4,7 @@
 // インクルード                         //
 //======================================//
 #include "R_PG_RX631_mcr_ver3.0.h"
+#include <math.h>
 //======================================//
 // シンボル定義                         //
 //======================================//
@@ -142,5 +143,6 @@ char IMUReadByte(short slaveAddr, char reg );
 void IMUReadArry(short slaveAddr, char reg, char num, char* dataArry );
 char init_IMU (void);
 void IMUProcess (void);
+void caribrateIMU (void);
 
 #endif // I2C_MPU-9255_H_

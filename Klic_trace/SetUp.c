@@ -783,6 +783,10 @@ void setup( void )
 					lcdPosition( 0, 1 );
 					lcdPrintf("        ");
 					if ( tasw_get() == 0x1 ) RollAngleIMU = 0;
+					if ( tasw_get() == 0x2 ) {
+						wait_lcd(500);
+						caribrateIMU();
+					}
 					break;
 					
 				case 13:
@@ -1306,7 +1310,7 @@ char fix_speedsetting ( void )
 		speed_curve_straight	= 30;
 		
 		speed_crossline		= 30;
-		speed_ckank_trace	= 26;
+		speed_ckank_trace	= 30;
 		speed_rightclank_curve	= 22;
 		speed_rightclank_escape	= 30;
 		speed_leftclank_curve	= 22;

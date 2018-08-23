@@ -211,9 +211,9 @@ void servoControl( void )
 	//サーボモータ用PWM値計算
 	Dev = getAnalogSensor();
 	// 目標値を変更したらI成分リセット
-	if ( Dev >= 0 && DevBefore == 1 ) {
+	if ( Dev >= 500 && DevBefore == 1 ) {
 		Int = 0;
-	} else if ( Dev < 0 && DevBefore == 0 ) {
+	} else if ( Dev < -500 && DevBefore == 0 ) {
 		Int = 0;
 	}
 	
@@ -435,15 +435,15 @@ void diff ( signed char pwm )
 		angle2 = angle;
 		// 負なら正にする
 		if ( angle2 < 0 ) angle2 = -angle2;
-		pa_number = angle2 * 3;
+		pa_number = angle2;
 		r1 = rev_difference[ pa_number ];
 		r2 = rev_difference[ pa_number + 1 ];
 		r3 = rev_difference[ pa_number + 2 ];
 		
 		base = (double)pwm / 100;
-		R1 = r1 * base;
-		R2 = r2 * base;
-		R3 = r3 * base;
+		R1 = (double)r1 * base;
+		R2 = (double)r2 * base;
+		R3 = (double)r3 * base;
 		R4 = pwm;
 		
 		if ( angle >= 30 ) {
@@ -463,9 +463,6 @@ void diff ( signed char pwm )
 //////////////////////////////////////////////////////////////////////////
 void getTurningAngleEnc(void)
 {
-	int r1;
-	short angle,v;
-	double	angularVelocity;	// 理論角速度[rad/s]
 	const unsigned int rev_radius[] = {       // 旋回半径テーブル　エンコーダまでの距離を足す	
 		0, 193477, 73051, 45009, 32516, 25447, 20899, 17727, 
 		15390, 13595, 12175, 11022, 10067, 9264, 8579, 7988, 
@@ -530,7 +527,10 @@ void getTurningAngleEnc(void)
 		136, 135, 135, 134, 133, 133, 132, 131, 
 		130, 130, 129, 128, 128, 127, 126, 126, 
 		};
-
+	int r1;
+	short angle,v;
+	double	angularVelocity;	// 理論角速度[rad/s]
+	
 	if ( pattern != 11 ) {
 		angle = getServoAngle();	// ステアリング角取得
 		if ( angle < 0 ) {
@@ -552,7 +552,7 @@ void getTurningAngleEnc(void)
 	}
 }
 //////////////////////////////////////////////////////////////////////////
-// モジュール名 getTurningAngleUIMU					//
+// モジュール名 getTurningAngleIMU					//
 // 処理概要   	IMUから旋回角度の計算					//
 // 引数         なし							//
 // 戻り値       なし							//
@@ -620,7 +620,7 @@ void motorControl( void )
 	// 駆動モーター用PWM値計算
 	Dev = i - j;	// 偏差
 	
-	if ( Dev > 50 || Dev < -50 ) {
+	if ( Dev > 50 || Dev < -50) {
 		// 目標値を超えたらI成分リセット
 		if ( Dev >= 0 && AccelefBefore == 1 ) {
 			Int3 = 0;
