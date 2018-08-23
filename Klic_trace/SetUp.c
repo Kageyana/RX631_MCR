@@ -56,7 +56,7 @@ char ble;
 void setup( void )
 {
 	char cnt_led;
-	short i;
+	short s;
 	
 	// LED“_–Åˆ—
 	
@@ -662,7 +662,7 @@ void setup( void )
 				case 2:
 					// ƒWƒƒƒCƒ
 					lcdPosition( 0, 0 );
-					lcdPrintf("Gyro    ");
+					lcdPrintf("Gyro   %d", s);
 					if ( cnt_setup >= 100 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 1 );
@@ -1108,11 +1108,10 @@ void setup( void )
 					lcdPrintf("AllErase");
 					lcdPosition( 0, 1 );
 					lcdPrintf("     Now");
-					i = 0;
-					while ( i <= 1023 ) {
-						eraseE2DataFlash(i);
-						i++;
-						//printf("i = %d\n", i);
+					s = 0;
+					while ( s <= 1023 ) {
+						eraseE2DataFlash( s );
+						s++;
 					}
 					cnt_setup = 0;
 					pattern_flash = 4;

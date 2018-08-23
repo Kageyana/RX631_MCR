@@ -79,19 +79,19 @@ char init_IMU (void)
 //////////////////////////////////////////////////////////////////////////
 void IMUProcess (void)
 {
-	char 	axisAccelData[6];	// 加速度の8bit分割データ格納先
+	//char 	axisAccelData[6];	// 加速度の8bit分割データ格納先
 	char 	axisGyroData[6];	// 角加速度の8bit分割データ格納先
 	
-	IMUReadArry(MPU9255_ADDRESS, ACCEL_XOUT_H, 6, axisAccelData);	// 3軸加速度取得
+	//IMUReadArry(MPU9255_ADDRESS, ACCEL_XOUT_H, 6, axisAccelData);	// 3軸加速度取得
 	IMUReadArry(MPU9255_ADDRESS, GYRO_XOUT_H, 6, axisGyroData);	// 3軸角加速度取得
 	
 	//8bitデータを16bitデータに変換
 	// 加速度
-	
+	/*
 	xa = (short)((axisAccelData[0] << 8 ) | axisAccelData[1]);
 	ya = (short)((axisAccelData[2] << 8 ) | axisAccelData[3]);
 	za = (short)((axisAccelData[4] << 8 ) | axisAccelData[5]);
-	
+	*/
 	// 角速度
 	xg = (short)((axisGyroData[0] << 8 ) | axisGyroData[1]);
 	yg = (short)((axisGyroData[2] << 8 ) | axisGyroData[3]);

@@ -597,17 +597,8 @@ void main(void){
 			servoPwmOut( ServoPwm2 );
 			j = getAnalogSensor();
 			diff( motorPwm );
-			// 左を減速、右を加速のみに使用する
-			/*
-			if( motorPwm > 0 ) rpwm = 0;		// 加速時　右0
-			else rpwm = motorPwm;			// 減速時　右減速
-			if( motorPwm > 0 ) lpwm = motorPwm;	// 加速時　左加速
-			else lpwm = 0;				// 減速時　左0
-			motor_f( lpwm, rpwm);
-			motor_r( lpwm, rpwm);
-			*/
 			
-			//if( -TurningAngleIMU <= 90 && -TurningAngleIMU >= 40) {
+			if( -TurningAngleIMU <= 90 && -TurningAngleIMU >= 40) {
 				if( j <= -1800 ) {
 					enc1 = 0;
 					i = (short)TurningAngleIMU;
@@ -615,7 +606,7 @@ void main(void){
 					pattern = 34;
 					break;
 				}
-			//}
+			}
 			break;
 			
 		case 34:
@@ -730,24 +721,15 @@ void main(void){
 			servoPwmOut( ServoPwm2 );
 			j = getAnalogSensor();
 			diff( motorPwm );
-			// 左を減速、右を加速のみに使用する
-			/*
-			if( motorPwm < 0 ) rpwm = 0;
-			else rpwm = motorPwm;
-			if( motorPwm > 0 ) lpwm = 0;
-			else lpwm = motorPwm;
-			motor_f( lpwm, rpwm);
-			motor_r( lpwm, rpwm);
-			*/
 			
-			//if( TurningAngleIMU <= 90 && TurningAngleIMU >= 40) {
+			if( TurningAngleIMU <= 90 && TurningAngleIMU >= 40) {
 				if( j >= 1800 ) {
 					enc1 = 0;
 					i = TurningAngleIMU;
 					pattern = 44;
 					break;
 				}
-			//}
+			}
 			break;
 			
 		case 44:

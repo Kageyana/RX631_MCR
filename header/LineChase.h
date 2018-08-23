@@ -51,8 +51,8 @@
 #define AD_3V3VOLTAGE		0.806		// 3V時の1AD値あたりの電圧[mV]
 #define AD_5VOLTAGE		1.22		// 5V時の1AD値あたりの電圧[mV]
 #define GYROVOLTAGE		0.67		// 電圧毎角加速度[mV/deg/s]
-#define SLOPEUPPERLINE		5		// 上り坂検出角度
-#define SLOPELOWERLINE		-5		// 下り坂検出角度
+#define SLOPEUPPERLINE		4		// 上り坂検出角度
+#define SLOPELOWERLINE		-4		// 下り坂検出角度
 #define INTEGRAL_LIMIT		200		// 角速度積算時間
 
 #define PI			3.141592	// 円周率
