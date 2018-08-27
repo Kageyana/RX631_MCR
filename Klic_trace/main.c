@@ -110,7 +110,7 @@ void main(void){
 						pattern = 101;
 					} else if( cnt_out3 >= STOP_ENCODER ) {	// エンコーダ停止(ひっくり返った？)
 						error_mode = 3;
-						//pattern = 101;
+						pattern = 101;
 					} else if( cnt_out4 >= STOP_GYRO ) {	// マイナスの加速度検知(コースから落ちた？)
 						error_mode = 4;	
 						pattern = 101;
@@ -128,6 +128,10 @@ void main(void){
 						pattern = 101;
 					}
 					*/
+					if ( tasw_get() == 0x4 ) {
+						error_mode = 6;
+						pattern = 101;
+					}
 				}
 			} else {			
 				// 手押しモードON
@@ -241,12 +245,14 @@ void main(void){
 					EncoderTotal = 10;	// 総走行距離
 					cnt1 = 0;		// タイマリセット
 					lcd_mode = 0;		// LCD表示OFF
+					caribrateIMU();		// IMUのキャリブレーション
 					msdFlag = 1;		// データ記録開始
 					pattern = 11;
 					break;
 				}
 			} else if ( start == 2 ) {
 				// スタートゲート開放スタート
+				caribrateIMU();		// IMUのキャリブレーション
 				pattern = 2;
 				break;
 			}
@@ -256,10 +262,10 @@ void main(void){
 			servoPwmOut( ServoPwm );
 			// スタートバー開閉待ち
 			if( !startbar_get() ) {
-				EncoderTotal = 10;		// 総走行距離
-				cnt1 = 0;			// タイマリセット
-				lcd_mode = 1;			// LCD表示OFF
-				msdFlag = 1;                    // データ記録開始
+				EncoderTotal = 10;	// 総走行距離
+				cnt1 = 0;		// タイマリセット
+				lcd_mode = 1;		// LCD表示OFF
+				msdFlag = 1;		// データ記録開始
 				pattern = 11;
 				break;
 			}
@@ -354,7 +360,7 @@ void main(void){
 					break;
 				}
 			}
-			// カーブ継ぎ目チェック
+			// 直線チェック
 			if( i <  CURVE_R600_START && i > -CURVE_R600_START ) {
 				enc1 = 0;
 				pattern = 11;
@@ -403,15 +409,9 @@ void main(void){
 			}
 			// カーブ継ぎ目チェック
 			if( i <  CURVE_R600_START && i > -CURVE_R600_START ) {
-				if ( enc1 >= enc_mm(50) ) {
-					enc1 = 0;
-					pattern = 15;
-					break;
-				} else {
-					enc1 = 0;
-					pattern = 11;
-					break;
-				}
+				enc1 = 0;
+				pattern = 15;
+				break;
 			}
 			break;
 			
@@ -1073,11 +1073,12 @@ void main(void){
 		case 71:
 			// 誤検知判断
 			servoPwmOut( ServoPwm );
-			//targetSpeed = ( speed_slope_trace / 10 ) * SPEED_CURRENT;
+			// 目標速度変えない
 			diff( motorPwm );
 			if( check_slope() == 1 ) {
 				if( slope_mode == 0 ) {
 					// 上り始め
+					slope_mode = 1;
 					enc1 = 0;
 					led_out( 0x18 );
 					setBeepPatternS( 0xe000 );
@@ -1085,10 +1086,10 @@ void main(void){
 					break;
 				} else if ( slope_mode == 2 && enc_slope >= enc_mm( 600 ) ) {
 					// 下り終わり
+					slope_mode = 3;
 					enc1 = 0;
 					led_out( 0x05 );
 					setBeepPatternS( 0xe000 );
-					slope_mode = 0;
 					pattern = 74;
 					break;
 				} else {
@@ -1099,10 +1100,10 @@ void main(void){
 			} else if ( check_slope() == -1 ) {
 				if( slope_mode == 1 && enc_slope >= enc_mm( 1000 ) ) {
 					// 上り終わり、下り始め
+					slope_mode = 2;
 					enc1 = 0;
 					led_out( 0x05 );
 					setBeepPatternS( 0xe000 );
-					slope_mode = 2;
 					pattern = 75;
 					break;
 				} else {
@@ -1111,7 +1112,7 @@ void main(void){
 					break;
 				}
 				break;
-			}else{
+			} else {
 				enc1 = 0;
 				pattern = 11;
 				break;
@@ -1176,7 +1177,11 @@ void main(void){
 		case 76:
 			// ジャイロセンサが安定するまで読み飛ばし
 			servoPwmOut( ServoPwm );
-			targetSpeed = speed_slope_trace * SPEED_CURRENT;
+			if ( slope_mode == 3 ) {
+				targetSpeed = speed_straight * SPEED_CURRENT;
+			} else {
+				targetSpeed = speed_slope_trace * SPEED_CURRENT;
+			}
 			diff( motorPwm );
 			
 			// クロスラインチェック
@@ -1202,11 +1207,17 @@ void main(void){
 				if( enc1 >= enc_mm( 1000 ) ) {
 					enc1 = 0;
 					enc_slope = 0;
-					slope_mode = 1;
 					pattern = 11;
 					break;
 				}
-			}else{
+			} else if ( slope_mode == 3 ) {
+				if( enc1 >= enc_mm( 500 ) ) {
+					enc1 = 0;
+					enc_slope = 0;
+					pattern = 11;
+					break;
+				}
+			} else {
 				if( enc1 >= enc_mm( 400 ) ) {
 					enc1 = 0;
 					enc_slope = 0;
@@ -1323,7 +1334,7 @@ void Timer (void) {
 		}
 		if ( sensor_inp() == 0x0 && pattern != 53 && pattern != 63 ) cnt_out2++;	// センサ全消灯
 		else cnt_out2 = 0;
-		if ( Encoder == 0 ) cnt_out3++;		// エンコーダ停止(ひっくり返った？)
+		if ( Encoder <= 1 && Encoder >= -1 ) cnt_out3++;		// エンコーダ停止(ひっくり返った？)
 		else cnt_out3 = 0;
 		s = (short)RollAngleIMU;
 		if ( s >= 5 || s <= -5 ) cnt_out4++;
@@ -1362,18 +1373,18 @@ void Timer (void) {
 	getRollAngleIMU();
 	if( cnt_gyro == INTEGRAL_LIMIT ) cnt_gyro = 0;
 
-	// MicroSD書き込み
-	microSDProcess();
-	if( msdFlag == 1 ) {
-		sendLog();
-	}
-
 	if ( IMUSet == 0 ) {
 		// UART受信
 		commandSCI1();
 	} else {
 		// 加速度及び角速度を取得
 		IMUProcess();
+	}
+	
+	// MicroSD書き込み
+	microSDProcess();
+	if( msdFlag == 1 ) {
+		sendLog();
 	}
 	
 	Timer10++;
