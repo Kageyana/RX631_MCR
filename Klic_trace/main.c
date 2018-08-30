@@ -327,6 +327,7 @@ void main(void){
 			targetSpeed = speed_curve_brake * SPEED_CURRENT;
 			led_out( 0x1e );
 			diff( motorPwm );
+			i = getServoAngle();
 			
 			if( enc1 > enc_mm( 60 ) ) {		// 60mm進む
 				enc1 = 0;
@@ -373,7 +374,6 @@ void main(void){
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_curve_r600 * SPEED_CURRENT;
 			diff( motorPwm );
-			i = getServoAngle();
 			
 			// クロスラインチェック
 			if( check_crossline() ) {
