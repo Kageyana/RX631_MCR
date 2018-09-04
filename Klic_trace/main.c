@@ -98,7 +98,7 @@ void main(void){
 		if( pattern >= 11 && pattern <= 99 ) {
 			if( !pushcart_mode ) {		
 				// 手押しモードOFF
-				if( cnt1 >= 500 ) {		// 動き出してから
+				if( cnt1 >= 10 ) {		// 動き出してから
 					if( EncoderTotal >= ( PALSE_METER * stopping_meter ) ) { // 距離超過の場合
 						error_mode = 0;
 						pattern = 101;

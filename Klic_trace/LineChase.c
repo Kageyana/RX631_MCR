@@ -424,8 +424,7 @@ void diff ( signed char pwm )
 
 
 	signed char R1, R2, R3, R4;
-	short angle, angle2, r1, r2, r3, pa_number, under;
-	double base;
+	short angle, angle2, r1, r2, r3, pa_number;
 	
 	angle = getServoAngle();
 	
@@ -449,35 +448,9 @@ void diff ( signed char pwm )
 		R4 = pwm;
 		
 		if ( angle >= 0 ) {
-			/*
-			if ( pattern >= 13 && pattern <=14 ) {
-				under = TurningAngleEnc - TurningAngleIMU;
-				if ( under >= 60 ) {
-					R4 += 10;
-					R3 -= 10;
-				}
-				if ( R4 >  100 ) R4 = 100;
-				if ( R4 <  -100 ) R4 = -100;
-				if ( R3 >  100 ) R3 = 100;
-				if ( R3 <  -100 ) R3 = -100;
-			}
-			*/
 			motor_f( R1, R3 );
 			motor_r( R2, R4 );
 		} else if ( angle <= -30 ) {
-			/*
-			if ( pattern >= 13 && pattern <=14 ) {
-				under = TurningAngleEnc + TurningAngleIMU;
-				if ( under >= 60 ) {
-					R4 += 10;
-					R3 -= 10;
-				}
-				if ( R4 >  100 ) R4 = 100;
-				if ( R4 <  -100 ) R4 = -100;
-				if ( R3 >  100 ) R3 = 100;
-				if ( R3 <  -100 ) R3 = -100;
-			}
-			*/
 			motor_f( R3, R1 );
 			motor_r( R4, R2 );
 		}
