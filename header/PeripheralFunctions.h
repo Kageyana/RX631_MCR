@@ -12,7 +12,7 @@
 #define TGR_MOTOR		4798		// ジェネラルレジスタ初期値(駆動モータ)
 #define TGR_SERVO		2878		// ジェネラルレジスタ初期値(サーボ)
 #define PALSE_METER		24750L		// 1mのパルス
-#define PALSE_MILLIMETER	25		// 1mmのパルス
+#define PALSE_MILLIMETER	24.75		// 1mmのパルス
 #define SPEED_CURRENT		25		// 1m/sの時　1msのパルス
 #define SPEED_CURRENT_DETAIL	24.75		// 1m/sの時　1msのパルス
 

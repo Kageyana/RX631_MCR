@@ -95,6 +95,7 @@ void main(void){
 	}
 
 	while(1){
+		__setpsw_i();
 		if( pattern >= 11 && pattern <= 99 ) {
 			if( !pushcart_mode ) {		
 				// 手押しモードOFF
@@ -128,10 +129,6 @@ void main(void){
 						pattern = 101;
 					}
 					*/
-					if ( tasw_get() == 0x4 ) {
-						error_mode = 6;
-						pattern = 101;
-					}
 				}
 			} else {			
 				// 手押しモードON
@@ -140,6 +137,11 @@ void main(void){
 				lcdPosition( 0, 1 );
 				lcdPrintf("%4d", (short)TurningAngleIMU);
 			}
+			// スイッチで停止
+			if ( tasw_get() == 0x4 ) {
+						error_mode = 6;
+						pattern = 101;
+					}
 		} else if( pattern >= 100 ) {
 			lcd_mode = 1;
 			lcdPosition( 0, 0 );
@@ -203,9 +205,11 @@ void main(void){
 				lcdPrintf("        ");
 				setBeepPatternS( 0xfff0 );
 				
-				EncoderTotal = 10;		// 総走行距離
-				cnt1 = 0;			// タイマリセット
-				lcd_mode = 1;			// LCD表示ON
+				EncoderTotal = 10;	// 総走行距離
+				cnt1 = 0;		// タイマリセット
+				lcd_mode = 1;		// LCD表示ON
+				caribrateIMU();		// IMUのキャリブレーション
+				msdFlag = 1;		// データ記録開始
 				pattern = 11;
 				break;
 			}

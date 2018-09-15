@@ -761,7 +761,7 @@ void setup( void )
 				case 10:
 					// Bluetooth;
 					lcdPosition( 0, 0 );
-					lcdPrintf("Text   %d", reverr);
+					lcdPrintf("Text   %d", revErr);
 					lcdPosition( 0, 1 );
 					lcdPrintf("%s",txt_data);
 					break;

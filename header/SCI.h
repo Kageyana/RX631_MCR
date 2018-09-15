@@ -30,7 +30,8 @@
 //======================================//
 // グローバル変数の宣言                 //
 //======================================//
-extern char reverr;
+extern char 		revErr;
+// SCI1関連
 extern char 		txt_command[128];
 extern char 		txt_data[128];
 extern char		*txt;
@@ -42,13 +43,23 @@ extern char		stopWord;
 extern short 		cnt_byte;
 extern char		commandEnd;
 
+// SCI12関連
+extern char		SCI12_ack_mode;	// 0:ACK受信 1:データ受信
+extern char		SCI12_I2cNumData;	// 送信データ数
+extern char*		SCI12_I2cDataArry;	// 送信データ配列
+
 extern char ascii_num[];
 //======================================//
 // プロトタイプ宣言                     //
 //======================================//
 void init_SCI1( char rate );
 void Excep_SCI1_RXI1( void );
-void chaek_SCI1_Error( void );
 void commandSCI1 (void);
+
+void init_SCI12( void );
+void send_SCI12_I2c( char slaveAddr, char* data, char num );
+void Excep_SCI12_RXI12( void );
+
+void chaek_SCI_Error( void );
 
 #endif /* SCI_H_ */

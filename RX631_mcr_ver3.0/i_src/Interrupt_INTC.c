@@ -713,9 +713,9 @@ void Interrupt_Group_6(void)
 }
 
 #if FAST_INTC_VECTOR == VECT_ICU_GROUP12
-#pragma interrupt Interrupt_Group_12(vect=VECT_ICU_GROUP12, fint)
+//#pragma interrupt Interrupt_Group_12(vect=VECT_ICU_GROUP12, fint)
 #else
-#pragma interrupt Interrupt_Group_12(vect=VECT_ICU_GROUP12)
+//#pragma interrupt Interrupt_Group_12(vect=VECT_ICU_GROUP12)
 #endif
 void Interrupt_Group_12(void)
 {

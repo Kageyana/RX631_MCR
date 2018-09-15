@@ -62,10 +62,11 @@ char init_IMU (void)
 	
 	whoami = IMUReadByte(MPU9255_ADDRESS, WHO_AM_I);
 	if ( whoami == 0x71 || whoami == 0x73 ) {
-		IMUWriteByte(MPU9255_ADDRESS, PWR_MGMT_1, 0x00);    // スリープモード解除
-		IMUWriteByte(MPU9255_ADDRESS, INT_PIN_CFG, 0x02);   // 内蔵プルアップ無効化
-		IMUWriteByte(MPU9255_ADDRESS, ACCEL_CONFIG, 0x18);  // レンジ±16gに変更
-		IMUWriteByte(MPU9255_ADDRESS, GYRO_CONFIG, 0x18);   // レンジ±2000deg/sに変更
+		IMUWriteByte(MPU9255_ADDRESS, PWR_MGMT_1, 0x00);	// スリープモード解除
+		IMUWriteByte(MPU9255_ADDRESS, INT_PIN_CFG, 0x02);	// 内蔵プルアップ無効化
+		IMUWriteByte(MPU9255_ADDRESS, CONFIG, 0x00);		// 8Hzローパスフィルタ
+		IMUWriteByte(MPU9255_ADDRESS, ACCEL_CONFIG, 0x18);	// レンジ±16gに変更
+		IMUWriteByte(MPU9255_ADDRESS, GYRO_CONFIG, 0x18);	// レンジ±2000deg/sに変更
 	} else {
 		ret = 1;
 	}

@@ -44,7 +44,7 @@
 #define ANGLE_LEFTCHANGE		160	// 右レーンチェンジ旋回角度
 
 // カーブ関連
-#define CURVE_R600_START	60		// R600開始AD値
+#define CURVE_R600_START	20		// R600開始AD値
 #define CURVE_R450_START	140		// R450開始AD値
 
 // ジャイロ関連
