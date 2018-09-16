@@ -18,7 +18,7 @@
 * Copyright (C) 2015 (2011 - 2013) Renesas Electronics Corporation.
 *
 ************************************************************************/
-
+/*
 // Exception(Supervisor Instruction)
 #pragma interrupt (Excep_SuperVisorInst)
 void Excep_SuperVisorInst(void);
@@ -328,8 +328,8 @@ void Excep_ICU_GROUP5(void);
 void Excep_ICU_GROUP6(void);
 
 // ICU GROUP12
-#pragma interrupt (Excep_ICU_GROUP12(vect=114))
-void Excep_ICU_GROUP12(void);
+//#pragma interrupt (Excep_ICU_GROUP12(vect=114))
+//void Excep_ICU_GROUP12(void);
 
 // SCI12 SCIX0
 #pragma interrupt (Excep_SCI12_SCIX0(vect=122))
@@ -886,6 +886,8 @@ void Excep_SCI12_TEI12(void);
 // IEB IEBINT
 #pragma interrupt (Excep_IEB_IEBINT(vect=253))
 void Excep_IEB_IEBINT(void);
+
+*/
 
 //;<<VECTOR DATA START (POWER ON RESET)>>
 //;Power On Reset PC

@@ -59,7 +59,7 @@ void setup( void )
 	short s;
 	
 	// LED点滅処理
-	
+	/*
 	if ( cnt_setup2 >= 600 ) cnt_setup2 = 0;
 	if ( cnt_setup2 < 300 ) {
 		if ( EncoderTotal % 2 == 1 ) led_out( 0x12 );
@@ -68,6 +68,7 @@ void setup( void )
 		if ( EncoderTotal % 2 == 1 ) led_out( 0x11 );
 		else led_out( 0x01 );
 	}
+	*/
 	
 	// ディップスイッチで項目選択
 	switch ( dipsw_get() ) {
