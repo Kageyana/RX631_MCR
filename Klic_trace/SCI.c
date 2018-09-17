@@ -23,8 +23,8 @@ char 		commandDataSelect = 0;
 
 // SCI12関連
 char		SCI12_ack_mode = 0;	// 0:ACK受信 1:データ受信
-char		SCI12_I2cNumData;	// データ数
-char*		SCI12_I2cDataArry;	// データ配列
+char		SCI12_NumData;	// データ数
+char*		SCI12_DataArry;	// データ配列
 
 char 		ascii_num[] = {48,49,50,51,52,53,54,55,56,57,97,98,99,100,101,102};
 
@@ -260,7 +260,7 @@ void init_SCI12( void )
 	MPC.PWPR.BIT.B0WI = 0;			// Release protect
 	MPC.PWPR.BIT.PFSWE = 1;
 	MPC.PE1PFS.BIT.PSEL = 0x0C;		// Set PE1: SSDA12
-	MPC.PE2PFS.BIT.PSEL = 0x0C;		// Set PE2: SSSL1
+	MPC.PE2PFS.BIT.PSEL = 0x0C;		// Set PE2: SSCL12
 	MPC.PWPR.BIT.PFSWE = 0;			// Protect
 	MPC.PWPR.BIT.B0WI = 1;
 	PORTE.PMR.BIT.B1 = 1;			// PE1: peripheral
@@ -290,7 +290,7 @@ void init_SCI12( void )
 	
 	SCI12.SPMR.BYTE = 0x00;
 	
-	SCI12.SCR.BYTE = 0xb0;			// Enable TX RX TI
+	SCI12.SCR.BYTE = 0xb0;			// Enable TX RX TXI
 	
 }
 //////////////////////////////////////////////////////////////////////////
@@ -301,9 +301,10 @@ void init_SCI12( void )
 //////////////////////////////////////////////////////////////////////////
 void send_SCI12_I2c( char slaveAddr, char* data, char num )
 {
-	SCI12_I2cNumData = num;
-	SCI12_I2cDataArry = data;
+	SCI12_NumData = num;
+	SCI12_DataArry = data;
 	
+	SCI12.SIMR3.BIT.IICSTIF = 0;
 	SCI12.SIMR3.BYTE = 0x51;		// スタートコンディション発行
 	while ( SCI12.SIMR3.BIT.IICSTIF == 0 );	// スタートコンディション発行完了まで待つ
 	SCI12.SIMR3.BYTE = 0x00;		// データ送信準備
@@ -321,10 +322,10 @@ void send_SCI12_I2c( char slaveAddr, char* data, char num )
 void Excep_SCI12_TXI12( void )
 {
 	led_out( 0x10 );
-	if ( SCI12.SISR.BIT.IICACKR == 0 && SCI12_I2cNumData > 0 ) {
-		SCI12.TDR = *SCI12_I2cDataArry++;	// 送信データ書き込み
-		SCI12_I2cNumData--;
-	} else if ( SCI12_I2cNumData == 0 ) {
+	if ( SCI12.SISR.BIT.IICACKR == 0 && SCI12_NumData > 0 ) {
+		SCI12.TDR = *SCI12_DataArry++;	// 送信データ書き込み
+		SCI12_NumData--;
+	} else if ( SCI12_NumData == 0 ) {
 		SCI12.SIMR3.BYTE = 0x54;		// ストップコンディション発行
 		while ( SCI12.SIMR3.BIT.IICSTIF == 0 );	// ストップコンディション発行完了まで待つ
 		SCI12.SIMR3.BIT.IICSDAS = 3;		// SDA端子をハイインピーダンス

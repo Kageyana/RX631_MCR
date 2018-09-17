@@ -45,8 +45,8 @@ extern char		commandEnd;
 
 // SCI12関連
 extern char		SCI12_ack_mode;	// 0:ACK受信 1:データ受信
-extern char		SCI12_I2cNumData;	// 送信データ数
-extern char*		SCI12_I2cDataArry;	// 送信データ配列
+extern char		SCI12_NumData;	// 送信データ数
+extern char*		SCI12_DataArry;	// 送信データ配列
 
 extern char ascii_num[];
 //======================================//
