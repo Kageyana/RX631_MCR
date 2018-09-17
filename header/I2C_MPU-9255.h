@@ -113,8 +113,10 @@
 #define ZA_OFFSET_H		0x7D
 #define ZA_OFFSET_L		0x7E
 
-#define ACCEL_RANGE		16	// 16[g]
-#define GYRO_RANGE		2000	// 2000[deg/s]
+#define ACCELLSB		2048	// 16[g]
+#define GYROLSB			131	// 2000[deg/s]
+#define TEMP_LSB		333.87	// LSB/°C
+#define ROOMTEMPOFFSET		23	// °C
 
 #define MAXDATA_RANGE		32764	// 16bitデータの最大値
 #define G_ACCELERATION		9.80665	// 重力加速度
@@ -129,8 +131,9 @@
 // グローバル変数の宣言                 //
 //======================================//
 // IMUから取得したデータ
-extern volatile short 	xa, ya, za;	// 加速度(16bitデータ)
-extern volatile short 	xg, yg, zg;	// 角加速度(16bitデータ)
+extern volatile short 	rawXa, rawYa, rawZa;	// 加速度(16bitデータ)
+extern volatile short 	rawXg, rawYg, rawZg;	// 角加速度(16bitデータ)
+extern volatile short 	rawTemp;		// 温度(16bitデータ)
 
 // モード関連
 extern char	IMUset;			// 0:初期化失敗		1:初期化完了

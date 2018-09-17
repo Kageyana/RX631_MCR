@@ -137,6 +137,8 @@ extern double 		Degrees;		// ジャイロセンサから計算した角度(degrees)
 extern double 		TurningAngleEnc;	// エンコーダから求めた旋回角度
 extern double 		TurningAngleIMU;	// IMUから求めた旋回角度
 extern double		RollAngleIMU;		// IMUから求めたロール方向角度
+extern double		PichAngleIMU;		// IMUから求めたピッチ方向角度
+extern double		TempIMU;		// IMUの温度
 
 // モーター関連
 extern signed char 	motorPwm;	// モーター制御PWM
@@ -165,10 +167,10 @@ signed char check_leftline( void );
 signed char check_slope( void );
 
 // 角度関連
-void getDegrees( void );
 void getTurningAngleEnc(void);
 void getTurningAngleIMU(void);
 void getRollAngleIMU(void);
+void getPichAngleIMU(void);
 
 // エンコーダ関連
 unsigned int enc_mm( short mm );

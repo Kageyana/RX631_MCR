@@ -1371,10 +1371,11 @@ void Timer (void) {
 	motorControl();
 	
 	// äpìxåvéZ
-	getDegrees();
 	getTurningAngleEnc();
 	getTurningAngleIMU();
 	getRollAngleIMU();
+	getPichAngleIMU();
+	getTempIMU();
 	if( cnt_gyro == INTEGRAL_LIMIT ) cnt_gyro = 0;
 
 	if ( IMUSet == 0 ) {

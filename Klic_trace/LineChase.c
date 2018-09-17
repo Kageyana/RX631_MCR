@@ -50,13 +50,12 @@ short	angle_leftchange;		// 右レーンチェンジ旋回角度
 // タイマ関連
 short	cnt_gyro;			// 角度計算用カウンタ
 
-// 角度関連
-double 	Degrees;		// 圧電ジャイロから計算した機体のピッチ角度
-short 	gyVoltageBefore;	// 1ms前の角度
-
+// ジャイロ関連
 double 	TurningAngleEnc;	// エンコーダから求めた旋回角度
 double 	TurningAngleIMU;	// IMUから求めた旋回角度
 double	RollAngleIMU;		// IMUから求めたロール方向角度
+double	PichAngleIMU;		// IMUから求めたピッチ方向角度
+double	TempIMU;		// IMUの温度
 
 // サーボ関連
 // 白線トレース
@@ -150,7 +149,7 @@ signed char check_slope( void )
 	short deg, upperline, lowerline;
 	signed char ret = 0;
 
-	deg = Degrees;
+	deg = PichAngleIMU;
 	
 	upperline = SLOPEUPPERLINE;
 	lowerline = SLOPELOWERLINE;
@@ -169,33 +168,6 @@ signed char check_slope( void )
 unsigned int enc_mm( short mm )
 {
 	return PALSE_MILLIMETER * mm;
-}
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 get_degrees						//
-// 処理概要     ジャイロセンサの値から角度算出				//
-// 引数         なし							//
-// 戻り値       なし							//
-//////////////////////////////////////////////////////////////////////////
-void getDegrees( void )
-{
-	/*
-	short s;
-	double gy_voltage, gyro;
-	
-	s = getGyro();
-	gy_voltage = (double)s * AD_3V3VOLTAGE;	// ジャイロセンサから出力された電圧[mV]
-	gyro = gy_voltage * GYROVOLTAGE;	// 角加速度算出
-	
-	Degrees += (doublev)( gyro + gyVoltageBefore ) * 0.001 / 2;	// 角加速度を積算
-	if( cnt_gyro == INTEGRAL_LIMIT ) Degrees = 0;	// 200msごとに積算値リセット
-	
-	gyVoltageBefore = gyro;
-	*/
-	double angularVelocity;
-	
-	angularVelocity = (double)(xg * GYRO_RANGE ) / MAXDATA_RANGE;	// IMUのデータを角速度[deg/s]に変換
-	Degrees += angularVelocity * 0.001;
-	if ( cnt_gyro == INTEGRAL_LIMIT ) Degrees = 0;
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 servoControl						//
@@ -701,7 +673,7 @@ void getTurningAngleEnc(void)
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 getTurningAngleIMU					//
-// 処理概要   	IMUから旋回角度の計算					//
+// 処理概要   	IMUからヨー角度の計算					//
 // 引数         なし							//
 // 戻り値       なし							//
 //////////////////////////////////////////////////////////////////////////
@@ -709,13 +681,13 @@ void getTurningAngleIMU(void)
 {
 	double angularVelocity;
 	
-	angularVelocity = (double)(zg * GYRO_RANGE ) / MAXDATA_RANGE;	// IMUのデータを角速度[deg/s]に変換
+	angularVelocity = (double)(rawZg / GYROLSB );	// IMUのデータを角速度[deg/s]に変換
 	TurningAngleIMU += angularVelocity * 0.001;
 	
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 getRollAngleIMU						//
-// 処理概要   	IMUから旋回角度の計算					//
+// 処理概要   	IMUからロール角度の計算					//
 // 引数         なし							//
 // 戻り値       なし							//
 //////////////////////////////////////////////////////////////////////////
@@ -723,10 +695,35 @@ void getRollAngleIMU(void)
 {
 	double angularVelocity;
 	
-	angularVelocity = (double)(yg * GYRO_RANGE ) / MAXDATA_RANGE;	// IMUのデータを角速度[deg/s]に変換
+	angularVelocity = (double)(rawYg / GYROLSB );	// IMUのデータを角速度[deg/s]に変換
 	RollAngleIMU += angularVelocity * 0.001;
 	if ( cnt_gyro == INTEGRAL_LIMIT ) RollAngleIMU = 0;
 	
+}
+//////////////////////////////////////////////////////////////////////////
+// モジュール名 getPichAngleIMU						//
+// 処理概要   	IMUからピッチ角度の計算					//
+// 引数         なし							//
+// 戻り値       なし							//
+//////////////////////////////////////////////////////////////////////////
+void getPichAngleIMU(void)
+{
+	double angularVelocity;
+	
+	angularVelocity = (double)(rawXg / GYROLSB );	// IMUのデータを角速度[deg/s]に変換
+	PichAngleIMU += angularVelocity * 0.001;
+	if ( cnt_gyro == INTEGRAL_LIMIT ) PichAngleIMU = 0;
+	
+}
+//////////////////////////////////////////////////////////////////////////
+// モジュール名 getPichAngleIMU						//
+// 処理概要   	IMUからピッチ角度の計算					//
+// 引数         なし							//
+// 戻り値       なし							//
+//////////////////////////////////////////////////////////////////////////
+void getTempIMU(void)
+{
+	TempIMU = (double)(rawTemp - ROOMTEMPOFFSET ) / TEMP_LSB + 21;	// IMUのデータを角速度[deg/s]に変換
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 motorControl						//

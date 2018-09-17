@@ -6,8 +6,10 @@
 // グローバル変数の宣言                 //
 //======================================//
 volatile int	ave[6] = {0,0,0,0,0,0};	// オフセット値	
-volatile short	xa, ya, za;		// 加速度
-volatile short	xg, yg, zg;		// 角加速度
+volatile short 	rawXa, rawYa, rawZa;	// 加速度(16bitデータ)
+volatile short 	rawXg, rawYg, rawZg;	// 角加速度(16bitデータ)
+volatile short 	rawTemp;		// 温度(16bitデータ)
+
 char		IMUset = 0;		// 0:初期化失敗		1:初期化完了
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -66,7 +68,7 @@ char init_IMU (void)
 		IMUWriteByte(MPU9255_ADDRESS, INT_PIN_CFG, 0x02);	// 内蔵プルアップ無効化
 		IMUWriteByte(MPU9255_ADDRESS, CONFIG, 0x00);		// 8Hzローパスフィルタ
 		IMUWriteByte(MPU9255_ADDRESS, ACCEL_CONFIG, 0x18);	// レンジ±16gに変更
-		IMUWriteByte(MPU9255_ADDRESS, GYRO_CONFIG, 0x18);	// レンジ±2000deg/sに変更
+		IMUWriteByte(MPU9255_ADDRESS, GYRO_CONFIG, 0x00);	// レンジ±2000deg/sに変更
 	} else {
 		ret = 1;
 	}
@@ -83,21 +85,26 @@ void IMUProcess (void)
 {
 	//char 	axisAccelData[6];	// 加速度の8bit分割データ格納先
 	char 	axisGyroData[6];	// 角加速度の8bit分割データ格納先
+	char 	tempData[2];		// 温度の8bit分割データ格納先
 	
 	//IMUReadArry(MPU9255_ADDRESS, ACCEL_XOUT_H, 6, axisAccelData);	// 3軸加速度取得
 	IMUReadArry(MPU9255_ADDRESS, GYRO_XOUT_H, 6, axisGyroData);	// 3軸角加速度取得
+	IMUReadArry(MPU9255_ADDRESS, TEMP_OUT_H, 2, tempData);		// 温度取得
 	
 	//8bitデータを16bitデータに変換
 	// 加速度
 	/*
-	xa = (short)((axisAccelData[0] << 8 ) | axisAccelData[1]);
-	ya = (short)((axisAccelData[2] << 8 ) | axisAccelData[3]);
-	za = (short)((axisAccelData[4] << 8 ) | axisAccelData[5]);
+	rawXa = (short)((axisAccelData[0] << 8 & 0xff00 ) | axisAccelData[1]);
+	rawYa = (short)((axisAccelData[2] << 8 & 0xff00 ) | axisAccelData[3]);
+	rawZa = (short)((axisAccelData[4] << 8 & 0xff00 ) | axisAccelData[5]);
 	*/
 	// 角速度
-	xg = (short)((axisGyroData[0] << 8 ) | axisGyroData[1]);
-	yg = (short)((axisGyroData[2] << 8 ) | axisGyroData[3]);
-	zg = (short)((axisGyroData[4] << 8 ) | axisGyroData[5]);
+	rawXg = (short)((axisGyroData[0] << 8 & 0xff00 ) | axisGyroData[1]);
+	rawYg = (short)((axisGyroData[2] << 8 & 0xff00 ) | axisGyroData[3]);
+	rawZg = (short)((axisGyroData[4] << 8 & 0xff00 ) | axisGyroData[5]);
+	
+	// 温度
+	rawTemp = (short)((tempData[0] << 8 & 0xff00 ) | tempData[1]);
 	
 	//xa -= ave[0];
 	//ya -= ave[1];

@@ -928,31 +928,30 @@ void sendLog (void) {
 		msdTimer = 0;
 		msdBuffPointa = msdBuff + msdBuffAddress;
 		// ここから記録
-		send_Char	(	pattern		);
-		send_Char	(	motorPwm 	);
-		send_Char	(	accele_fL 	);
-		send_Char	(	accele_fR 	);
-		send_Char	(	accele_rL 	);
-		send_Char	(	accele_rR 	);
-		send_Char	(	ServoPwm 	);
-		send_Char	(	ServoPwm2 	);
-		send_Char	(	sensor_inp() 	);
-		send_Char	( 	slope_mode	);
-		send_ShortToChar(	getServoAngle()	);
-		send_ShortToChar(	SetAngle	);
-		send_ShortToChar(	getAnalogSensor());
-		send_ShortToChar((short)Degrees		);
-		send_ShortToChar((short)TurningAngleEnc	);
-		send_ShortToChar((short)TurningAngleIMU	);
-		send_ShortToChar((short)RollAngleIMU	);
-		send_ShortToChar(	Encoder		);
-		send_ShortToChar(	targetSpeed	);
-		send_ShortToChar(	xg		);
-		send_ShortToChar(	yg		);
-		send_ShortToChar(	zg		);
-		send_uIntToChar (	EncoderTotal	);
-		send_uIntToChar (	enc1		);
-		send_uIntToChar (	cnt_log		);
+		send_Char	(	pattern		);	// 0
+		send_Char	(	motorPwm 	);	// 1
+		send_Char	(	accele_fL 	);	// 2
+		send_Char	(	accele_fR 	);	// 3
+		send_Char	(	accele_rL 	);	// 4
+		send_Char	(	accele_rR 	);	// 5
+		send_Char	(	ServoPwm 	);	// 6
+		send_Char	(	ServoPwm2 	);	// 7
+		send_Char	(	sensor_inp() 	);	// 8
+		send_Char	( 	slope_mode	);	// 9
+		send_ShortToChar(	getServoAngle()	);	// 10
+		send_ShortToChar(	SetAngle	);	// 12
+		send_ShortToChar(	getAnalogSensor());	// 14
+		send_ShortToChar((short)TurningAngleEnc	);	// 16
+		send_ShortToChar((short)TurningAngleIMU	);	// 18
+		send_ShortToChar((short)RollAngleIMU	);	// 20
+		send_ShortToChar(	Encoder		);	// 22
+		send_ShortToChar(	targetSpeed	);	// 24
+		send_ShortToChar(	rawXg		);	// 26
+		send_ShortToChar(	rawYg		);	// 28
+		send_ShortToChar(	rawZg		);	// 30
+		send_uIntToChar (	EncoderTotal	);	// 32
+		send_uIntToChar (	enc1		);	// 36
+		send_uIntToChar (	cnt_log		);	// 40
 		// ここまで
 		cnt_log += WRITINGTIME;
 		msdBuffAddress += DATA_BYTE;       // RAMの記録アドレスを次へ
@@ -998,7 +997,6 @@ void msd_sendToPC ( void )
 				printf(		"getServoAngle,"	);
 				printf(		"SetAngle,"		);
 				printf(		"getAnalogSensor,"	);
-				printf(		"Degrees,"		);
 				printf(		"TurningAngleEnc,"	);
 				printf(		"TurningAngleIMU,"	);
 				printf(		"RollAngleIMU,"		);
@@ -1059,18 +1057,17 @@ void msd_sendToPC ( void )
 				printf("%5d,", CharToShort(10));		// getServoAngle()
 				printf("%5d,", CharToShort(12));		// SetAngle
 				printf("%5d,", CharToShort(14));		// getAnalogSensor()
-				printf("%5d,", CharToShort(16));		// Degrees
-				printf("%5d,", CharToShort(18));		// TurningAngleEnc
-				printf("%5d,", CharToShort(20));		// TurningAngleIMU
-				printf("%5d,", CharToShort(22));		// RollAngleIMU
-				printf("%5d,", CharToShort(24));		// Encoder
-				printf("%5d,", CharToShort(26) / 10);		// targetSpeed
-				printf("%4.4f,", (double)(CharToShort(28)*GYRO_RANGE)/MAXDATA_RANGE);// xg
-				printf("%4.4f,", (double)(CharToShort(30)*GYRO_RANGE)/MAXDATA_RANGE);// yg
-				printf("%4.4f,", (double)(CharToShort(32)*GYRO_RANGE)/MAXDATA_RANGE);// zg
-				printf("%6d,", CharTouInt (34));		// EncoderTotal
-				printf("%6d,", CharTouInt (38));		// enc1
-				printf("%6d", CharTouInt (42));			// cnt_log
+				printf("%5d,", CharToShort(16));		// TurningAngleEnc
+				printf("%5d,", CharToShort(18));		// TurningAngleIMU
+				printf("%5d,", CharToShort(20));		// RollAngleIMU
+				printf("%5d,", CharToShort(22));		// Encoder
+				printf("%5d,", CharToShort(24) / 10);		// targetSpeed
+				printf("%4.4f,", (double)(CharToShort(26) * GYROLSB));// xg
+				printf("%4.4f,", (double)(CharToShort(28) * GYROLSB));// yg
+				printf("%4.4f,", (double)(CharToShort(30) * GYROLSB));// zg
+				printf("%6d,", CharTouInt (32));		// EncoderTotal
+				printf("%6d,", CharTouInt (36));		// enc1
+				printf("%6d", CharTouInt (40));			// cnt_log
 				printf("\n");
 				i += WRITINGTIME;
 				msdBuffAddress += DATA_BYTE;
