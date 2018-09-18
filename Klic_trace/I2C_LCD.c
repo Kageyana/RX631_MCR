@@ -33,7 +33,7 @@ void lcd_put( unsigned char data )
 void lcd_CMD( unsigned char cmd ) 
 {
 	char Command[] = { RSBIT0, cmd };
- 	I2C_LCD_READ
+ 	I2C_LCD_CMD
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 wait_lcd						//
@@ -56,7 +56,9 @@ void wait_lcd ( short waitTime )
 //////////////////////////////////////////////////////////////////////////
  void inti_lcd(void)
  {
+	char a[1] = { 0x49 };
 	wait_lcd(4);
+	//send_SCI12_I2c( LCD_SLAVEADDRESS, a, 1 );
 	lcd_CMD(0x38);	// function set			: データ線は8本・表示は２行・フォントは5x8ドット
 	wait_lcd(1);
 	lcd_CMD(0x39);	// function set           	: 拡張コマンドの設定を有効にする

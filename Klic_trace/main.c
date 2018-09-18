@@ -44,7 +44,7 @@ static char		Timer10;	// 1msカウント用
 // メインプログラム	                //
 //======================================//
 void main(void){
-	short i, j, rpwm, lpwm;
+	short i, j;
 	unsigned int ui;
 	
 	//======================================//
@@ -68,15 +68,16 @@ void main(void){
 	init_BeepS();			// ブザー初期化
 	
 	// SCI1初期化
-	if( tasw_get() == 0x2 ) {
+	/*if( tasw_get() == 0x2 ) {
 		init_SCI1(RATE_230400);
 		IMUSet = 0;
 	} else {
 		R_PG_SCI_Set_C1();
 		init_IMU();
 		IMUSet = 1;
-	}
-	
+	}*/
+	init_SCI1(RATE_230400);
+	IMUSet = 0;
 	// フラッシュ初期化
 	if( initFlash() == 0 ) {
 		setBeepPatternS( 0x8000 );
@@ -1356,7 +1357,7 @@ void Timer (void) {
 			
 	// LCD表示
 	if ( lcd_mode ) {
-		//lcdShowProcess();
+		lcdShowProcess();
 	}
 
 	// エンコーダカウント

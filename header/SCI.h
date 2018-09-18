@@ -44,7 +44,8 @@ extern short 		cnt_byte;
 extern char		commandEnd;
 
 // SCI12関連
-extern char		SCI12_ack_mode;	// 0:ACK受信 1:データ受信
+extern char		SCI12_Req_mode;	// 0:スタート 1:ストップ
+extern char		SCI12_SlaveAddr;// 送信データ数
 extern char		SCI12_NumData;	// 送信データ数
 extern char*		SCI12_DataArry;	// 送信データ配列
 
@@ -58,7 +59,8 @@ void commandSCI1 (void);
 
 void init_SCI12( void );
 void send_SCI12_I2c( char slaveAddr, char* data, char num );
-void Excep_SCI12_RXI12( void );
+void Excep_SCI12_TXI12 ( void );
+void Excep_SCI12_TEI12 ( void );
 
 void chaek_SCI_Error( void );
 

@@ -22,18 +22,20 @@ char 		commandEnd = 0;
 char 		commandDataSelect = 0;
 
 // SCI12関連
-char		SCI12_ack_mode = 0;	// 0:ACK受信 1:データ受信
-char		SCI12_NumData;	// データ数
-char*		SCI12_DataArry;	// データ配列
+char		SCI12_Req_mode = 0;	// 0:スタート 1:ストップ
+char		SCI12_SlaveAddr;	// 送信データ数
+char		SCI12_NumData;		// データ数
+char*		SCI12_DataArry;		// データ配列
 
 char 		ascii_num[] = {48,49,50,51,52,53,54,55,56,57,97,98,99,100,101,102};
 
 
-#pragma interrupt Excep_SCI1_RXI1 (vect = VECT_SCI1_RXI1)	// 受信割り込み関数定義
+#pragma interrupt Excep_SCI1_RXI1 (vect = VECT_SCI1_RXI1, enable )	// 受信割り込み関数定義
 
-#pragma interrupt Excep_SCI12_TXI12 (vect = VECT_SCI12_TXI12)	// 送信割り込み関数定義
+#pragma interrupt Excep_SCI12_TXI12 (vect = VECT_SCI12_TXI12, enable )	// TXI12割り込み関数定義
+#pragma interrupt Excep_SCI12_TEI12 (vect = VECT_SCI12_TEI12, enable )	// STI12割り込み関数定義
 
-#pragma interrupt chaek_SCI_Error (vect = VECT_ICU_GROUP12)	// 受信エラー割り込み関数定義
+#pragma interrupt chaek_SCI_Error (vect = VECT_ICU_GROUP12, enable )	// 受信エラー割り込み関数定義
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 init_SCI1						//
 // 処理概要     SCI1の初期化						//
@@ -90,11 +92,10 @@ void init_SCI1( char rate )
 	
 	SCI1.SCR.BYTE = 0;			// Set PFC of external pin used
 	
-	
 	ICU.IER[IER_SCI1_RXI1].BIT.IEN_SCI1_RXI1 = 1;	// RXI割り込み開始
-	ICU.IPR[VECT_SCI1_RXI1].BIT.IPR = 14;		// RXI割り込み許可
-	ICU.GEN[GEN_SCI1_ERI1].BIT.EN1 = 1;		// ERI割り込み開始
-	ICU.IPR[VECT_ICU_GROUP12].BIT.IPR = 15;		// ERI割り込み許可
+	ICU.IPR[VECT_SCI1_RXI1].BIT.IPR = 14;		// RXI割り込み優先度14
+	ICU.GEN[GEN_SCI1_ERI1].BIT.EN_SCI1_ERI1 = 1;	// ERI割り込み開始
+	ICU.IPR[VECT_ICU_GROUP12].BIT.IPR = 15;		// ERI割り込み優先度15
 	
 	// Set MPC
 	PORT3.PMR.BIT.B0 = 1;			// Disable PB1: peripheral
@@ -244,15 +245,17 @@ void commandSCI1 (void)
 void init_SCI12( void )
 {
 	
-	// SCI1
+	// SCI12
 	SYSTEM.PRCR.WORD = 0xA502;		// Release protect
-	MSTP(SCI12) = 0;			// Wake up SCI1
+	MSTP(SCI12) = 0;			// Wake up SCI12
 	SYSTEM.PRCR.WORD = 0xA500;		// Protect
 	
 	SCI12.SCR.BYTE = 0;			// Set PFC of external pin used
 	
-	ICU.IER[IER_SCI12_TXI12].BIT.IEN_SCI12_TXI12 = 1;	// TXI割り込み開始
-	ICU.IPR[VECT_SCI12_TXI12].BIT.IPR = 13;		// TXI割り込み許可
+	IEN( SCI12, TXI12 ) = 1;	// TXI割り込み開始
+	IPR( SCI12, TXI12 ) = 13;	// TXI割り込み優先度13
+	IEN( SCI12, TEI12 ) = 1;	// TEIE割り込み開始
+	IPR( SCI12, TEI12 ) = 12;	// TEIE割り込み優先度12
 	
 	// Set MPC
 	PORTE.PMR.BIT.B1 = 0;			// Disable PE1: peripheral
@@ -274,12 +277,13 @@ void init_SCI12( void )
 	
 	SCI12.SMR.BYTE = 0x00;			// PCLKクロック
 	
-	SCI12.SCMR.BIT.SDIR = 1;
-	SCI12.SCMR.BIT.SINV = 0;
-	SCI12.SCMR.BIT.SMIF = 0;
+	SCI12.SCMR.BIT.SDIR = 1;		// MSBファースト
+	SCI12.SCMR.BIT.SINV = 0;		// 送信、受信データをそのまま送受信する
+	SCI12.SCMR.BIT.SMIF = 0;		// シリアルコミュニケーションインターフェイス
 	
-	SCI12.BRR = 3;				// 375kHz
+	SCI12.BRR = 9;				// 375kHz
 	
+	SCI12.SPMR.BYTE = 0;
 	SCI12.SEMR.BIT.NFEN = 0;		// ノイズ除去機能無効
 	SCI12.SNFR.BIT.NFCS = 2;		// 2分周のクロックをノイズフィルタに使用
 	SCI12.SIMR1.BIT.IICM = 1;		// 簡易IICモード
@@ -290,47 +294,85 @@ void init_SCI12( void )
 	
 	SCI12.SPMR.BYTE = 0x00;
 	
-	SCI12.SCR.BYTE = 0xb0;			// Enable TX RX TXI
-	
+	SCI12.SCR.BYTE = 0x30;			// Enable TX RX
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 send_SCI12_I2c						//
-// 処理概要     scanfの入力(scanfで使用する)				//
+// 処理概要     SCI12I2cの送信						//
 // 引数         なし							//
 // 戻り値       data:入力した一文字					//
 //////////////////////////////////////////////////////////////////////////
 void send_SCI12_I2c( char slaveAddr, char* data, char num )
 {
+	SCI12_SlaveAddr = slaveAddr;
 	SCI12_NumData = num;
 	SCI12_DataArry = data;
 	
+	SCI12_Req_mode = 0;
+	
+	SCI12.SCR.BIT.TEIE = 1;			// STI割り込み許可
+	SCI12.SCR.BIT.TIE = 1;			// TXI割り込み許可
+	
 	SCI12.SIMR3.BIT.IICSTIF = 0;
 	SCI12.SIMR3.BYTE = 0x51;		// スタートコンディション発行
-	while ( SCI12.SIMR3.BIT.IICSTIF == 0 );	// スタートコンディション発行完了まで待つ
-	SCI12.SIMR3.BYTE = 0x00;		// データ送信準備
 	
-	SCI12.TDR = slaveAddr;		// スレーブアドレス書き込み
-	__setpsw_i();
 	// データは割り込みで送信
 }
 //////////////////////////////////////////////////////////////////////////
+// モジュール名 Excep_SCI12_TEI12					//
+// 処理概要     開始/ 再開始/ 停止条件生成完了時に割り込みで実行される	//
+// 引数         なし							//
+// 戻り値       なし							//
+//////////////////////////////////////////////////////////////////////////
+void Excep_SCI12_TEI12 ( void )
+{
+	if ( SCI12_Req_mode == 0 ) {
+		led_out( 0x01 );
+		SCI12.SIMR3.BYTE = 0x00;	// データ送信準備
+		SCI12.TDR = SCI12_SlaveAddr;	// スレーブアドレス書き込み
+	} else {
+		led_out( 0x02 );
+		SCI12.SIMR3.BIT.IICSDAS = 3;	// SDA端子をハイインピーダンス
+		SCI12.SIMR3.BIT.IICSCLS = 3;	// SCL端子をハイインピーダンス
+		SCI12_Req_mode = 0;		// スタートコンディション待ち
+		
+		SCI12.SCR.BIT.TEIE = 0;		// STI割り込み禁止
+		SCI12.SCR.BIT.TIE = 0;		// TXI割り込み禁止
+	}
+}
+//////////////////////////////////////////////////////////////////////////
 // モジュール名 Excep_SCI12_TXI12					//
-// 処理概要     UART受信時に割り込みで実行される			//
+// 処理概要     SCI12受信時に割り込みで実行される			//
 // 引数         なし							//
 // 戻り値       なし							//
 //////////////////////////////////////////////////////////////////////////
 void Excep_SCI12_TXI12( void )
 {
-	led_out( 0x10 );
-	if ( SCI12.SISR.BIT.IICACKR == 0 && SCI12_NumData > 0 ) {
-		SCI12.TDR = *SCI12_DataArry++;	// 送信データ書き込み
-		SCI12_NumData--;
-	} else if ( SCI12_NumData == 0 ) {
-		SCI12.SIMR3.BYTE = 0x54;		// ストップコンディション発行
-		while ( SCI12.SIMR3.BIT.IICSTIF == 0 );	// ストップコンディション発行完了まで待つ
-		SCI12.SIMR3.BIT.IICSDAS = 3;		// SDA端子をハイインピーダンス
-		SCI12.SIMR3.BIT.IICSCLS = 3;		// SCL端子をハイインピーダンス
+	// データ数確認
+	if ( SCI12_NumData == 0 ) {
+		led_out( 0x04 );
+		SCI12.SIMR3.BIT.IICSTIF = 0;
+		SCI12.SIMR3.BYTE = 0x54;	// ストップコンディション発行
+	} else {
+		if ( SCI12.SISR.BIT.IICACKR == 0 && SCI12_Req_mode == 0 ) {
+			// ACK受信
+			led_out( 0x10 );
+			SCI12_Req_mode = 1;		// ストップコンディション待ち
+			SCI12.TDR = *SCI12_DataArry++;	// 送信データ書き込み
+			SCI12_NumData--;
+		} else if ( SCI12.SISR.BIT.IICACKR == 1 && SCI12_Req_mode == 0 ) {
+			// NACK受信
+			led_out( 0x08 );
+			SCI12.SIMR3.BIT.IICSTIF = 0;
+			SCI12_Req_mode = 1;		// ストップコンディション待ち
+			SCI12.SIMR3.BYTE = 0x54;	// ストップコンディション発行
+		} else {
+			SCI12.TDR = *SCI12_DataArry++;	// 送信データ書き込み
+			SCI12_NumData--;
+		}
 	}
+	
+	
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 chaek_SCI_Error						//
