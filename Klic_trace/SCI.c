@@ -256,6 +256,8 @@ void init_SCI12( void )
 	
 	SCI12.SCR.BYTE = 0;		// Set PFC of external pin used
 	
+	PORTE.ODR0.BYTE = 0x14;		// PE1 Nチャンネルオープンドレイン出力
+	
 	// Set MPC
 	PORTE.PMR.BIT.B1 = 0;		// Disable PE1: peripheral
 	PORTE.PMR.BIT.B2 = 0;		// Disable PE2: peripheral
@@ -268,9 +270,8 @@ void init_SCI12( void )
 	PORTE.PMR.BIT.B1 = 1;		// PE1: peripheral
 	PORTE.PMR.BIT.B2 = 1;		// PE2: peripheral
 	
-	PORTE.ODR0.BIT.B2 = 1;		// PE1 Nチャンネルオープンドレイン出力
-	PORTE.ODR0.BIT.B4 = 1;		// PE1 Nチャンネルオープンドレイン出力
-
+	
+	
 	// SCI12 Settings
 	SCI12.SIMR3.BIT.IICSDAS = 3;	// SDA端子をハイインピーダンス
 	SCI12.SIMR3.BIT.IICSCLS = 3;	// SCL端子をハイインピーダンス
@@ -292,9 +293,7 @@ void init_SCI12( void )
 	SCI12.SIMR2.BIT.IICCSC = 1;	// クロック同期を行う
 	SCI12.SIMR2.BIT.IICACKT = 1;	// NACK送信またはACK/NACK受信
 	
-	SCI12.SPMR.BYTE = 0x00;
-	
-	SCI12.SCR.BYTE = 0x30;			// Enable TX RX
+	SCI12.SCR.BYTE = 0x30;		// Enable TX RX
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 send_SCI12_I2c						//
@@ -310,12 +309,11 @@ void send_SCI12_I2c( char slaveAddr, char* data, char num )
 	
 	SCI12_Req_mode = 0;
 	
-	SCI12.SIMR3.BYTE = 0xf0;	// SDA端子、SCL端子をハイインピーダンス
 	SCI12.SCR.BIT.TEIE = 1;		// STI割り込み許可
 	SCI12.SCR.BIT.TIE = 1;		// TXI割り込み許可
 	
 	//SCI12.SIMR3.BIT.IICSTIF = 0;
-	SCI12.SIMR3.BYTE = 0x51;		// スタートコンディション発行
+	SCI12.SIMR3.BYTE = 0x51;	// スタートコンディション発行
 	
 	// データは割り込みで送信
 }

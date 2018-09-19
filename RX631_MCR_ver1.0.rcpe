@@ -134,7 +134,8 @@
           <Option>-isa=rxv1</Option>
           <Option>-fpu</Option>
           <Option>-dbl_size=8</Option>
-          <Option>-lang=c</Option>
+          <Option>-auto_enum</Option>
+          <Option>-lang=c99</Option>
           <Option>-include=RX631_mcr_ver3.0</Option>
           <Option>-include=RX631_mcr_ver3.0\i_src</Option>
           <Option>-include=RX631_mcr_ver3.0\AD_12</Option>
@@ -205,6 +206,7 @@
           <Option>-isa=rxv1</Option>
           <Option>-fpu</Option>
           <Option>-dbl_size=8</Option>
+          <Option>-auto_enum</Option>
           <Option>-head=runtime,math,stdarg,stdio,stdlib,string,new</Option>
           <Option>-output=%BuildModeName%\%ProjectName%.lib</Option>
           <Option>-nologo</Option>

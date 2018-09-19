@@ -11,7 +11,7 @@
 // シンボル定義                         //
 //======================================//
 // スレーブアドレス
-#define LCD_SLAVEADDRESS	0x7c
+#define LCD_SLAVEADDRESS	0x78
 // 液晶関連変数
 #define LCD_MAX_X	17		// 表示文字数 横 16 or 20
 #define LCD_MAX_Y	2		// 表示文字数 縦  2 or  4

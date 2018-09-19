@@ -56,10 +56,10 @@ void wait_lcd ( short waitTime )
 //////////////////////////////////////////////////////////////////////////
  void inti_lcd(void)
  {
-	char a[1] = { 0x49 };
+	char a[1] = { 0x7c };
 	wait_lcd(4);
-	//send_SCI12_I2c( LCD_SLAVEADDRESS, a, 1 );
-	lcd_CMD(0x38);	// function set			: データ線は8本・表示は２行・フォントは5x8ドット
+	send_SCI12_I2c( LCD_SLAVEADDRESS, a, 1 );
+	/*lcd_CMD(0x38);	// function set			: データ線は8本・表示は２行・フォントは5x8ドット
 	wait_lcd(1);
 	lcd_CMD(0x39);	// function set           	: 拡張コマンドの設定を有効にする
 	wait_lcd(1);
@@ -76,7 +76,7 @@ void wait_lcd ( short waitTime )
 	lcd_CMD(0x0c);	// display ON/OFF control      	: 画面表示はON・カーソル表示はOFF・カーソル点滅はOFF
 	wait_lcd(1);
 	lcd_CMD(0x01);	// Clear Display 		: 画面全体に20Hのｽﾍﾟｰｽで表示、ｶｰｿﾙはcol=0,row=0に移動
-	wait_lcd(2);
+	wait_lcd(2);*/
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 lcdLocate						//
