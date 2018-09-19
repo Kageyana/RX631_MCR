@@ -171,6 +171,7 @@ void getTurningAngleEnc(void);
 void getTurningAngleIMU(void);
 void getRollAngleIMU(void);
 void getPichAngleIMU(void);
+void getTempIMU(void);
 
 // エンコーダ関連
 unsigned int enc_mm( short mm );
