@@ -244,53 +244,53 @@ void commandSCI1 (void)
 //////////////////////////////////////////////////////////////////////////
 void init_SCI12( void )
 {
-	
-	// SCI12
-	SYSTEM.PRCR.WORD = 0xA502;		// Release protect
-	MSTP(SCI12) = 0;			// Wake up SCI12
-	SYSTEM.PRCR.WORD = 0xA500;		// Protect
-	
-	SCI12.SCR.BYTE = 0;			// Set PFC of external pin used
-	
 	IEN( SCI12, TXI12 ) = 1;	// TXI割り込み開始
 	IPR( SCI12, TXI12 ) = 13;	// TXI割り込み優先度13
 	IEN( SCI12, TEI12 ) = 1;	// TEIE割り込み開始
 	IPR( SCI12, TEI12 ) = 12;	// TEIE割り込み優先度12
 	
+	// SCI12
+	SYSTEM.PRCR.WORD = 0xA502;	// Release protect
+	MSTP(SCI12) = 0;		// Wake up SCI12
+	SYSTEM.PRCR.WORD = 0xA500;	// Protect
+	
+	SCI12.SCR.BYTE = 0;		// Set PFC of external pin used
+	
 	// Set MPC
-	PORTE.PMR.BIT.B1 = 0;			// Disable PE1: peripheral
-	PORTE.PMR.BIT.B2 = 0;			// Disable PE2: peripheral
-	MPC.PWPR.BIT.B0WI = 0;			// Release protect
+	PORTE.PMR.BIT.B1 = 0;		// Disable PE1: peripheral
+	PORTE.PMR.BIT.B2 = 0;		// Disable PE2: peripheral
+	MPC.PWPR.BIT.B0WI = 0;		// Release protect
 	MPC.PWPR.BIT.PFSWE = 1;
-	MPC.PE1PFS.BIT.PSEL = 0x0C;		// Set PE1: SSDA12
-	MPC.PE2PFS.BIT.PSEL = 0x0C;		// Set PE2: SSCL12
-	MPC.PWPR.BIT.PFSWE = 0;			// Protect
+	MPC.PE1PFS.BIT.PSEL = 0x0C;	// Set PE1: SSDA12
+	MPC.PE2PFS.BIT.PSEL = 0x0C;	// Set PE2: SSCL12
+	MPC.PWPR.BIT.PFSWE = 0;		// Protect
 	MPC.PWPR.BIT.B0WI = 1;
-	PORTE.PMR.BIT.B1 = 1;			// PE1: peripheral
-	PORTE.PMR.BIT.B2 = 1;			// PE2: peripheral
+	PORTE.PMR.BIT.B1 = 1;		// PE1: peripheral
+	PORTE.PMR.BIT.B2 = 1;		// PE2: peripheral
 	
-	PORTE.ODR0.BYTE = 0x1c;			// PE1,PE2 Nチャンネルオープンドレイン出力
-	
+	PORTE.ODR0.BIT.B2 = 1;		// PE1 Nチャンネルオープンドレイン出力
+	PORTE.ODR0.BIT.B4 = 1;		// PE1 Nチャンネルオープンドレイン出力
+
 	// SCI12 Settings
-	SCI12.SIMR3.BIT.IICSDAS = 3;		// SDA端子をハイインピーダンス
-	SCI12.SIMR3.BIT.IICSCLS = 3;		// SCL端子をハイインピーダンス
+	SCI12.SIMR3.BIT.IICSDAS = 3;	// SDA端子をハイインピーダンス
+	SCI12.SIMR3.BIT.IICSCLS = 3;	// SCL端子をハイインピーダンス
 	
-	SCI12.SMR.BYTE = 0x00;			// PCLKクロック
+	SCI12.SMR.BYTE = 0x00;		// PCLKクロック
 	
-	SCI12.SCMR.BIT.SDIR = 1;		// MSBファースト
-	SCI12.SCMR.BIT.SINV = 0;		// 送信、受信データをそのまま送受信する
-	SCI12.SCMR.BIT.SMIF = 0;		// シリアルコミュニケーションインターフェイス
+	SCI12.SCMR.BIT.SDIR = 1;	// MSBファースト
+	SCI12.SCMR.BIT.SINV = 0;	// 送信、受信データをそのまま送受信する
+	SCI12.SCMR.BIT.SMIF = 0;	// シリアルコミュニケーションインターフェイス
 	
-	SCI12.BRR = 9;				// 375kHz
+	SCI12.BRR = 3;			// 375kHz
 	
 	SCI12.SPMR.BYTE = 0;
-	SCI12.SEMR.BIT.NFEN = 0;		// ノイズ除去機能無効
-	SCI12.SNFR.BIT.NFCS = 2;		// 2分周のクロックをノイズフィルタに使用
-	SCI12.SIMR1.BIT.IICM = 1;		// 簡易IICモード
-	SCI12.SIMR1.BIT.IICDL = 0;		// 出力遅延なし
-	SCI12.SIMR2.BIT.IICINTM = 1;		// 受信割り込み、送信割り込み可能
-	SCI12.SIMR2.BIT.IICCSC = 1;		// クロック同期を行う
-	SCI12.SIMR2.BIT.IICACKT = 1;		// NACK送信またはACK/NACK受信
+	SCI12.SEMR.BIT.NFEN = 0;	// ノイズ除去機能無効
+	SCI12.SNFR.BIT.NFCS = 2;	// 2分周のクロックをノイズフィルタに使用
+	SCI12.SIMR1.BIT.IICM = 1;	// 簡易IICモード
+	SCI12.SIMR1.BIT.IICDL = 1;	// 0～1サイクル遅延
+	SCI12.SIMR2.BIT.IICINTM = 1;	// 受信割り込み、送信割り込み可能
+	SCI12.SIMR2.BIT.IICCSC = 1;	// クロック同期を行う
+	SCI12.SIMR2.BIT.IICACKT = 1;	// NACK送信またはACK/NACK受信
 	
 	SCI12.SPMR.BYTE = 0x00;
 	
@@ -310,10 +310,11 @@ void send_SCI12_I2c( char slaveAddr, char* data, char num )
 	
 	SCI12_Req_mode = 0;
 	
-	SCI12.SCR.BIT.TEIE = 1;			// STI割り込み許可
-	SCI12.SCR.BIT.TIE = 1;			// TXI割り込み許可
+	SCI12.SIMR3.BYTE = 0xf0;	// SDA端子、SCL端子をハイインピーダンス
+	SCI12.SCR.BIT.TEIE = 1;		// STI割り込み許可
+	SCI12.SCR.BIT.TIE = 1;		// TXI割り込み許可
 	
-	SCI12.SIMR3.BIT.IICSTIF = 0;
+	//SCI12.SIMR3.BIT.IICSTIF = 0;
 	SCI12.SIMR3.BYTE = 0x51;		// スタートコンディション発行
 	
 	// データは割り込みで送信
@@ -327,13 +328,14 @@ void send_SCI12_I2c( char slaveAddr, char* data, char num )
 void Excep_SCI12_TEI12 ( void )
 {
 	if ( SCI12_Req_mode == 0 ) {
-		led_out( 0x01 );
+		// スタートコンディション
+		PORT5.PODR.BIT.B1 = 1;
 		SCI12.SIMR3.BYTE = 0x00;	// データ送信準備
 		SCI12.TDR = SCI12_SlaveAddr;	// スレーブアドレス書き込み
-	} else {
-		led_out( 0x02 );
-		SCI12.SIMR3.BIT.IICSDAS = 3;	// SDA端子をハイインピーダンス
-		SCI12.SIMR3.BIT.IICSCLS = 3;	// SCL端子をハイインピーダンス
+	} else if ( SCI12_Req_mode == 1 ) {
+		// ストップコンディション
+		PORT5.PODR.BIT.B2 = 1;
+		SCI12.SIMR3.BYTE = 0xf0;	// SDA端子、SCL端子をハイインピーダンス
 		SCI12_Req_mode = 0;		// スタートコンディション待ち
 		
 		SCI12.SCR.BIT.TEIE = 0;		// STI割り込み禁止
@@ -350,29 +352,28 @@ void Excep_SCI12_TXI12( void )
 {
 	// データ数確認
 	if ( SCI12_NumData == 0 ) {
-		led_out( 0x04 );
-		SCI12.SIMR3.BIT.IICSTIF = 0;
+		PORT5.PODR.BIT.B3 = 1;
+		SCI12_Req_mode = 1;		// ストップコンディション待ち
+		//SCI12.SIMR3.BIT.IICSTIF = 0;
 		SCI12.SIMR3.BYTE = 0x54;	// ストップコンディション発行
 	} else {
 		if ( SCI12.SISR.BIT.IICACKR == 0 && SCI12_Req_mode == 0 ) {
 			// ACK受信
-			led_out( 0x10 );
-			SCI12_Req_mode = 1;		// ストップコンディション待ち
+			PORT5.PODR.BIT.B5 = 1;
+			SCI12_Req_mode = 2;		// データ送信
 			SCI12.TDR = *SCI12_DataArry++;	// 送信データ書き込み
 			SCI12_NumData--;
 		} else if ( SCI12.SISR.BIT.IICACKR == 1 && SCI12_Req_mode == 0 ) {
 			// NACK受信
-			led_out( 0x08 );
-			SCI12.SIMR3.BIT.IICSTIF = 0;
+			PORT5.PODR.BIT.B4 = 1;
 			SCI12_Req_mode = 1;		// ストップコンディション待ち
+			//SCI12.SIMR3.BIT.IICSTIF = 0;
 			SCI12.SIMR3.BYTE = 0x54;	// ストップコンディション発行
 		} else {
 			SCI12.TDR = *SCI12_DataArry++;	// 送信データ書き込み
 			SCI12_NumData--;
 		}
 	}
-	
-	
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 chaek_SCI_Error						//

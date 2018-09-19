@@ -1357,7 +1357,7 @@ void Timer (void) {
 			
 	// LCD表示
 	if ( lcd_mode ) {
-		lcdShowProcess();
+		//lcdShowProcess();
 	}
 
 	// エンコーダカウント

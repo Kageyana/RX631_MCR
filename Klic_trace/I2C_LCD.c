@@ -65,7 +65,7 @@ void wait_lcd ( short waitTime )
 	wait_lcd(1);
 	lcd_CMD(0x14);	// Internal OSC frequency 	: バイアスの選択と内部OSC周波数の調整
 	wait_lcd(1);
-	lcd_CMD(0x70);	// Contrast set          	: コントラスト調整データ(下位4ビット)
+	lcd_CMD(0x7f);	// Contrast set          	: コントラスト調整データ(下位4ビット)
 	wait_lcd(1);
 	lcd_CMD(0x56);	// Power/ICON/Contrast control	: 昇圧回路有効、コントラスト調整データ(上位2ビット)
 	wait_lcd(1);
