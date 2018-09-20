@@ -55,17 +55,41 @@ void wait_lcd ( short waitTime )
 // 戻り値       なし                                                    //
 //////////////////////////////////////////////////////////////////////////
  void inti_lcd(void)
- {
-	char a[1] = { 0x7c };
+{
+	/*int count;
+	char a[256];
+	uint8_t b[256];
+	
+	cnt0 = 0;
+	for ( int i = 0; i < 256; i++ ) {
+		a[i] = i;
+		b[i] = i;
+	}
+	
+	cnt0 = 0;
+	for ( int i = 0; i < 100; i++ ) {
+		send_SCI12_I2c(LCD_SLAVEADDRESS, a, 255);
+	}
+	count = cnt0;
+	printf("registor = %d[ms]\n", count);
+	
+	R_PG_SCI_Set_C12();
+	cnt0 = 0;
+	for ( int i = 0; i < 100; i++ ) {
+		R_PG_SCI_I2CMode_Send_C12(0, LCD_SLAVEADDRESS, b, 255);
+	}
+	count = cnt0;
+	printf("PDG = %d[ms]\n", count);*/
+	
+	
 	wait_lcd(4);
-	send_SCI12_I2c( LCD_SLAVEADDRESS, a, 1 );
-	/*lcd_CMD(0x38);	// function set			: データ線は8本・表示は２行・フォントは5x8ドット
+	lcd_CMD(0x38);	// function set			: データ線は8本・表示は２行・フォントは5x8ドット
 	wait_lcd(1);
 	lcd_CMD(0x39);	// function set           	: 拡張コマンドの設定を有効にする
 	wait_lcd(1);
 	lcd_CMD(0x14);	// Internal OSC frequency 	: バイアスの選択と内部OSC周波数の調整
 	wait_lcd(1);
-	lcd_CMD(0x7f);	// Contrast set          	: コントラスト調整データ(下位4ビット)
+	lcd_CMD(0x70);	// Contrast set          	: コントラスト調整データ(下位4ビット)
 	wait_lcd(1);
 	lcd_CMD(0x56);	// Power/ICON/Contrast control	: 昇圧回路有効、コントラスト調整データ(上位2ビット)
 	wait_lcd(1);
@@ -76,7 +100,7 @@ void wait_lcd ( short waitTime )
 	lcd_CMD(0x0c);	// display ON/OFF control      	: 画面表示はON・カーソル表示はOFF・カーソル点滅はOFF
 	wait_lcd(1);
 	lcd_CMD(0x01);	// Clear Display 		: 画面全体に20Hのｽﾍﾟｰｽで表示、ｶｰｿﾙはcol=0,row=0に移動
-	wait_lcd(2);*/
+	wait_lcd(2);
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 lcdLocate						//

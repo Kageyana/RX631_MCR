@@ -9,7 +9,7 @@
 * Version      : 
 * Description  : 
 ******************************************************************************
-* History : 17.09.2018 Version Description
+* History : 20.09.2018 Version Description
 *         :   
 ******************************************************************************/
 
@@ -35,6 +35,7 @@ Includes   <System Includes> , "Project Includes"
 #include ".\CMT\R_PG_Timer_CMT_U1.h"
 #include ".\SCI\R_PG_SCI_C1.h"
 #include ".\SCI\R_PG_SCI_C5.h"
+#include ".\SCI\R_PG_SCI_C12.h"
 #include ".\AD_12\R_PG_ADC_12_S12AD0.h"
 
 

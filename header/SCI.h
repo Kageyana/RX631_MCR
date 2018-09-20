@@ -6,7 +6,7 @@
 #include "iodefine.h"
 #include <machine.h>
 #include "stdio.h"
-#include "string.h"
+#include <string.h>
 #include "vect.h"
 #include "PeripheralFunctions.h"
 //======================================//
@@ -33,6 +33,7 @@
 // グローバル変数の宣言                 //
 //======================================//
 extern char 		revErr;
+
 // SCI1関連
 extern char 		txt_command[128];
 extern char 		txt_data[128];
@@ -46,10 +47,11 @@ extern short 		cnt_byte;
 extern char		commandEnd;
 
 // SCI12関連
-extern char		SCI12_Req_mode;	// 0:スタート 1:ストップ
-extern char		SCI12_SlaveAddr;// 送信データ数
-extern char		SCI12_NumData;	// 送信データ数
-extern char*		SCI12_DataArry;	// 送信データ配列
+extern char		SCI12_Req_mode;		// 0:スタート 1:ストップ
+extern char		SCI12_SlaveAddr;	// スレーブアドレス
+extern char		SCI12_NumData;		// 送信データ数
+extern char*		SCI12_DataArry;		// 送信データ配列
+extern char		SCI12_DataBuff[255];	// 送信データバッファ
 
 extern char ascii_num[];
 //======================================//

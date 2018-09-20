@@ -26,6 +26,7 @@ char		SCI12_Req_mode = 0;	// 0:スタート 1:ストップ
 char		SCI12_SlaveAddr;	// 送信データ数
 char		SCI12_NumData;		// データ数
 char*		SCI12_DataArry;		// データ配列
+char		SCI12_DataBuff[255];	// 送信データバッファ
 
 char 		ascii_num[] = {48,49,50,51,52,53,54,55,56,57,97,98,99,100,101,102};
 
@@ -303,16 +304,18 @@ void init_SCI12( void )
 //////////////////////////////////////////////////////////////////////////
 void send_SCI12_I2c( char slaveAddr, char* data, char num )
 {
+	while ( SCI12.SIMR3.BYTE != 0xf0 );
+	
+	memcpy( SCI12_DataBuff, data, num );	// 送信データをバッファに移動
+	
 	SCI12_SlaveAddr = slaveAddr;
 	SCI12_NumData = num;
-	SCI12_DataArry = data;
+	SCI12_DataArry = SCI12_DataBuff;
 	
 	SCI12_Req_mode = 0;
-	
 	SCI12.SCR.BIT.TEIE = 1;		// STI割り込み許可
 	SCI12.SCR.BIT.TIE = 1;		// TXI割り込み許可
 	
-	//SCI12.SIMR3.BIT.IICSTIF = 0;
 	SCI12.SIMR3.BYTE = 0x51;	// スタートコンディション発行
 	
 	// データは割り込みで送信
@@ -325,14 +328,13 @@ void send_SCI12_I2c( char slaveAddr, char* data, char num )
 //////////////////////////////////////////////////////////////////////////
 void Excep_SCI12_TEI12 ( void )
 {
+	__clrpsw_i();
 	if ( SCI12_Req_mode == 0 ) {
 		// スタートコンディション
-		PORT5.PODR.BIT.B1 = 1;
 		SCI12.SIMR3.BYTE = 0x00;	// データ送信準備
 		SCI12.TDR = SCI12_SlaveAddr;	// スレーブアドレス書き込み
 	} else if ( SCI12_Req_mode == 1 ) {
 		// ストップコンディション
-		PORT5.PODR.BIT.B2 = 1;
 		SCI12.SIMR3.BYTE = 0xf0;	// SDA端子、SCL端子をハイインピーダンス
 		SCI12_Req_mode = 0;		// スタートコンディション待ち
 		
@@ -348,24 +350,20 @@ void Excep_SCI12_TEI12 ( void )
 //////////////////////////////////////////////////////////////////////////
 void Excep_SCI12_TXI12( void )
 {
+	__clrpsw_i();
 	// データ数確認
 	if ( SCI12_NumData == 0 ) {
-		PORT5.PODR.BIT.B3 = 1;
 		SCI12_Req_mode = 1;		// ストップコンディション待ち
-		//SCI12.SIMR3.BIT.IICSTIF = 0;
 		SCI12.SIMR3.BYTE = 0x54;	// ストップコンディション発行
 	} else {
 		if ( SCI12.SISR.BIT.IICACKR == 0 && SCI12_Req_mode == 0 ) {
 			// ACK受信
-			PORT5.PODR.BIT.B5 = 1;
 			SCI12_Req_mode = 2;		// データ送信
 			SCI12.TDR = *SCI12_DataArry++;	// 送信データ書き込み
 			SCI12_NumData--;
 		} else if ( SCI12.SISR.BIT.IICACKR == 1 && SCI12_Req_mode == 0 ) {
 			// NACK受信
-			PORT5.PODR.BIT.B4 = 1;
 			SCI12_Req_mode = 1;		// ストップコンディション待ち
-			//SCI12.SIMR3.BIT.IICSTIF = 0;
 			SCI12.SIMR3.BYTE = 0x54;	// ストップコンディション発行
 		} else {
 			SCI12.TDR = *SCI12_DataArry++;	// 送信データ書き込み
@@ -381,31 +379,8 @@ void Excep_SCI12_TXI12( void )
 //////////////////////////////////////////////////////////////////////////
 void chaek_SCI_Error( void )
 {
-	/*
-	if ( SCI1.SSR.BIT.ORER ) {		
-		// オーバーランエラー処理
-		*txt++ = SCI1.RDR;
-	}
-	
-	if ( SCI1.SSR.BIT.FER ) {		
-		
-		if ( PORT3.PIDR.BIT.B0 ) {	// ブレーク信号検出
-			SCI1.SCR.BIT.RE = 1;
-		} else {
-			// フレーミングエラー処理
-			if ( SCI1.SSR.BIT.PER == 1 ) {
-				// パリティエラー処理
-			}
-		}
-		// エラーフラグクリア
-		SCI1.SSR.BIT.ORER = 0;
-		SCI1.SSR.BIT.FER = 0;
-		SCI1.SSR.BIT.PER = 0;
-	}
-	*/
 	__clrpsw_i();
 	if ( SCI1.SSR.BIT.ORER ) revErr = 1;
 	if ( SCI1.SSR.BIT.FER ) revErr = 2;
 	if ( SCI1.SSR.BIT.PER ) revErr = 3;
-	
 }

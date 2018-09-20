@@ -36,7 +36,7 @@
 * Description  : 
 * Limitations  : 
 ******************************************************************************
-* History : 16.09.2018 Version Description
+* History : 20.09.2018 Version Description
 *         :   
 ******************************************************************************/
 
@@ -85,8 +85,8 @@ bool R_PG_SCI_Set_C12(void)
 
 	return R_SCI_Create(
 		12,
-		PDL_SCI_SYNC | PDL_SCI_TX_CONNECTED | PDL_SCI_RX_CONNECTED | PDL_SCI_IIC_MODE | PDL_SCI_IIC_FILTER_CLOCK_DIV1 | PDL_SCI_IIC_DELAY_SDA_0_1,
-		BIT_31 | PDL_SCI_PCLK_DIV_1 | 9 | (256 & 0x00FFFF00ul),
+		PDL_SCI_SYNC | PDL_SCI_TX_CONNECTED | PDL_SCI_RX_CONNECTED | PDL_SCI_IIC_MODE | PDL_SCI_IIC_FILTER_CLOCK_DIV2 | PDL_SCI_IIC_DELAY_SDA_0_1,
+		BIT_31 | PDL_SCI_PCLK_DIV_1 | 3 | (375000 & 0x00FFFF00ul),
 		0,
 		0
 	);

@@ -50,6 +50,8 @@ void main(void){
 	//======================================//
 	// 初期化		                //
 	//======================================//
+	init_SCI1(RATE_230400);
+	IMUSet = 0;
 	inti_lcd();			// LCD初期化
 	lcdPosition( 0, 0 );
 	lcdPrintf("INITIALI");
@@ -66,7 +68,7 @@ void main(void){
 	start = 0;			// ゲートスタート
 	
 	init_BeepS();			// ブザー初期化
-	
+	led_out( 0x01 );
 	// SCI1初期化
 	/*if( tasw_get() == 0x2 ) {
 		init_SCI1(RATE_230400);
@@ -76,8 +78,7 @@ void main(void){
 		init_IMU();
 		IMUSet = 1;
 	}*/
-	init_SCI1(RATE_230400);
-	IMUSet = 0;
+	
 	// フラッシュ初期化
 	if( initFlash() == 0 ) {
 		setBeepPatternS( 0x8000 );
@@ -85,7 +86,7 @@ void main(void){
 	} else{
 		setBeepPatternS( 0xaa00 );
 	}
-	
+	led_out( 0x02 );
 	// MicroSDカード初期化
 	if( init_msd() == 0 ) {
 		setBeepPatternS( 0x4000 );
@@ -94,7 +95,7 @@ void main(void){
 		setBeepPatternS( 0xaa00 );
 		msdset = 0;
 	}
-
+	led_out( 0x04 );
 	while(1){
 		__setpsw_i();
 		if( pattern >= 11 && pattern <= 99 ) {
@@ -1353,11 +1354,12 @@ void Timer (void) {
 		cnt_flash++;
 	}
 	cnt1++;
+	cnt0++;
 	cnt_gyro++;
 			
 	// LCD表示
 	if ( lcd_mode ) {
-		//lcdShowProcess();
+		lcdShowProcess();
 	}
 
 	// エンコーダカウント
