@@ -177,7 +177,6 @@
           <Option>-include=SmartManual Docs\RX631</Option>
           <Option>-output=obj</Option>
           <Option>-debug</Option>
-          <Option>-speed</Option>
           <Option>-nologo</Option>
         </CompileOptions>
         <AssembleOptions>

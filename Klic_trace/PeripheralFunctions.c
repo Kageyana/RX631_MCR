@@ -16,6 +16,7 @@
 //======================================//
 // タイマ関連
 static char		ADTimer10;	// AD変換カウント用
+volatile unsigned short		cnt0;		// 関数用タイマ
 
 // スイッチ関連
 static unsigned char 	dpsw_d[4];	// ディップスイッチの格納先
@@ -136,9 +137,9 @@ void getEncoder (void)
 	Encoder = cnt_Encoder - encbuff;// 現在地から1ms前の値を引いて1ms間のカウントを計算
 	
 	// 積算
-	EncoderTotal += Encoder;
-	enc1 += Encoder;
-	enc_slope += Encoder;
+	EncoderTotal	+= Encoder;
+	enc1		+= Encoder;
+	enc_slope	+= Encoder;
 	
 	encbuff = cnt_Encoder;	// 次回はこの値が1ms前の値となる
 }

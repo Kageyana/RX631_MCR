@@ -8,9 +8,6 @@
 //======================================//
 // シンボル定義                         //
 //======================================//
-// Slave Address
-#define MPU9255_ADDRESS     	0x00d0	// 書き込み時のスレーブアドレス
-
 // MPU-9255 Register Map
 #define SELF_TEST_X_GYRO	0x00
 #define SELF_TEST_Y_GYRO	0x01
@@ -112,6 +109,9 @@
 #define YA_OFFSET_L		0x7B
 #define ZA_OFFSET_H		0x7D
 #define ZA_OFFSET_L		0x7E
+
+// Slave Address
+#define MPU9255_ADDRESS     	0x00d0	// 書き込み時のスレーブアドレス
 
 #define ACCEL_RANGE		16	// 16[g]
 #define GYRO_RANGE		2000	// 2000[deg/s]

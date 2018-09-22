@@ -1082,7 +1082,6 @@
 -output=obj
 -obj_path=%BuildModeName%
 -debug
--speed
 -nologo
 -exec_time
 </COptionCommandLine-DefaultValue>
@@ -1150,7 +1149,7 @@
       <COptionFloatOrder-DefaultValue>False</COptionFloatOrder-DefaultValue>
       <COptionIncode-DefaultValue>Sjis</COptionIncode-DefaultValue>
       <IsLockedByUser>True</IsLockedByUser>
-      <TimeTagModified--0>-8586643297020850752</TimeTagModified--0>
+      <TimeTagModified--0>-8586639925202232226</TimeTagModified--0>
       <COptionLangC-0>C99</COptionLangC-0>
       <COptionListfile-0>False</COptionListfile-0>
       <COptionLogo-0>False</COptionLogo-0>
@@ -1212,7 +1211,7 @@ SmartManual Docs\RX631
       <COptionMisra2004RuleFile-0 />
       <COptionPreCompileCommands-0 />
       <COptionShowConditionals-0>False</COptionShowConditionals-0>
-      <COptionSpeedAndSize-0>Speed</COptionSpeedAndSize-0>
+      <COptionSpeedAndSize-0>Size</COptionSpeedAndSize-0>
       <COptionLoop-0>Auto</COptionLoop-0>
       <COptionMisra2004RuleNumberApply-0 />
       <COptionPostCompileCommands-0 />
@@ -1271,7 +1270,6 @@ SmartManual Docs\RX631
 -output=obj
 -obj_path=%BuildModeName%
 -debug
--speed
 -nologo
 -exec_time
 </COptionCommandLine-0>

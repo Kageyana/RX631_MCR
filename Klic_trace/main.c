@@ -17,6 +17,7 @@
 #include "I2C_LCD.h"
 #include "MicroSD.h"
 #include "I2C_MPU-9255.h"
+#include "iodefine.h"
 #include <stdio.h>
 
 //======================================//
@@ -44,14 +45,20 @@ static char		Timer10;	// 1msカウント用
 // メインプログラム	                //
 //======================================//
 void main(void){
+	char dummy[1];
 	short i, j;
 	unsigned int ui;
 	
 	//======================================//
 	// 初期化		                //
 	//======================================//
-	init_SCI1(RATE_230400);
-	IMUSet = 0;
+	if ( send_SCI1_I2cWait( 0xd0, dummy, 1) >= 1 ) {
+		init_SCI1( UART, RATE_230400);
+		IMUSet = 0;
+	} else  {
+		IMUSet = 1;
+	}
+	
 	inti_lcd();			// LCD初期化
 	lcdPosition( 0, 0 );
 	lcdPrintf("INITIALI");
@@ -68,16 +75,6 @@ void main(void){
 	start = 0;			// ゲートスタート
 	
 	init_BeepS();			// ブザー初期化
-	led_out( 0x01 );
-	// SCI1初期化
-	/*if( tasw_get() == 0x2 ) {
-		init_SCI1(RATE_230400);
-		IMUSet = 0;
-	} else {
-		R_PG_SCI_Set_C1();
-		init_IMU();
-		IMUSet = 1;
-	}*/
 	
 	// フラッシュ初期化
 	if( initFlash() == 0 ) {
@@ -86,7 +83,6 @@ void main(void){
 	} else{
 		setBeepPatternS( 0xaa00 );
 	}
-	led_out( 0x02 );
 	// MicroSDカード初期化
 	if( init_msd() == 0 ) {
 		setBeepPatternS( 0x4000 );
@@ -95,7 +91,7 @@ void main(void){
 		setBeepPatternS( 0xaa00 );
 		msdset = 0;
 	}
-	led_out( 0x04 );
+
 	while(1){
 		__setpsw_i();
 		if( pattern >= 11 && pattern <= 99 ) {
@@ -1345,7 +1341,7 @@ void Timer (void) {
 		s = (short)RollAngleIMU;
 		if ( s >= 5 || s <= -5 ) cnt_out4++;
 		else	cnt_out4 = 0;
-	} else if ( pattern < 11 ) {
+	} else if ( pattern < 10 || pattern > 100 ) {
 		cnt_setup++;
 		cnt_setup2++;
 		cnt_setup3++;
@@ -1380,12 +1376,12 @@ void Timer (void) {
 	getRollAngleIMU();
 	if( cnt_gyro == INTEGRAL_LIMIT ) cnt_gyro = 0;
 
-	if ( IMUSet == 0 ) {
+	if ( IMUSet ) {
+		// 加速度及び角速度を取得
+		//IMUProcess();
+	} else {
 		// UART受信
 		commandSCI1();
-	} else {
-		// 加速度及び角速度を取得
-		IMUProcess();
 	}
 	
 	// MicroSD書き込み
@@ -1401,7 +1397,7 @@ void Timer (void) {
 		// ブザー
 		beepProcessS();
 		break;
-	case 2:
+	case 2://
 		// スイッチ読み込み
 		getSwitch();
 		break;
