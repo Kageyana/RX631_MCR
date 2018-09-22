@@ -7,29 +7,30 @@
 //======================================//
 char revErr = 0;
 // SCI1関連
-char		SCI1_mode;		// 通信方式
-char		txt_command[128];	// コマンド格納
-char		txt_data[128];		// データ格納
-char		*txt;			// 受信データ格納
-char		cmmandMode = 0;		// コマンド選択
-char		stopWord = 0;		// 0: 停止ワード未受信 1:停止ワード受信
-short 		cnt_byte = 0;		// 受信したバイト数
-char 		command = 0;		// 0:コマンド受信待ち 1:コマンド入力中 2:コマンド判定中
+char	SCI1_mode;		// 通信方式
+char	txt_command[128];	// コマンド格納
+char	txt_data[128];		// データ格納
+char	*txt;			// 受信データ格納
+char	cmmandMode = 0;		// コマンド選択
+char	stopWord = 0;		// 0: 停止ワード未受信 1:停止ワード受信
+short 	cnt_byte = 0;		// 受信したバイト数
+char 	command = 0;		// 0:コマンド受信待ち 1:コマンド入力中 2:コマンド判定中
 
-char		SCI1_Req_mode;		// 0:スタート 1:ストップ
-char		SCI1_SlaveAddr;		// スレーブアドレス
-char		SCI1_NumData;		// 送信データ数
-char*		SCI1_DataArry;		// 送信データ配列
-char		SCI1_DataBuff[255];	// 送信データバッファ
+char	SCI1_Req_mode;		// 0:スタート 1:ストップ 2:データ送受信中
+char	SCI1_RW_mode;		// 0:送信 1:受信
+char	SCI1_SlaveAddr;		// スレーブアドレス
+char	SCI1_NumData;		// 送信データ数
+char*	SCI1_DataArry;		// 送信データ配列
+char	SCI1_DataBuff[255];	// 送信データバッファ
 
 // SCI12関連
-char		SCI12_Req_mode = 0;	// 0:スタート 1:ストップ
-char		SCI12_SlaveAddr;	// 送信データ数
-char		SCI12_NumData;		// データ数
-char*		SCI12_DataArry;		// データ配列
-char		SCI12_DataBuff[255];	// 送信データバッファ
+char	SCI12_Req_mode = 0;	// 0:スタート 1:ストップ
+char	SCI12_SlaveAddr;	// 送信データ数
+char	SCI12_NumData;		// データ数
+char*	SCI12_DataArry;		// データ配列
+char	SCI12_DataBuff[255];	// 送信データバッファ
 
-char 		ascii_num[] = {48,49,50,51,52,53,54,55,56,57,97,98,99,100,101,102};
+char 	ascii_num[] = {48,49,50,51,52,53,54,55,56,57,97,98,99,100,101,102};
 
 
 #pragma interrupt Excep_SCI1_RXI1 (vect = VECT_SCI1_RXI1)	// RXI1割り込み関数定義
@@ -153,7 +154,7 @@ void init_SCI1( char mode, char rate )
 		
 		txt= txt_data;
 	} else if ( mode == I2C ) {
-		IEN( SCI1, RXI1 ) = 0;	// RXI割り込み開始
+		IEN( SCI1, RXI1 ) = 1;	// RXI割り込み開始
 		IEN( SCI1, TXI1 ) = 1;	// TXI割り込み開始
 		IEN( SCI1, TEI1 ) = 1;	// TEIE割り込み開始
 		
@@ -263,7 +264,10 @@ void Excep_SCI1_RXI1(void)
 			}
 		}
 	} else if ( SCI1_mode == I2C ) {
-		
+		PORT5.PODR.BIT.B5 = 1;
+		*SCI1_DataArry++ = SCI1.RDR;
+		SCI1_NumData--;
+		if ( SCI1_NumData == 0 ) PORT5.PODR.BIT.B4 = 1;
 	} else if ( SCI1_mode == SPI ) {
 		
 	}
@@ -308,25 +312,55 @@ void Excep_SCI1_TXI1( void )
 		
 	} else if ( SCI1_mode == I2C ) {
 		// データ数確認
-		if ( SCI1_NumData == 0 ) {
-			SCI1_Req_mode = 1;		// ストップコンディション待ち
-			SCI1.SIMR3.BYTE = 0x54;	// ストップコンディション発行
-		} else {
-			if ( SCI1.SISR.BIT.IICACKR == 0 && SCI1_Req_mode == 0 ) {
-				// ACK受信
-				SCI1_Req_mode = 2;		// データ送信
-				SCI1.TDR = *SCI1_DataArry++;	// 送信データ書き込み
-				SCI1.SSR.BIT.TEND = 0;
-				SCI1_NumData--;
-			} else if ( SCI1.SISR.BIT.IICACKR == 1 && SCI1_Req_mode == 0 ) {
-				// NACK受信
+		if ( SCI1_NumData <= 1 ) {
+			if ( SCI1_RW_mode ) {
+				// 受信モード
+				if ( SCI1_NumData ) {
+					// 残り1
+					SCI1.SIMR2.BIT.IICACKT = 1;	// NACK送信またはACK/NACK受信
+				} else {
+					// 残り0
+					SCI1.SCR.BIT.RIE = 0;	// RXI割り込み禁止
+					SCI1_Req_mode = 1;	// ストップコンディション待ち
+					SCI1.SIMR3.BYTE = 0x54;	// ストップコンディション発行
+				}
+			} else if ( SCI1_NumData == 0 && SCI1_RW_mode == 0 ) {
+				// 送信モード
 				SCI1_Req_mode = 1;	// ストップコンディション待ち
 				SCI1.SIMR3.BYTE = 0x54;	// ストップコンディション発行
+			}
+		}
+		if ( SCI1.SISR.BIT.IICACKR == 0 && SCI1_Req_mode == 0 ) {
+			// スレーブアドレス送信後にACK受信
+			SCI1_Req_mode = 2;	// データ送受信中
+			if ( SCI1_RW_mode ) {
+				// 受信モード
+				SCI1.SIMR2.BIT.IICACKT = 0;	// ACK送信準備
+				SCI1.SCR.BIT.RIE = 1;		// RXI割り込み開始
+				SCI1.TDR = 0xFF;	// ダミーデータ書き込み
 			} else {
+				// 送信モード
 				SCI1.TDR = *SCI1_DataArry++;	// 送信データ書き込み
 				SCI1.SSR.BIT.TEND = 0;
-				SCI1_NumData--;
+				SCI1_NumData--;		// 送信データ減少
 			}
+		} else if ( SCI1.SISR.BIT.IICACKR == 1 ) {
+			// NACK受信
+			PORT5.PODR.BIT.B3 = 1;
+			SCI1_Req_mode = 1;	// ストップコンディション待ち
+			SCI1.SIMR3.BYTE = 0x54;	// ストップコンディション発行
+		} else if ( SCI1_Req_mode == 2 ) {
+			// ACK受信
+			if ( SCI1_RW_mode ) {
+				// 受信モード
+				SCI1.TDR = 0xFF;	// ダミーデータ書き込み
+			} else {
+				// 送信モード
+				SCI1.TDR = *SCI1_DataArry++;	// 送信データ書き込み
+				SCI1.SSR.BIT.TEND = 0;
+				SCI1_NumData--;		// 送信データ減少
+			}
+			
 		}
 	} else if ( SCI1_mode == SPI ) {
 		
@@ -383,6 +417,7 @@ void send_SCI1_I2c( char slaveAddr, char* data, char num )
 {
 	while ( SCI1.SIMR3.BYTE != 0xf0 );	// バスがフリーになるまで待つ
 	
+	SCI1_RW_mode = 0;	// 送信モード
 	memcpy( SCI1_DataBuff, data, num );	// 送信データをバッファに移動
 	
 	SCI1_SlaveAddr = slaveAddr;
@@ -409,6 +444,7 @@ char send_SCI1_I2cWait( char slaveAddr, char* data, char num )
 	
 	while ( SCI1.SIMR3.BYTE != 0xf0 );	// バスがフリーになるまで待つ
 	
+	SCI1_RW_mode = 1;	// 受信モード
 	memcpy( SCI1_DataBuff, data, num );	// 送信データをバッファに移動
 	
 	SCI1_SlaveAddr = slaveAddr;
@@ -431,6 +467,30 @@ char send_SCI1_I2cWait( char slaveAddr, char* data, char num )
 	}
 	if ( err == 1 ) return 2;
 	else return SCI1.SISR.BIT.IICACKR;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// モジュール名 receive_SCI1_I2c								//
+// 処理概要     SCI1I2cの送信									//
+// 引数         slaveAddr:スレーブアドレス data:送信データの先頭アドレス num: 送信するデータ数	//
+// 戻り値       なし										//
+//////////////////////////////////////////////////////////////////////////////////////////////////
+void receive_SCI1_I2c( char slaveAddr, char* data, char num )
+{
+	while ( SCI1.SIMR3.BYTE != 0xf0 );	// バスがフリーになるまで待つ
+	
+	SCI1_SlaveAddr = slaveAddr | RW_BIT;
+	SCI1_NumData = num;
+	SCI1_DataArry = data;
+	
+	SCI1_Req_mode = 0;
+	SCI1.SCR.BIT.RIE = 0;		// RXI割り込み禁止
+	SCI1.SCR.BIT.TEIE = 1;		// STI割り込み許可
+	SCI1.SCR.BIT.TIE = 1;		// TXI割り込み許可
+	
+	SCI1.SIMR3.BYTE = 0x51;	// スタートコンディション発行
+	
+	// データは割り込みで送信
+	while ( SCI1.SIMR3.BYTE != 0xf0 );	// バスがフリーになるまで待つ
 }
 
 

@@ -47,6 +47,7 @@
 #define UART		1
 #define I2C		2
 #define SPI		3
+#define RW_BIT		1
 
 #define SET_SCI_C1	init_SCI1( I2C, 0);
 //======================================//
@@ -64,7 +65,8 @@ extern char	stopWord;		// 0: 停止ワード未受信 1:停止ワード受信
 extern short 	cnt_byte;		// 受信したバイト数
 extern char	command;		// 0:コマンド受信待ち 1:コマンド入力中 2:コマンド判定中
 
-extern char	SCI1_Req_mode;		// 0:スタート 1:ストップ
+extern char	SCI1_Req_mode;		// 0:スタート 1:ストップ 2:データ送受信中
+extern char	SCI1_RW_mode;		// 0:送信 1:受信
 extern char	SCI1_SlaveAddr;		// スレーブアドレス
 extern char	SCI1_NumData;		// 送信データ数
 extern char*	SCI1_DataArry;		// 送信データ配列
@@ -88,6 +90,7 @@ void Excep_SCI1_TEI1( void );
 void commandSCI1 (void);
 void send_SCI1_I2c( char slaveAddr, char* data, char num );
 char send_SCI1_I2cWait( char slaveAddr, char* data, char num );
+void receive_SCI1_I2c( char slaveAddr, char* data, char num );
 
 void init_SCI12( void );
 void send_SCI12_I2c( char slaveAddr, char* data, char num );

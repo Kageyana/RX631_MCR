@@ -20,7 +20,7 @@ char		IMUset = 0;		// 0:‰Šú‰»¸”s		1:‰Šú‰»Š®—¹
 //////////////////////////////////////////////////////////////////////////////////////////
 void IMUWriteByte(short slaveAddr, char reg, char data )
 {
-	uint8_t sendData[2] = { reg, data };
+	char sendData[2] = { reg, data };
     
 	I2C_IMU_COMMAND
 }
@@ -32,7 +32,7 @@ void IMUWriteByte(short slaveAddr, char reg, char data )
 //////////////////////////////////////////////////////////////////////////
 char IMUReadByte(short slaveAddr, char reg )
 {
-	uint8_t sendData[1] = { reg }, reciveData[1];
+	char sendData[1] = { reg }, reciveData[1];
     
 	I2C_IMU_DATA
 	I2C_IMU_READ
@@ -47,7 +47,7 @@ char IMUReadByte(short slaveAddr, char reg )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void IMUReadArry(short slaveAddr, char reg, char num, char* dataArry )
 {
-	uint8_t sendData[1] = { reg };
+	char sendData[1] = { reg };
     
 	I2C_IMU_DATA
 	I2C_IMU_ARRY

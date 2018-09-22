@@ -4,13 +4,11 @@
 // インクルード                         //
 //======================================//
 #include "R_PG_RX631_mcr_ver3.0.h"
+#include "SCI.h"
 #include <math.h>
 //======================================//
 // シンボル定義                         //
 //======================================//
-// Slave Address
-#define MPU9255_ADDRESS     	0x00d0	// 書き込み時のスレーブアドレス
-
 // MPU-9255 Register Map
 #define SELF_TEST_X_GYRO	0x00
 #define SELF_TEST_Y_GYRO	0x01
@@ -113,6 +111,9 @@
 #define ZA_OFFSET_H		0x7D
 #define ZA_OFFSET_L		0x7E
 
+// Slave Address
+#define MPU9255_ADDRESS     	0xd0	// 書き込み時のスレーブアドレス
+
 #define ACCELLSB		2048	// 16[g]
 #define GYROLSB			131	// 2000[deg/s]
 #define TEMP_LSB		333.87	// LSB/°C
@@ -122,10 +123,10 @@
 #define G_ACCELERATION		9.80665	// 重力加速度
 
 /******************************************** 自動生成関数 *****************************************/
-#define I2C_IMU_DATA		R_PG_SCI_I2CMode_Send_C1(0, slaveAddr, sendData, 1);
-#define I2C_IMU_COMMAND		R_PG_SCI_I2CMode_Send_C1(0, slaveAddr, sendData, 2);
-#define I2C_IMU_READ		R_PG_SCI_I2CMode_Receive_C1(0, slaveAddr, reciveData, 1);
-#define I2C_IMU_ARRY		R_PG_SCI_I2CMode_Receive_C1(0, slaveAddr, (uint8_t*)dataArry, num);
+#define I2C_IMU_DATA		send_SCI1_I2c(slaveAddr, sendData, 1);
+#define I2C_IMU_COMMAND		send_SCI1_I2c(slaveAddr, sendData, 2);
+#define I2C_IMU_READ		receive_SCI1_I2c(slaveAddr, reciveData, 1);
+#define I2C_IMU_ARRY		receive_SCI1_I2c(slaveAddr, dataArry, num);
 /****************************************************************************************************/
 //======================================//
 // グローバル変数の宣言                 //

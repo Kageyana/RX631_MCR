@@ -56,10 +56,13 @@ void main(void){
 		init_SCI1( UART, RATE_230400);
 		IMUSet = 0;
 	} else  {
+		PORT5.PODR.BIT.B2 = 1;
+		init_IMU();
 		IMUSet = 1;
 	}
 	
 	inti_lcd();			// LCDèâä˙âª
+	
 	lcdPosition( 0, 0 );
 	lcdPrintf("INITIALI");
 	lcdPosition( 0, 1 );
@@ -1370,10 +1373,11 @@ void Timer (void) {
 	motorControl();
 	
 	// äpìxåvéZ
-	getDegrees();
 	getTurningAngleEnc();
 	getTurningAngleIMU();
 	getRollAngleIMU();
+	getPichAngleIMU;
+	getTempIMU;
 	if( cnt_gyro == INTEGRAL_LIMIT ) cnt_gyro = 0;
 
 	if ( IMUSet ) {
