@@ -59,7 +59,6 @@ void setup( void )
 	short s;
 	
 	// LED“_–Åˆ—
-	
 	if ( cnt_setup2 >= 600 ) cnt_setup2 = 0;
 	if ( cnt_setup2 < 300 ) {
 		if ( EncoderTotal % 2 == 1 ) led_out( 0x12 );

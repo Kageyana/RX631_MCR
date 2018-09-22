@@ -51,7 +51,7 @@ extern unsigned int		msdEndAddress;          // 記録終了アドレス
 extern unsigned int		msdWorkAddress;         // 作業用アドレス
 extern unsigned int		msdWorkAddress2;	// 作業用アドレス2
 extern volatile char		msdlibError;		// エラー番号
-extern signed char 		*msdBuffPointa;		// RAM保存バッファ用ポインタ
+extern signed char* 		msdBuffPointa;		// RAM保存バッファ用ポインタ
 
 extern volatile short		msdlibCnt;
 extern volatile unsigned char	interrupt_msd_send_data;	// 送信フラグ

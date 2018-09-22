@@ -940,7 +940,7 @@
       <GeneralOptionPatch-DefaultValue>None</GeneralOptionPatch-DefaultValue>
       <GeneralOptionSaveAcc-DefaultValue>False</GeneralOptionSaveAcc-DefaultValue>
       <IsLockedByUser>True</IsLockedByUser>
-      <TimeTagModified--0>-8586841242047164181</TimeTagModified--0>
+      <TimeTagModified--0>-8586643293206018294</TimeTagModified--0>
       <BuildMode-0>DefaultBuild</BuildMode-0>
       <Memo-0 />
       <OutputMessageFormat-0>%TargetFiles%</OutputMessageFormat-0>
@@ -984,7 +984,7 @@
       <GeneralOptionOtherAdditionalOptions-0 />
       <GeneralOptionSignedBitfield-0>Unsigned</GeneralOptionSignedBitfield-0>
       <COptionShowDefinitions-0>False</COptionShowDefinitions-0>
-      <GeneralOptionAutoEnum-0>False</GeneralOptionAutoEnum-0>
+      <GeneralOptionAutoEnum-0>True</GeneralOptionAutoEnum-0>
       <COptionShowExpansions-0>False</COptionShowExpansions-0>
       <GeneralOptionBitOrder-0>Right</GeneralOptionBitOrder-0>
       <GeneralOptionPack-0>False</GeneralOptionPack-0>
@@ -1039,6 +1039,23 @@
       <COptionCommandLine-DefaultValue>-isa=rxv1
 -fpu
 -dbl_size=8
+-auto_enum
+-include=RX631_mcr_ver3.0
+-include=RX631_mcr_ver3.0\i_src
+-include=RX631_mcr_ver3.0\AD_12
+-include=RX631_mcr_ver3.0\SCI
+-include=RX631_mcr_ver3.0\CMT
+-include=RX631_mcr_ver3.0\MTU
+-include=RX631_mcr_ver3.0\IO
+-include=RX631_mcr_ver3.0\SYSTEM
+-include=..\RX631_mcr_ver2.3
+-include=..\RX631_mcr_ver2.3\i_src
+-include=..\RX631_mcr_ver2.3\AD_12
+-include=..\RX631_mcr_ver2.3\SCI
+-include=..\RX631_mcr_ver2.3\CMT
+-include=..\RX631_mcr_ver2.3\MTU
+-include=..\RX631_mcr_ver2.3\IO
+-include=..\RX631_mcr_ver2.3\SYSTEM
 -include=..\RX631_mcr_ver2.2
 -include=..\RX631_mcr_ver2.2\i_src
 -include=..\RX631_mcr_ver2.2\AD_12
@@ -1065,8 +1082,8 @@
 -output=obj
 -obj_path=%BuildModeName%
 -debug
--speed
 -nologo
+-exec_time
 </COptionCommandLine-DefaultValue>
       <COptionDefine-DefaultValue />
       <COptionInline-DefaultValue>Auto</COptionInline-DefaultValue>
@@ -1131,9 +1148,9 @@
       <COptionCheck-DefaultValue>No</COptionCheck-DefaultValue>
       <COptionFloatOrder-DefaultValue>False</COptionFloatOrder-DefaultValue>
       <COptionIncode-DefaultValue>Sjis</COptionIncode-DefaultValue>
-      <IsLockedByUser>False</IsLockedByUser>
-      <TimeTagModified--0>-8586676273184441455</TimeTagModified--0>
-      <COptionLangC-0>C</COptionLangC-0>
+      <IsLockedByUser>True</IsLockedByUser>
+      <TimeTagModified--0>-8586639925202232226</TimeTagModified--0>
+      <COptionLangC-0>C99</COptionLangC-0>
       <COptionListfile-0>False</COptionListfile-0>
       <COptionLogo-0>False</COptionLogo-0>
       <COptionMisra-0>Misra2012</COptionMisra-0>
@@ -1194,7 +1211,7 @@ SmartManual Docs\RX631
       <COptionMisra2004RuleFile-0 />
       <COptionPreCompileCommands-0 />
       <COptionShowConditionals-0>False</COptionShowConditionals-0>
-      <COptionSpeedAndSize-0>Speed</COptionSpeedAndSize-0>
+      <COptionSpeedAndSize-0>Size</COptionSpeedAndSize-0>
       <COptionLoop-0>Auto</COptionLoop-0>
       <COptionMisra2004RuleNumberApply-0 />
       <COptionPostCompileCommands-0 />
@@ -1210,6 +1227,23 @@ SmartManual Docs\RX631
       <COptionCommandLine-0>-isa=rxv1
 -fpu
 -dbl_size=8
+-auto_enum
+-include=RX631_mcr_ver3.0
+-include=RX631_mcr_ver3.0\i_src
+-include=RX631_mcr_ver3.0\AD_12
+-include=RX631_mcr_ver3.0\SCI
+-include=RX631_mcr_ver3.0\CMT
+-include=RX631_mcr_ver3.0\MTU
+-include=RX631_mcr_ver3.0\IO
+-include=RX631_mcr_ver3.0\SYSTEM
+-include=..\RX631_mcr_ver2.3
+-include=..\RX631_mcr_ver2.3\i_src
+-include=..\RX631_mcr_ver2.3\AD_12
+-include=..\RX631_mcr_ver2.3\SCI
+-include=..\RX631_mcr_ver2.3\CMT
+-include=..\RX631_mcr_ver2.3\MTU
+-include=..\RX631_mcr_ver2.3\IO
+-include=..\RX631_mcr_ver2.3\SYSTEM
 -include=..\RX631_mcr_ver2.2
 -include=..\RX631_mcr_ver2.2\i_src
 -include=..\RX631_mcr_ver2.2\AD_12
@@ -1236,8 +1270,8 @@ SmartManual Docs\RX631
 -output=obj
 -obj_path=%BuildModeName%
 -debug
--speed
 -nologo
+-exec_time
 </COptionCommandLine-0>
       <COptionDefine-0 />
       <COptionInline-0>Auto</COptionInline-0>
@@ -1327,7 +1361,7 @@ SmartManual Docs\RX631
 -nologo
 -exec_time
 </AsmOptionCommandLine-DefaultValue>
-      <IsLockedByUser>False</IsLockedByUser>
+      <IsLockedByUser>True</IsLockedByUser>
       <TimeTagModified--0>-8586898286906216510</TimeTagModified--0>
       <AsmOptionChkpm-0>False</AsmOptionChkpm-0>
       <AsmOptionGoptimize-0>False</AsmOptionGoptimize-0>
@@ -1454,7 +1488,7 @@ D_2=R_2
 -nologo
 -exit
 </LinkOptionCommandLine-DefaultValue>
-      <IsLockedByUser>False</IsLockedByUser>
+      <IsLockedByUser>True</IsLockedByUser>
       <TimeTagModified--0>-8586676273921471594</TimeTagModified--0>
       <LinkOptionCpu-0>False</LinkOptionCpu-0>
       <LinkOptionForm-0>Absolute</LinkOptionForm-0>
@@ -1593,7 +1627,7 @@ D_2=R_2
       <HexOptionEndRecord-DefaultValue>None</HexOptionEndRecord-DefaultValue>
       <LinkOptionS9-DefaultValue>False</LinkOptionS9-DefaultValue>
       <HexOptionCreateUnfilledArea-DefaultValue>False</HexOptionCreateUnfilledArea-DefaultValue>
-      <IsLockedByUser>False</IsLockedByUser>
+      <IsLockedByUser>True</IsLockedByUser>
       <TimeTagModified--0>-8586898286905666122</TimeTagModified--0>
       <HexOptionForm-0>Stype</HexOptionForm-0>
       <HexOptionOutput-0>True</HexOptionOutput-0>
@@ -1722,6 +1756,7 @@ D_2=R_2
       <LbgOptionCommandLine-DefaultValue>-isa=rxv1
 -fpu
 -dbl_size=8
+-auto_enum
 -head=runtime,math,stdarg,stdio,stdlib,string,new
 -output=%BuildModeName%\%ProjectName%.lib
 -nologo
@@ -1773,8 +1808,8 @@ D_2=R_2
       <LbgOptionSimpleFloatConv-DefaultValue>False</LbgOptionSimpleFloatConv-DefaultValue>
       <LbgOptionFpu-DefaultValue>Fpu</LbgOptionFpu-DefaultValue>
       <LbgOptionFloatOrder-DefaultValue>False</LbgOptionFloatOrder-DefaultValue>
-      <IsLockedByUser>False</IsLockedByUser>
-      <TimeTagModified--0>-8586841242047007928</TimeTagModified--0>
+      <IsLockedByUser>True</IsLockedByUser>
+      <TimeTagModified--0>-8586643293205270284</TimeTagModified--0>
       <LbgOptionLanguage-0>C</LbgOptionLanguage-0>
       <LbgOptionLibraryMode-0>MakeOptionChanged</LbgOptionLibraryMode-0>
       <LbgOptionLogo-0>False</LbgOptionLogo-0>
@@ -1794,6 +1829,7 @@ D_2=R_2
       <LbgOptionCommandLine-0>-isa=rxv1
 -fpu
 -dbl_size=8
+-auto_enum
 -head=runtime,math,stdarg,stdio,stdlib,string,new
 -output=%BuildModeName%\%ProjectName%.lib
 -nologo

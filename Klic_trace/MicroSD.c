@@ -26,7 +26,7 @@ unsigned int		msdStartAddress;	// 記録開始アドレス
 unsigned int		msdEndAddress;		// 記録終了アドレス
 unsigned int		msdWorkAddress;		// 作業用アドレス
 unsigned int		msdWorkAddress2;	// 作業用アドレス2
-signed char 		*msdBuffPointa;		// RAM保存バッファ用ポインタ
+signed char* 		msdBuffPointa;		// RAM保存バッファ用ポインタ
 unsigned int 		msdAddrBuff[25];	// MicroSDカードの最終書き込みアドレス保存用
                                         
 //////////////////////////////////////////////////////////////////////////
