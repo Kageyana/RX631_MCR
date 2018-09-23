@@ -264,10 +264,8 @@ void Excep_SCI1_RXI1(void)
 			}
 		}
 	} else if ( SCI1_mode == I2C ) {
-		PORT5.PODR.BIT.B5 = 1;
 		*SCI1_DataArry++ = SCI1.RDR;
 		SCI1_NumData--;
-		if ( SCI1_NumData == 0 ) PORT5.PODR.BIT.B4 = 1;
 	} else if ( SCI1_mode == SPI ) {
 		
 	}
@@ -335,9 +333,10 @@ void Excep_SCI1_TXI1( void )
 			SCI1_Req_mode = 2;	// データ送受信中
 			if ( SCI1_RW_mode ) {
 				// 受信モード
-				SCI1.SIMR2.BIT.IICACKT = 0;	// ACK送信準備
+				if ( SCI1_NumData > 1 ) SCI1.SIMR2.BIT.IICACKT = 0;	// ACK送信準備
 				SCI1.SCR.BIT.RIE = 1;		// RXI割り込み開始
 				SCI1.TDR = 0xFF;	// ダミーデータ書き込み
+				SCI1.SSR.BIT.TEND = 0;
 			} else {
 				// 送信モード
 				SCI1.TDR = *SCI1_DataArry++;	// 送信データ書き込み
@@ -346,7 +345,7 @@ void Excep_SCI1_TXI1( void )
 			}
 		} else if ( SCI1.SISR.BIT.IICACKR == 1 ) {
 			// NACK受信
-			PORT5.PODR.BIT.B3 = 1;
+			PORT5.PODR.BIT.B5 = 1;
 			SCI1_Req_mode = 1;	// ストップコンディション待ち
 			SCI1.SIMR3.BYTE = 0x54;	// ストップコンディション発行
 		} else if ( SCI1_Req_mode == 2 ) {
@@ -354,6 +353,7 @@ void Excep_SCI1_TXI1( void )
 			if ( SCI1_RW_mode ) {
 				// 受信モード
 				SCI1.TDR = 0xFF;	// ダミーデータ書き込み
+				SCI1.SSR.BIT.TEND = 0;
 			} else {
 				// 送信モード
 				SCI1.TDR = *SCI1_DataArry++;	// 送信データ書き込み
@@ -444,7 +444,7 @@ char send_SCI1_I2cWait( char slaveAddr, char* data, char num )
 	
 	while ( SCI1.SIMR3.BYTE != 0xf0 );	// バスがフリーになるまで待つ
 	
-	SCI1_RW_mode = 1;	// 受信モード
+	SCI1_RW_mode = 0;	// 送信モード
 	memcpy( SCI1_DataBuff, data, num );	// 送信データをバッファに移動
 	
 	SCI1_SlaveAddr = slaveAddr;
@@ -478,6 +478,7 @@ void receive_SCI1_I2c( char slaveAddr, char* data, char num )
 {
 	while ( SCI1.SIMR3.BYTE != 0xf0 );	// バスがフリーになるまで待つ
 	
+	SCI1_RW_mode = 1;	// 受信モード
 	SCI1_SlaveAddr = slaveAddr | RW_BIT;
 	SCI1_NumData = num;
 	SCI1_DataArry = data;

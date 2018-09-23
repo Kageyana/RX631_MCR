@@ -1381,8 +1381,9 @@ void Timer (void) {
 	if( cnt_gyro == INTEGRAL_LIMIT ) cnt_gyro = 0;
 
 	if ( IMUSet ) {
+		
 		// ‰Á‘¬“x‹y‚ÑŠp‘¬“x‚ğæ“¾
-		//IMUProcess();
+		IMUProcess();
 	} else {
 		// UARTóM
 		commandSCI1();

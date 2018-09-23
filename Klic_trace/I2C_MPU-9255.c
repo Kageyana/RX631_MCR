@@ -18,7 +18,7 @@ char		IMUset = 0;		// 0:初期化失敗		1:初期化完了
 // 引数         slaveAddr:スレーブアドレス reg:レジスタのアドレス data:書き込みデータ	//
 // 戻り値       なし									//
 //////////////////////////////////////////////////////////////////////////////////////////
-void IMUWriteByte(short slaveAddr, char reg, char data )
+void IMUWriteByte(char slaveAddr, char reg, char data )
 {
 	char sendData[2] = { reg, data };
     
@@ -30,7 +30,7 @@ void IMUWriteByte(short slaveAddr, char reg, char data )
 // 引数         slaveAddr:スレーブアドレス reg:レジスタのアドレス	//
 // 戻り値       指定レジスタのデータ 					//
 //////////////////////////////////////////////////////////////////////////
-char IMUReadByte(short slaveAddr, char reg )
+char IMUReadByte(char slaveAddr, char reg )
 {
 	char sendData[1] = { reg }, reciveData[1];
     
@@ -45,7 +45,7 @@ char IMUReadByte(short slaveAddr, char reg )
 // 引数         slaveAddr:スレーブアドレス addr:レジスタのアドレス num:読み取るデータ数 dataArry:データの格納先	//
 // 戻り値       なし 												//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void IMUReadArry(short slaveAddr, char reg, char num, char* dataArry )
+void IMUReadArry(char slaveAddr, char reg, char num, char* dataArry )
 {
 	char sendData[1] = { reg };
     
@@ -68,7 +68,7 @@ char init_IMU (void)
 		IMUWriteByte(MPU9255_ADDRESS, INT_PIN_CFG, 0x02);	// 内蔵プルアップ無効化
 		IMUWriteByte(MPU9255_ADDRESS, CONFIG, 0x00);		// 8Hzローパスフィルタ
 		IMUWriteByte(MPU9255_ADDRESS, ACCEL_CONFIG, 0x18);	// レンジ±16gに変更
-		IMUWriteByte(MPU9255_ADDRESS, GYRO_CONFIG, 0x00);	// レンジ±2000deg/sに変更
+		IMUWriteByte(MPU9255_ADDRESS, GYRO_CONFIG, 0x10);	// レンジ±1000deg/sに変更
 	} else {
 		ret = 1;
 	}
@@ -183,7 +183,6 @@ void caribrateIMU (void)
 	short xa[10], ya[10], za[10], xg[10], yg[10], zg[10];
 	int i;
 	
-	__clrpsw_i();
 	for( i = 0; i < 10; i++ ){
 		IMUReadArry(MPU9255_ADDRESS, ACCEL_XOUT_H, 6, a);	// 3軸加速度取得
 		IMUReadArry(MPU9255_ADDRESS, GYRO_XOUT_H, 6, g);	// 3軸角加速度取得
@@ -214,5 +213,4 @@ void caribrateIMU (void)
 	ave[5] /= 10;
 	
 	
-	__setpsw_i();
 }

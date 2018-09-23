@@ -115,7 +115,7 @@
 #define MPU9255_ADDRESS     	0xd0	// 書き込み時のスレーブアドレス
 
 #define ACCELLSB		2048	// 16[g]
-#define GYROLSB			131	// 2000[deg/s]
+#define GYROLSB			32.8	// 1000[deg/s]
 #define TEMP_LSB		333.87	// LSB/°C
 #define ROOMTEMPOFFSET		23	// °C
 
@@ -142,9 +142,9 @@ extern char	IMUset;			// 0:初期化失敗		1:初期化完了
 //======================================//
 // プロトタイプ宣言                     //
 //======================================//
-void IMUWriteByte(short slaveAddr, char reg, char data );
-char IMUReadByte(short slaveAddr, char reg );
-void IMUReadArry(short slaveAddr, char reg, char num, char* dataArry );
+void IMUWriteByte(char slaveAddr, char reg, char data );
+char IMUReadByte(char slaveAddr, char reg );
+void IMUReadArry(char slaveAddr, char reg, char num, char* dataArry );
 char init_IMU (void);
 void IMUProcess (void);
 void caribrateIMU (void);
