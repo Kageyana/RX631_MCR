@@ -123,10 +123,8 @@
 #define G_ACCELERATION		9.80665	// 重力加速度
 
 /******************************************** 自動生成関数 *****************************************/
-#define I2C_IMU_DATA		send_SCI1_I2c(slaveAddr, sendData, 1);
 #define I2C_IMU_COMMAND		send_SCI1_I2c(slaveAddr, sendData, 2);
-#define I2C_IMU_READ		receive_SCI1_I2c(slaveAddr, reciveData, 1);
-#define I2C_IMU_ARRY		receive_SCI1_I2c(slaveAddr, dataArry, num);
+#define I2C_IMU_ARRY		receive_data_SCI1_I2c(slaveAddr, sendData, reciveData, num);
 /****************************************************************************************************/
 //======================================//
 // グローバル変数の宣言                 //

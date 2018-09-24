@@ -32,10 +32,9 @@ void IMUWriteByte(char slaveAddr, char reg, char data )
 //////////////////////////////////////////////////////////////////////////
 char IMUReadByte(char slaveAddr, char reg )
 {
-	char sendData[1] = { reg }, reciveData[1];
+	char sendData[1] = { reg }, reciveData[1], num = 1;
     
-	I2C_IMU_DATA
-	I2C_IMU_READ
+	I2C_IMU_ARRY
     
 	return reciveData[0];
 }
@@ -45,11 +44,9 @@ char IMUReadByte(char slaveAddr, char reg )
 // 引数         slaveAddr:スレーブアドレス addr:レジスタのアドレス num:読み取るデータ数 dataArry:データの格納先	//
 // 戻り値       なし 												//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void IMUReadArry(char slaveAddr, char reg, char num, char* dataArry )
+void IMUReadArry(char slaveAddr, char reg, char num, char* reciveData )
 {
 	char sendData[1] = { reg };
-    
-	I2C_IMU_DATA
 	I2C_IMU_ARRY
 }
 //////////////////////////////////////////////////////////////////////////
