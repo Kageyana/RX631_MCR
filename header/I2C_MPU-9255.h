@@ -3,9 +3,9 @@
 //======================================//
 // インクルード                         //
 //======================================//
-#include "R_PG_RX631_mcr_ver3.0.h"
+#include "iodefine.h"
 #include "SCI.h"
-#include <math.h>
+#include "LineChase.h"
 //======================================//
 // シンボル定義                         //
 //======================================//
@@ -111,6 +111,8 @@
 #define ZA_OFFSET_H		0x7D
 #define ZA_OFFSET_L		0x7E
 
+#define CLOCK		96		// 動作周波数[MHz]
+
 // Slave Address
 #define MPU9255_ADDRESS     	0xd0	// 書き込み時のスレーブアドレス
 
@@ -140,6 +142,7 @@ extern char	IMUset;			// 0:初期化失敗		1:初期化完了
 //======================================//
 // プロトタイプ宣言                     //
 //======================================//
+void wait_IMU ( short waitTime );
 void IMUWriteByte(char slaveAddr, char reg, char data );
 char IMUReadByte(char slaveAddr, char reg );
 void IMUReadArry(char slaveAddr, char reg, char num, char* dataArry );

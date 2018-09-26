@@ -5,13 +5,26 @@
 //======================================//
 // グローバル変数の宣言                 //
 //======================================//
-volatile int	ave[6] = {0,0,0,0,0,0};	// オフセット値	
+volatile int	cent_data[6] = {0,0,0,0,0,0};	// オフセット値	
 volatile short 	rawXa, rawYa, rawZa;	// 加速度(16bitデータ)
 volatile short 	rawXg, rawYg, rawZg;	// 角加速度(16bitデータ)
 volatile short 	rawTemp;		// 温度(16bitデータ)
 
 char		IMUset = 0;		// 0:初期化失敗		1:初期化完了
 
+//////////////////////////////////////////////////////////////////////////
+// モジュール名 wait_IMU						//
+// 処理概要     遅延処理						//
+// 引数         遅延時間(ms)						//
+// 戻り値       なし                                                    //
+//////////////////////////////////////////////////////////////////////////
+void wait_IMU ( short waitTime )
+{
+	volatile int time, i = 0;
+	
+	time = (int)waitTime * ( CLOCK * 1000 )/ 16;
+	for ( i = 0; i < time; i++) __nop();
+}
 //////////////////////////////////////////////////////////////////////////////////////////
 // モジュール名 IMUWriteByte								//
 // 処理概要     指定したレジスタにデータを書き込む					//
@@ -103,12 +116,12 @@ void IMUProcess (void)
 	// 温度
 	rawTemp = (short)((tempData[0] << 8 & 0xff00 ) | tempData[1]);
 	
-	//xa -= ave[0];
-	//ya -= ave[1];
-	//za -= ave[2];
-	//xg -= ave[3];
-	//yg -= ave[4];
-	//zg -= ave[5];
+	//xa -= cent_data[0];
+	//ya -= cent_data[1];
+	//za -= cent_data[2];
+	//xg -= cent_data[3];
+	//yg -= cent_data[4];
+	//zg -= cent_data[5];
 
 }
 //////////////////////////////////////////////////////////////////////////
@@ -119,95 +132,48 @@ void IMUProcess (void)
 //////////////////////////////////////////////////////////////////////////
 void caribrateIMU (void)
 {
+	char a[6], g[6];
+	volatile short xa[2000], ya[2000], za[2000], xg[2000], yg[2000], zg[2000];
+	volatile short cnt, temp_cnt = 0;
+	
+	IMUSet = 0;
+	PORT5.PODR.BIT.B5 = 1;
+	for( int i = 0; i < 100; i++ ){
+		//IMUReadArry(MPU9255_ADDRESS, ACCEL_XOUT_H, 6, a);	// 3軸加速度取得
+		IMUReadArry(MPU9255_ADDRESS, GYRO_XOUT_H, 6, g);	// 3軸角加速度取得
+		
+		// 加速度
+		//xa[i] = (short)((a[0] << 8 ) | a[1]);
+		//ya[i] = (short)((a[2] << 8 ) | a[3]);
+		//za[i] = (short)((a[4] << 8 ) | a[5]);
+		
+		// 角速度
+		xg[i] = (short)((g[0] << 8 & 0xff00 ) | g[1]);
+		yg[i] = (short)((g[2] << 8 & 0xff00 ) | g[3]);
+		zg[i] = (short)((g[4] << 8 & 0xff00 ) | g[5]);
+
+		wait_IMU(10);
+	}
+	PORT5.PODR.BIT.B5 = 0;
 	/*
-	uint8_t  msb, lsb;
-	char a[6], g[6];
-	short xa[10], ya[10], za[10], xg[10], yg[10], zg[10], s[6];
-	int i, ave[6] = {0,0,0,0,0,0};
-	
-	
-	for( i = 0; i < 10; i++ ){
-		IMUReadArry(MPU9255_ADDRESS, ACCEL_XOUT_H, 6, a);	// 3軸加速度取得
-		IMUReadArry(MPU9255_ADDRESS, GYRO_XOUT_H, 6, g);	// 3軸角加速度取得
+
+	// モード特定処理
+	// 初期値
+	mode = 0;
+	cnt = 0;
+	for ( int j = 0;j < 400; j++ ) {
+		temp_cnt = 1;
+		for ( int k = j+1;j < 400; k++ ) {
+			if ( zg[k] == zg[j] ) temp_cnt++;
+		}
 		
-		// 加速度
-		xa[i] = (short)((a[0] << 8 ) | a[1]);
-		ya[i] = (short)((a[2] << 8 ) | a[3]);
-		za[i] = (short)((a[4] << 8 ) | a[5]);
-		
-		// 角速度
-		xg[i] = (short)((g[0] << 8 ) | g[1]);
-		yg[i] = (short)((g[2] << 8 ) | g[3]);
-		zg[i] = (short)((g[4] << 8 ) | g[5]);
-		
-		ave[0] += xa[i];
-		ave[1] += ya[i];
-		ave[2] += za[i];
-		ave[3] += xg[i];
-		ave[4] += yg[i];
-		ave[5] += zg[i];
+		if ( temp_cnt > cnt ) {
+			cnt = temp_cnt;
+			mode = zg[j];
+		}
 	}
+	cent_data[5] = mode;
 	
-	ave[0] /= 10;
-	ave[1] /= 10;
-	ave[2] /= 10;
-	ave[3] /= 10;
-	ave[4] /= 10;
-	ave[5] /= 10;
-	
-	s[0] = (int)ave[0] * 8 / 4;
-	s[1] = (int)ave[1] * 8 / 4;
-	s[2] = (int)ave[2] * 8 / 4;
-	s[3] = (int)ave[3] * 8 / 4;
-	s[4] = (int)ave[4] * 8 / 4;
-	s[5] = (int)ave[5] * 8 / 4;
-	
-	for( i = 0; i < 3; i++ ){
-		msb = s[i] >> 8;
-		lsb = s[i] & 0xff;
-		IMUWriteByte(MPU9255_ADDRESS, XG_OFFSET_H + (i*2), msb );
-		IMUWriteByte(MPU9255_ADDRESS, XG_OFFSET_H + (i*2) + 1, lsb );
-	}
-	for( i = 3; i < 6; i++ ){
-		msb = s[i] >> 8;
-		lsb = s[i] & 0xff;
-		IMUWriteByte(MPU9255_ADDRESS, XA_OFFSET_H + ((i-3)*2), msb );
-		IMUWriteByte(MPU9255_ADDRESS, XA_OFFSET_H + ((i-3)*2) + 1, lsb );
-	}
 	*/
-	
-	char a[6], g[6];
-	short xa[10], ya[10], za[10], xg[10], yg[10], zg[10];
-	int i;
-	
-	for( i = 0; i < 10; i++ ){
-		IMUReadArry(MPU9255_ADDRESS, ACCEL_XOUT_H, 6, a);	// 3軸加速度取得
-		IMUReadArry(MPU9255_ADDRESS, GYRO_XOUT_H, 6, g);	// 3軸角加速度取得
-		
-		// 加速度
-		xa[i] = (short)((a[0] << 8 ) | a[1]);
-		ya[i] = (short)((a[2] << 8 ) | a[3]);
-		za[i] = (short)((a[4] << 8 ) | a[5]);
-		
-		// 角速度
-		xg[i] = (short)((g[0] << 8 ) | g[1]);
-		yg[i] = (short)((g[2] << 8 ) | g[3]);
-		zg[i] = (short)((g[4] << 8 ) | g[5]);
-		
-		ave[0] += xa[i];
-		ave[1] += ya[i];
-		ave[2] += za[i];
-		ave[3] += xg[i];
-		ave[4] += yg[i];
-		ave[5] += zg[i];
-	}
-	
-	ave[0] /= 10;
-	ave[1] /= 10;
-	ave[2] /= 10;
-	ave[3] /= 10;
-	ave[4] /= 10;
-	ave[5] /= 10;
-	
-	
+	IMUSet = 1;
 }

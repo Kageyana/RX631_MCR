@@ -58,7 +58,7 @@ void setup( void )
 	char cnt_led;
 	short s;
 	
-	/*// LED点滅処理
+	// LED点滅処理
 	if ( cnt_setup2 >= 600 ) cnt_setup2 = 0;
 	if ( cnt_setup2 < 300 ) {
 		if ( EncoderTotal % 2 == 1 ) led_out( 0x12 );
@@ -66,7 +66,7 @@ void setup( void )
 	} else {
 		if ( EncoderTotal % 2 == 1 ) led_out( 0x11 );
 		else led_out( 0x01 );
-	}*/
+	}
 	
 	// ディップスイッチで項目選択
 	switch ( dipsw_get() ) {
@@ -768,9 +768,9 @@ void setup( void )
 				case 11:
 					// 旋回角度;
 					lcdPosition( 0, 0 );
-					lcdPrintf("IMU%4d", (short)TurningAngleIMU);
+					lcdPrintf("IMU %4d", (short)TurningAngleIMU);
 					lcdPosition( 0, 1 );
-					lcdPrintf("Enc%4d", (short)TurningAngleEnc);
+					lcdPrintf("Enc %4d", (short)TurningAngleEnc);
 					if ( tasw_get() == 0x1 ) TurningAngleEnc = 0;
 					if ( tasw_get() == 0x2 ) TurningAngleIMU = 0;
 					break;
@@ -778,11 +778,11 @@ void setup( void )
 				case 12:
 					// ロール角度;
 					lcdPosition( 0, 0 );
-					lcdPrintf("Roll%3d", (short)RollAngleIMU);
+					lcdPrintf("Roll %3d", (short)RollAngleIMU);
 					lcdPosition( 0, 1 );
 					lcdPrintf("Temp%2.1f", TempIMU);
 					if ( tasw_get() == 0x2 ) RollAngleIMU = 0;
-					if ( tasw_get() == 0x3 ) {
+					if ( tasw_get() == 0x1 ) {
 						wait_lcd(500);
 						caribrateIMU();
 					}
