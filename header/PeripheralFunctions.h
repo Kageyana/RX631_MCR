@@ -152,4 +152,7 @@ void motor_r( signed char accelerL, signed char accelerR );
 // サーボ関連
 void servoPwmOut( signed char pwm );
 
+// 比較関連
+int short_sort( const void* a, const void* b );
+
 #endif // PERIPHERALFUNCTIONS_H_

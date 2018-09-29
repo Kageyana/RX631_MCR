@@ -508,3 +508,20 @@ void servoPwmOut( signed char servopwm )
 		PWM_SERVO_OUT
 	}
 }
+//////////////////////////////////////////////////////////////////////////
+// ƒ‚ƒWƒ…[ƒ‹–¼ short_sort						//
+// ˆ—ŠT—v     shortŒ^•Ï”‚Ì”äŠr‚ğ‚·‚é					//
+// ˆø”         ”äŠr‚·‚é”z—ñ						//
+// –ß‚è’l       -1:a<b 0:a=b 1:a>b					//
+//////////////////////////////////////////////////////////////////////////
+int short_sort( const void* a, const void* b )
+{
+	// ˆø”‚Ívoid*Œ^‚Æ‹K’è‚³‚ê‚Ä‚¢‚é‚Ì‚ÅintŒ^‚Écast‚·‚é
+	if( *( short * )a < *( short * )b ) {
+		return -1;
+	} else
+	if( *( short * )a == *( short * )b ) {
+		return 0;
+		}
+	return 1;
+}

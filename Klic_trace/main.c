@@ -45,19 +45,19 @@ static char		Timer10;	// 1msカウント用
 // メインプログラム	                //
 //======================================//
 void main(void){
-	char dummy[1];
 	short i, j;
 	unsigned int ui;
 	
 	//======================================//
 	// 初期化		                //
 	//======================================//
-	if ( send_SCI1_I2cWait( 0xd0, dummy, 1) >= 1 ) {
+	if ( init_IMU() ) {
 		init_SCI1( UART, RATE_230400);
+		setBeepPatternS( 0xaa00 );
 		IMUSet = 0;
 	} else  {
 		PORT5.PODR.BIT.B2 = 1;
-		init_IMU();
+		setBeepPatternS( 0x8000 );
 		IMUSet = 1;
 	}
 	
@@ -209,7 +209,7 @@ void main(void){
 				EncoderTotal = 10;	// 総走行距離
 				cnt1 = 0;		// タイマリセット
 				lcd_mode = 1;		// LCD表示ON
-				caribrateIMU();		// IMUのキャリブレーション
+				caribrateIMU(AVERAGE);		// IMUのキャリブレーション
 				msdFlag = 1;		// データ記録開始
 				pattern = 11;
 				break;
@@ -250,14 +250,14 @@ void main(void){
 					EncoderTotal = 10;	// 総走行距離
 					cnt1 = 0;		// タイマリセット
 					lcd_mode = 0;		// LCD表示OFF
-					caribrateIMU();		// IMUのキャリブレーション
+					caribrateIMU(AVERAGE);		// IMUのキャリブレーション
 					msdFlag = 1;		// データ記録開始
 					pattern = 11;
 					break;
 				}
 			} else if ( start == 2 ) {
 				// スタートゲート開放スタート
-				caribrateIMU();		// IMUのキャリブレーション
+				caribrateIMU(AVERAGE);		// IMUのキャリブレーション
 				pattern = 2;
 				break;
 			}
@@ -1407,6 +1407,8 @@ void Timer (void) {
 		getSwitch();
 		break;
 	case 3:
+		// IMUキャリブレーション
+		caribrateIMU( MEDIAN );
 		break;
 	case 5:
 		break;

@@ -35,9 +35,9 @@ char	SCI12_DataBuff[255];	// 送信データバッファ
 char 	ascii_num[] = {48,49,50,51,52,53,54,55,56,57,97,98,99,100,101,102};
 
 
-#pragma interrupt Excep_SCI1_RXI1 (vect = VECT_SCI1_RXI1, enable)	// RXI1割り込み関数定義
-#pragma interrupt Excep_SCI1_TXI1 (vect = VECT_SCI1_TXI1, enable)	// TXI1割り込み関数定義
-#pragma interrupt Excep_SCI1_TEI1 (vect = VECT_SCI1_TEI1, enable)	// TEI1割り込み関数定義
+#pragma interrupt Excep_SCI1_RXI1 (vect = VECT_SCI1_RXI1)	// RXI1割り込み関数定義
+#pragma interrupt Excep_SCI1_TXI1 (vect = VECT_SCI1_TXI1)	// TXI1割り込み関数定義
+#pragma interrupt Excep_SCI1_TEI1 (vect = VECT_SCI1_TEI1)	// TEI1割り込み関数定義
 
 #pragma interrupt Excep_SCI5_RXI5 (vect = VECT_SCI5_RXI5, enable)	// RXI1割り込み関数定義
 #pragma interrupt Excep_SCI5_TXI5 (vect = VECT_SCI5_TXI5, enable)	// TXI12割り込み関数定義
@@ -294,7 +294,7 @@ void Excep_SCI1_TEI1 ( void )
 			SCI1.SIMR3.BYTE = 0xf0;	// SDA端子、SCL端子をハイインピーダンス
 			SCI1_Req_mode = 0;	// スタートコンディション待ち
 			
-			//PORT5.PODR.BIT.B4 = 0;
+			PORT5.PODR.BIT.B4 = 0;
 			
 			SCI1.SCR.BIT.TEIE = 0;	// STI割り込み禁止
 			SCI1.SCR.BIT.TIE = 0;	// TXI割り込み禁止
@@ -367,7 +367,7 @@ void Excep_SCI1_TXI1( void )
 		} else if ( SCI1.SISR.BIT.IICACKR == 1 ) {
 			// NACK受信
 			if ( SCI1_RW_mode ) {
-				//PORT5.PODR.BIT.B4 = 1;
+				PORT5.PODR.BIT.B4 = 1;
 				SCI1_Req_mode = 1;	// ストップコンディション待ち
 				SCI1.SIMR3.BYTE = 0x54;	// ストップコンディション発行
 			}

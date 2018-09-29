@@ -3,7 +3,9 @@
 //======================================//
 // インクルード                         //
 //======================================//
+#include <stdlib.h>
 #include "iodefine.h"
+#include "PeripheralFunctions.h"
 #include "SCI.h"
 #include "LineChase.h"
 //======================================//
@@ -113,7 +115,6 @@
 
 #define CLOCK		96		// 動作周波数[MHz]
 
-// Slave Address
 #define MPU9255_ADDRESS     	0xd0	// 書き込み時のスレーブアドレス
 
 #define ACCELLSB		2048	// 16[g]
@@ -124,9 +125,15 @@
 #define MAXDATA_RANGE		32764	// 16bitデータの最大値
 #define G_ACCELERATION		9.80665	// 重力加速度
 
+#define AVERAGE			1	// 平均
+#define MODE			2	// 最頻値
+#define MEDIAN			3	// 中央値
+
 /******************************************** 自動生成関数 *****************************************/
-#define I2C_IMU_COMMAND		send_SCI1_I2c(slaveAddr, sendData, 2);
-#define I2C_IMU_ARRY		receive_data_SCI1_I2c(slaveAddr, sendData, reciveData, num);
+#define I2C_IMU_COMMAND		send_SCI1_I2cWait( slaveAddr, sendData, 2)
+#define I2C_IMU_DATA		send_SCI1_I2cWait( slaveAddr, sendData, 1)
+#define	I2C_IMU_RECIVE		receive_SCI1_I2c( slaveAddr, reciveData, num )
+#define I2C_IMU_ARRY		receive_data_SCI1_I2c(slaveAddr, sendData, reciveData, num)
 /****************************************************************************************************/
 //======================================//
 // グローバル変数の宣言                 //
@@ -136,18 +143,26 @@ extern volatile short 	rawXa, rawYa, rawZa;	// 加速度(16bitデータ)
 extern volatile short 	rawXg, rawYg, rawZg;	// 角加速度(16bitデータ)
 extern volatile short 	rawTemp;		// 温度(16bitデータ)
 
+// キャリブレーション関連
+extern short		xg_sample[2000], yg_sample[2000], zg_sample[2000];
+extern short		xa_sample[2000], ya_sample[2000], za_sample[2000];
+extern short 		median, mode;
+extern int		average;
+extern char		caribration;		// 0:キャリブレーション停止 1:キャリブレーション中
+
 // モード関連
-extern char	IMUset;			// 0:初期化失敗		1:初期化完了
+extern char		IMUset;			// 0:初期化失敗		1:初期化完了
+extern char		whoami;
 
 //======================================//
 // プロトタイプ宣言                     //
 //======================================//
 void wait_IMU ( short waitTime );
 void IMUWriteByte(char slaveAddr, char reg, char data );
-char IMUReadByte(char slaveAddr, char reg );
+char IMUReadByte(char slaveAddr, char reg , char* reciveData );
 void IMUReadArry(char slaveAddr, char reg, char num, char* dataArry );
 char init_IMU (void);
 void IMUProcess (void);
-void caribrateIMU (void);
+void caribrateIMU (char data_Option);
 
 #endif // I2C_MPU-9255_H_
