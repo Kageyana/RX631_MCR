@@ -113,8 +113,6 @@
 #define ZA_OFFSET_H		0x7D
 #define ZA_OFFSET_L		0x7E
 
-#define CLOCK		96		// 動作周波数[MHz]
-
 #define MPU9255_ADDRESS     	0xd0	// 書き込み時のスレーブアドレス
 
 #define ACCELLSB		2048	// 16[g]
@@ -122,9 +120,13 @@
 #define TEMP_LSB		333.87	// LSB/°C
 #define ROOMTEMPOFFSET		23	// °C
 
+// データ処理関連
+#define CLOCK			96	// 動作周波数[MHz]
+
 #define MAXDATA_RANGE		32764	// 16bitデータの最大値
 #define G_ACCELERATION		9.80665	// 重力加速度
 
+#define SAMPLENUMBER		10000	// サンプリングデータ数
 #define AVERAGE			1	// 平均
 #define MODE			2	// 最頻値
 #define MEDIAN			3	// 中央値
@@ -144,15 +146,15 @@ extern volatile short 	rawXg, rawYg, rawZg;	// 角加速度(16bitデータ)
 extern volatile short 	rawTemp;		// 温度(16bitデータ)
 
 // キャリブレーション関連
-extern short		xg_sample[2000], yg_sample[2000], zg_sample[2000];
-extern short		xa_sample[2000], ya_sample[2000], za_sample[2000];
-extern short 		median, mode;
-extern int		average;
-extern char		caribration;		// 0:キャリブレーション停止 1:キャリブレーション中
+extern short	xg_sample[SAMPLENUMBER], yg_sample[SAMPLENUMBER], zg_sample[SAMPLENUMBER];
+extern short	xa_sample[SAMPLENUMBER], ya_sample[SAMPLENUMBER], za_sample[SAMPLENUMBER];
+extern short 	median, mode;
+extern int	average;
+extern char	caribration;		// 0:キャリブレーション停止 1:キャリブレーション中
 
 // モード関連
-extern char		IMUset;			// 0:初期化失敗		1:初期化完了
-extern char		whoami;
+extern char	IMUset;			// 0:初期化失敗		1:初期化完了
+extern char	whoami;
 
 //======================================//
 // プロトタイプ宣言                     //

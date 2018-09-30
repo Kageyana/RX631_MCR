@@ -10,15 +10,16 @@ volatile short 	rawXa, rawYa, rawZa;	// 加速度(16bitデータ)
 volatile short 	rawXg, rawYg, rawZg;	// 角加速度(16bitデータ)
 volatile short 	rawTemp;		// 温度(16bitデータ)
 
-char		pattern_caribrateIMU = 0;// キャリブレーション処理
-short		xg_sample[2000], yg_sample[2000], zg_sample[2000];
-short		data_cnt = 0;
-short 		median, mode;
-int		average;
-char		caribration;		// 0:キャリブレーション停止 1:キャリブレーション中
+char	pattern_caribrateIMU = 0;// キャリブレーション処理
+short	xg_sample[SAMPLENUMBER], yg_sample[SAMPLENUMBER], zg_sample[SAMPLENUMBER];
+short	xg_sample[SAMPLENUMBER], yg_sample[SAMPLENUMBER], zg_sample[SAMPLENUMBER];
+short	data_cnt = 0;
+short 	median, mode;
+int	average;
+char	caribration;		// 0:キャリブレーション停止 1:キャリブレーション中
 
-char		IMUset = 0;		// 0:初期化失敗		1:初期化完了
-char		whoami;
+char	IMUset = 0;		// 0:初期化失敗		1:初期化完了
+char	whoami;
 
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 wait_IMU						//
@@ -181,7 +182,7 @@ void caribrateIMU (char data_Option)
 			zg_sample[data_cnt] = (short)((g[4] << 8 & 0xff00 ) | g[5]);
 			
 			data_cnt++;
-			if ( data_cnt >= 2000 ) {
+			if ( data_cnt >= SAMPLENUMBER ) {
 				PORT5.PODR.BIT.B5 = 0;
 				data_cnt = sizeof(xg_sample) / sizeof(xg_sample[0]);	// データ総数計算
 				datasize = sizeof(xg_sample[0]);		// データサイズ計算 

@@ -51,16 +51,6 @@ void main(void){
 	//======================================//
 	// 初期化		                //
 	//======================================//
-	if ( init_IMU() ) {
-		init_SCI1( UART, RATE_230400);
-		setBeepPatternS( 0xaa00 );
-		IMUSet = 0;
-	} else  {
-		PORT5.PODR.BIT.B2 = 1;
-		setBeepPatternS( 0x8000 );
-		IMUSet = 1;
-	}
-	
 	inti_lcd();			// LCD初期化
 	
 	lcdPosition( 0, 0 );
@@ -79,20 +69,31 @@ void main(void){
 	
 	init_BeepS();			// ブザー初期化
 	
+	// SCI1初期化
+	if ( init_IMU() ) {
+		init_SCI1( UART, RATE_230400);
+		setBeepPatternS( 0xaa00 );
+		IMUSet = 0;
+	} else  {
+		PORT5.PODR.BIT.B2 = 1;
+		setBeepPatternS( 0x8000 );
+		IMUSet = 1;
+	}
+	
 	// フラッシュ初期化
-	if( initFlash() == 0 ) {
+	if( initFlash() ) {
+		setBeepPatternS( 0xaa00 );
+	} else{
 		setBeepPatternS( 0x8000 );
 		readFlashSetup();	// データフラッシュから前回パラメータを読み込む
-	} else{
-		setBeepPatternS( 0xaa00 );
 	}
 	// MicroSDカード初期化
-	if( init_msd() == 0 ) {
-		setBeepPatternS( 0x4000 );
-		msdset = 1;
-	} else {
+	if( init_msd() ) {
 		setBeepPatternS( 0xaa00 );
 		msdset = 0;
+	} else {
+		setBeepPatternS( 0x4000 );
+		msdset = 1;
 	}
 
 	while(1){
@@ -1357,19 +1358,14 @@ void Timer (void) {
 	cnt_gyro++;
 			
 	// LCD表示
-	if ( lcd_mode ) {
-		lcdShowProcess();
-	}
+	if ( lcd_mode ) lcdShowProcess();
 
 	// エンコーダカウント
 	getEncoder();
 
 	// PID制御値算出
-	if ( angle_mode == 0 ) {
-		servoControl();
-	} else {
-		servoControl2();
-	}
+	if ( angle_mode == 0 ) servoControl();
+	else	servoControl2();
 	motorControl();
 	
 	// 角度計算
@@ -1379,9 +1375,8 @@ void Timer (void) {
 	getPichAngleIMU;
 	getTempIMU;
 	if( cnt_gyro == INTEGRAL_LIMIT ) cnt_gyro = 0;
-
+	
 	if ( IMUSet ) {
-		
 		// 加速度及び角速度を取得
 		IMUProcess();
 	} else {
@@ -1389,11 +1384,12 @@ void Timer (void) {
 		commandSCI1();
 	}
 	
+	// IMUキャリブレーション
+	caribrateIMU( MEDIAN );
+	
 	// MicroSD書き込み
 	microSDProcess();
-	if( msdFlag == 1 ) {
-		sendLog();
-	}
+	if( msdFlag == 1 )sendLog();
 	
 	Timer10++;
 	// 10ｍごとに実行
@@ -1407,8 +1403,6 @@ void Timer (void) {
 		getSwitch();
 		break;
 	case 3:
-		// IMUキャリブレーション
-		caribrateIMU( MEDIAN );
 		break;
 	case 5:
 		break;
