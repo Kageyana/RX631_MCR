@@ -716,14 +716,14 @@ void getPichAngleIMU(void)
 	
 }
 //////////////////////////////////////////////////////////////////////////
-// モジュール名 getPichAngleIMU						//
-// 処理概要   	IMUからピッチ角度の計算					//
+// モジュール名 getTempIMU						//
+// 処理概要   	IMUの温度を計算						//
 // 引数         なし							//
 // 戻り値       なし							//
 //////////////////////////////////////////////////////////////////////////
 void getTempIMU(void)
 {
-	TempIMU = (double)(rawTemp - ROOMTEMPOFFSET ) / TEMP_LSB + 21;	// IMUのデータを角速度[deg/s]に変換
+	TempIMU = (double)((rawTemp - ROOMTEMPOFFSET )/TEMP_LSB) + 21;	// IMUのデータを角速度[deg/s]に変換
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 motorControl						//

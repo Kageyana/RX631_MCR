@@ -5,17 +5,16 @@
 //======================================//
 // グローバル変数の宣言                 //
 //======================================//
-short	cent_data[6] = {0,0,0,0,0,0};	// オフセット値	
+short	cent_data[7] = {0};	// オフセット値	
 volatile short 	rawXa, rawYa, rawZa;	// 加速度(16bitデータ)
 volatile short 	rawXg, rawYg, rawZg;	// 角加速度(16bitデータ)
 volatile short 	rawTemp;		// 温度(16bitデータ)
 
 char	pattern_caribrateIMU = 0;// キャリブレーション処理
-short	xg_sample[SAMPLENUMBER], yg_sample[SAMPLENUMBER], zg_sample[SAMPLENUMBER];
-short	xg_sample[SAMPLENUMBER], yg_sample[SAMPLENUMBER], zg_sample[SAMPLENUMBER];
+short	sampleIMU[7][SAMPLENUMBER];
 short	data_cnt = 0;
-short 	median, mode;
-int	average;
+short 	median[7], mode[7];
+int	averageIMU[7];
 char	caribration;		// 0:キャリブレーション停止 1:キャリブレーション中
 
 char	IMUset = 0;		// 0:初期化失敗		1:初期化完了
@@ -111,33 +110,30 @@ char init_IMU (void)
 //////////////////////////////////////////////////////////////////////////
 void IMUProcess (void)
 {
-	//char 	axisAccelData[6];	// 加速度の8bit分割データ格納先
-	char 	axisData[8];	// 角加速度、温度の8bit分割データ格納先
+	char 	axisData[14];	// 角加速度、温度の8bit分割データ格納先
 	
-	//IMUReadArry(MPU9255_ADDRESS, ACCEL_XOUT_H, 6, axisAccelData);	// 3軸加速度取得
-	IMUReadArry(MPU9255_ADDRESS, TEMP_OUT_H, 8, axisData);	// 3軸角加速度、温度取得
+	IMUReadArry(MPU9255_ADDRESS, GYRO_XOUT_H, 6, axisData);	// 3軸加速度取得
 	
 	//8bitデータを16bitデータに変換
 	// 加速度
-	/*
-	rawXa = (short)((axisAccelData[0] << 8 & 0xff00 ) | axisAccelData[1]);
-	rawYa = (short)((axisAccelData[2] << 8 & 0xff00 ) | axisAccelData[3]);
-	rawZa = (short)((axisAccelData[4] << 8 & 0xff00 ) | axisAccelData[5]);
-	*/
+	//rawXa = (short)((axisData[0] << 8 & 0xff00 ) | axisData[1]);
+	//rawYa = (short)((axisData[2] << 8 & 0xff00 ) | axisData[3]);
+	//rawZa = (short)((axisData[4] << 8 & 0xff00 ) | axisData[5]);
+	
 	// 温度
-	rawTemp = (short)((axisData[0] << 8 & 0xff00 ) | axisData[1]);
+	//rawTemp = (short)((axisData[6] << 8 & 0xff00 ) | axisData[7]);
 	
 	// 角速度
-	rawXg = (short)((axisData[2] << 8 & 0xff00 ) | axisData[3]);
-	rawYg = (short)((axisData[4] << 8 & 0xff00 ) | axisData[5]);
-	rawZg = (short)((axisData[6] << 8 & 0xff00 ) | axisData[7]);
+	rawXg = (short)((axisData[0] << 8 & 0xff00 ) | axisData[1]);
+	rawYg = (short)((axisData[2] << 8 & 0xff00 ) | axisData[3]);
+	rawZg = (short)((axisData[4] << 8 & 0xff00 ) | axisData[5]);
 	
-	//rawXa -= cent_data[0];
-	//rawYa -= cent_data[1];
-	//rawZa -= cent_data[2];
-	//rawXg -= cent_data[3];
-	//rawYg -= cent_data[4];
-	rawZg -= cent_data[5];
+	rawXa -= cent_data[0];
+	rawYa -= cent_data[1];
+	rawZa -= cent_data[2];
+	rawXg -= cent_data[4];
+	rawYg -= cent_data[5];
+	rawZg -= cent_data[6];
 
 }
 //////////////////////////////////////////////////////////////////////////
@@ -148,8 +144,8 @@ void IMUProcess (void)
 //////////////////////////////////////////////////////////////////////////
 void caribrateIMU (char data_Option)
 {
-	char g[6];
-	short i, j, datasize;
+	char data[6];
+	short i, j, k, datasize;
 	short cnt, temp_cnt = 0;
 	
 	switch( pattern_caribrateIMU ) {
@@ -158,9 +154,11 @@ void caribrateIMU (char data_Option)
 				IMUSet = 0;	// キャリブレーション開始
 				// 初期化
 				data_cnt = 0;
-				average = 0;
-				mode = 0;
-				median = 0;
+				for ( i = 0; i < 7; i++ ) {
+					averageIMU[i] = 0;
+					mode[i] = 0;
+					median[i] = 0;
+				}
 				
 				pattern_caribrateIMU = 1;
 			}
@@ -168,64 +166,66 @@ void caribrateIMU (char data_Option)
 			
 		case 1:
 			PORT5.PODR.BIT.B5 = 1;
-			//IMUReadArry(MPU9255_ADDRESS, ACCEL_XOUT_H, 6, a);	// 3軸加速度取得
-			IMUReadArry(MPU9255_ADDRESS, GYRO_XOUT_H, 6, g);	// 3軸角加速度取得
+			IMUReadArry(MPU9255_ADDRESS, ACCEL_XOUT_H, 14, data);	// 6軸データ+温度取得
 			
-			// 加速度
-			//xa[i] = (short)((a[0] << 8 ) | a[1]);
-			//ya[i] = (short)((a[2] << 8 ) | a[3]);
-			//za[i] = (short)((a[4] << 8 ) | a[5]);
-			
-			// 角速度
-			xg_sample[data_cnt] = (short)((g[0] << 8 & 0xff00 ) | g[1]);
-			yg_sample[data_cnt] = (short)((g[2] << 8 & 0xff00 ) | g[3]);
-			zg_sample[data_cnt] = (short)((g[4] << 8 & 0xff00 ) | g[5]);
-			
+			// 16bitデータに変換
+			for ( i = 0; i < 7; i++ ) {
+				for ( j = 0;j < 14; j = j + 2 ) {
+					sampleIMU[i][data_cnt] = (short)((data[j] << 8 & 0xff00 ) | data[j+1]);
+				}
+			}
 			data_cnt++;
 			if ( data_cnt >= SAMPLENUMBER ) {
 				PORT5.PODR.BIT.B5 = 0;
-				data_cnt = sizeof(xg_sample) / sizeof(xg_sample[0]);	// データ総数計算
-				datasize = sizeof(xg_sample[0]);		// データサイズ計算 
+				data_cnt = SAMPLENUMBER;	// データ総数計算
+				datasize = 2;		// データサイズ計算 
 				
-				if( data_Option == AVERAGE )	pattern_caribrateIMU = AVERAGE * 10;
-				if( data_Option == MODE )	pattern_caribrateIMU = MODE * 10;
-				if( data_Option == MEDIAN )	pattern_caribrateIMU = MEDIAN  *10;
+				if( data_Option == AVERAGE )	pattern_caribrateIMU = AVERAGE;
+				if( data_Option == MODE )	pattern_caribrateIMU = MODE;
+				if( data_Option == MEDIAN )	pattern_caribrateIMU = MEDIAN;
 			}
 			break;
 			
-		case AVERAGE * 10 + 0:
-			for ( i = 0; i < data_cnt; i++ ) average += zg_sample[i];
-			average /= data_cnt;
-			cent_data[5] = average;
+		case AVERAGE + 0:
+			for ( i = 0; i < data_cnt; i++ ) {
+				for ( j = 0; j < 7; j++ ) averageIMU[j] += sampleIMU[j][i];
+			}
+			for ( i = 0; i < 7; i++ ) {
+				averageIMU[i] /= data_cnt;
+				cent_data[i] = averageIMU[i];
+			}
 			
 			pattern_caribrateIMU = 40;
 			break;
 			
-		case MODE * 10 + 0:
-			// 初期値
-			mode = 0;
-			cnt = 0;
-			for ( i = 0;i < data_cnt; i++ ) {
-				temp_cnt = 1;
-				for ( j = i+1;j < data_cnt; j++ ) {
-					if ( zg_sample[j] == zg_sample[i] ) temp_cnt++;
+		case MODE + 0:
+			for ( i = 0; i < 7; i++ ) {
+				// 初期値
+				mode[i] = 0;
+				cnt = 0;
+				for ( j = 0;j < data_cnt; j++ ) {
+					temp_cnt = 1;
+					for ( k = j+1;k < data_cnt; k++ ) {
+						if ( sampleIMU[i][j] == sampleIMU[i][k] ) temp_cnt++;
+					}
+					
+					if ( temp_cnt > cnt ) {
+						cnt = temp_cnt;
+						mode[i] = sampleIMU[i][j];
+					}
 				}
-				
-				if ( temp_cnt > cnt ) {
-					cnt = temp_cnt;
-					mode = zg_sample[i];
-				}
+				cent_data[i] = mode[i];
 			}
-			cent_data[5] = mode;
 			
 			pattern_caribrateIMU = 40;
 			break;
 			
-		case MEDIAN * 10 + 0:
-			qsort( (void*)zg_sample, data_cnt, datasize, short_sort );
-			median = zg_sample[1000];
-			cent_data[5] = median;
-			
+		case MEDIAN + 0:
+			for ( i = 0; i < 7; i++ ) {
+				qsort( (void*)sampleIMU[i], data_cnt, datasize, short_sort );
+				median[i] = sampleIMU[i][data_cnt/2];
+				cent_data[i] = median[i];
+			}
 			pattern_caribrateIMU = 40;
 			break;
 		

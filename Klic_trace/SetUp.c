@@ -763,12 +763,6 @@ void setup( void )
 					lcdPrintf("Text   %d", revErr);
 					lcdPosition( 0, 1 );
 					lcdPrintf("%s",txt_data);
-					if ( tasw_get() == 0x2 ) {
-						printf("zg, average, %d, mode, %d, median, %d\n", average, mode, median);
-						for ( s=0; s< 2000;s++ ) {
-							printf("%d\n", zg_sample[s]);
-						}
-					}
 					if ( tasw_get() == 0x1 ) {
 						IMUSet = 0;
 						init_SCI1( UART, RATE_230400 );

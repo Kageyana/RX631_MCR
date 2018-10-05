@@ -43,7 +43,7 @@ short			Angle0;		// サーボセンター値
 // ブザー関連
 unsigned short 		BeepPattern;
 unsigned short 		BeepTimer;
-static char		BeepMode;
+char			BeepMode;
 
 // エンコーダ関連
 static unsigned short 	cnt_Encoder;	// エンコーダ値の格納先

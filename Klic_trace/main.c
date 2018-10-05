@@ -97,12 +97,11 @@ void main(void){
 	}
 
 	while(1){
-		__setpsw_i();
 		if( pattern >= 11 && pattern <= 99 ) {
 			if( !pushcart_mode ) {		
 				// 手押しモードOFF
 				if( cnt1 >= 10 ) {		// 動き出してから
-					if( EncoderTotal >= ( PALSE_METER * stopping_meter ) ) { // 距離超過の場合
+				/*	if( EncoderTotal >= ( PALSE_METER * stopping_meter ) ) { // 距離超過の場合
 						error_mode = 0;
 						pattern = 101;
 					} else if( cnt_out >= STOP_SENSOR1 ) {	// センサ全灯
@@ -141,9 +140,9 @@ void main(void){
 			}
 			// スイッチで停止
 			if ( tasw_get() == 0x4 ) {
-						error_mode = 6;
-						pattern = 101;
-					}
+				error_mode = 6;
+				pattern = 101;
+			}
 		} else if( pattern >= 100 ) {
 			lcd_mode = 1;
 			lcdPosition( 0, 0 );
@@ -205,12 +204,12 @@ void main(void){
 				
 				lcdPosition( 0, 1 );
 				lcdPrintf("        ");
-				setBeepPatternS( 0xfff0 );
+				setBeepPatternS( 0x8000 );
 				
 				EncoderTotal = 10;	// 総走行距離
 				cnt1 = 0;		// タイマリセット
 				lcd_mode = 1;		// LCD表示ON
-				caribrateIMU(AVERAGE);		// IMUのキャリブレーション
+				//caribrateIMU(AVERAGE);		// IMUのキャリブレーション
 				msdFlag = 1;		// データ記録開始
 				pattern = 11;
 				break;
@@ -251,14 +250,14 @@ void main(void){
 					EncoderTotal = 10;	// 総走行距離
 					cnt1 = 0;		// タイマリセット
 					lcd_mode = 0;		// LCD表示OFF
-					caribrateIMU(AVERAGE);		// IMUのキャリブレーション
+					//caribrateIMU(AVERAGE);		// IMUのキャリブレーション
 					msdFlag = 1;		// データ記録開始
 					pattern = 11;
 					break;
 				}
 			} else if ( start == 2 ) {
 				// スタートゲート開放スタート
-				caribrateIMU(AVERAGE);		// IMUのキャリブレーション
+				//caribrateIMU(AVERAGE);		// IMUのキャリブレーション
 				pattern = 2;
 				break;
 			}
@@ -339,6 +338,7 @@ void main(void){
 				enc1 = 0;
 				TurningAngleEnc = 0;
 				TurningAngleIMU = 0;
+				led_out( 0x00 );
 				pattern = 13;
 				break;
 			}
@@ -380,6 +380,7 @@ void main(void){
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_curve_r600 * SPEED_CURRENT;
 			diff( motorPwm );
+			i = getServoAngle();
 			
 			// クロスラインチェック
 			if( check_crossline() ) {
@@ -1369,27 +1370,27 @@ void Timer (void) {
 	motorControl();
 	
 	// 角度計算
-	getTurningAngleEnc();
-	getTurningAngleIMU();
-	getRollAngleIMU();
-	getPichAngleIMU;
-	getTempIMU;
+	//getTurningAngleEnc();
+	//getTurningAngleIMU();
+	//getRollAngleIMU();
+	//getPichAngleIMU();
+	//getTempIMU();
 	if( cnt_gyro == INTEGRAL_LIMIT ) cnt_gyro = 0;
 	
 	if ( IMUSet ) {
 		// 加速度及び角速度を取得
-		IMUProcess();
+		//IMUProcess();
 	} else {
 		// UART受信
-		commandSCI1();
+		//commandSCI1();
 	}
 	
 	// IMUキャリブレーション
-	caribrateIMU( MEDIAN );
+	//caribrateIMU( AVERAGE );
 	
 	// MicroSD書き込み
 	microSDProcess();
-	if( msdFlag == 1 )sendLog();
+	if( msdFlag == 1 ) sendLog();
 	
 	Timer10++;
 	// 10ｍごとに実行
@@ -1400,7 +1401,7 @@ void Timer (void) {
 		break;
 	case 2://
 		// スイッチ読み込み
-		getSwitch();
+		if ( pattern < 10 || pattern > 100 ) getSwitch();
 		break;
 	case 3:
 		break;

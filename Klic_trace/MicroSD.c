@@ -1000,7 +1000,7 @@ void msd_sendToPC ( void )
 				printf(		"TurningAngleEnc,"	);
 				printf(		"TurningAngleIMU,"	);
 				printf(		"RollAngleIMU,"		);
-				printf(		"Encoder,"		);
+				printf(		"Encoder,"		 );
 				printf(		"targetSpeed,"		);
 				printf(		"xg[degrees/sec],"	);
 				printf(		"yg[degrees/sec],"	);

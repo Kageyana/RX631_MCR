@@ -118,7 +118,7 @@
 #define ACCELLSB		2048	// 16[g]
 #define GYROLSB			32.8	// 1000[deg/s]
 #define TEMP_LSB		333.87	// LSB/°C
-#define ROOMTEMPOFFSET		23	// °C
+#define ROOMTEMPOFFSET		24	// °C
 
 // データ処理関連
 #define CLOCK			96	// 動作周波数[MHz]
@@ -127,9 +127,9 @@
 #define G_ACCELERATION		9.80665	// 重力加速度
 
 #define SAMPLENUMBER		10000	// サンプリングデータ数
-#define AVERAGE			1	// 平均
-#define MODE			2	// 最頻値
-#define MEDIAN			3	// 中央値
+#define AVERAGE			10	// 平均
+#define MODE			20	// 最頻値
+#define MEDIAN			30	// 中央値
 
 /******************************************** 自動生成関数 *****************************************/
 #define I2C_IMU_COMMAND		send_SCI1_I2cWait( slaveAddr, sendData, 2)
@@ -146,10 +146,9 @@ extern volatile short 	rawXg, rawYg, rawZg;	// 角加速度(16bitデータ)
 extern volatile short 	rawTemp;		// 温度(16bitデータ)
 
 // キャリブレーション関連
-extern short	xg_sample[SAMPLENUMBER], yg_sample[SAMPLENUMBER], zg_sample[SAMPLENUMBER];
-extern short	xa_sample[SAMPLENUMBER], ya_sample[SAMPLENUMBER], za_sample[SAMPLENUMBER];
-extern short 	median, mode;
-extern int	average;
+extern short	sampleIMU[7][SAMPLENUMBER];
+extern short 	median[7], mode[7];
+extern int	averageIMU[7];
 extern char	caribration;		// 0:キャリブレーション停止 1:キャリブレーション中
 
 // モード関連
