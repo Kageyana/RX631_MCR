@@ -947,9 +947,9 @@ void sendLog (void) {
 		send_ShortToChar((short)RollAngleIMU	);
 		send_ShortToChar(	Encoder		);
 		send_ShortToChar(	targetSpeed	);
-		send_ShortToChar(	xg		);
-		send_ShortToChar(	yg		);
-		send_ShortToChar(	zg		);
+		send_ShortToChar(	rawXg		);
+		send_ShortToChar(	rawYg		);
+		send_ShortToChar(	rawZg		);
 		send_uIntToChar (	EncoderTotal	);
 		send_uIntToChar (	enc1		);
 		send_uIntToChar (	cnt_log		);
@@ -1065,9 +1065,9 @@ void msd_sendToPC ( void )
 				printf("%5d,", CharToShort(22));		// RollAngleIMU
 				printf("%5d,", CharToShort(24));		// Encoder
 				printf("%5d,", CharToShort(26) / 10);		// targetSpeed
-				printf("%4.4f,", (double)(CharToShort(28)*GYRO_RANGE)/MAXDATA_RANGE);// xg
-				printf("%4.4f,", (double)(CharToShort(30)*GYRO_RANGE)/MAXDATA_RANGE);// yg
-				printf("%4.4f,", (double)(CharToShort(32)*GYRO_RANGE)/MAXDATA_RANGE);// zg
+				printf("%4.4f,", (double)CharToShort(28)/GYROLSB);// xg
+				printf("%4.4f,", (double)CharToShort(30)/GYROLSB);// yg
+				printf("%4.4f,", (double)CharToShort(32)/GYROLSB);// zg
 				printf("%6d,", CharTouInt (34));		// EncoderTotal
 				printf("%6d,", CharTouInt (38));		// enc1
 				printf("%6d", CharTouInt (42));			// cnt_log

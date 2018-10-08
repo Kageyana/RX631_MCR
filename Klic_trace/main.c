@@ -44,7 +44,7 @@ static char		Timer10;	// 1msカウント用
 // メインプログラム	                //
 //======================================//
 void main(void){
-	short i, j, rpwm, lpwm;
+	short i, j;
 	unsigned int ui;
 	
 	//======================================//
@@ -69,10 +69,10 @@ void main(void){
 	
 	// SCI1初期化
 	if( tasw_get() == 0x2 ) {
-		init_SCI1(RATE_230400);
+		init_SCI1( UART, RATE_230400 );
 		IMUSet = 0;
 	} else {
-		R_PG_SCI_Set_C1();
+		init_SCI1( I2C, 0);
 		init_IMU();
 		IMUSet = 1;
 	}
@@ -100,6 +100,7 @@ void main(void){
 			if( !pushcart_mode ) {		
 				// 手押しモードOFF
 				if( cnt1 >= 10 ) {		// 動き出してから
+				/*
 					if( EncoderTotal >= ( PALSE_METER * stopping_meter ) ) { // 距離超過の場合
 						error_mode = 0;
 						pattern = 101;
@@ -208,7 +209,6 @@ void main(void){
 				EncoderTotal = 10;	// 総走行距離
 				cnt1 = 0;		// タイマリセット
 				lcd_mode = 1;		// LCD表示ON
-				caribrateIMU();		// IMUのキャリブレーション
 				msdFlag = 1;		// データ記録開始
 				pattern = 11;
 				break;
@@ -249,14 +249,12 @@ void main(void){
 					EncoderTotal = 10;	// 総走行距離
 					cnt1 = 0;		// タイマリセット
 					lcd_mode = 0;		// LCD表示OFF
-					caribrateIMU();		// IMUのキャリブレーション
 					msdFlag = 1;		// データ記録開始
 					pattern = 11;
 					break;
 				}
 			} else if ( start == 2 ) {
 				// スタートゲート開放スタート
-				caribrateIMU();		// IMUのキャリブレーション
 				pattern = 2;
 				break;
 			}
@@ -1375,6 +1373,7 @@ void Timer (void) {
 	getTurningAngleEnc();
 	getTurningAngleIMU();
 	getRollAngleIMU();
+	caribrateIMU( MEDIAN );
 	if( cnt_gyro == INTEGRAL_LIMIT ) cnt_gyro = 0;
 
 	if ( IMUSet == 0 ) {

@@ -15,6 +15,7 @@
 // グローバル変数の宣言                 //
 //======================================//
 // タイマ関連
+short			cnt0;		// 関数用タイマ
 static char		ADTimer10;	// AD変換カウント用
 
 // スイッチ関連
@@ -506,4 +507,21 @@ void servoPwmOut( signed char servopwm )
 		DIR_SERVO_REV
 		PWM_SERVO_OUT
 	}
+}
+//////////////////////////////////////////////////////////////////////////
+// モジュール名 short_sort						//
+// 処理概要     short型変数の比較をする					//
+// 引数         比較する配列						//
+// 戻り値       -1:a<b 0:a=b 1:a>b					//
+//////////////////////////////////////////////////////////////////////////
+int short_sort( const void* a, const void* b )
+{
+	// 引数はvoid*型と規定されているのでint型にcastする
+	if( *( short * )a < *( short * )b ) {
+		return -1;
+	} else
+	if( *( short * )a == *( short * )b ) {
+		return 0;
+		}
+	return 1;
 }

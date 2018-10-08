@@ -193,7 +193,7 @@ void getDegrees( void )
 	*/
 	double angularVelocity;
 	
-	angularVelocity = (double)(xg * GYRO_RANGE ) / MAXDATA_RANGE;	// IMUのデータを角速度[deg/s]に変換
+	angularVelocity = (double)rawXg * GYROLSB;	// IMUのデータを角速度[deg/s]に変換
 	Degrees += angularVelocity * 0.001;
 	if ( cnt_gyro == INTEGRAL_LIMIT ) Degrees = 0;
 }
@@ -709,7 +709,7 @@ void getTurningAngleIMU(void)
 {
 	double angularVelocity;
 	
-	angularVelocity = (double)(zg * GYRO_RANGE ) / MAXDATA_RANGE;	// IMUのデータを角速度[deg/s]に変換
+	angularVelocity = (double)rawZg / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
 	TurningAngleIMU += angularVelocity * 0.001;
 	
 }
@@ -723,7 +723,7 @@ void getRollAngleIMU(void)
 {
 	double angularVelocity;
 	
-	angularVelocity = (double)(yg * GYRO_RANGE ) / MAXDATA_RANGE;	// IMUのデータを角速度[deg/s]に変換
+	angularVelocity = (double)rawYg / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
 	RollAngleIMU += angularVelocity * 0.001;
 	if ( cnt_gyro == INTEGRAL_LIMIT ) RollAngleIMU = 0;
 	

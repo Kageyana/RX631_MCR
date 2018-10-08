@@ -87,6 +87,9 @@
 //======================================//
 // グローバル変数の宣言                 //
 //======================================//
+// タイマ関連
+extern short		cnt0;		// 関数用タイマ
+
 // センサ関連
 extern short		sensorR;	// 右アナログセンサ
 extern short		sensorL;	// 左アナログセンサ
@@ -148,5 +151,8 @@ void motor_r( signed char accelerL, signed char accelerR );
 
 // サーボ関連
 void servoPwmOut( signed char pwm );
+
+// 比較関連
+int short_sort( const void* a, const void* b );
 
 #endif // PERIPHERALFUNCTIONS_H_

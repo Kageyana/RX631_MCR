@@ -769,9 +769,9 @@ void setup( void )
 				case 11:
 					// ù‰ñŠp“x;
 					lcdPosition( 0, 0 );
-					lcdPrintf("IMU%4d", (short)TurningAngleIMU);
+					lcdPrintf("IMU %4d", (short)TurningAngleIMU);
 					lcdPosition( 0, 1 );
-					lcdPrintf("Enc%4d", (short)TurningAngleEnc);
+					lcdPrintf("Enc %4d", (short)TurningAngleEnc);
 					if ( tasw_get() == 0x1 ) TurningAngleEnc = 0;
 					if ( tasw_get() == 0x2 ) TurningAngleIMU = 0;
 					break;
@@ -779,13 +779,13 @@ void setup( void )
 				case 12:
 					// ƒ[ƒ‹Šp“x;
 					lcdPosition( 0, 0 );
-					lcdPrintf("Roll%3d", (short)RollAngleIMU);
+					lcdPrintf("Roll %3d", (short)RollAngleIMU);
 					lcdPosition( 0, 1 );
 					lcdPrintf("        ");
 					if ( tasw_get() == 0x1 ) RollAngleIMU = 0;
 					if ( tasw_get() == 0x2 ) {
-						wait_lcd(500);
-						caribrateIMU();
+						wait_lcd(1000);
+						caribration = 1;
 					}
 					break;
 					
@@ -794,9 +794,9 @@ void setup( void )
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 0 );
-						lcdPrintf("xa%2.3f",(double)xa*ACCEL_RANGE/MAXDATA_RANGE);
+						lcdPrintf("xa%2.3f",(double)rawXa / ACCELLSB);
 						lcdPosition( 0, 1 );
-						lcdPrintf("ya%2.3f",(double)ya*ACCEL_RANGE/MAXDATA_RANGE);
+						lcdPrintf("ya%2.3f",(double)rawYa / ACCELLSB);
 					}
 					break;
 					
@@ -805,9 +805,9 @@ void setup( void )
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 0 );
-						lcdPrintf("za%2.3f",(double)za*ACCEL_RANGE/MAXDATA_RANGE);
+						lcdPrintf("za%2.3f",(double)rawZa / ACCELLSB);
 						lcdPosition( 0, 1 );
-						lcdPrintf("xg%2.3f",(double)xg*GYRO_RANGE/MAXDATA_RANGE);
+						lcdPrintf("xg%2.3f",(double)rawXg / GYROLSB);
 					}
 					break;
 					
@@ -816,9 +816,9 @@ void setup( void )
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 0 );
-						lcdPrintf("yg%2.3f",(double)yg*GYRO_RANGE/MAXDATA_RANGE);
+						lcdPrintf("yg%2.3f",(double)rawYg / GYROLSB);
 						lcdPosition( 0, 1 );
-						lcdPrintf("zg%2.3f",(double)zg*GYRO_RANGE/MAXDATA_RANGE);
+						lcdPrintf("zg%2.3f",(double)rawZg / GYROLSB);
 					}
 					break;
 					
@@ -829,7 +829,7 @@ void setup( void )
 						lcdPosition( 0, 0 );
 						lcdPrintf("who am i");
 						lcdPosition( 0, 1 );
-						lcdPrintf("%d     %x",IMUSet, IMUReadByte(MPU9255_ADDRESS, WHO_AM_I));
+						lcdPrintf("%d     %x",IMUSet, whoami);
 					}
 					break;
 			}
