@@ -36,7 +36,7 @@
 * Description  : 
 * Limitations  : 
 ******************************************************************************
-* History : 08.10.2018 Version Description
+* History : 09.10.2018 Version Description
 *         :   
 ******************************************************************************/
 
@@ -74,13 +74,13 @@ bool R_PG_ADC_12_Set_S12AD0(void)
 	return R_ADC_12_Create(
 		0,
 		PDL_ADC_12_CHANNEL_3 | PDL_ADC_12_CHANNEL_4 | PDL_ADC_12_CHANNEL_5 | PDL_ADC_12_CHANNEL_6 | PDL_ADC_12_CHANNEL_7 | PDL_ADC_12_CHANNEL_8 | PDL_ADC_12_CHANNEL_12 | PDL_ADC_12_CHANNEL_13,
-		PDL_ADC_12_SCAN_CONTINUOUS | PDL_ADC_12_DIV_8 | PDL_ADC_12_DATA_ALIGNMENT_RIGHT | PDL_ADC_12_RETAIN_RESULT | PDL_ADC_12_INPUT_AN | PDL_ADC_12_DMAC_DTC_TRIGGER_DISABLE | PDL_ADC_12_SAMPLING_TIME_SPECIFY,
+		PDL_ADC_12_SCAN_CONTINUOUS | PDL_ADC_12_DIV_8 | PDL_ADC_12_DATA_ALIGNMENT_RIGHT | PDL_ADC_12_CLEAR_RESULT | PDL_ADC_12_INPUT_AN | PDL_ADC_12_DMAC_DTC_TRIGGER_DISABLE | PDL_ADC_12_SAMPLING_TIME_SPECIFY,
 		PDL_ADC_12_TRIGGER_SOFTWARE,
 		PDL_NO_DATA,
 		75,
 		20,
 		ADconverter,
-		12
+		8
 	);
 
 }

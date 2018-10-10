@@ -6,25 +6,25 @@
 // グローバル変数の宣言							//
 //====================================//
 // タイマ関連
-unsigned int			cnt_log;			// ログ漏れ確認用カウント
+unsigned int			cnt_log;				// ログ漏れ確認用カウント
 
-static unsigned char		msdlibBuff[512 + 128];		// 一時保管バッファ
+static unsigned char		msdlibBuff[512 + 128];	// 一時保管バッファ
 static volatile short		msdlibMode;			// 状態
-volatile short			msdlibCnt;			// 書き込み数
-static volatile unsigned char*	msdlibWrite;			// 書き込みデータのアドレス
+volatile short			msdlibCnt;				// 書き込み数
+static volatile unsigned char*	msdlibWrite;		// 書き込みデータのアドレス
 volatile char			msdlibError;			// エラー番号
-static volatile unsigned int	msdSize;			// microSDのサイズ(kB単位)
+static volatile unsigned int	msdSize;				// microSDのサイズ(kB単位)
 static volatile short		modeSector;			// 1:セクタ指定モード 0:アドレス
 volatile unsigned char		interrupt_msd_send_data = 0;	// 送信フラグ
 
 // microSD関連
 signed char		msdBuff[ 512 ];		// 一時保存バッファ
 short			msdBuffAddress;		// 一時記録バッファ書込アドレス
-short			msdFlag = 0;		// 1:データ記録 0:記録しない
-short			msdTimer;		// 取得間隔計算用
+short			msdFlag = 0;			// 1:データ記録 0:記録しない
+short			msdTimer;				// 取得間隔計算用
 unsigned int		msdStartAddress;	// 記録開始アドレス
-unsigned int		msdEndAddress;		// 記録終了アドレス
-unsigned int		msdWorkAddress;		// 作業用アドレス
+unsigned int		msdEndAddress;	// 記録終了アドレス
+unsigned int		msdWorkAddress;	// 作業用アドレス
 unsigned int		msdWorkAddress2;	// 作業用アドレス2
 signed char 		*msdBuffPointa;		// RAM保存バッファ用ポインタ
 unsigned int 		msdAddrBuff[25];	// MicroSDカードの最終書き込みアドレス保存用
@@ -928,31 +928,31 @@ void sendLog (void) {
 		msdTimer = 0;
 		msdBuffPointa = msdBuff + msdBuffAddress;
 		// ここから記録
-		send_Char	(	pattern		);
-		send_Char	(	motorPwm 	);
-		send_Char	(	accele_fL 	);
-		send_Char	(	accele_fR 	);
-		send_Char	(	accele_rL 	);
-		send_Char	(	accele_rR 	);
-		send_Char	(	ServoPwm 	);
-		send_Char	(	ServoPwm2 	);
-		send_Char	(	sensor_inp() 	);
-		send_Char	( 	slope_mode	);
-		send_ShortToChar(	getServoAngle()	);
-		send_ShortToChar(	SetAngle	);
-		send_ShortToChar(	getAnalogSensor());
-		send_ShortToChar((short)Degrees		);
-		send_ShortToChar((short)TurningAngleEnc	);
-		send_ShortToChar((short)TurningAngleIMU	);
-		send_ShortToChar((short)RollAngleIMU	);
-		send_ShortToChar(	Encoder		);
-		send_ShortToChar(	targetSpeed	);
-		send_ShortToChar(	rawXg		);
-		send_ShortToChar(	rawYg		);
-		send_ShortToChar(	rawZg		);
-		send_uIntToChar (	EncoderTotal	);
-		send_uIntToChar (	enc1		);
-		send_uIntToChar (	cnt_log		);
+		send_Char			(	pattern		);
+		send_Char			(	motorPwm 	);
+		send_Char			(	accele_fL 		);
+		send_Char			(	accele_fR 		);
+		send_Char			(	accele_rL 		);
+		send_Char			(	accele_rR 		);
+		send_Char			(	ServoPwm 	);
+		send_Char			(	ServoPwm2 	);
+		send_Char			(	sensor_inp() 	);
+		send_Char			( 	slope_mode	);
+		send_ShortToChar	(	getServoAngle()	);
+		send_ShortToChar	(	SetAngle		);
+		send_ShortToChar	(	getAnalogSensor());
+		send_ShortToChar	((short)PichAngleIMU	);
+		send_ShortToChar	((short)TurningAngleEnc	);
+		send_ShortToChar	((short)TurningAngleIMU	);
+		send_ShortToChar	((short)RollAngleIMU	);
+		send_ShortToChar	(	Encoder		);
+		send_ShortToChar	(	targetSpeed	);
+		send_ShortToChar	(	rawXg		);
+		send_ShortToChar	(	rawYg		);
+		send_ShortToChar	(	rawZg		);
+		send_uIntToChar 	(	EncoderTotal	);
+		send_uIntToChar 	(	enc1			);
+		send_uIntToChar 	(	cnt_log		);
 		// ここまで
 		cnt_log += WRITINGTIME;
 		msdBuffAddress += DATA_BYTE;       // RAMの記録アドレスを次へ
@@ -984,7 +984,7 @@ void msd_sendToPC ( void )
 				i = 0;
 				// タイトル
 				printf(		"Time[ms],"		);
-				printf(		"pattern,"		);
+				printf(		"pattern,"			);
 				printf(		"MotorPwm,"		);
 				printf(		"accele_fL,"		);
 				printf(		"accele_fR,"		);
@@ -998,15 +998,15 @@ void msd_sendToPC ( void )
 				printf(		"getServoAngle,"	);
 				printf(		"SetAngle,"		);
 				printf(		"getAnalogSensor,"	);
-				printf(		"Degrees,"		);
+				printf(		"PichAngleIMU,"		);
 				printf(		"TurningAngleEnc,"	);
 				printf(		"TurningAngleIMU,"	);
 				printf(		"RollAngleIMU,"		);
-				printf(		"Encoder,"		);
+				printf(		"Encoder,"			);
 				printf(		"targetSpeed,"		);
-				printf(		"xg[degrees/sec],"	);
-				printf(		"yg[degrees/sec],"	);
-				printf(		"zg[degrees/sec],"	);
+				printf(		"xg[PichAngleIMU/sec],"	);
+				printf(		"yg[PichAngleIMU/sec],"	);
+				printf(		"zg[PichAngleIMU/sec],"	);
 				
 				printf(		"EncoderTotal,"		);
 				printf(		"enc1,"			);
@@ -1056,18 +1056,20 @@ void msd_sendToPC ( void )
 				printf("%5d,", msdBuff[ msdBuffAddress + 7 ]);	// ServoPwm2
 				printf("%5d,", msdBuff[ msdBuffAddress + 8 ]);	// sensor_inp()
 				printf("%5d,", msdBuff[ msdBuffAddress + 9 ]);	// slope_mode
+				
 				printf("%5d,", CharToShort(10));		// getServoAngle()
 				printf("%5d,", CharToShort(12));		// SetAngle
 				printf("%5d,", CharToShort(14));		// getAnalogSensor()
-				printf("%5d,", CharToShort(16));		// Degrees
+				printf("%5d,", CharToShort(16));		// PichAngleIMU
 				printf("%5d,", CharToShort(18));		// TurningAngleEnc
 				printf("%5d,", CharToShort(20));		// TurningAngleIMU
 				printf("%5d,", CharToShort(22));		// RollAngleIMU
 				printf("%5d,", CharToShort(24));		// Encoder
-				printf("%5d,", CharToShort(26) / 10);		// targetSpeed
+				printf("%5d,", CharToShort(26) / 10);	// targetSpeed
 				printf("%4.4f,", (double)CharToShort(28)/GYROLSB);// xg
 				printf("%4.4f,", (double)CharToShort(30)/GYROLSB);// yg
 				printf("%4.4f,", (double)CharToShort(32)/GYROLSB);// zg
+				
 				printf("%6d,", CharTouInt (34));		// EncoderTotal
 				printf("%6d,", CharTouInt (38));		// enc1
 				printf("%6d", CharTouInt (42));			// cnt_log

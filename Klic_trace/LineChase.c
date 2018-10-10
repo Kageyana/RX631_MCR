@@ -6,12 +6,12 @@
 // グローバル変数の宣言							//
 //====================================//
 // モード関連
-char 	lcd_mode = 1;	// LCD表示可否		1:表示		0:消灯		
-char 	slope_mode;	// 坂チェック		0:上り坂始め	1:上り坂終わり	2:下り坂始め
-char 	angle_mode;	// サーボPWM変更	0:白線トレース	1:角度制御
-char	pushcart_mode;	// 手押しモード可否	0:自動走行	1:手押し
-char	msdset;		// MicroSDが初期化されたか	0:初期化失敗	1:初期化成功
-char	IMUSet = 0;	// IMUが初期化されたか	0: 初期化失敗	1:初期化成功
+char 	lcd_mode = 1;		// LCD表示可否		1:表示		0:消灯		
+char 	slope_mode;		// 坂チェック		0:上り坂始め	1:上り坂終わり	2:下り坂始め
+char 	angle_mode;		// サーボPWM変更	0:白線トレース	1:角度制御
+char	pushcart_mode;		// 手押しモード可否	0:自動走行	1:手押し
+char	msdset;			// MicroSDが初期化されたか	0:初期化失敗	1:初期化成功
+char	IMUSet = 0;		// IMUが初期化されたか	0: 初期化失敗	1:初期化成功
 
 // パラメータ関連
 // 距離
@@ -52,7 +52,7 @@ short	angle_leftchange;		// 右レーンチェンジ旋回角度
 short	cnt_gyro;				// 角度計算用カウンタ
 
 // 角度関連
-double 	Degrees;			// 圧電ジャイロから計算した機体のピッチ角度
+double 	PichAngleIMU;			// 圧電ジャイロから計算した機体のピッチ角度
 short 	gyVoltageBefore;	// 1ms前の角度
 
 double 	TurningAngleEnc;	// エンコーダから求めた旋回角度
@@ -101,9 +101,8 @@ signed char check_crossline( void )
 	char ret = 0;
 
 	digital_sensor = sensor_inp();
-	if ( digital_sensor == 0x7 ) {
-		ret = 1;
-	}
+	if ( digital_sensor == 0x7 ) ret = 1;
+	
 	return ret;
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -118,9 +117,7 @@ signed char check_rightline( void )
 	char ret = 0;
 
 	digital_sensor = sensor_inp();
-	if ( digital_sensor == 0x3 ) {
-		ret = 1;
-	}
+	if ( digital_sensor == 0x3 ) ret = 1;
 	return ret;
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -151,7 +148,7 @@ signed char check_slope( void )
 	short deg, upperline, lowerline;
 	signed char ret = 0;
 
-	deg = Degrees;
+	deg = PichAngleIMU;
 	
 	upperline = SLOPEUPPERLINE;
 	lowerline = SLOPELOWERLINE;
@@ -172,20 +169,6 @@ unsigned int enc_mm( short mm )
 	return PALSE_MILLIMETER * mm;
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 get_degrees							//
-// 処理概要     ジャイロセンサの値から角度算出				//
-// 引数         なし									//
-// 戻り値       なし									//
-///////////////////////////////////////////////////////////////////////////
-void getDegrees( void )
-{
-	double angularVelocity;
-	
-	angularVelocity = (double)rawXg * GYROLSB;	// IMUのデータを角速度[deg/s]に変換
-	Degrees += angularVelocity * 0.001;
-	if ( cnt_gyro == INTEGRAL_LIMIT ) Degrees = 0;
-}
-///////////////////////////////////////////////////////////////////////////
 // モジュール名 servoControl							//
 // 処理概要     ライントレース時サーボのPWMの計算				//
 // 引数         なし									//
@@ -199,11 +182,8 @@ void servoControl( void )
 	//サーボモータ用PWM値計算
 	Dev = getAnalogSensor();
 	// 目標値を変更したらI成分リセット
-	if ( Dev >= 0 && DevBefore == 1 ) {
-		Int = 0;
-	} else if ( Dev < -0 && DevBefore == 0 ) {
-		Int = 0;
-	}
+	if ( Dev >= 0 && DevBefore == 1 ) Int = 0;
+	else if ( Dev < -0 && DevBefore == 0 ) Int = 0;
 	
 	Int += (double)Dev * 0.001;
 	Dif = ( Dev - SensorBefore ) * 1;	// dゲイン1/1000倍
@@ -216,14 +196,11 @@ void servoControl( void )
 
 	// PWMの上限の設定(安定したら70程度に)
 	if ( iRet >  70 ) iRet =  70;		// マイコンカーが安定したら
-	if ( iRet <  -70 ) iRet = -70;		// 上限を90くらいにしてください
-	if ( sensor_inp() == 0x1 ) {
-		iRet = -70;
-	} else if ( sensor_inp() == 0x4 ) {
-		iRet = 70;
-	}
+	if ( iRet <  -70 ) iRet = -70;	// 上限を90くらいにしてください
+	if ( sensor_inp() == 0x1 ) iRet = -70;
+	else if ( sensor_inp() == 0x4 ) iRet = 70;
 	
-	if ( Dev >= 0 )		DevBefore = 0;
+	if ( Dev >= 0 )	DevBefore = 0;
 	else			DevBefore = 1;
 	ServoPwm = iRet;
 	SensorBefore = Dev;				// 次回はこの値が1ms前の値となる
@@ -247,11 +224,9 @@ void servoControl2( void )
 	Dev = i - j;
 		
 	// 目標値を超えたらI成分リセット
-	if ( Dev >= 0 && AngleBefore3 == 1 ) {
-		Int2 = 0;
-	} else if ( Dev < 0 && AngleBefore3 == 0 ) {
-		Int2 = 0;
-	}
+	if ( Dev >= 0 && AngleBefore3 == 1 ) Int2 = 0;
+	else if ( Dev < 0 && AngleBefore3 == 0 ) Int2 = 0;
+	
 	// 目標値を変更したらI成分リセット
 	if ( !(i == SetAngleBefore) ) Int2 = 0;
 	
@@ -699,11 +674,10 @@ void getTurningAngleIMU(void)
 	
 	angularVelocity = (double)rawZg / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
 	TurningAngleIMU += angularVelocity * 0.001;
-	
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 getRollAngleIMU							//
-// 処理概要   	IMUから旋回角度の計算					//
+// 処理概要   	IMUからロール角度の計算					//
 // 引数         なし									//
 // 戻り値       なし									//
 ///////////////////////////////////////////////////////////////////////////
@@ -713,8 +687,21 @@ void getRollAngleIMU(void)
 	
 	angularVelocity = (double)rawYg / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
 	RollAngleIMU += angularVelocity * 0.001;
-	if ( cnt_gyro == INTEGRAL_LIMIT ) RollAngleIMU = 0;
+	//if ( cnt_gyro >= INTEGRAL_LIMIT ) RollAngleIMU = 0;
+}
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 getPichAngleIMU							//
+// 処理概要     IMUからピッチ角度の計算						//
+// 引数         なし									//
+// 戻り値       なし									//
+///////////////////////////////////////////////////////////////////////////
+void getPichAngleIMU( void )
+{
+	double angularVelocity;
 	
+	angularVelocity = (double)rawXg / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
+	PichAngleIMU += angularVelocity * 0.001;
+	//if ( cnt_gyro >= INTEGRAL_LIMIT ) PichAngleIMU = 0;
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 motorControl							//
@@ -758,11 +745,9 @@ void motorControl( void )
 	
 	if ( Dev > 50 || Dev < -50) {
 		// 目標値を超えたらI成分リセット
-		if ( Dev >= 0 && AccelefBefore == 1 ) {
-			Int3 = 0;
-		} else if ( Dev < 0 && AccelefBefore == 0 ) {
-			Int3 = 0;
-		}
+		if ( Dev >= 0 && AccelefBefore == 1 ) Int3 = 0;
+		else if ( Dev < 0 && AccelefBefore == 0 ) Int3 = 0;
+		
 		// 目標値を変更したらI成分リセット
 		if ( i != targetSpeedBefore ) Int3 = 0;
 		
@@ -775,9 +760,6 @@ void motorControl( void )
 		iRet = iP + iI + iD;
 		iRet = iRet >> 4;
 		
-		//v = rev_voltage[targetSpeed / SPEED_CURRENT];
-		//if ( Dev < 0 ) v = -v;
-		//iRet += v;
 		// PWMの上限の設定
 		if ( iRet >  100 )	iRet =  100;
 		if ( iRet <  -100 )	iRet = -100;
@@ -793,6 +775,4 @@ void motorControl( void )
 	motorPwm = iRet;
 	EncoderBefore = Dev;
 	targetSpeedBefore = i;
-	
-	
 }

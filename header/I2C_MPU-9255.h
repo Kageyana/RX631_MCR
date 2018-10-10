@@ -1,16 +1,16 @@
 #ifndef I2C_MPU9255_H_
 #define I2C_MPU9255_H_
-//======================================//
-// インクルード                         //
-//======================================//
+//====================================//
+// インクルード									//
+//====================================//
 #include <stdlib.h>
 #include "iodefine.h"
 #include "PeripheralFunctions.h"
 #include "SCI.h"
 #include "LineChase.h"
-//======================================//
-// シンボル定義                         //
-//======================================//
+//====================================//
+// シンボル定義									//
+//====================================//
 // MPU-9255 Register Map
 #define SELF_TEST_X_GYRO	0x00
 #define SELF_TEST_Y_GYRO	0x01
@@ -131,12 +131,11 @@
 #define MODE				20		// 最頻値
 #define MEDIAN				30		// 中央値
 
-/******************************************** 自動生成関数 *****************************************/
-#define I2C_IMU_COMMAND		send_SCI1_I2cWait( slaveAddr, sendData, 2)
-#define I2C_IMU_DATA		send_SCI1_I2cWait( slaveAddr, sendData, 1)
-#define	I2C_IMU_RECIVE		receive_SCI1_I2c( slaveAddr, reciveData, num )
-#define I2C_IMU_ARRY		receive_data_SCI1_I2c(slaveAddr, sendData, reciveData, num)
-/****************************************************************************************************/
+/*************************************** 自動生成関数 **********************************/
+#define I2C_IMU_COMMAND	send_SCI1_I2cWait( MPU9255_ADDRESS, sendData, num)
+#define I2C_IMU_RECIVE		receive_SCI1_I2c( MPU9255_ADDRESS, reciveData, num )
+#define I2C_IMU_ARRY		receive_data_SCI1_I2c(MPU9255_ADDRESS, sendData, reciveData, num)
+/************************************************************************************/
 //====================================//
 // グローバル変数の宣言							//
 //====================================//
@@ -148,7 +147,7 @@ extern volatile short 	rawTemp;				// 温度(16bitデータ)
 // キャリブレーション関連
 extern short	sampleIMU[7][SAMPLENUMBER];
 extern short 	median[7], mode[7];
-extern int	averageIMU[7];
+extern int		averageIMU[7];
 extern char	caribration;		// 0:キャリブレーション停止 1:キャリブレーション中
 
 // モード関連
@@ -159,9 +158,9 @@ extern char	whoami;
 // プロトタイプ宣言								//
 //====================================//
 void wait_IMU ( short waitTime );
-void IMUWriteByte(char slaveAddr, char reg, char data );
-char IMUReadByte(char slaveAddr, char reg , char* reciveData );
-void IMUReadArry(char slaveAddr, char reg, char num, char* dataArry );
+void IMUWriteByte( char reg, char data );
+char IMUReadByte( char reg , char* reciveData );
+void IMUReadArry( char reg, char num, char* dataArry );
 char init_IMU (void);
 void IMUProcess (void);
 void caribrateIMU (char data_Option);

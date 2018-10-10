@@ -5,12 +5,12 @@
 //====================================//
 // グローバル変数の宣言             						//
 //====================================//
-short	cent_data[7] = {0};	// オフセット値	
+short	cent_data[7] = {0};			// オフセット値	
 volatile short 	rawXa, rawYa, rawZa;	// 加速度(16bitデータ)
-volatile short 	rawXg, rawYg, rawZg;	// 角加速度(16bitデータ)
-volatile short 	rawTemp;		// 温度(16bitデータ)
+volatile short 	rawXg, rawYg, rawZg;// 角加速度(16bitデータ)
+volatile short 	rawTemp;			// 温度(16bitデータ)
 
-char	pattern_caribrateIMU = 0;// キャリブレーション処理
+char	pattern_caribrateIMU = 0;		// キャリブレーション処理
 short	sampleIMU[7][SAMPLENUMBER];
 short	data_cnt = 0;
 short 	median[7], mode[7];
@@ -39,11 +39,11 @@ void wait_IMU ( short waitTime )
 // 引数         slaveAddr:スレーブアドレス reg:レジスタのアドレス data:書き込みデータ	//
 // 戻り値       なし													//
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-void IMUWriteByte(char slaveAddr, char reg, char data )
+void IMUWriteByte( char reg, char data )
 {
-	char sendData[2] = { reg, data };
+	char sendData[2] = { reg, data }, num = 2;
     
-	I2C_IMU_COMMAND;	// コマンド送信
+	I2C_IMU_COMMAND;		// コマンド送信
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 IMUReadByte							//
@@ -51,11 +51,11 @@ void IMUWriteByte(char slaveAddr, char reg, char data )
 // 引数         slaveAddr:スレーブアドレス reg:レジスタのアドレス	//
 // 戻り値       0:正常に受信　1:受信不可						//
 ///////////////////////////////////////////////////////////////////////////
-char IMUReadByte(char slaveAddr, char reg , char* reciveData )
+char IMUReadByte( char reg , char* reciveData )
 {
 	char sendData[1] = { reg }, num = 1;
-    
-	if ( I2C_IMU_DATA == 0 ) {		// コマンド送信
+  	
+	if ( I2C_IMU_COMMAND == 0 ) {	// コマンド送信
 		I2C_IMU_RECIVE;		// データ受信
 		return 0;
 	} else {
@@ -68,7 +68,7 @@ char IMUReadByte(char slaveAddr, char reg , char* reciveData )
 // 引数         slaveAddr:スレーブアドレス addr:レジスタのアドレス num:読み取るデータ数 dataArry:データの格納先	//
 // 戻り値       なし																		//
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void IMUReadArry(char slaveAddr, char reg, char num, char* reciveData )
+void IMUReadArry( char reg, char num, char* reciveData )
 {
 	char sendData[1] = { reg };
 	I2C_IMU_ARRY;
@@ -82,17 +82,16 @@ void IMUReadArry(char slaveAddr, char reg, char num, char* reciveData )
 char init_IMU (void)
 {
 	char ret  = 0, reciveData[1];
-	
-	if ( IMUReadByte(MPU9255_ADDRESS, WHO_AM_I, reciveData) == 0 ) {
+	if ( IMUReadByte( WHO_AM_I, reciveData) == 0 ) {
 		if ( reciveData[0] == 0x71 || reciveData[0] == 0x73 ) {
 			whoami = reciveData[0];
 			wait_IMU(35);
 			
-			IMUWriteByte(MPU9255_ADDRESS, PWR_MGMT_1, 0x00);	// スリープモード解除
-			IMUWriteByte(MPU9255_ADDRESS, INT_PIN_CFG, 0x02);	// 内蔵プルアップ無効化
-			IMUWriteByte(MPU9255_ADDRESS, CONFIG, 0x00);		// ローパスフィルタを使用しない
-			IMUWriteByte(MPU9255_ADDRESS, ACCEL_CONFIG, 0x18);	// レンジ±16gに変更
-			IMUWriteByte(MPU9255_ADDRESS, GYRO_CONFIG, 0x10);	// レンジ±1000deg/sに変更
+			IMUWriteByte( PWR_MGMT_1, 0x00);	// スリープモード解除
+			IMUWriteByte( INT_PIN_CFG, 0x02);	// 内蔵プルアップ無効化
+			IMUWriteByte( CONFIG, 0x00);		// ローパスフィルタを使用しない
+			IMUWriteByte( ACCEL_CONFIG, 0x18);	// レンジ±16gに変更
+			IMUWriteByte( GYRO_CONFIG, 0x10);	// レンジ±1000deg/sに変更
 		} else {
 			ret = 1;
 		}
@@ -112,7 +111,7 @@ void IMUProcess (void)
 {
 	char 	axisData[14];	// 角加速度、温度の8bit分割データ格納先
 	
-	IMUReadArry(MPU9255_ADDRESS, GYRO_XOUT_H, 6, axisData);	// 3軸加速度取得
+	IMUReadArry( GYRO_XOUT_H, 6, axisData);	// 3軸加速度取得
 	
 	//8bitデータを16bitデータに変換
 	// 加速度
@@ -166,7 +165,7 @@ void caribrateIMU (char data_Option)
 			
 		case 1:
 			PORT5.PODR.BIT.B5 = 1;
-			IMUReadArry(MPU9255_ADDRESS, ACCEL_XOUT_H, 14, data);	// 6軸データ+温度取得
+			IMUReadArry( ACCEL_XOUT_H, 14, data);	// 6軸データ+温度取得
 			
 			// 16bitデータに変換
 			for ( i = 0; i < 7; i++ ) {
@@ -179,7 +178,7 @@ void caribrateIMU (char data_Option)
 				datasize = 2;		// データサイズ計算 
 				
 				if( data_Option == AVERAGE )	pattern_caribrateIMU = AVERAGE;
-				if( data_Option == MODE )	pattern_caribrateIMU = MODE;
+				if( data_Option == MODE )		pattern_caribrateIMU = MODE;
 				if( data_Option == MEDIAN )	pattern_caribrateIMU = MEDIAN;
 			}
 			break;

@@ -8,11 +8,11 @@
 char 	start;		// 0:セットアップ中	1:セットアップ完了
 
 // タイマ関連
-unsigned short 		cnt_setup;	// セットアップで使用
+unsigned short 		cnt_setup;		// セットアップで使用
 unsigned short 		cnt_setup2;	// セットアップで使用
 unsigned short 		cnt_setup3;	// セットアップで使用
-short			cnt_swR;	// スイッチ長押し判定用右
-short			cnt_swL;	// スイッチ長押し判定用左
+short				cnt_swR;		// スイッチ長押し判定用右
+short				cnt_swL;		// スイッチ長押し判定用左
 
 // スイッチ関連
 signed char pushL = 0;
@@ -473,11 +473,8 @@ void setup( void )
 					//値を点滅
 					lcdPosition( 0, 1 );
 					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
-						lcdPrintf("   %2d %2d", ki2_buff, kd2_buff);
-					} else {
-						lcdPrintf("%2d %2d %2d", kp2_buff, ki2_buff, kd2_buff);
-					}
+					if ( cnt_setup < 250 ) lcdPrintf("   %2d %2d", ki2_buff, kd2_buff);
+					else				lcdPrintf("%2d %2d %2d", kp2_buff, ki2_buff, kd2_buff);
 					
 					data_tuning ( &kp2_buff, 1, RIGHT );
 					break;
@@ -486,11 +483,8 @@ void setup( void )
 					//値を点滅
 					lcdPosition( 0, 1 );
 					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
-						lcdPrintf("%2d    %2d", kp2_buff, kd2_buff);
-					} else {
-						lcdPrintf("%2d %2d %2d", kp2_buff, ki2_buff, kd2_buff);
-					}
+					if ( cnt_setup < 250 ) lcdPrintf("%2d    %2d", kp2_buff, kd2_buff);
+					else				lcdPrintf("%2d %2d %2d", kp2_buff, ki2_buff, kd2_buff);
 					
 					data_tuning ( &ki2_buff, 1, RIGHT );
 					break;
@@ -499,11 +493,8 @@ void setup( void )
 					//値を点滅
 					lcdPosition( 0, 1 );
 					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
-						lcdPrintf("%2d %2d   ", kp2_buff, ki2_buff);
-					} else {
-						lcdPrintf("%2d %2d %2d", kp2_buff, ki2_buff, kd2_buff);
-					}
+					if ( cnt_setup < 250 )	lcdPrintf("%2d %2d   ", kp2_buff, ki2_buff);
+					else				lcdPrintf("%2d %2d %2d", kp2_buff, ki2_buff, kd2_buff);
 					
 					data_tuning ( &kd2_buff, 1, RIGHT );
 					break;
@@ -531,11 +522,8 @@ void setup( void )
 					//値を点滅
 					lcdPosition( 0, 1 );
 					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
-						lcdPrintf("   %2d %2d", ki3_buff, kd3_buff );
-					} else {
-						lcdPrintf("%2d %2d %2d", kp3_buff, ki3_buff, kd3_buff );
-					}
+					if ( cnt_setup < 250 ) lcdPrintf("   %2d %2d", ki3_buff, kd3_buff );
+					else				lcdPrintf("%2d %2d %2d", kp3_buff, ki3_buff, kd3_buff );
 					
 					data_tuning ( &kp3_buff, 1, RIGHT );
 					break;
@@ -544,11 +532,8 @@ void setup( void )
 					//値を点滅
 					lcdPosition( 0, 1 );
 					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
-						lcdPrintf("%2d    %2d", kp3_buff, kd3_buff );
-					} else {
-						lcdPrintf("%2d %2d %2d", kp3_buff, ki3_buff, kd3_buff );
-					}
+					if ( cnt_setup < 250 ) lcdPrintf("%2d    %2d", kp3_buff, kd3_buff );
+					else				lcdPrintf("%2d %2d %2d", kp3_buff, ki3_buff, kd3_buff );
 					
 					data_tuning ( &ki3_buff, 1, RIGHT );
 					break;
@@ -558,11 +543,8 @@ void setup( void )
 					//値を点滅
 					lcdPosition( 0, 1 );
 					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
-						lcdPrintf("%2d %2d   ", kp3_buff, ki3_buff );
-					} else {
-						lcdPrintf("%2d %2d %2d", kp3_buff, ki3_buff, kd3_buff );
-					}
+					if ( cnt_setup < 250 ) lcdPrintf("%2d %2d   ", kp3_buff, ki3_buff );
+					else 				lcdPrintf("%2d %2d %2d", kp3_buff, ki3_buff, kd3_buff );
 					
 					data_tuning ( &kd3_buff, 1, RIGHT );
 					break;
@@ -666,7 +648,7 @@ void setup( void )
 					if ( cnt_setup >= 100 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 1 );
-						lcdPrintf("   %5d",(short)Degrees);
+						lcdPrintf("   %5d",(short)PichAngleIMU);
 					}
 					break;
 					
@@ -738,11 +720,9 @@ void setup( void )
 					lcdPrintf("Servo   ");
 					lcdPosition( 0, 1 );
 					lcdPrintf("        ");
-					if ( motor_test == 1 ) 	{
-						servoPwmOut( 20 );
-					} else {
-						servoPwmOut( 0 );
-					}
+					if ( motor_test == 1 ) servoPwmOut( 20 );
+					else				servoPwmOut( 0 );
+					
 					data_select( &motor_test, 1 );
 					break;
 				case 9:
@@ -1136,12 +1116,12 @@ void setup( void )
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////
-// モジュール名 data_select								//
+///////////////////////////////////////////////////////////////////////////////////////
+// モジュール名 data_select										//
 // 処理概要     タクトスイッチで0,1に変化させる						//
-// 引数         data: 変化させる変数 button: どのスイッチで変化させるか			//
-// 戻り値       なし									//
-//////////////////////////////////////////////////////////////////////////////////////////
+// 引数         data: 変化させる変数 button: どのスイッチで変化させるか		//
+// 戻り値       なし											//
+///////////////////////////////////////////////////////////////////////////////////////
 void data_select ( char *data , char button )
 {
 	if ( tasw_get() == button ) {
@@ -1156,12 +1136,12 @@ void data_select ( char *data , char button )
 		push = 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////
-// モジュール名 data_tuning								//
+///////////////////////////////////////////////////////////////////////////////////////
+// モジュール名 data_tuning										//
 // 処理概要     タクトスイッチでdataを加減する						//
 // 引数         data: 加減させる変数 add: 0: 変化量 lr: 0:右列 1:左列			//
-// 戻り値       なし									//
-//////////////////////////////////////////////////////////////////////////////////////////
+// 戻り値       なし											//
+///////////////////////////////////////////////////////////////////////////////////////
 void data_tuning ( void *data, char add , char lr )
 {
 	short *data2 = (short*)data;	// short型ポインタにキャスト
@@ -1237,12 +1217,12 @@ void data_tuning ( void *data, char add , char lr )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////
-// モジュール名 fix_speedsetting							//
+/////////////////////////////////////////////////////////////////////////////////
+// モジュール名 fix_speedsetting								//
 // 処理概要     速度パラメータを固定値にする						//
-// 引数         なし									//
-// 戻り値       0: 速度一定にしない　1: 速度一定にする					//
-//////////////////////////////////////////////////////////////////////////////////////////
+// 引数         なし										//
+// 戻り値       0: 速度一定にしない　1: 速度一定にする				//
+/////////////////////////////////////////////////////////////////////////////////
 char fix_speedsetting ( void )
 {
 	char ret = 0;

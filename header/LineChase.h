@@ -80,7 +80,7 @@
 #define STOP_SENSOR2		800		// センサ全消灯
 #define STOP_ENCODER		10		// エンコーダ停止(ひっくり返った？)
 #define STOP_GYRO			100		// マイナスの加速度検知(コースから落ちた？)
-#define STOP_COUNT		10000		// 時間停止
+#define STOP_COUNT		10000	// 時間停止
 //====================================//
 // グローバル変数の宣言							//
 //====================================//
@@ -102,22 +102,22 @@ extern short	speed_straight;			// 通常トレース
 extern short	speed_curve_brake;		// カーブブレーキ
 extern short	speed_curve_r600;		// R600カーブ速度
 extern short	speed_curve_r450;		// R450カーブ速度
-extern short	speed_curve_straight;		// S字カーブ直線速度
+extern short	speed_curve_straight;	// S字カーブ直線速度
 
-extern short	speed_crossline;		// クロスライン進入速度
+extern short	speed_crossline;			// クロスライン進入速度
 extern short	speed_ckank_trace;		// クランク進入速度
-extern short	speed_rightclank_curve;		// 右クランク旋回速度
+extern short	speed_rightclank_curve;	// 右クランク旋回速度
 extern short	speed_rightclank_escape;	// 右クランク復帰速度
-extern short	speed_leftclank_curve;		// 左クランク旋回速度
-extern short	speed_leftclank_escape;		// 左クランク復帰速度
+extern short	speed_leftclank_curve;	// 左クランク旋回速度
+extern short	speed_leftclank_escape;	// 左クランク復帰速度
 
 extern short	speed_halfine;			// ハーフライン進入速度
 extern short	speed_rightchange_trace;	// 右レーンチェンジ進入速度
 extern short	speed_rightchange_curve;	// 右レーンチェンジ旋回速度
-extern short	speed_rightchange_escape;	// 右レーンチェンジ復帰速度
+extern short	speed_rightchange_escape;// 右レーンチェンジ復帰速度
 
-extern short	speed_leftchange_trace;		// 左レーンチェンジ進入速度
-extern short	speed_leftchange_curve;		// 左レーンチェンジ旋回速度
+extern short	speed_leftchange_trace;	// 左レーンチェンジ進入速度
+extern short	speed_leftchange_curve;	// 左レーンチェンジ旋回速度
 extern short	speed_leftchange_escape;	// 左レーンチェンジ旋回速度
 
 extern short	speed_slope_brake;		// 下り坂終点速度
@@ -125,18 +125,18 @@ extern short	speed_slope_trace;		// 坂読み飛ばし速度
 
 // サーボ角度
 extern short	angle_rightclank;		// 右クランク旋回角度
-extern short	angle_leftclank;		// 左クランク旋回角度
+extern short	angle_leftclank;			// 左クランク旋回角度
 extern short	angle_rightchange;		// 右レーンチェンジ旋回角度
 extern short	angle_leftchange;		// 右レーンチェンジ旋回角度
 
 // タイマ関連
-extern short		cnt_gyro;		// 角度計算用カウンタ
+extern short		cnt_gyro;			// 角度計算用カウンタ
 
 // 角度関連
-extern double 		Degrees;		// ジャイロセンサから計算した角度(degrees)
 extern double 		TurningAngleEnc;	// エンコーダから求めた旋回角度
 extern double 		TurningAngleIMU;	// IMUから求めた旋回角度
 extern double		RollAngleIMU;		// IMUから求めたロール方向角度
+extern double 		PichAngleIMU;		// IMUから求めたピッチ方向角度
 
 // モーター関連
 extern signed char 	motorPwm;	// モーター制御PWM
@@ -165,10 +165,10 @@ signed char check_leftline( void );
 signed char check_slope( void );
 
 // 角度関連
-void getDegrees( void );
 void getTurningAngleEnc(void);
 void getTurningAngleIMU(void);
 void getRollAngleIMU(void);
+void getPichAngleIMU( void );
 
 // エンコーダ関連
 unsigned int enc_mm( short mm );

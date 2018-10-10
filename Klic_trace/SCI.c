@@ -5,49 +5,49 @@
 //====================================//
 // グローバル変数の宣言							//
 //====================================//
-char revErr = 0;
+char		revErr = 0;		// 通信エラー番号
 // SCI1関連
-char	SCI1_mode;		// 通信方式
-char	txt_command[128];	// コマンド格納
-char	txt_data[128];		// データ格納
-char	*txt;			// 受信データ格納
-char	cmmandMode = 0;		// コマンド選択
-char	stopWord = 0;		// 0: 停止ワード未受信 1:停止ワード受信
+char		SCI1_mode;		// 通信方式
+char		txt_command[128];	// コマンド格納
+char		txt_data[128];		// データ格納
+char*	txt;				// 受信データ格納
+char		cmmandMode = 0;	// コマンド選択
+char		stopWord = 0;		// 0: 停止ワード未受信 1:停止ワード受信
 short 	cnt_byte = 0;		// 受信したバイト数
-char 	command = 0;		// 0:コマンド受信待ち 1:コマンド入力中 2:コマンド判定中
+char 		command = 0;		// 0:コマンド受信待ち 1:コマンド入力中 2:コマンド判定中
 
-char	SCI1_Req_mode;		// 0:スタート 1:ストップ 2:データ送受信中
-char	SCI1_RW_mode;		// 0:送信 1:受信
-char	SCI1_SlaveAddr;		// スレーブアドレス
-char	SCI1_NumData;		// 送信データ数
+char		SCI1_Req_mode;	// 0:スタート 1:ストップ 2:データ送受信中
+char		SCI1_RW_mode;	// 0:送信 1:受信
+char		SCI1_SlaveAddr;	// スレーブアドレス
+char		SCI1_NumData;		// 送信データ数
 char*	SCI1_DataArry;		// 送信データ配列
-char	SCI1_DataBuff[255];	// 送信データバッファ
+char		SCI1_DataBuff[255];	// 送信データバッファ
 
 // SCI12関連
-char	SCI12_Req_mode = 0;	// 0:スタート 1:ストップ
-char	SCI12_SlaveAddr;	// 送信データ数
-char	SCI12_NumData;		// データ数
-char	SCI1_NumData2;		// 送信データ数2
+char		SCI12_Req_mode = 0;	// 0:スタート 1:ストップ
+char		SCI12_SlaveAddr;		// 送信データ数
+char		SCI12_NumData;		// データ数
+char		SCI1_NumData2;		// 送信データ数2
 char*	SCI12_DataArry;		// データ配列
 char*	SCI1_DataArry2;		// 送信データ配列2
-char	SCI12_DataBuff[255];	// 送信データバッファ
+char		SCI12_DataBuff[255];	// 送信データバッファ
 
-char 	ascii_num[] = {48,49,50,51,52,53,54,55,56,57,97,98,99,100,101,102};
+char 		ascii_num[] = {48,49,50,51,52,53,54,55,56,57,97,98,99,100,101,102};
 
 
 #pragma interrupt Excep_SCI1_RXI1 (vect = VECT_SCI1_RXI1, enable)	// RXI1割り込み関数定義
 #pragma interrupt Excep_SCI1_TXI1 (vect = VECT_SCI1_TXI1, enable)	// TXI1割り込み関数定義
-#pragma interrupt Excep_SCI1_TEI1 (vect = VECT_SCI1_TEI1, enable)	// TEI1割り込み関数定義
+#pragma interrupt Excep_SCI1_TEI1 (vect = VECT_SCI1_TEI1, enable)		// TEI1割り込み関数定義
 
 #pragma interrupt Excep_SCI5_RXI5 (vect = VECT_SCI5_RXI5, enable)	// RXI1割り込み関数定義
 #pragma interrupt Excep_SCI5_TXI5 (vect = VECT_SCI5_TXI5, enable)	// TXI12割り込み関数定義
-#pragma interrupt Excep_SCI5_TEI5 (vect = VECT_SCI5_TEI5, enable)	// STI12割り込み関数定義
+#pragma interrupt Excep_SCI5_TEI5 (vect = VECT_SCI5_TEI5, enable)		// STI12割り込み関数定義
 
 #pragma interrupt Excep_SCI12_RXI12 (vect = VECT_SCI12_RXI12, enable)	// RXI1割り込み関数定義
 #pragma interrupt Excep_SCI12_TXI12 (vect = VECT_SCI12_TXI12, enable)	// TXI12割り込み関数定義
 #pragma interrupt Excep_SCI12_TEI12 (vect = VECT_SCI12_TEI12, enable)	// STI12割り込み関数定義
 
-#pragma interrupt chaek_SCI_Error (vect = VECT_ICU_GROUP12 )	// 受信エラー割り込み関数定義
+//#pragma interrupt chaek_SCI_Error (vect = VECT_ICU_GROUP12 )	// 受信エラー割り込み関数定義
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 init_SCI1								//
 // 処理概要     SCI1の初期化								//
@@ -462,7 +462,7 @@ void send_SCI1_I2c( char slaveAddr, char* data, char num )
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 char send_SCI1_I2cWait( char slaveAddr, char* data, char num )
 {
-	char err = 0;
+	volatile char err = 0;
 	
 	while ( SCI1.SIMR3.BYTE != 0xf0 );	// バスがフリーになるまで待つ
 	
@@ -474,9 +474,8 @@ char send_SCI1_I2cWait( char slaveAddr, char* data, char num )
 	SCI1_DataArry = SCI1_DataBuff;
 	
 	SCI1_Req_mode = 0;		// スタートコンディション待ち
-	SCI1.SCR.BIT.TEIE = 1;		// STI割り込み許可
-	SCI1.SCR.BIT.TIE = 1;		// TXI割り込み許可
-	
+	SCI1.SCR.BIT.TEIE = 1;	// STI割り込み許可
+	SCI1.SCR.BIT.TIE = 1;	// TXI割り込み許可
 	SCI1.SIMR3.BYTE = 0x51;		// スタートコンディション発行
 	// データは割り込みで送信
 	cnt0 = 0;
@@ -485,7 +484,6 @@ char send_SCI1_I2cWait( char slaveAddr, char* data, char num )
 			err = 1;
 			break;
 		}
-		
 	}
 	if ( err == 1 ) return 2;
 	else return SCI1.SISR.BIT.IICACKR;
@@ -513,7 +511,9 @@ void receive_SCI1_I2c( char slaveAddr, char* data, char num )
 	SCI1.SIMR3.BYTE = 0x51;	// スタートコンディション発行
 	
 	// データは割り込みで送信
+	PORT5.PODR.BIT.B2 = 1;
 	while ( SCI1.SIMR3.BYTE != 0xf0 );	// バスがフリーになるまで待つ
+	PORT5.PODR.BIT.B2 = 0;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // モジュール名 receive_data_SCI1_I2c											//
@@ -557,14 +557,14 @@ void receive_data_SCI1_I2c( char slaveAddr, char* sendData, char* receiveData, c
 ///////////////////////////////////////////////////////////////////////////
 void init_SCI12( void )
 {
-	IEN( SCI12, TXI12 ) = 1;		// TXI割り込み開始
+	IEN( SCI12, TXI12 ) = 1;			// TXI割り込み開始
 	IPR( SCI12, TXI12 ) = IPR_TXI12;	// TXI割り込み優先度13
-	IEN( SCI12, TEI12 ) = 1;		// TEIE割り込み開始
+	IEN( SCI12, TEI12 ) = 1;			// TEIE割り込み開始
 	IPR( SCI12, TEI12 ) = IPR_TEI12;	// TEIE割り込み優先度12
 	
 	// SCI12
 	SYSTEM.PRCR.WORD = 0xA502;	// Release protect
-	MSTP(SCI12) = 0;		// Wake up SCI12
+	MSTP(SCI12) = 0;			// Wake up SCI12
 	SYSTEM.PRCR.WORD = 0xA500;	// Protect
 	
 	SCI12.SCR.BYTE = 0;		// Set PFC of external pin used

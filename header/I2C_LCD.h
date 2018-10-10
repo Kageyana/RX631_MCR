@@ -21,8 +21,8 @@
 #define CLOCK		96		// “®ìü”g”[MHz]
 
 /******************************** ©“®¶¬ŠÖ” *********************************/
-#define SET_SCI_C12	init_SCI12();	// I2C‰Šú‰»
-#define I2C_LCD_SEND	send_SCI12_I2c(LCD_SLAVEADDRESS, word, 2);
+#define	SET_SCI_C12	init_SCI12();	// I2C‰Šú‰»
+#define	I2C_LCD_SEND	send_SCI12_I2c(LCD_SLAVEADDRESS, word, 2);
 #define	I2C_LCD_READ	send_SCI12_I2c(LCD_SLAVEADDRESS, Command, 2);
 /***************************************************************************/
 //====================================//
