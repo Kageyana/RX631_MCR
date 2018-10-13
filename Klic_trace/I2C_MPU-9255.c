@@ -29,7 +29,6 @@ char	whoami;
 void wait_IMU ( short waitTime )
 {
 	volatile int time, i = 0;
-	
 	time = (int)waitTime * ( CLOCK * 1000 )/ 16;
 	for ( i = 0; i < time; i++) __nop();
 }
@@ -42,7 +41,6 @@ void wait_IMU ( short waitTime )
 void IMUWriteByte( char reg, char data )
 {
 	char sendData[2] = { reg, data }, num = 2;
-    
 	I2C_IMU_COMMAND;		// コマンド送信
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -87,11 +85,11 @@ char init_IMU (void)
 			whoami = reciveData[0];
 			wait_IMU(35);
 			
-			IMUWriteByte( PWR_MGMT_1, 0x00);	// スリープモード解除
-			IMUWriteByte( INT_PIN_CFG, 0x02);	// 内蔵プルアップ無効化
-			IMUWriteByte( CONFIG, 0x00);		// ローパスフィルタを使用しない
+			IMUWriteByte( PWR_MGMT_1, 0x00);		// スリープモード解除
+			IMUWriteByte( INT_PIN_CFG, 0x02);		// 内蔵プルアップ無効化
+			IMUWriteByte( CONFIG, 0x00);			// ローパスフィルタを使用しない
 			IMUWriteByte( ACCEL_CONFIG, 0x18);	// レンジ±16gに変更
-			IMUWriteByte( GYRO_CONFIG, 0x10);	// レンジ±1000deg/sに変更
+			IMUWriteByte( GYRO_CONFIG, 0x10);		// レンジ±1000deg/sに変更
 		} else {
 			ret = 1;
 		}
@@ -111,21 +109,21 @@ void IMUProcess (void)
 {
 	char 	axisData[14];	// 角加速度、温度の8bit分割データ格納先
 	
-	IMUReadArry( GYRO_XOUT_H, 6, axisData);	// 3軸加速度取得
+	IMUReadArry( ACCEL_XOUT_H, 14, axisData);	// 3軸加速度取得
 	
 	//8bitデータを16bitデータに変換
 	// 加速度
-	//rawXa = (short)((axisData[0] << 8 & 0xff00 ) | axisData[1]);
-	//rawYa = (short)((axisData[2] << 8 & 0xff00 ) | axisData[3]);
-	//rawZa = (short)((axisData[4] << 8 & 0xff00 ) | axisData[5]);
+	rawXa = (short)((axisData[0] << 8 & 0xff00 ) | axisData[1]);
+	rawYa = (short)((axisData[2] << 8 & 0xff00 ) | axisData[3]);
+	rawZa = (short)((axisData[4] << 8 & 0xff00 ) | axisData[5]);
 	
 	// 温度
-	//rawTemp = (short)((axisData[6] << 8 & 0xff00 ) | axisData[7]);
+	rawTemp = (short)((axisData[6] << 8 & 0xff00 ) | axisData[7]);
 	
 	// 角速度
-	rawXg = (short)((axisData[0] << 8 & 0xff00 ) | axisData[1]);
-	rawYg = (short)((axisData[2] << 8 & 0xff00 ) | axisData[3]);
-	rawZg = (short)((axisData[4] << 8 & 0xff00 ) | axisData[5]);
+	rawXg = (short)((axisData[8] << 8 & 0xff00 ) | axisData[9]);
+	rawYg = (short)((axisData[10] << 8 & 0xff00 ) | axisData[11]);
+	rawZg = (short)((axisData[12] << 8 & 0xff00 ) | axisData[13]);
 	
 	rawXa -= cent_data[0];
 	rawYa -= cent_data[1];
@@ -158,7 +156,6 @@ void caribrateIMU (char data_Option)
 					mode[i] = 0;
 					median[i] = 0;
 				}
-				
 				pattern_caribrateIMU = 1;
 			}
 			break;

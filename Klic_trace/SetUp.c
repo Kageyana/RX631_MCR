@@ -650,6 +650,9 @@ void setup( void )
 						lcdPosition( 0, 1 );
 						lcdPrintf("   %5d",(short)PichAngleIMU);
 					}
+					if ( tasw_get() == 0x1) {
+						PichAngleIMU = 0;
+					}
 					break;
 					
 				case 3:
@@ -749,11 +752,11 @@ void setup( void )
 				case 11:
 					// ê˘âÒäpìx;
 					lcdPosition( 0, 0 );
-					lcdPrintf("IMU %4d", (short)TurningAngleIMU);
+					lcdPrintf("IMU %4d", (short)YawAngleIMU);
 					lcdPosition( 0, 1 );
 					lcdPrintf("Enc %4d", (short)TurningAngleEnc);
 					if ( tasw_get() == 0x1 ) TurningAngleEnc = 0;
-					if ( tasw_get() == 0x2 ) TurningAngleIMU = 0;
+					if ( tasw_get() == 0x2 ) YawAngleIMU = 0;
 					break;
 					
 				case 12:
@@ -761,7 +764,7 @@ void setup( void )
 					lcdPosition( 0, 0 );
 					lcdPrintf("Roll %3d", (short)RollAngleIMU);
 					lcdPosition( 0, 1 );
-					lcdPrintf("        ");
+					lcdPrintf("%2.1f", TempIMU);
 					if ( tasw_get() == 0x1 ) RollAngleIMU = 0;
 					if ( tasw_get() == 0x2 ) {
 						wait_lcd(1000);

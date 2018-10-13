@@ -43,43 +43,44 @@ short	speed_slope_brake;		// 下り坂終点速度
 short	speed_slope_trace;		// 坂読み飛ばし速度
 
 // サーボ角度
-short	angle_rightclank;		// 右クランク旋回角度
-short	angle_leftclank;			// 左クランク旋回角度
-short	angle_rightchange;		// 右レーンチェンジ旋回角度
-short	angle_leftchange;		// 右レーンチェンジ旋回角度
+short		angle_rightclank;	// 右クランク旋回角度
+short		angle_leftclank;		// 左クランク旋回角度
+short		angle_rightchange;	// 右レーンチェンジ旋回角度
+short		angle_leftchange;	// 右レーンチェンジ旋回角度
 
 // タイマ関連
-short	cnt_gyro;				// 角度計算用カウンタ
+short		cnt_gyro;				// 角度計算用カウンタ
 
 // 角度関連
-double 	PichAngleIMU;			// 圧電ジャイロから計算した機体のピッチ角度
+double 	PichAngleIMU;		// 圧電ジャイロから計算した機体のピッチ角度
 short 	gyVoltageBefore;	// 1ms前の角度
 
 double 	TurningAngleEnc;	// エンコーダから求めた旋回角度
-double 	TurningAngleIMU;	// IMUから求めた旋回角度
+double 	YawAngleIMU;		// IMUから求めた旋回角度
 double	RollAngleIMU;		// IMUから求めたロール方向角度
+double 	TempIMU;			// IMUの温度
 
 // サーボ関連
 // 白線トレース
 signed char	ServoPwm;	// 白線トレースサーボPWM
 short 		SensorBefore;	// 1ms前のセンサ値
-char		DevBefore;		// I成分リセット用
+char			DevBefore;	// I成分リセット用
 double		Int;			// I成分積算値(白線トレース)
 // 角度制御
 signed char	ServoPwm2;		// 角度サーボPWM
-short 		SetAngle;		// 目標角度
-short		SetAngleBefore;		// 1ms前の目標角度
-short 		AngleBefore2;	// 1ms前の角度
-char		AngleBefore3;		// I成分リセット用
-double		Int2;			// I成分積算値(角度制御)
+short 		SetAngle;			// 目標角度
+short			SetAngleBefore;		// 1ms前の目標角度
+short 		AngleBefore2;		// 1ms前の角度
+char			AngleBefore3;		// I成分リセット用
+double		Int2;				// I成分積算値(角度制御)
 
 // モーター関連
-signed char 	motorPwm;	// モーター制御PWM
-char 		AccelefBefore;		// I成分リセット用
-short		EncoderBefore;		// 1ms前の速度
-int 		targetSpeedBefore;	// 1ms前の目標速度	
-double 		Int3;			// I成分積算値(速度制御)
-short		targetSpeed;		// 目標速度
+signed char 	motorPwm;		// モーター制御PWM
+char 			AccelefBefore;		// I成分リセット用
+short			EncoderBefore;		// 1ms前の速度
+int 			targetSpeedBefore;	// 1ms前の目標速度	
+double 		Int3;				// I成分積算値(速度制御)
+short			targetSpeed;		// 目標速度
 
 // デモ関連
 char 	demo;
@@ -663,17 +664,17 @@ void getTurningAngleEnc(void)
 	}
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 getTurningAngleIMU						//
+// モジュール名 getYawAngleIMU							//
 // 処理概要   	IMUから旋回角度の計算					//
 // 引数         なし									//
 // 戻り値       なし									//
 ///////////////////////////////////////////////////////////////////////////
-void getTurningAngleIMU(void)
+void getYawAngleIMU(void)
 {
 	double angularVelocity;
 	
 	angularVelocity = (double)rawZg / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
-	TurningAngleIMU += angularVelocity * 0.001;
+	YawAngleIMU += angularVelocity * 0.001;
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 getRollAngleIMU							//
@@ -702,6 +703,16 @@ void getPichAngleIMU( void )
 	angularVelocity = (double)rawXg / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
 	PichAngleIMU += angularVelocity * 0.001;
 	//if ( cnt_gyro >= INTEGRAL_LIMIT ) PichAngleIMU = 0;
+}
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 getPichAngleIMU							//
+// 処理概要     IMUからピッチ角度の計算						//
+// 引数         なし									//
+// 戻り値       なし									//
+///////////////////////////////////////////////////////////////////////////
+void getTempIMU( void )
+{	
+	TempIMU = (double)((rawTemp - ROOMTEMPOFFSET) / TEMP_LSB ) + 21;
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 motorControl							//
