@@ -13,12 +13,12 @@
 // スレーブアドレス
 #define LCD_SLAVEADDRESS	0x7c
 // 液晶関連変数
-#define LCD_MAX_X			17		// 表示文字数 横 16 or 20
-#define LCD_MAX_Y			2		// 表示文字数 縦  2 or  4
-#define	RSBIT0			0x80		// コマンド送信ビット
-#define RSBIT1				0xc0		// データ送信ビット
+#define LCD_MAX_X	17		// 表示文字数 横 16 or 20
+#define LCD_MAX_Y	2		// 表示文字数 縦  2 or  4
+#define	RSBIT0		0x80		// コマンド送信ビット
+#define RSBIT1		0xc0		// データ送信ビット
 
-#define CLOCK				96		// 動作周波数[MHz]
+#define CLOCK		96		// 動作周波数[MHz]
 
 /******************************** 自動生成関数 *********************************/
 #define	SET_SCI_C12	init_SCI12();	// I2C初期化

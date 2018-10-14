@@ -943,7 +943,7 @@ void sendLog (void) {
 		send_ShortToChar	(	getAnalogSensor());
 		send_ShortToChar	((short)PichAngleIMU	);
 		send_ShortToChar	((short)TurningAngleEnc	);
-		send_ShortToChar	((short)YawAngleIMU	);
+		send_ShortToChar	((short)TurningAngleIMU	);
 		send_ShortToChar	((short)RollAngleIMU	);
 		send_ShortToChar	(	Encoder		);
 		send_ShortToChar	(	targetSpeed	);
@@ -1000,7 +1000,7 @@ void msd_sendToPC ( void )
 				printf(		"getAnalogSensor,"	);
 				printf(		"PichAngleIMU,"		);
 				printf(		"TurningAngleEnc,"	);
-				printf(		"YawAngleIMU,"	);
+				printf(		"TurningAngleIMU,"	);
 				printf(		"RollAngleIMU,"		);
 				printf(		"Encoder,"			);
 				printf(		"targetSpeed,"		);
@@ -1062,7 +1062,7 @@ void msd_sendToPC ( void )
 				printf("%5d,", CharToShort(14));		// getAnalogSensor()
 				printf("%5d,", CharToShort(16));		// PichAngleIMU
 				printf("%5d,", CharToShort(18));		// TurningAngleEnc
-				printf("%5d,", CharToShort(20));		// YawAngleIMU
+				printf("%5d,", CharToShort(20));		// TurningAngleIMU
 				printf("%5d,", CharToShort(22));		// RollAngleIMU
 				printf("%5d,", CharToShort(24));		// Encoder
 				printf("%5d,", CharToShort(26) / 10);	// targetSpeed

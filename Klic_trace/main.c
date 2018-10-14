@@ -70,11 +70,10 @@ void main(void){
 	// SCI1初期化
 	if ( init_IMU() ) {
 		init_SCI1( UART, RATE_230400 );
-		setBeepPatternS( 0xaa00 );
 		IMUSet = 0;
 	} else {
+		init_IMU();
 		IMUSet = 1;
-		setBeepPatternS( 0x8000 );
 	}
 	
 	// フラッシュ初期化
@@ -132,7 +131,7 @@ void main(void){
 				lcdPosition( 0, 0 );
 				lcdPrintf("case %3d", pattern);
 				lcdPosition( 0, 1 );
-				lcdPrintf("%4d", (short)YawAngleIMU);
+				lcdPrintf("%4d", (short)TurningAngleIMU);
 			}
 			// スイッチで停止
 			if ( tasw_get() == 0x4 ) {
@@ -155,8 +154,8 @@ void main(void){
 			// スタート前設定
 			setup();
 			if ( start >= 1 && !pushcart_mode ) {
-				demo = 0;			// デモモード解除
-				angle_mode = 0;	// 白線トレース
+				demo = 0;		// デモモード解除
+				angle_mode = 0;		// 白線トレース
 				txt= txt_data;		// 受信配列リセット
 				cnt_byte = 0;		// 受信カウントリセット
 				if ( msdset == 1 ) init_log();	// ログ記録準備
@@ -182,9 +181,6 @@ void main(void){
 				writeFlashData( STOPMETER_STARTAREA, STOPMETER_ENDAREA, STOPMETER_DATA, 1 );
 				
 				targetSpeed = speed_straight * SPEED_CURRENT; // 目標速度設定
-				YawAngleIMU = 0;
-				RollAngleIMU = 0;
-				PichAngleIMU = 0;
 				cnt1 = 0;		// タイマリセット
 				pattern = 1;
 				break;
@@ -333,7 +329,7 @@ void main(void){
 			if ( enc1 > enc_mm( 60 ) ) {		// 60mm進む
 				enc1 = 0;
 				TurningAngleEnc = 0;
-				YawAngleIMU = 0;
+				TurningAngleIMU = 0;
 				pattern = 13;
 				break;
 			}
@@ -528,7 +524,7 @@ void main(void){
 				SetAngle = angle_rightclank;
 				angle_mode = 1;
 				TurningAngleEnc = 0;
-				YawAngleIMU = 0;
+				TurningAngleIMU = 0;
 				pattern = 31;
 				break;
 			}
@@ -540,7 +536,7 @@ void main(void){
 				SetAngle = angle_leftclank;
 				angle_mode = 1;
 				TurningAngleEnc = 0;
-				YawAngleIMU = 0;
+				TurningAngleIMU = 0;
 				pattern = 41;
 				break;
 			}
@@ -569,17 +565,17 @@ void main(void){
 				motor_f( lpwm, rpwm);
 				motor_r( lpwm, rpwm);	
 			}*/
-			if( -YawAngleIMU <= 30 ) {
+			if( -TurningAngleIMU <= 30 ) {
 				if( sensor_inp() == 0x2 ) {
 					enc1 = 0;
 					angle_mode = 0;
 					pattern = 36;
 					break;
 				}
-			} else if ( -YawAngleIMU >= 20 ) {
+			} else if ( -TurningAngleIMU >= 20 ) {
 				if( j <= -1800 ) {
 					enc1 = 0;
-					i = (short)-YawAngleIMU;
+					i = (short)-TurningAngleIMU;
 					pattern = 34;
 					break;
 				}
@@ -599,10 +595,10 @@ void main(void){
 			j = getAnalogSensor();
 			diff( motorPwm );
 			
-			if( -YawAngleIMU <= 90 && -YawAngleIMU >= 40) {
+			if( -TurningAngleIMU <= 90 && -TurningAngleIMU >= 40) {
 				if( j <= -1800 ) {
 					enc1 = 0;
-					i = (short)YawAngleIMU;
+					i = (short)TurningAngleIMU;
 					i = -i;
 					pattern = 34;
 					break;
@@ -693,17 +689,17 @@ void main(void){
 				motor_f( lpwm, rpwm);
 				motor_r( lpwm, rpwm);	
 			}*/
-			if( YawAngleIMU <= 30 ) {
+			if( TurningAngleIMU <= 30 ) {
 				if( sensor_inp() == 0x2 ) {
 					enc1 = 0;
 					angle_mode = 0;
 					pattern = 46;
 					break;
 				}
-			} else if ( YawAngleIMU >= 20 ) {
+			} else if ( TurningAngleIMU >= 20 ) {
 				if( j >= 1800 ) {
 					enc1 = 0;
-					i = YawAngleIMU;
+					i = TurningAngleIMU;
 					pattern = 44;
 					break;
 				}
@@ -723,10 +719,10 @@ void main(void){
 			j = getAnalogSensor();
 			diff( motorPwm );
 			
-			if( YawAngleIMU <= 90 && YawAngleIMU >= 40) {
+			if( TurningAngleIMU <= 90 && TurningAngleIMU >= 40) {
 				if( j >= 1800 ) {
 					enc1 = 0;
-					i = YawAngleIMU;
+					i = TurningAngleIMU;
 					pattern = 44;
 					break;
 				}
@@ -1366,6 +1362,14 @@ void Timer (void) {
 	
 	motorControl();
 	
+	// 角度計算
+	getPichAngleIMU();
+	getTurningAngleEnc();
+	getTurningAngleIMU();
+	getRollAngleIMU();
+	caribrateIMU( MEDIAN );
+	if( cnt_gyro == INTEGRAL_LIMIT ) cnt_gyro = 0;
+
 	if ( IMUSet == 0 ) {
 		// UART受信
 		commandSCI1();
@@ -1373,15 +1377,6 @@ void Timer (void) {
 		// 加速度及び角速度を取得
 		IMUProcess();
 	}
-	
-	// 角度計算
-	getTurningAngleEnc();
-	getPichAngleIMU();
-	getYawAngleIMU();
-	getRollAngleIMU();
-	getTempIMU();
-	caribrateIMU( MEDIAN );
-	if( cnt_gyro == INTEGRAL_LIMIT ) cnt_gyro = 0;
 	
 	// MicroSD書き込み
 	microSDProcess();
