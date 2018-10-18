@@ -62,10 +62,10 @@ void setup( void )
 	
 	if ( cnt_setup2 >= 600 ) cnt_setup2 = 0;
 	if ( cnt_setup2 < 300 ) {
-		if ( EncoderTotal % 2 == 1 ) led_out( 0x12 );
+		if ( EncoderTotal % 12 == 1 ) led_out( 0x12 );
 		else led_out( 0x02 );
 	} else {
-		if ( EncoderTotal % 2 == 1 ) led_out( 0x11 );
+		if ( EncoderTotal % 12 == 1 ) led_out( 0x11 );
 		else led_out( 0x01 );
 	}
 	
@@ -761,7 +761,7 @@ void setup( void )
 					lcdPosition( 0, 0 );
 					lcdPrintf("Roll %3d", (short)RollAngleIMU);
 					lcdPosition( 0, 1 );
-					lcdPrintf("        ");
+					lcdPrintf("Temp%2.1f", (double)TempIMU);
 					if ( tasw_get() == 0x1 ) RollAngleIMU = 0;
 					if ( tasw_get() == 0x2 ) {
 						wait_lcd(1000);
@@ -843,8 +843,8 @@ void setup( void )
 			servo_test = 0;
 			angle_mode = 0;
 			data_tuning ( &pattern_msd, 1, LEFT );
-			if ( pattern_msd == 11 ) pattern_msd = 1;
-			else if ( pattern_msd == 0 ) pattern_msd = 10;
+			if ( pattern_msd == 12 ) pattern_msd = 1;
+			else if ( pattern_msd == 0 ) pattern_msd = 11;
 			
 			switch ( pattern_msd ) {
 				case 1:
@@ -1017,6 +1017,24 @@ void setup( void )
 						push1 = 0;
 					}
 					break;
+					/*
+				case 11:
+					if ( msdFlag == 0 ) { 
+						lcdPosition( 0, 1 );
+						lcdPrintf("Log     ");
+					}
+					if ( tasw_get() == 0x1 && push1 == 0 ) {
+						if ( msdset == 1 ) init_log();	// ログ記録準備
+						msdFlag = 1;		// データ記録開始
+						lcdPosition( 0, 1 );
+						lcdPrintf("Logging ");
+					}
+					if ( tasw_get() == 0x2 && push1 == 0 ) {
+						msdEndLog();		// MicroSDの終了処理
+						readFlashSetup();	// データフラッシュから前回パラメータを読み込む
+					}
+					break;
+					*/
 			}
 			break;
 		//------------------------------------------------------------------

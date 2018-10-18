@@ -69,28 +69,61 @@ void main(void){
 	
 	// SCI1初期化
 	if ( init_IMU() ) {
+		setBeepPatternS( 0xcc00 );
 		init_SCI1( UART, RATE_230400 );
 		IMUSet = 0;
+		
+		lcdPosition( 0, 0 );
+		lcdPrintf("SCI1    ");
+		lcdPosition( 0, 1 );
+		lcdPrintf("   ERROR");
 	} else {
-		init_IMU();
+		setBeepPatternS( 0x8000 );
 		IMUSet = 1;
+		
+		lcdPosition( 0, 0 );
+		lcdPrintf("SCI1    ");
+		lcdPosition( 0, 1 );
+		lcdPrintf("      OK");
 	}
 	
+	wait_lcd(100);
 	// フラッシュ初期化
 	if( initFlash() == 0 ) {
 		setBeepPatternS( 0x8000 );
 		readFlashSetup();	// データフラッシュから前回パラメータを読み込む
+		
+		lcdPosition( 0, 0 );
+		lcdPrintf("FLASH   ");
+		lcdPosition( 0, 1 );
+		lcdPrintf("      OK");
 	} else{
-		setBeepPatternS( 0xaa00 );
+		setBeepPatternS( 0xcc00 );
+		
+		lcdPosition( 0, 1 );
+		lcdPrintf("FLASH   ");
+		lcdPosition( 0, 0 );
+		lcdPrintf("   ERROR");
 	}
 	
+	wait_lcd(100);
 	// MicroSDカード初期化
 	if( init_msd() == 0 ) {
 		setBeepPatternS( 0x4000 );
 		msdset = 1;
+		
+		lcdPosition( 0, 0 );
+		lcdPrintf("MicroSD ");
+		lcdPosition( 0, 1 );
+		lcdPrintf("      OK");
 	} else {
-		setBeepPatternS( 0xaa00 );
+		setBeepPatternS( 0xcc00 );
 		msdset = 0;
+		
+		lcdPosition( 0, 0 );
+		lcdPrintf("MicroSD ");
+		lcdPosition( 0, 1 );
+		lcdPrintf("   ERROR");
 	}
 
 	while(1){
@@ -98,7 +131,7 @@ void main(void){
 		if( pattern >= 11 && pattern <= 99 ) {
 			if( !pushcart_mode ) {		
 				// 手押しモードOFF
-				if( cnt1 >= 10 ) {		// 動き出してから
+				if( cnt1 >= 100 ) {		// 動き出してから
 					if ( EncoderTotal >= ( PALSE_METER * stopping_meter ) ) { // 距離超過の場合
 						error_mode = 0;
 						pattern = 101;
@@ -155,9 +188,12 @@ void main(void){
 			setup();
 			if ( start >= 1 && !pushcart_mode ) {
 				demo = 0;		// デモモード解除
-				angle_mode = 0;		// 白線トレース
+				angle_mode = 0;	// 白線トレース
 				txt= txt_data;		// 受信配列リセット
 				cnt_byte = 0;		// 受信カウントリセット
+				TurningAngleIMU = 0;
+				RollAngleIMU = 0;
+				PichAngleIMU = 0;
 				if ( msdset == 1 ) init_log();	// ログ記録準備
 				if ( fixSpeed == 0 ) writeFlashBeforeStart();	// 速度パラメータをデータフラッシュに保存
 				
@@ -1262,10 +1298,10 @@ void main(void){
 			
 		case 104:
 			// 最後のデータが書き込まれるまで待つ
-			printf("case 104\n");
+			//printf("case 104\n");
 			if( checkMicroSDProcess() == 11 ) {
 				msdFlag = 0;	// ログ記録終了
-				printf("microSDProcessEndNOW\n");
+				//printf("microSDProcessEndNOW\n");
 				microSDProcessEnd();        // microSDProcess終了処理
 				pattern = 105;
 				break;
@@ -1285,8 +1321,8 @@ void main(void){
 				flashDataBuff[ 2 ] = msdWorkAddress >> 16;
 				flashDataBuff[ 3 ] = msdWorkAddress & 0xffff;	// 終了アドレス
 				writeFlashData( MSD_STARTAREA, MSD_ENDAREA, MSD_DATA, 4 );
-				printf("msdStartAddress = %d\n", msdStartAddress);
-				printf("msdEndAddress = %d\n", msdWorkAddress);
+				//printf("msdStartAddress = %d\n", msdStartAddress);
+				//printf("msdEndAddress = %d\n", msdWorkAddress);
 				pattern = 106;
 				setBeepPatternS( 0xa8a8 );
 				break;
@@ -1362,14 +1398,6 @@ void Timer (void) {
 	
 	motorControl();
 	
-	// 角度計算
-	getPichAngleIMU();
-	getTurningAngleEnc();
-	getTurningAngleIMU();
-	getRollAngleIMU();
-	caribrateIMU( MEDIAN );
-	if( cnt_gyro == INTEGRAL_LIMIT ) cnt_gyro = 0;
-
 	if ( IMUSet == 0 ) {
 		// UART受信
 		commandSCI1();
@@ -1377,6 +1405,15 @@ void Timer (void) {
 		// 加速度及び角速度を取得
 		IMUProcess();
 	}
+	
+	// 角度計算
+	getPichAngleIMU();
+	getTurningAngleEnc();
+	getTurningAngleIMU();
+	getRollAngleIMU();
+	getTempIMU();
+	caribrateIMU( MEDIAN );
+	if( cnt_gyro == INTEGRAL_LIMIT ) cnt_gyro = 0;
 	
 	// MicroSD書き込み
 	microSDProcess();

@@ -58,28 +58,29 @@ short 	gyVoltageBefore;	// 1ms前の角度
 double 	TurningAngleEnc;	// エンコーダから求めた旋回角度
 double 	TurningAngleIMU;	// IMUから求めた旋回角度
 double	RollAngleIMU;		// IMUから求めたロール方向角度
+double	TempIMU;			// IMUの温度
 
 // サーボ関連
 // 白線トレース
 signed char	ServoPwm;	// 白線トレースサーボPWM
 short 		SensorBefore;	// 1ms前のセンサ値
-char		DevBefore;		// I成分リセット用
+char			DevBefore;		// I成分リセット用
 double		Int;			// I成分積算値(白線トレース)
 // 角度制御
 signed char	ServoPwm2;		// 角度サーボPWM
 short 		SetAngle;		// 目標角度
-short		SetAngleBefore;		// 1ms前の目標角度
+short			SetAngleBefore;		// 1ms前の目標角度
 short 		AngleBefore2;	// 1ms前の角度
-char		AngleBefore3;		// I成分リセット用
+char			AngleBefore3;		// I成分リセット用
 double		Int2;			// I成分積算値(角度制御)
 
 // モーター関連
 signed char 	motorPwm;	// モーター制御PWM
-char 		AccelefBefore;		// I成分リセット用
-short		EncoderBefore;		// 1ms前の速度
-int 		targetSpeedBefore;	// 1ms前の目標速度	
+char 			AccelefBefore;		// I成分リセット用
+short			EncoderBefore;		// 1ms前の速度
+int 			targetSpeedBefore;	// 1ms前の目標速度	
 double 		Int3;			// I成分積算値(速度制御)
-short		targetSpeed;		// 目標速度
+short			targetSpeed;		// 目標速度
 
 // デモ関連
 char 	demo;
@@ -702,6 +703,16 @@ void getPichAngleIMU( void )
 	angularVelocity = (double)rawXg / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
 	PichAngleIMU += angularVelocity * 0.001;
 	//if ( cnt_gyro >= INTEGRAL_LIMIT ) PichAngleIMU = 0;
+}
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 getTempIMU							//
+// 処理概要     IMUの温度を計算							//
+// 引数         なし									//
+// 戻り値       なし									//
+///////////////////////////////////////////////////////////////////////////
+void getTempIMU( void )
+{
+	TempIMU = ( ( rawTemp - ROOMTEMPOFFSET ) / TEMP_LSB ) + 21;
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 motorControl							//

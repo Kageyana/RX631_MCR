@@ -110,22 +110,31 @@ char init_IMU (void)
 void IMUProcess (void)
 {
 	char 	axisData[14];	// 角加速度、温度の8bit分割データ格納先
-	
+	/*
 	IMUReadArry( GYRO_XOUT_H, 6, axisData);	// 3軸加速度取得
 	
 	//8bitデータを16bitデータに変換
-	// 加速度
-	//rawXa = (short)((axisData[0] << 8 & 0xff00 ) | axisData[1]);
-	//rawYa = (short)((axisData[2] << 8 & 0xff00 ) | axisData[3]);
-	//rawZa = (short)((axisData[4] << 8 & 0xff00 ) | axisData[5]);
-	
-	// 温度
-	//rawTemp = (short)((axisData[6] << 8 & 0xff00 ) | axisData[7]);
-	
 	// 角速度
 	rawXg = (short)((axisData[0] << 8 & 0xff00 ) | axisData[1]);
 	rawYg = (short)((axisData[2] << 8 & 0xff00 ) | axisData[3]);
 	rawZg = (short)((axisData[4] << 8 & 0xff00 ) | axisData[5]);
+	*/
+	IMUReadArry( ACCEL_XOUT_H, 14, axisData);	// 3軸加速度取得
+	
+	//8bitデータを16bitデータに変換
+	// 加速度
+	rawXa = (short)((axisData[0] << 8 & 0xff00 ) | axisData[1]);
+	rawYa = (short)((axisData[2] << 8 & 0xff00 ) | axisData[3]);
+	rawZa = (short)((axisData[4] << 8 & 0xff00 ) | axisData[5]);
+	
+	// 温度
+	rawTemp = (short)((axisData[6] << 8 & 0xff00 ) | axisData[7]);
+	
+	// 角速度
+	rawXg = (short)((axisData[8] << 8 & 0xff00 ) | axisData[9]);
+	rawYg = (short)((axisData[10] << 8 & 0xff00 ) | axisData[11]);
+	rawZg = (short)((axisData[12] << 8 & 0xff00 ) | axisData[13]);
+	
 	
 	rawXa -= cent_data[0];
 	rawYa -= cent_data[1];

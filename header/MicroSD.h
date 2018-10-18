@@ -76,6 +76,7 @@ char microSDProcessEnd( void );
 void microSDProcess( void );
 char checkMicroSDProcess( void );
 void sendLog (void);
+char msdEndLog ( void );
 void msd_send_data (void);
 void send_Char ( char data );
 void send_ShortToChar ( short data );

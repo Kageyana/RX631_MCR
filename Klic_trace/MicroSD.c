@@ -940,13 +940,16 @@ void sendLog (void) {
 		send_Char			( 	slope_mode	);
 		send_ShortToChar	(	getServoAngle()	);
 		send_ShortToChar	(	SetAngle		);
-		send_ShortToChar	(	getAnalogSensor());
-		send_ShortToChar	((short)PichAngleIMU	);
+		send_ShortToChar	(	getAnalogSensor()	);
+		send_ShortToChar	((short)PichAngleIMU		);
 		send_ShortToChar	((short)TurningAngleEnc	);
 		send_ShortToChar	((short)TurningAngleIMU	);
-		send_ShortToChar	((short)RollAngleIMU	);
+		send_ShortToChar	((short)RollAngleIMU		);
 		send_ShortToChar	(	Encoder		);
 		send_ShortToChar	(	targetSpeed	);
+		send_ShortToChar	(	rawXa		);
+		send_ShortToChar	(	rawYa		);
+		send_ShortToChar	(	rawZa		);
 		send_ShortToChar	(	rawXg		);
 		send_ShortToChar	(	rawYg		);
 		send_ShortToChar	(	rawZg		);
@@ -1004,9 +1007,12 @@ void msd_sendToPC ( void )
 				printf(		"RollAngleIMU,"		);
 				printf(		"Encoder,"			);
 				printf(		"targetSpeed,"		);
-				printf(		"xg[PichAngleIMU/sec],"	);
-				printf(		"yg[PichAngleIMU/sec],"	);
-				printf(		"zg[PichAngleIMU/sec],"	);
+				printf(		"xa[m/s^2],"		);
+				printf(		"ya[m/s^2],"		);
+				printf(		"za[m/s^2],"		);
+				printf(		"xg[degrees/sec],"	);
+				printf(		"yg[degrees/sec],"	);
+				printf(		"zg[degrees/sec],"	);
 				
 				printf(		"EncoderTotal,"		);
 				printf(		"enc1,"			);
@@ -1060,19 +1066,22 @@ void msd_sendToPC ( void )
 				printf("%5d,", CharToShort(10));		// getServoAngle()
 				printf("%5d,", CharToShort(12));		// SetAngle
 				printf("%5d,", CharToShort(14));		// getAnalogSensor()
-				printf("%5d,", CharToShort(16));		// PichAngleIMU
-				printf("%5d,", CharToShort(18));		// TurningAngleEnc
-				printf("%5d,", CharToShort(20));		// TurningAngleIMU
-				printf("%5d,", CharToShort(22));		// RollAngleIMU
-				printf("%5d,", CharToShort(24));		// Encoder
-				printf("%5d,", CharToShort(26) / 10);	// targetSpeed
-				printf("%4.4f,", (double)CharToShort(28)/GYROLSB);// xg
-				printf("%4.4f,", (double)CharToShort(30)/GYROLSB);// yg
-				printf("%4.4f,", (double)CharToShort(32)/GYROLSB);// zg
+				printf("%5d,", CharToShort(22));		// PichAngleIMU
+				printf("%5d,", CharToShort(24));		// TurningAngleEnc
+				printf("%5d,", CharToShort(26));		// TurningAngleIMU
+				printf("%5d,", CharToShort(28));		// RollAngleIMU
+				printf("%5d,", CharToShort(30));		// Encoder
+				printf("%5d,", CharToShort(32) / 10);	// targetSpeed
+				printf("%4.4f,", (double)CharToShort(34) / ACCELLSB * G_ACCELERATION);// xa
+				printf("%4.4f,", (double)CharToShort(36) / ACCELLSB * G_ACCELERATION);// ya
+				printf("%4.4f,", (double)CharToShort(38) / ACCELLSB * G_ACCELERATION);// za
+				printf("%4.4f,", (double)CharToShort(40) / GYROLSB);// xg
+				printf("%4.4f,", (double)CharToShort(42) / GYROLSB);// yg
+				printf("%4.4f,", (double)CharToShort(44) / GYROLSB);// zg
 				
-				printf("%6d,", CharTouInt (34));		// EncoderTotal
-				printf("%6d,", CharTouInt (38));		// enc1
-				printf("%6d", CharTouInt (42));			// cnt_log
+				printf("%6d,", CharTouInt (46));		// EncoderTotal
+				printf("%6d,", CharTouInt (50));		// enc1
+				printf("%6d", CharTouInt (54));		// cnt_log
 				printf("\n");
 				i += WRITINGTIME;
 				msdBuffAddress += DATA_BYTE;
@@ -1084,6 +1093,51 @@ void msd_sendToPC ( void )
 				break;
 		}
 	}
+}
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 msdEndLog								//
+// 処理概要     ログの終了処理							//
+// 引数         なし									//
+// 戻り値       0:正常に終了 1:異常終了						//
+///////////////////////////////////////////////////////////////////////////
+char msdEndLog ( void )
+{
+	char pattern_msdend = 0;
+	
+	while ( pattern_msdend < 2 ) {
+	switch( pattern_msdend ) {
+		case 0:
+				// 最後のデータが書き込まれるまで待つ
+				if ( checkMicroSDProcess() == 11 ) {
+					msdFlag = 0;			// ログ記録終了
+					microSDProcessEnd();        // microSDProcess終了処理
+					pattern = 1;
+					break;
+				} else if ( checkMicroSDProcess() == 0 ) {
+					setBeepPatternS( 0xf0f0 );
+					pattern = 3;
+					break;
+				}
+				break;
+				
+			case 1:
+				// 終了処理が終わるまで待つ
+				if ( checkMicroSDProcess() == 0 ) {
+					// MicroSD最終書き込みアドレス保存
+					flashDataBuff[ 0 ] = msdStartAddress >> 16;
+					flashDataBuff[ 1 ] = msdStartAddress & 0xffff;	// 開始アドレス
+					flashDataBuff[ 2 ] = msdWorkAddress >> 16;
+					flashDataBuff[ 3 ] = msdWorkAddress & 0xffff;	// 終了アドレス
+					writeFlashData( MSD_STARTAREA, MSD_ENDAREA, MSD_DATA, 4 );
+					pattern = 2;
+					setBeepPatternS( 0xa8a8 );
+					break;
+				}
+				break;
+	}
+	}
+	
+	return pattern - 2;
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 send_Char								//

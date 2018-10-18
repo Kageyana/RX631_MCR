@@ -124,7 +124,7 @@
 #define CLOCK				96		// 動作周波数[MHz]
 
 #define MAXDATA_RANGE		32764	// 16bitデータの最大値
-#define G_ACCELERATION		9.80665	// 重力加速度
+#define G_ACCELERATION		9.81		// 重力加速度
 
 #define SAMPLENUMBER		10000	// サンプリングデータ数
 #define AVERAGE			10		// 平均

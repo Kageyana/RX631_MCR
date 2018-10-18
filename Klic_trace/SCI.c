@@ -138,8 +138,8 @@ void init_SCI1( char mode, char rate )
 		SCI1.SMR.BIT.CKS = 0;		// PCLK
 		SCI1.SMR.BIT.MP = 0;		// マルチプロセッサ通信機能を禁止
 		
-		SCI1.SIMR1.BIT.IICM = 0;	// シリアルインタフェースモード
-		SCI1.SPMR.BYTE = 0;		// クロック遅れ、反転なし
+		SCI1.SIMR1.BIT.IICM = 0;		// シリアルインタフェースモード
+		SCI1.SPMR.BYTE = 0;			// クロック遅れ、反転なし
 		SCI1.SCMR.BIT.SMIF = 0;		// シリアルコミュニケーションインターフェイスモード
 		SCI1.SCMR.BIT.SDIR = 0;		// LSBファースト
 		SCI1.SEMR.BIT.ACS0 = 0;		// 外部クロック入力
@@ -149,10 +149,10 @@ void init_SCI1( char mode, char rate )
 		SCI1.SMR.BIT.PM = 0;		// none parity
 		SCI1.SMR.BIT.CHR = 0;		// 8bit data length
 		SCI1.SMR.BIT.CM = 0;		// 調歩同期式
-		SCI1.BRR = brr;			// 12: 115200bps 1:750000bps 0:1500000bps
+		SCI1.BRR = brr;				// 12: 115200bps 1:750000bps 0:1500000bps
 		SCI1.SCR.BIT.RIE = 1;		// RXI割り込み要求
-		SCI1.SCR.BIT.TE = 1;		// Enable TX
-		SCI1.SCR.BIT.RE = 1;		// Enable RX
+		SCI1.SCR.BIT.TE = 1;			// Enable TX
+		SCI1.SCR.BIT.RE = 1;			// Enable RX
 		
 		txt= txt_data;
 	} else if ( mode == I2C ) {

@@ -272,7 +272,7 @@ unsigned char sensor_inp(void)
 	
 	if (sensorRR < 3000 ) r = 0x1;
 	else r = 0;
-	if (sensorC < 2000 ) c = 0x2;
+	if (sensorC < 3000 ) c = 0x2;
 	else c = 0;
 	if (sensorLL < 3000 ) l = 0x4;
 	else l = 0;
