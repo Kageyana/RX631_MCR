@@ -71,7 +71,7 @@ void main(void){
 	if ( init_IMU() ) {
 		setBeepPatternS( 0xcc00 );
 		init_SCI1( UART, RATE_230400 );
-		IMUSet = 0;
+		i = 0;
 		
 		lcdPosition( 0, 0 );
 		lcdPrintf("SCI1    ");
@@ -79,7 +79,7 @@ void main(void){
 		lcdPrintf("   ERROR");
 	} else {
 		setBeepPatternS( 0x8000 );
-		IMUSet = 1;
+		i = 1;
 		lcdPosition( 0, 0 );
 		lcdPrintf("SCI1    ");
 		lcdPosition( 0, 1 );
@@ -125,6 +125,7 @@ void main(void){
 		lcdPrintf("   ERROR");
 	}
 
+	IMUSet = i;
 	while(1){
 		__setpsw_i();
 		if( pattern >= 11 && pattern <= 99 ) {

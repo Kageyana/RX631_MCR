@@ -1111,11 +1111,11 @@ char msdEndLog ( void )
 				if ( checkMicroSDProcess() == 11 ) {
 					msdFlag = 0;			// ログ記録終了
 					microSDProcessEnd();        // microSDProcess終了処理
-					pattern = 1;
+					pattern_msdend = 1;
 					break;
 				} else if ( checkMicroSDProcess() == 0 ) {
 					setBeepPatternS( 0xf0f0 );
-					pattern = 3;
+					pattern_msdend = 3;
 					break;
 				}
 				break;
@@ -1129,7 +1129,7 @@ char msdEndLog ( void )
 					flashDataBuff[ 2 ] = msdWorkAddress >> 16;
 					flashDataBuff[ 3 ] = msdWorkAddress & 0xffff;	// 終了アドレス
 					writeFlashData( MSD_STARTAREA, MSD_ENDAREA, MSD_DATA, 4 );
-					pattern = 2;
+					pattern_msdend = 2;
 					setBeepPatternS( 0xa8a8 );
 					break;
 				}

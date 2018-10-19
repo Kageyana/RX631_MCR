@@ -1017,24 +1017,27 @@ void setup( void )
 						push1 = 0;
 					}
 					break;
-					/*
+					
 				case 11:
 					if ( msdFlag == 0 ) { 
 						lcdPosition( 0, 1 );
 						lcdPrintf("Log     ");
 					}
 					if ( tasw_get() == 0x1 && push1 == 0 ) {
-						if ( msdset == 1 ) init_log();	// ログ記録準備
+						push1 = 1;
+						init_log();	// ログ記録準備
 						msdFlag = 1;		// データ記録開始
 						lcdPosition( 0, 1 );
 						lcdPrintf("Logging ");
-					}
-					if ( tasw_get() == 0x2 && push1 == 0 ) {
+					} else if ( tasw_get() == 0x2 && push1 == 0 ) {
+						push1 = 1;
 						msdEndLog();		// MicroSDの終了処理
-						readFlashSetup();	// データフラッシュから前回パラメータを読み込む
+						//readFlashSetup();	// データフラッシュから前回パラメータを読み込む
+					} else if ( tasw_get() == 0x0 ) {
+						push1 = 0;
 					}
 					break;
-					*/
+					
 			}
 			break;
 		//------------------------------------------------------------------
