@@ -80,7 +80,6 @@ void main(void){
 	} else {
 		setBeepPatternS( 0x8000 );
 		IMUSet = 1;
-		
 		lcdPosition( 0, 0 );
 		lcdPrintf("SCI1    ");
 		lcdPosition( 0, 1 );
