@@ -52,12 +52,12 @@ short	angle_leftchange;		// 右レーンチェンジ旋回角度
 short	cnt_gyro;				// 角度計算用カウンタ
 
 // 角度関連
-double 	PichAngleIMU;			// 圧電ジャイロから計算した機体のピッチ角度
 short 	gyVoltageBefore;	// 1ms前の角度
 
 double 	TurningAngleEnc;	// エンコーダから求めた旋回角度
-double 	TurningAngleIMU;	// IMUから求めた旋回角度
+double 	TurningAngleIMU;	// IMUから求めたヨー角度
 double	RollAngleIMU;		// IMUから求めたロール方向角度
+double 	PichAngleIMU;		// IMUから求めたピッチ方向角度
 double	TempIMU;			// IMUの温度
 
 // サーボ関連
@@ -671,10 +671,10 @@ void getTurningAngleEnc(void)
 ///////////////////////////////////////////////////////////////////////////
 void getTurningAngleIMU(void)
 {
-	double angularVelocity;
+	double angularVelocity_zg;
 	
-	angularVelocity = (double)rawZg / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
-	TurningAngleIMU += angularVelocity * 0.001;
+	angularVelocity_zg = (double)rawZg / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
+	TurningAngleIMU += angularVelocity_zg * 0.001;
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 getRollAngleIMU							//
@@ -684,10 +684,10 @@ void getTurningAngleIMU(void)
 ///////////////////////////////////////////////////////////////////////////
 void getRollAngleIMU(void)
 {
-	double angularVelocity;
+	double angularVelocity_yg;
 	
-	angularVelocity = (double)rawYg / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
-	RollAngleIMU += angularVelocity * 0.001;
+	angularVelocity_yg = (double)rawYg / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
+	RollAngleIMU += angularVelocity_yg * 0.001 ;
 	//if ( cnt_gyro >= INTEGRAL_LIMIT ) RollAngleIMU = 0;
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -698,10 +698,10 @@ void getRollAngleIMU(void)
 ///////////////////////////////////////////////////////////////////////////
 void getPichAngleIMU( void )
 {
-	double angularVelocity;
+	double angularVelocity_xg;
 	
-	angularVelocity = (double)rawXg / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
-	PichAngleIMU += angularVelocity * 0.001;
+	angularVelocity_xg = (double)rawXg / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
+	PichAngleIMU += angularVelocity_xg * 0.001;
 	//if ( cnt_gyro >= INTEGRAL_LIMIT ) PichAngleIMU = 0;
 }
 ///////////////////////////////////////////////////////////////////////////

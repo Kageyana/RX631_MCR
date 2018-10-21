@@ -945,6 +945,7 @@ void sendLog (void) {
 		send_ShortToChar	((short)TurningAngleEnc	);
 		send_ShortToChar	((short)TurningAngleIMU	);
 		send_ShortToChar	((short)RollAngleIMU		);
+		send_ShortToChar	((short)(TempIMU*10)	);
 		send_ShortToChar	(	Encoder		);
 		send_ShortToChar	(	targetSpeed	);
 		send_ShortToChar	(	rawXa		);
@@ -1005,6 +1006,7 @@ void msd_sendToPC ( void )
 				printf(		"TurningAngleEnc,"	);
 				printf(		"TurningAngleIMU,"	);
 				printf(		"RollAngleIMU,"		);
+				printf(		"TempIMU,"		);
 				printf(		"Encoder,"			);
 				printf(		"targetSpeed,"		);
 				printf(		"xa[m/s^2],"		);
@@ -1066,22 +1068,23 @@ void msd_sendToPC ( void )
 				printf("%5d,", CharToShort(10));		// getServoAngle()
 				printf("%5d,", CharToShort(12));		// SetAngle
 				printf("%5d,", CharToShort(14));		// getAnalogSensor()
-				printf("%5d,", CharToShort(22));		// PichAngleIMU
-				printf("%5d,", CharToShort(24));		// TurningAngleEnc
-				printf("%5d,", CharToShort(26));		// TurningAngleIMU
-				printf("%5d,", CharToShort(28));		// RollAngleIMU
-				printf("%5d,", CharToShort(30));		// Encoder
-				printf("%5d,", CharToShort(32) / 10);	// targetSpeed
-				printf("%4.4f,", (double)CharToShort(34) / ACCELLSB * G_ACCELERATION);// xa
-				printf("%4.4f,", (double)CharToShort(36) / ACCELLSB * G_ACCELERATION);// ya
-				printf("%4.4f,", (double)CharToShort(38) / ACCELLSB * G_ACCELERATION);// za
-				printf("%4.4f,", (double)CharToShort(40) / GYROLSB);// xg
-				printf("%4.4f,", (double)CharToShort(42) / GYROLSB);// yg
-				printf("%4.4f,", (double)CharToShort(44) / GYROLSB);// zg
+				printf("%5d,", CharToShort(16));		// PichAngleIMU
+				printf("%5d,", CharToShort(18));		// TurningAngleEnc
+				printf("%5d,", CharToShort(20));		// TurningAngleIMU
+				printf("%5d,", CharToShort(22));		// RollAngleIMU
+				printf("%2.1f,", (double)CharToShort(24)/10);	// TempIMU
+				printf("%5d,", CharToShort(26));		// Encoder
+				printf("%5d,", CharToShort(28) / 10);	// targetSpeed
+				printf("%4.4f,", (double)CharToShort(30) / ACCELLSB * G_ACCELERATION);// xa
+				printf("%4.4f,", (double)CharToShort(32) / ACCELLSB * G_ACCELERATION);// ya
+				printf("%4.4f,", (double)CharToShort(34) / ACCELLSB * G_ACCELERATION);// za
+				printf("%4.4f,", (double)CharToShort(36) / GYROLSB);// xg
+				printf("%4.4f,", (double)CharToShort(38) / GYROLSB);// yg
+				printf("%4.4f,", (double)CharToShort(40) / GYROLSB);// zg
 				
-				printf("%6d,", CharTouInt (46));		// EncoderTotal
-				printf("%6d,", CharTouInt (50));		// enc1
-				printf("%6d", CharTouInt (54));		// cnt_log
+				printf("%6d,", CharTouInt (42));		// EncoderTotal
+				printf("%6d,", CharTouInt (46));		// enc1
+				printf("%6d", CharTouInt (50));		// cnt_log
 				printf("\n");
 				i += WRITINGTIME;
 				msdBuffAddress += DATA_BYTE;

@@ -91,7 +91,7 @@ char init_IMU (void)
 			IMUWriteByte( INT_PIN_CFG, 0x02);	// 内蔵プルアップ無効化
 			IMUWriteByte( CONFIG, 0x00);		// ローパスフィルタを使用しない
 			IMUWriteByte( ACCEL_CONFIG, 0x18);	// レンジ±16gに変更
-			IMUWriteByte( GYRO_CONFIG, 0x10);	// レンジ±1000deg/sに変更
+			IMUWriteByte( GYRO_CONFIG, 0x12);	// レンジ±1000deg/sに変更
 		} else {
 			ret = 1;
 		}
