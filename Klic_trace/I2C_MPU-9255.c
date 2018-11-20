@@ -5,20 +5,25 @@
 //====================================//
 // グローバル変数の宣言             						//
 //====================================//
-short	cent_data[7] = {0};			// オフセット値	
-volatile short 	rawXa, rawYa, rawZa;	// 加速度(16bitデータ)
-volatile short 	rawXg, rawYg, rawZg;// 角加速度(16bitデータ)
+// IMUから取得したデータ
+volatile int 	rawXa = 0, rawYa = 0, rawZa = 0;	// 加速度(16bitデータ)
+volatile int 	rawXg = 0, rawYg = 0, rawZg = 0;// 角加速度(16bitデータ)
+
+short 	rawXa2 = 0, rawYa2 = 0, rawZa2 = 0;	// 加速度(16bitデータ)
+short 	rawXg2 = 0, rawYg2 = 0, rawZg2 = 0;// 角加速度(16bitデータ)
+
 volatile short 	rawTemp;			// 温度(16bitデータ)
 
-char	pattern_caribrateIMU = 0;		// キャリブレーション処理
-short	sampleIMU[7][SAMPLENUMBER];
-short	data_cnt = 0;
-short 	median[7], mode[7];
-int	averageIMU[7];
-char	caribration;		// 0:キャリブレーション停止 1:キャリブレーション中
+// データ処理
+double 	TurningAngleIMU;	// IMUから求めたヨー角度
+double	RollAngleIMU;		// IMUから求めたロール方向角度
+double 	PichAngleIMU;		// IMUから求めたピッチ方向角度
+double	TempIMU;			// IMUの温度
+short		offset[3];			// オフセット値(16bit)
 
 char	IMUset = 0;		// 0:初期化失敗		1:初期化完了
 char	whoami;
+char cnt_imu = 0;
 
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 wait_IMU								//
@@ -91,7 +96,7 @@ char init_IMU (void)
 			IMUWriteByte( INT_PIN_CFG, 0x02);	// 内蔵プルアップ無効化
 			IMUWriteByte( CONFIG, 0x00);		// ローパスフィルタを使用しない
 			IMUWriteByte( ACCEL_CONFIG, 0x18);	// レンジ±16gに変更
-			IMUWriteByte( GYRO_CONFIG, 0x12);	// レンジ±1000deg/sに変更
+			IMUWriteByte( GYRO_CONFIG, 0x10);	// レンジ±1000deg/sに変更
 		} else {
 			ret = 1;
 		}
@@ -110,15 +115,29 @@ char init_IMU (void)
 void IMUProcess (void)
 {
 	char 	axisData[14];	// 角加速度、温度の8bit分割データ格納先
-	/*
-	IMUReadArry( GYRO_XOUT_H, 6, axisData);	// 3軸加速度取得
+	
+	IMUReadArry( TEMP_OUT_H, 8, axisData);	// 3軸加速度取得
 	
 	//8bitデータを16bitデータに変換
+	// 温度
+	rawTemp = (short)((axisData[0] << 8 & 0xff00 ) | axisData[1]);
+	
 	// 角速度
-	rawXg = (short)((axisData[0] << 8 & 0xff00 ) | axisData[1]);
-	rawYg = (short)((axisData[2] << 8 & 0xff00 ) | axisData[3]);
-	rawZg = (short)((axisData[4] << 8 & 0xff00 ) | axisData[5]);
-	*/
+	rawXg2 = (short)((axisData[2] << 8 & 0xff00 ) | axisData[3]);
+	rawYg2 = (short)((axisData[4] << 8 & 0xff00 ) | axisData[5]);
+	rawZg2 = (short)((axisData[6] << 8 & 0xff00 ) | axisData[7]);
+	
+	if ( rawXg2 < 0 ) rawXg2 += offset[0];
+	else			rawXg2 -= offset[0];
+	if ( rawYg2 < 0 ) rawYg2 += offset[1];
+	else			rawYg2 -= offset[1];
+	if ( rawZg2 < 0 ) rawZg2 += offset[2];
+	else			rawZg2 -= offset[2];
+	
+	rawXg += rawXg2;
+	rawYg += rawYg2;
+	rawZg += rawZg2;
+	/*
 	IMUReadArry( ACCEL_XOUT_H, 14, axisData);	// 3軸加速度取得
 	
 	//8bitデータを16bitデータに変換
@@ -134,15 +153,8 @@ void IMUProcess (void)
 	rawXg = (short)((axisData[8] << 8 & 0xff00 ) | axisData[9]);
 	rawYg = (short)((axisData[10] << 8 & 0xff00 ) | axisData[11]);
 	rawZg = (short)((axisData[12] << 8 & 0xff00 ) | axisData[13]);
+	*/
 	
-	
-	rawXa -= cent_data[0];
-	rawYa -= cent_data[1];
-	rawZa -= cent_data[2];
-	rawXg -= cent_data[4];
-	rawYg -= cent_data[5];
-	rawZg -= cent_data[6];
-
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 caribrateIMU							//
@@ -150,98 +162,88 @@ void IMUProcess (void)
 // 引数         なし									//
 // 戻り値       なし									//
 ///////////////////////////////////////////////////////////////////////////
-void caribrateIMU (char data_Option)
+void caribrateIMU (void)
 {
-	char data[6];
-	short i, j, k, datasize;
-	short cnt, temp_cnt = 0;
+	char data1[14];
+	short i, j, axisData[8];
+	int atemp = 0, axg = 0, ayg = 0, azg = 0;
+	double	xy, yy, zy;		// 角速度平均値
+	double	xb, yb, zb;		// 近似直線の切片
 	
-	switch( pattern_caribrateIMU ) {
-		case 0:
-			if ( caribration ) {
-				IMUSet = 0;	// キャリブレーション開始
-				// 初期化
-				data_cnt = 0;
-				for ( i = 0; i < 7; i++ ) {
-					averageIMU[i] = 0;
-					mode[i] = 0;
-					median[i] = 0;
-				}
-				
-				pattern_caribrateIMU = 1;
-			}
-			break;
-			
-		case 1:
-			PORT5.PODR.BIT.B5 = 1;
-			IMUReadArry( ACCEL_XOUT_H, 14, data);	// 6軸データ+温度取得
-			
-			// 16bitデータに変換
-			for ( i = 0; i < 7; i++ ) {
-				sampleIMU[i][data_cnt] = (short)((data[i * 2] << 8 & 0xff00 ) | data[i * 2 + 1]);
-			}
-			data_cnt++;
-			if ( data_cnt >= SAMPLENUMBER ) {
-				PORT5.PODR.BIT.B5 = 0;
-				data_cnt = SAMPLENUMBER;	// データ総数計算
-				datasize = 2;		// データサイズ計算 
-				
-				if( data_Option == AVERAGE )	pattern_caribrateIMU = AVERAGE;
-				if( data_Option == MODE )		pattern_caribrateIMU = MODE;
-				if( data_Option == MEDIAN )	pattern_caribrateIMU = MEDIAN;
-			}
-			break;
-			
-		case AVERAGE + 0:
-			for ( i = 0; i < data_cnt; i++ ) {
-				for ( j = 0; j < 7; j++ ) averageIMU[j] += sampleIMU[j][i];
-			}
-			for ( i = 0; i < 7; i++ ) {
-				averageIMU[i] /= data_cnt;
-				cent_data[i] = averageIMU[i];
-			}
-			
-			pattern_caribrateIMU = 40;
-			break;
-			
-		case MODE + 0:
-			for ( i = 0; i < 7; i++ ) {
-				// 初期値
-				mode[i] = 0;
-				cnt = 0;
-				for ( j = 0;j < data_cnt; j++ ) {
-					temp_cnt = 1;
-					for ( k = j+1;k < data_cnt; k++ ) {
-						if ( sampleIMU[i][j] == sampleIMU[i][k] ) temp_cnt++;
-					}
-					
-					if ( temp_cnt > cnt ) {
-						cnt = temp_cnt;
-						mode[i] = sampleIMU[i][j];
-					}
-				}
-				cent_data[i] = mode[i];
-			}
-			
-			pattern_caribrateIMU = 40;
-			break;
-			
-		case MEDIAN + 0:
-			for ( i = 0; i < 7; i++ ) {
-				qsort( (void*)sampleIMU[i], data_cnt, datasize, short_sort );
-				median[i] = sampleIMU[i][data_cnt/2];
-				cent_data[i] = median[i];
-			}
-			pattern_caribrateIMU = 40;
-			break;
-		
-		case 40:
-			IMUSet = 1;
-			caribration = 0;
-			setBeepPatternS( 0xa300 );
-			
-			pattern_caribrateIMU = 0;
-			break;
-		
+	for ( i = 0; i < SAMPLE; i++ ) {
+		IMUReadArry( TEMP_OUT_H, 8, data1);
+		for ( j = 0; j < 4; j++ ) axisData[j] = (short)((data1[j * 2] << 8 & 0xff00 ) | data1[j * 2 + 1]);
+		atemp += axisData[0];
+		axg += axisData[1];
+		ayg += axisData[2];
+		azg += axisData[3];
 	}
+	atemp /= SAMPLE;
+	axg /= SAMPLE;
+	ayg /= SAMPLE;
+	azg /= SAMPLE;
+	
+	TempIMU = (double)(atemp / TEMP_LSB) + 21.0;
+	
+	xy = (double)axg/GYROLSB;
+	xb = (double)xy - ( XGSLOPE * TempIMU );
+	
+	yy = (double)ayg/GYROLSB;
+	yb = (double)yy - ( YGSLOPE * TempIMU );
+	
+	zy = (double)azg/GYROLSB;
+	zb = (double)zy - ( ZGSLOPE * TempIMU );
+	
+	offset[0] = (double)XGSLOPE * TempIMU + xb * GYROLSB;
+	offset[1] = (double)YGSLOPE * TempIMU + yb * GYROLSB;
+	offset[2] = (double)ZGSLOPE * TempIMU + zb * GYROLSB;
+	
+	if ( offset[0] < 0 ) offset[0] = -offset[0];
+	if ( offset[1] < 0 ) offset[1] = -offset[1];
+	if ( offset[2] < 0 ) offset[2] = -offset[2];
+}
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 getTurningAngleIMU						//
+// 処理概要   	IMUから旋回角度の計算					//
+// 引数         なし									//
+// 戻り値       なし									//
+///////////////////////////////////////////////////////////////////////////
+void getTurningAngleIMU(void)
+{
+	double angularVelocity_zg;
+	
+	angularVelocity_zg = (double)(rawZg/10) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
+	
+	TurningAngleIMU += (double)( angularVelocity_zg)* 0.01;
+	
+}
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 getRollAngleIMU							//
+// 処理概要   	IMUからロール角度の計算					//
+// 引数         なし									//
+// 戻り値       なし									//
+///////////////////////////////////////////////////////////////////////////
+void getRollAngleIMU(void)
+{
+	double angularVelocity_yg;
+	
+	angularVelocity_yg = (double)(rawXg/10) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
+	
+	RollAngleIMU += (double)( angularVelocity_yg)* 0.01;
+	
+}
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 getPichAngleIMU							//
+// 処理概要     IMUからピッチ角度の計算						//
+// 引数         なし									//
+// 戻り値       なし									//
+///////////////////////////////////////////////////////////////////////////
+void getPichAngleIMU( void )
+{
+	double angularVelocity_xg;
+	
+	angularVelocity_xg = (double)(rawYg/10) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
+	
+	PichAngleIMU += (double)( angularVelocity_xg)* 0.01;
+	
 }

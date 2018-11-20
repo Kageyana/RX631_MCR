@@ -938,22 +938,23 @@ void sendLog (void) {
 		send_Char			(	ServoPwm2 	);
 		send_Char			(	sensor_inp() 	);
 		send_Char			( 	slope_mode	);
+		
 		send_ShortToChar	(	getServoAngle()	);
 		send_ShortToChar	(	SetAngle		);
 		send_ShortToChar	(	getAnalogSensor()	);
-		send_ShortToChar	((short)PichAngleIMU		);
+		send_ShortToChar	((short)PichAngleIMU*10	);
 		send_ShortToChar	((short)TurningAngleEnc	);
-		send_ShortToChar	((short)TurningAngleIMU	);
-		send_ShortToChar	((short)RollAngleIMU		);
-		send_ShortToChar	((short)(TempIMU*10)	);
+		send_ShortToChar	((short)TurningAngleIMU*10);
+		send_ShortToChar	((short)RollAngleIMU*10	);
 		send_ShortToChar	(	Encoder		);
 		send_ShortToChar	(	targetSpeed	);
-		send_ShortToChar	(	rawXa		);
-		send_ShortToChar	(	rawYa		);
-		send_ShortToChar	(	rawZa		);
-		send_ShortToChar	(	rawXg		);
-		send_ShortToChar	(	rawYg		);
-		send_ShortToChar	(	rawZg		);
+		send_ShortToChar	(	rawXa2		);
+		send_ShortToChar	(	rawYa2		);
+		send_ShortToChar	(	rawZa2		);
+		send_ShortToChar	(	rawXg2		);
+		send_ShortToChar	(	rawYg2		);
+		send_ShortToChar	(	rawZg2		);
+		
 		send_uIntToChar 	(	EncoderTotal	);
 		send_uIntToChar 	(	enc1			);
 		send_uIntToChar 	(	cnt_log		);
@@ -1006,7 +1007,6 @@ void msd_sendToPC ( void )
 				printf(		"TurningAngleEnc,"	);
 				printf(		"TurningAngleIMU,"	);
 				printf(		"RollAngleIMU,"		);
-				printf(		"TempIMU,"		);
 				printf(		"Encoder,"			);
 				printf(		"targetSpeed,"		);
 				printf(		"xa[m/s^2],"		);
@@ -1065,26 +1065,25 @@ void msd_sendToPC ( void )
 				printf("%5d,", msdBuff[ msdBuffAddress + 8 ]);	// sensor_inp()
 				printf("%5d,", msdBuff[ msdBuffAddress + 9 ]);	// slope_mode
 				
-				printf("%5d,", CharToShort(10));		// getServoAngle()
-				printf("%5d,", CharToShort(12));		// SetAngle
-				printf("%5d,", CharToShort(14));		// getAnalogSensor()
-				printf("%5d,", CharToShort(16));		// PichAngleIMU
-				printf("%5d,", CharToShort(18));		// TurningAngleEnc
-				printf("%5d,", CharToShort(20));		// TurningAngleIMU
-				printf("%5d,", CharToShort(22));		// RollAngleIMU
-				printf("%2.1f,", (double)CharToShort(24)/10);	// TempIMU
-				printf("%5d,", CharToShort(26));		// Encoder
-				printf("%5d,", CharToShort(28) / 10);	// targetSpeed
-				printf("%4.4f,", (double)CharToShort(30) / ACCELLSB * G_ACCELERATION);// xa
-				printf("%4.4f,", (double)CharToShort(32) / ACCELLSB * G_ACCELERATION);// ya
-				printf("%4.4f,", (double)CharToShort(34) / ACCELLSB * G_ACCELERATION);// za
-				printf("%4.4f,", (double)CharToShort(36) / GYROLSB);// xg
-				printf("%4.4f,", (double)CharToShort(38) / GYROLSB);// yg
-				printf("%4.4f,", (double)CharToShort(40) / GYROLSB);// zg
+				printf("%5d,", CharToShort(10));				// getServoAngle()
+				printf("%5d,", CharToShort(12));				// SetAngle
+				printf("%5d,", CharToShort(14));				// getAnalogSensor()
+				printf("%4.2f,", (double)CharToShort(16)/10);	// PichAngleIMU
+				printf("%5d,", CharToShort(18));				// TurningAngleEnc
+				printf("%4.2f,", (double)CharToShort(20)/10);	// TurningAngleIMU
+				printf("%4.2f,", (double)CharToShort(22)/10);	// RollAngleIMU
+				printf("%5d,", CharToShort(24));				// Encoder
+				printf("%5d,", CharToShort(26) / 10);			// targetSpeed
+				printf("%4.4f,", (double)CharToShort(28) / ACCELLSB * G_ACCELERATION);// xa
+				printf("%4.4f,", (double)CharToShort(30) / ACCELLSB * G_ACCELERATION);// ya
+				printf("%4.4f,", (double)CharToShort(32) / ACCELLSB * G_ACCELERATION);// za
+				printf("%4.4f,", (double)CharToShort(34) / GYROLSB);// xg
+				printf("%4.4f,", (double)CharToShort(36) / GYROLSB);// yg
+				printf("%4.4f,", (double)CharToShort(38) / GYROLSB);// zg
 				
-				printf("%6d,", CharTouInt (42));		// EncoderTotal
-				printf("%6d,", CharTouInt (46));		// enc1
-				printf("%6d", CharTouInt (50));		// cnt_log
+				printf("%6d,", CharTouInt (40));		// EncoderTotal
+				printf("%6d,", CharTouInt (44));		// enc1
+				printf("%6d", CharTouInt (48));		// cnt_log
 				printf("\n");
 				i += WRITINGTIME;
 				msdBuffAddress += DATA_BYTE;

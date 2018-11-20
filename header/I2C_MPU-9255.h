@@ -118,7 +118,7 @@
 #define ACCELLSB			2048		// 16[g]
 #define GYROLSB			32.8		// 1000[deg/s]
 #define TEMP_LSB			333.87	// LSB/°C
-#define ROOMTEMPOFFSET	24		// °C
+#define ROOMTEMPOFFSET	0		// 21°Cのとき0
 
 // データ処理関連
 #define CLOCK				96		// 動作周波数[MHz]
@@ -126,11 +126,12 @@
 #define MAXDATA_RANGE		32764	// 16bitデータの最大値
 #define G_ACCELERATION		9.81		// 重力加速度
 
-#define SAMPLENUMBER		10000	// サンプリングデータ数
-#define AVERAGE			10		// 平均
-#define MODE				20		// 最頻値
-#define MEDIAN				30		// 中央値
-
+// キャリブレーション
+#define XGSLOPE			0.0048
+#define YGSLOPE			-0.0259
+#define ZGSLOPE			-0.0032
+#define SAMPLE				5000
+#define REC_NUM			8
 /*************************************** 自動生成関数 **********************************/
 #define I2C_IMU_COMMAND	send_SCI1_I2cWait( MPU9255_ADDRESS, sendData, num)
 #define I2C_IMU_RECIVE		receive_SCI1_I2c( MPU9255_ADDRESS, reciveData, num )
@@ -140,19 +141,23 @@
 // グローバル変数の宣言							//
 //====================================//
 // IMUから取得したデータ
-extern volatile short 	rawXa, rawYa, rawZa;		// 加速度(16bitデータ)
-extern volatile short 	rawXg, rawYg, rawZg;	// 角加速度(16bitデータ)
+extern volatile int 	rawXa, rawYa, rawZa;		// 加速度(16bitデータ)
+extern volatile int 	rawXg, rawYg, rawZg;	// 角加速度(16bitデータ)
 extern volatile short 	rawTemp;				// 温度(16bitデータ)
 
-// キャリブレーション関連
-extern short	sampleIMU[7][SAMPLENUMBER];
-extern short 	median[7], mode[7];
-extern int		averageIMU[7];
-extern char	caribration;		// 0:キャリブレーション停止 1:キャリブレーション中
+extern short 	rawXa2, rawYa2, rawZa2;	// 加速度(16bitデータ)
+extern short 	rawXg2, rawYg2, rawZg2;// 角加速度(16bitデータ)
+
+// データ処理
+extern double 		TurningAngleIMU;	// IMUから求めた旋回角度
+extern double		RollAngleIMU;		// IMUから求めたロール方向角度
+extern double 		PichAngleIMU;		// IMUから求めたピッチ方向角度
+extern double		TempIMU;			// IMUの温度
 
 // モード関連
 extern char	IMUset;			// 0:初期化失敗		1:初期化完了
 extern char	whoami;
+extern char	cnt_imu;
 
 //====================================//
 // プロトタイプ宣言								//
@@ -163,6 +168,9 @@ char IMUReadByte( char reg , char* reciveData );
 void IMUReadArry( char reg, char num, char* dataArry );
 char init_IMU (void);
 void IMUProcess (void);
-void caribrateIMU (char data_Option);
+void caribrateIMU (void);
+void getTurningAngleIMU(void);
+void getRollAngleIMU(void);
+void getPichAngleIMU( void );
 
 #endif // I2C_MPU-9255_H_

@@ -52,13 +52,7 @@ short	angle_leftchange;		// 右レーンチェンジ旋回角度
 short	cnt_gyro;				// 角度計算用カウンタ
 
 // 角度関連
-short 	gyVoltageBefore;	// 1ms前の角度
-
 double 	TurningAngleEnc;	// エンコーダから求めた旋回角度
-double 	TurningAngleIMU;	// IMUから求めたヨー角度
-double	RollAngleIMU;		// IMUから求めたロール方向角度
-double 	PichAngleIMU;		// IMUから求めたピッチ方向角度
-double	TempIMU;			// IMUの温度
 
 // サーボ関連
 // 白線トレース
@@ -662,57 +656,6 @@ void getTurningAngleEnc(void)
 	} else {
 		TurningAngleEnc += 0;
 	}
-}
-///////////////////////////////////////////////////////////////////////////
-// モジュール名 getTurningAngleIMU						//
-// 処理概要   	IMUから旋回角度の計算					//
-// 引数         なし									//
-// 戻り値       なし									//
-///////////////////////////////////////////////////////////////////////////
-void getTurningAngleIMU(void)
-{
-	double angularVelocity_zg;
-	
-	angularVelocity_zg = (double)rawZg / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
-	TurningAngleIMU += angularVelocity_zg * 0.001;
-}
-///////////////////////////////////////////////////////////////////////////
-// モジュール名 getRollAngleIMU							//
-// 処理概要   	IMUからロール角度の計算					//
-// 引数         なし									//
-// 戻り値       なし									//
-///////////////////////////////////////////////////////////////////////////
-void getRollAngleIMU(void)
-{
-	double angularVelocity_yg;
-	
-	angularVelocity_yg = (double)rawYg / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
-	RollAngleIMU += angularVelocity_yg * 0.001 ;
-	//if ( cnt_gyro >= INTEGRAL_LIMIT ) RollAngleIMU = 0;
-}
-///////////////////////////////////////////////////////////////////////////
-// モジュール名 getPichAngleIMU							//
-// 処理概要     IMUからピッチ角度の計算						//
-// 引数         なし									//
-// 戻り値       なし									//
-///////////////////////////////////////////////////////////////////////////
-void getPichAngleIMU( void )
-{
-	double angularVelocity_xg;
-	
-	angularVelocity_xg = (double)rawXg / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
-	PichAngleIMU += angularVelocity_xg * 0.001;
-	//if ( cnt_gyro >= INTEGRAL_LIMIT ) PichAngleIMU = 0;
-}
-///////////////////////////////////////////////////////////////////////////
-// モジュール名 getTempIMU							//
-// 処理概要     IMUの温度を計算							//
-// 引数         なし									//
-// 戻り値       なし									//
-///////////////////////////////////////////////////////////////////////////
-void getTempIMU( void )
-{
-	TempIMU = ( ( rawTemp - ROOMTEMPOFFSET ) / TEMP_LSB ) + 21;
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 motorControl							//

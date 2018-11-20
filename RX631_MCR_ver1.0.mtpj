@@ -1132,7 +1132,7 @@
       <COptionFloatOrder-DefaultValue>False</COptionFloatOrder-DefaultValue>
       <COptionIncode-DefaultValue>Sjis</COptionIncode-DefaultValue>
       <IsLockedByUser>False</IsLockedByUser>
-      <TimeTagModified--0>-8586676273184441455</TimeTagModified--0>
+      <TimeTagModified--0>-8586597773914869636</TimeTagModified--0>
       <COptionLangC-0>C</COptionLangC-0>
       <COptionListfile-0>False</COptionListfile-0>
       <COptionLogo-0>False</COptionLogo-0>
@@ -1194,7 +1194,7 @@ SmartManual Docs\RX631
       <COptionMisra2004RuleFile-0 />
       <COptionPreCompileCommands-0 />
       <COptionShowConditionals-0>False</COptionShowConditionals-0>
-      <COptionSpeedAndSize-0>Speed</COptionSpeedAndSize-0>
+      <COptionSpeedAndSize-0>Size</COptionSpeedAndSize-0>
       <COptionLoop-0>Auto</COptionLoop-0>
       <COptionMisra2004RuleNumberApply-0 />
       <COptionPostCompileCommands-0 />

@@ -1406,15 +1406,6 @@ void Timer (void) {
 		IMUProcess();
 	}
 	
-	// äpìxåvéZ
-	getPichAngleIMU();
-	getTurningAngleEnc();
-	getTurningAngleIMU();
-	getRollAngleIMU();
-	getTempIMU();
-	caribrateIMU( MEDIAN );
-	if( cnt_gyro == INTEGRAL_LIMIT ) cnt_gyro = 0;
-	
 	// MicroSDèëÇ´çûÇ›
 	microSDProcess();
 	if ( msdFlag == 1 ) sendLog();
@@ -1431,6 +1422,14 @@ void Timer (void) {
 		getSwitch();
 		break;
 	case 3:
+		// äpìxåvéZ
+		getPichAngleIMU();
+		//getTurningAngleEnc();
+		getTurningAngleIMU();
+		getRollAngleIMU();
+		rawXg=0;
+		rawYg=0;
+		rawZg=0;
 		break;
 	case 5:
 		break;

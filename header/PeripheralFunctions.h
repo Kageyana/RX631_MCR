@@ -18,7 +18,7 @@
 
 /*************************************** 自動生成関数 *************************************/
 // タイマ割り込み
-#define SET_CMT_C0	R_PG_Timer_Set_CMT_U0_C0();	// コンペアマッチタイマ初期化(ch0)
+#define SET_CMT_C0		R_PG_Timer_Set_CMT_U0_C0();	// コンペアマッチタイマ初期化(ch0)
 #define START_CMT_C0	R_PG_Timer_StartCount_CMT_U0_C0();	// // カウントスタート(ch0)
 
 // エンコーダ

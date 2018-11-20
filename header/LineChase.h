@@ -134,10 +134,6 @@ extern short		cnt_gyro;			// 角度計算用カウンタ
 
 // 角度関連
 extern double 		TurningAngleEnc;	// エンコーダから求めた旋回角度
-extern double 		TurningAngleIMU;	// IMUから求めた旋回角度
-extern double		RollAngleIMU;		// IMUから求めたロール方向角度
-extern double 		PichAngleIMU;		// IMUから求めたピッチ方向角度
-extern double		TempIMU;			// IMUの温度
 
 // モーター関連
 extern signed char 	motorPwm;	// モーター制御PWM
@@ -167,10 +163,6 @@ signed char check_slope( void );
 
 // 角度関連
 void getTurningAngleEnc(void);
-void getTurningAngleIMU(void);
-void getRollAngleIMU(void);
-void getPichAngleIMU( void );
-void getTempIMU( void );
 
 // エンコーダ関連
 unsigned int enc_mm( short mm );

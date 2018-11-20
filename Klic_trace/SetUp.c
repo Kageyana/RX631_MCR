@@ -39,6 +39,7 @@ char motor_test = 0;
 char servo_test = 0;
 char servo_test2 = 0;
 char fixSpeed = 0;
+
 //====================================//
 // プロトタイプ宣言								//
 //====================================//
@@ -621,8 +622,8 @@ void setup( void )
 			data_tuning ( &pattern_sensor, 1, LEFT );
 			angle_mode = 0;
 			
-			if ( pattern_sensor == 17 ) pattern_sensor = 1;
-			else if ( pattern_sensor == 0 ) pattern_sensor = 16;
+			if ( pattern_sensor == 18 ) pattern_sensor = 1;
+			else if ( pattern_sensor == 0 ) pattern_sensor = 17;
 			
 			switch( pattern_sensor ) {
 				case 1:
@@ -645,6 +646,7 @@ void setup( void )
 					// ジャイロ
 					lcdPosition( 0, 0 );
 					lcdPrintf("Gyro   %d", s);
+					if ( tasw_get() == 0x1 ) PichAngleIMU = 0;
 					if ( cnt_setup >= 100 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 1 );
@@ -739,7 +741,7 @@ void setup( void )
 					break;
 					
 				case 10:
-					// Bluetooth;
+					// Bluetooth
 					lcdPosition( 0, 0 );
 					lcdPrintf("Text   %d", revErr);
 					lcdPosition( 0, 1 );
@@ -747,7 +749,7 @@ void setup( void )
 					break;
 					
 				case 11:
-					// 旋回角度;
+					// 旋回角度
 					lcdPosition( 0, 0 );
 					lcdPrintf("IMU %4d", (short)TurningAngleIMU);
 					lcdPosition( 0, 1 );
@@ -757,20 +759,22 @@ void setup( void )
 					break;
 					
 				case 12:
-					// ロール角度;
+					// ロール角度
 					lcdPosition( 0, 0 );
-					lcdPrintf("Roll %3d", (short)RollAngleIMU);
+					lcdPrintf("Roll%4d", (short)RollAngleIMU);
 					lcdPosition( 0, 1 );
 					lcdPrintf("Temp%2.1f", (double)TempIMU);
-					if ( tasw_get() == 0x1 ) RollAngleIMU = 0;
-					if ( tasw_get() == 0x2 ) {
+					if ( tasw_get() == 0x2 ) RollAngleIMU = 0;
+					if ( tasw_get() == 0x1 ) {
 						wait_lcd(1000);
-						caribration = 1;
+						IMUSet = 0;
+						caribrateIMU();
+						IMUSet = 1;
 					}
 					break;
 					
 				case 13:
-					// IMU;
+					// IMU
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 0 );
@@ -781,29 +785,29 @@ void setup( void )
 					break;
 					
 				case 14:
-					// IMU;
+					// IMU
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 0 );
 						lcdPrintf("za%2.3f",(double)rawZa / ACCELLSB);
 						lcdPosition( 0, 1 );
-						lcdPrintf("xg%2.3f",(double)rawXg / GYROLSB);
+						lcdPrintf("xg%2.3f",(double)rawXg2/GYROLSB);
 					}
 					break;
 					
 				case 15:
-					// IMU;
+					// IMU
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 0 );
-						lcdPrintf("yg%2.3f",(double)rawYg / GYROLSB);
+						lcdPrintf("yg%2.3f",(double)rawYg2/GYROLSB);
 						lcdPosition( 0, 1 );
-						lcdPrintf("zg%2.3f",(double)rawZg / GYROLSB);
+						lcdPrintf("zg%2.3f",(double)rawZg2/GYROLSB);
 					}
 					break;
 					
 				case 16:
-					// who am i;
+					// who am i
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 0 );
@@ -1023,13 +1027,13 @@ void setup( void )
 						lcdPosition( 0, 1 );
 						lcdPrintf("Log     ");
 					}
-					if ( tasw_get() == 0x1 && push1 == 0 ) {
+					if ( tasw_get() == 0x1 && push1 == 0 && msdFlag == 0) {
 						push1 = 1;
 						init_log();	// ログ記録準備
 						msdFlag = 1;		// データ記録開始
 						lcdPosition( 0, 1 );
 						lcdPrintf("Logging ");
-					} else if ( tasw_get() == 0x2 && push1 == 0 ) {
+					} else if ( tasw_get() == 0x2 && push1 == 0 && msdFlag == 1) {
 						push1 = 1;
 						msdEndLog();		// MicroSDの終了処理
 						//readFlashSetup();	// データフラッシュから前回パラメータを読み込む
