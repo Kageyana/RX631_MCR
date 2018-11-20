@@ -41,20 +41,21 @@ void HardwareSetup(void)
 	SET_MTU_C1
 	SET_MTU_C2
 	SET_MTU_C3
-	START_MTU		// MTU0,2,3,4のカウント開始
 	
-	SET_CMT_C0		// コンペアマッチタイマを設定(ch0)
-	SET_CMT_C2		// コンペアマッチタイマを設定(ch2)
-	START_CMT_C0 		// カウントスタート(ch0)
-	START_CMT_C2 		// カウントスタート(ch2)
-	
-	init_IO();		// IOポートの初期化
-	
-	SET_ADC			// 12ビットA/Dコンバータ(S12AD0)を設定
-	START_ADC		// A/D変換開始
-	
-	SET_SCI_C1		// シリアルI/Oチャネルを設定(I2C)
+	SET_SCI_C1
 	SET_SCI_C5 		// シリアルI/Oチャネルを設定(SPI)
 	SET_SCI_C12 		// シリアルI/Oチャネルを設定(I2C)
 	
+	SET_CMT_C0		// コンペアマッチタイマを設定(ch0)
+	SET_CMT_C2		// コンペアマッチタイマを設定(ch2)
+	
+	init_IO();			// IOポートの初期化
+	
+	SET_ADC			// 12ビットA/Dコンバータ(S12AD0)を設定
+	
+	START_MTU		// MTU0,2,3,4のカウント開始
+	
+	START_ADC		// A/D変換開始
+	START_CMT_C0 	// カウントスタート(ch0)
+	START_CMT_C2 	// カウントスタート(ch2)
 }

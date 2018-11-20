@@ -1,18 +1,18 @@
-//======================================//
-// インクルード                         //
-//======================================//
+//====================================//
+// インクルード									//
+//====================================//
 #include "SetUp.h"
-//======================================//
-// グローバル変数の宣言                 //
-//======================================//
+//====================================//
+// グローバル変数の宣言							//
+//====================================//
 char 	start;		// 0:セットアップ中	1:セットアップ完了
 
 // タイマ関連
-unsigned short 		cnt_setup;	// セットアップで使用
+unsigned short 		cnt_setup;		// セットアップで使用
 unsigned short 		cnt_setup2;	// セットアップで使用
 unsigned short 		cnt_setup3;	// セットアップで使用
-short			cnt_swR;	// スイッチ長押し判定用右
-short			cnt_swL;	// スイッチ長押し判定用左
+short				cnt_swR;		// スイッチ長押し判定用右
+short				cnt_swL;		// スイッチ長押し判定用左
 
 // スイッチ関連
 signed char pushL = 0;
@@ -39,9 +39,10 @@ char motor_test = 0;
 char servo_test = 0;
 char servo_test2 = 0;
 char fixSpeed = 0;
-//======================================//
-// プロトタイプ宣言                     //
-//======================================//
+
+//====================================//
+// プロトタイプ宣言								//
+//====================================//
 void data_select ( char *data , char button );
 void data_tuning ( void *data, char add , char direction );
 void wait2 ( int waittime );
@@ -58,15 +59,16 @@ void setup( void )
 	char cnt_led;
 	short s;
 	
-	/*// LED点滅処理
+	// LED点滅処理
+	
 	if ( cnt_setup2 >= 600 ) cnt_setup2 = 0;
 	if ( cnt_setup2 < 300 ) {
-		if ( EncoderTotal % 2 == 1 ) led_out( 0x12 );
+		if ( EncoderTotal % 12 == 1 ) led_out( 0x12 );
 		else led_out( 0x02 );
 	} else {
-		if ( EncoderTotal % 2 == 1 ) led_out( 0x11 );
+		if ( EncoderTotal % 12 == 1 ) led_out( 0x11 );
 		else led_out( 0x01 );
-	}*/
+	}
 	
 	// ディップスイッチで項目選択
 	switch ( dipsw_get() ) {
@@ -472,11 +474,8 @@ void setup( void )
 					//値を点滅
 					lcdPosition( 0, 1 );
 					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
-						lcdPrintf("   %2d %2d", ki2_buff, kd2_buff);
-					} else {
-						lcdPrintf("%2d %2d %2d", kp2_buff, ki2_buff, kd2_buff);
-					}
+					if ( cnt_setup < 250 ) lcdPrintf("   %2d %2d", ki2_buff, kd2_buff);
+					else				lcdPrintf("%2d %2d %2d", kp2_buff, ki2_buff, kd2_buff);
 					
 					data_tuning ( &kp2_buff, 1, RIGHT );
 					break;
@@ -485,11 +484,8 @@ void setup( void )
 					//値を点滅
 					lcdPosition( 0, 1 );
 					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
-						lcdPrintf("%2d    %2d", kp2_buff, kd2_buff);
-					} else {
-						lcdPrintf("%2d %2d %2d", kp2_buff, ki2_buff, kd2_buff);
-					}
+					if ( cnt_setup < 250 ) lcdPrintf("%2d    %2d", kp2_buff, kd2_buff);
+					else				lcdPrintf("%2d %2d %2d", kp2_buff, ki2_buff, kd2_buff);
 					
 					data_tuning ( &ki2_buff, 1, RIGHT );
 					break;
@@ -498,11 +494,8 @@ void setup( void )
 					//値を点滅
 					lcdPosition( 0, 1 );
 					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
-						lcdPrintf("%2d %2d   ", kp2_buff, ki2_buff);
-					} else {
-						lcdPrintf("%2d %2d %2d", kp2_buff, ki2_buff, kd2_buff);
-					}
+					if ( cnt_setup < 250 )	lcdPrintf("%2d %2d   ", kp2_buff, ki2_buff);
+					else				lcdPrintf("%2d %2d %2d", kp2_buff, ki2_buff, kd2_buff);
 					
 					data_tuning ( &kd2_buff, 1, RIGHT );
 					break;
@@ -530,11 +523,8 @@ void setup( void )
 					//値を点滅
 					lcdPosition( 0, 1 );
 					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
-						lcdPrintf("   %2d %2d", ki3_buff, kd3_buff );
-					} else {
-						lcdPrintf("%2d %2d %2d", kp3_buff, ki3_buff, kd3_buff );
-					}
+					if ( cnt_setup < 250 ) lcdPrintf("   %2d %2d", ki3_buff, kd3_buff );
+					else				lcdPrintf("%2d %2d %2d", kp3_buff, ki3_buff, kd3_buff );
 					
 					data_tuning ( &kp3_buff, 1, RIGHT );
 					break;
@@ -543,11 +533,8 @@ void setup( void )
 					//値を点滅
 					lcdPosition( 0, 1 );
 					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
-						lcdPrintf("%2d    %2d", kp3_buff, kd3_buff );
-					} else {
-						lcdPrintf("%2d %2d %2d", kp3_buff, ki3_buff, kd3_buff );
-					}
+					if ( cnt_setup < 250 ) lcdPrintf("%2d    %2d", kp3_buff, kd3_buff );
+					else				lcdPrintf("%2d %2d %2d", kp3_buff, ki3_buff, kd3_buff );
 					
 					data_tuning ( &ki3_buff, 1, RIGHT );
 					break;
@@ -557,11 +544,8 @@ void setup( void )
 					//値を点滅
 					lcdPosition( 0, 1 );
 					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
-						lcdPrintf("%2d %2d   ", kp3_buff, ki3_buff );
-					} else {
-						lcdPrintf("%2d %2d %2d", kp3_buff, ki3_buff, kd3_buff );
-					}
+					if ( cnt_setup < 250 ) lcdPrintf("%2d %2d   ", kp3_buff, ki3_buff );
+					else 				lcdPrintf("%2d %2d %2d", kp3_buff, ki3_buff, kd3_buff );
 					
 					data_tuning ( &kd3_buff, 1, RIGHT );
 					break;
@@ -638,8 +622,8 @@ void setup( void )
 			data_tuning ( &pattern_sensor, 1, LEFT );
 			angle_mode = 0;
 			
-			if ( pattern_sensor == 17 ) pattern_sensor = 1;
-			else if ( pattern_sensor == 0 ) pattern_sensor = 16;
+			if ( pattern_sensor == 18 ) pattern_sensor = 1;
+			else if ( pattern_sensor == 0 ) pattern_sensor = 17;
 			
 			switch( pattern_sensor ) {
 				case 1:
@@ -662,6 +646,7 @@ void setup( void )
 					// ジャイロ
 					lcdPosition( 0, 0 );
 					lcdPrintf("Gyro   %d", s);
+					if ( tasw_get() == 0x1 ) PichAngleIMU = 0;
 					if ( cnt_setup >= 100 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 1 );
@@ -737,11 +722,9 @@ void setup( void )
 					lcdPrintf("Servo   ");
 					lcdPosition( 0, 1 );
 					lcdPrintf("        ");
-					if ( motor_test == 1 ) 	{
-						servoPwmOut( 20 );
-					} else {
-						servoPwmOut( 0 );
-					}
+					if ( motor_test == 1 ) servoPwmOut( 20 );
+					else				servoPwmOut( 0 );
+					
 					data_select( &motor_test, 1 );
 					break;
 				case 9:
@@ -758,7 +741,7 @@ void setup( void )
 					break;
 					
 				case 10:
-					// Bluetooth;
+					// Bluetooth
 					lcdPosition( 0, 0 );
 					lcdPrintf("Text   %d", revErr);
 					lcdPosition( 0, 1 );
@@ -766,69 +749,71 @@ void setup( void )
 					break;
 					
 				case 11:
-					// 旋回角度;
+					// 旋回角度
 					lcdPosition( 0, 0 );
-					lcdPrintf("IMU%4d", (short)TurningAngleIMU);
+					lcdPrintf("IMU %4d", (short)TurningAngleIMU);
 					lcdPosition( 0, 1 );
-					lcdPrintf("Enc%4d", (short)TurningAngleEnc);
+					lcdPrintf("Enc %4d", (short)TurningAngleEnc);
 					if ( tasw_get() == 0x1 ) TurningAngleEnc = 0;
 					if ( tasw_get() == 0x2 ) TurningAngleIMU = 0;
 					break;
 					
 				case 12:
-					// ロール角度;
+					// ロール角度
 					lcdPosition( 0, 0 );
-					lcdPrintf("Roll%3d", (short)RollAngleIMU);
+					lcdPrintf("Roll%4d", (short)RollAngleIMU);
 					lcdPosition( 0, 1 );
-					lcdPrintf("Temp%2.1f", TempIMU);
+					lcdPrintf("Temp%2.1f", (double)TempIMU);
 					if ( tasw_get() == 0x2 ) RollAngleIMU = 0;
-					if ( tasw_get() == 0x3 ) {
-						wait_lcd(500);
+					if ( tasw_get() == 0x1 ) {
+						wait_lcd(1000);
+						IMUSet = 0;
 						caribrateIMU();
+						IMUSet = 1;
 					}
 					break;
 					
 				case 13:
-					// IMU;
+					// IMU
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 0 );
-						lcdPrintf("xa%2.3f",(double)rawXa/ACCELLSB);
+						lcdPrintf("xa%2.3f",(double)rawXa / ACCELLSB);
 						lcdPosition( 0, 1 );
-						lcdPrintf("ya%2.3f",(double)rawYa/ACCELLSB);
+						lcdPrintf("ya%2.3f",(double)rawYa / ACCELLSB);
 					}
 					break;
 					
 				case 14:
-					// IMU;
+					// IMU
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 0 );
-						lcdPrintf("za%2.3f",(double)rawZa/ACCELLSB);
+						lcdPrintf("za%2.3f",(double)rawZa / ACCELLSB);
 						lcdPosition( 0, 1 );
-						lcdPrintf("xg%2.3f",(double)rawXg/GYROLSB);
+						lcdPrintf("xg%2.3f",(double)rawXg2/GYROLSB);
 					}
 					break;
 					
 				case 15:
-					// IMU;
+					// IMU
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 0 );
-						lcdPrintf("yg%2.3f",(double)rawYg/GYROLSB);
+						lcdPrintf("yg%2.3f",(double)rawYg2/GYROLSB);
 						lcdPosition( 0, 1 );
-						lcdPrintf("zg%2.3f",(double)rawZg/GYROLSB);
+						lcdPrintf("zg%2.3f",(double)rawZg2/GYROLSB);
 					}
 					break;
 					
 				case 16:
-					// who am i;
+					// who am i
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 0 );
 						lcdPrintf("who am i");
 						lcdPosition( 0, 1 );
-						lcdPrintf("%d     %x",IMUSet, IMUReadByte(MPU9255_ADDRESS, WHO_AM_I));
+						lcdPrintf("%d     %x",IMUSet, whoami);
 					}
 					break;
 			}
@@ -862,8 +847,8 @@ void setup( void )
 			servo_test = 0;
 			angle_mode = 0;
 			data_tuning ( &pattern_msd, 1, LEFT );
-			if ( pattern_msd == 11 ) pattern_msd = 1;
-			else if ( pattern_msd == 0 ) pattern_msd = 10;
+			if ( pattern_msd == 12 ) pattern_msd = 1;
+			else if ( pattern_msd == 0 ) pattern_msd = 11;
 			
 			switch ( pattern_msd ) {
 				case 1:
@@ -1036,6 +1021,27 @@ void setup( void )
 						push1 = 0;
 					}
 					break;
+					
+				case 11:
+					if ( msdFlag == 0 ) { 
+						lcdPosition( 0, 1 );
+						lcdPrintf("Log     ");
+					}
+					if ( tasw_get() == 0x1 && push1 == 0 && msdFlag == 0) {
+						push1 = 1;
+						init_log();	// ログ記録準備
+						msdFlag = 1;		// データ記録開始
+						lcdPosition( 0, 1 );
+						lcdPrintf("Logging ");
+					} else if ( tasw_get() == 0x2 && push1 == 0 && msdFlag == 1) {
+						push1 = 1;
+						msdEndLog();		// MicroSDの終了処理
+						//readFlashSetup();	// データフラッシュから前回パラメータを読み込む
+					} else if ( tasw_get() == 0x0 ) {
+						push1 = 0;
+					}
+					break;
+					
 			}
 			break;
 		//------------------------------------------------------------------
@@ -1135,12 +1141,12 @@ void setup( void )
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////
-// モジュール名 data_select								//
+///////////////////////////////////////////////////////////////////////////////////////
+// モジュール名 data_select										//
 // 処理概要     タクトスイッチで0,1に変化させる						//
-// 引数         data: 変化させる変数 button: どのスイッチで変化させるか			//
-// 戻り値       なし									//
-//////////////////////////////////////////////////////////////////////////////////////////
+// 引数         data: 変化させる変数 button: どのスイッチで変化させるか		//
+// 戻り値       なし											//
+///////////////////////////////////////////////////////////////////////////////////////
 void data_select ( char *data , char button )
 {
 	if ( tasw_get() == button ) {
@@ -1155,12 +1161,12 @@ void data_select ( char *data , char button )
 		push = 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////
-// モジュール名 data_tuning								//
+///////////////////////////////////////////////////////////////////////////////////////
+// モジュール名 data_tuning										//
 // 処理概要     タクトスイッチでdataを加減する						//
 // 引数         data: 加減させる変数 add: 0: 変化量 lr: 0:右列 1:左列			//
-// 戻り値       なし									//
-//////////////////////////////////////////////////////////////////////////////////////////
+// 戻り値       なし											//
+///////////////////////////////////////////////////////////////////////////////////////
 void data_tuning ( void *data, char add , char lr )
 {
 	short *data2 = (short*)data;	// short型ポインタにキャスト
@@ -1236,12 +1242,12 @@ void data_tuning ( void *data, char add , char lr )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////
-// モジュール名 fix_speedsetting							//
+/////////////////////////////////////////////////////////////////////////////////
+// モジュール名 fix_speedsetting								//
 // 処理概要     速度パラメータを固定値にする						//
-// 引数         なし									//
-// 戻り値       0: 速度一定にしない　1: 速度一定にする					//
-//////////////////////////////////////////////////////////////////////////////////////////
+// 引数         なし										//
+// 戻り値       0: 速度一定にしない　1: 速度一定にする				//
+/////////////////////////////////////////////////////////////////////////////////
 char fix_speedsetting ( void )
 {
 	char ret = 0;
