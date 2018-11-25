@@ -44,7 +44,7 @@ static char			Timer10;	// 1msカウント用
 // メインプログラム								//
 //====================================//
 void main(void){
-	short i, j;
+	short i, j, k = 0, l = 11, m;
 	unsigned int ui;
 	
 	//=================================//
@@ -148,12 +148,15 @@ void main(void){
 						error_mode = 4;	
 						pattern = 101;
 					}*/
-					
+					/*
+					// Buletoothで外部から停止
 					if ( stopWord == 1 ) {
 						error_mode = 5;
 						pattern = 101;
 					}
+					*/
 					/*
+					// 一定時間で停止
 					if( cnt1 >= STOP_COUNT ) {
 						pattern = 101;
 					}
@@ -161,10 +164,20 @@ void main(void){
 				}
 			} else {			
 				// 手押しモードON
+				if (comp_uint[k]) {
+					if ( comp_uint[k] >= EncoderTotal && m >= 0) {
+						l = 12;
+						m = -m;
+					} else if ( comp_uint[k] >= EncoderTotal && m < 0 ) {
+						l = 11;
+						m = -m;
+					}
+				}
+				
 				lcdPosition( 0, 0 );
-				lcdPrintf("case %3d", pattern);
+				lcdPrintf("now %3d", pattern);
 				lcdPosition( 0, 1 );
-				lcdPrintf("%4d", (short)TurningAngleIMU);
+				lcdPrintf("log %3d", l);
 			}
 			// スイッチで停止
 			if ( tasw_get() == 0x4 ) {

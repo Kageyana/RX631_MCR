@@ -847,8 +847,8 @@ void setup( void )
 			servo_test = 0;
 			angle_mode = 0;
 			data_tuning ( &pattern_msd, 1, LEFT );
-			if ( pattern_msd == 12 ) pattern_msd = 1;
-			else if ( pattern_msd == 0 ) pattern_msd = 11;
+			if ( pattern_msd == 13 ) pattern_msd = 1;
+			else if ( pattern_msd == 0 ) pattern_msd = 12;
 			
 			switch ( pattern_msd ) {
 				case 1:
@@ -1025,7 +1025,7 @@ void setup( void )
 				case 11:
 					if ( msdFlag == 0 ) { 
 						lcdPosition( 0, 1 );
-						lcdPrintf("Log     ");
+						lcdPrintf("LogWrite");
 					}
 					if ( tasw_get() == 0x1 && push1 == 0 && msdFlag == 0) {
 						push1 = 1;
@@ -1042,6 +1042,18 @@ void setup( void )
 					}
 					break;
 					
+				case 12:
+					if ( msdFlag == 0 ) { 
+						lcdPosition( 0, 1 );
+						lcdPrintf("LogRead ");
+					}
+					if ( tasw_get() == 0x1 && push1 == 0 && msdFlag == 0) {
+						//ÉçÉOâêÕ
+						msdgetData () ;
+					} else if ( tasw_get() == 0x0 ) {
+						push1 = 0;
+					}
+					break;
 			}
 			break;
 		//------------------------------------------------------------------

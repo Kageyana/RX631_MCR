@@ -19,15 +19,20 @@ volatile unsigned char		interrupt_msd_send_data = 0;	// 送信フラグ
 
 // microSD関連
 signed char		msdBuff[ 512 ];		// 一時保存バッファ
-short			msdBuffAddress;		// 一時記録バッファ書込アドレス
-short			msdFlag = 0;			// 1:データ記録 0:記録しない
-short			msdTimer;				// 取得間隔計算用
+short				msdBuffAddress;	// 一時記録バッファ書込アドレス
+short				msdFlag = 0;		// 1:データ記録 0:記録しない
+short				msdTimer;			// 取得間隔計算用
 unsigned int		msdStartAddress;	// 記録開始アドレス
 unsigned int		msdEndAddress;	// 記録終了アドレス
 unsigned int		msdWorkAddress;	// 作業用アドレス
 unsigned int		msdWorkAddress2;	// 作業用アドレス2
 signed char 		*msdBuffPointa;		// RAM保存バッファ用ポインタ
 unsigned int 		msdAddrBuff[25];	// MicroSDカードの最終書き込みアドレス保存用
+
+// ログ解析関連
+char			comp_char[10] = {0,0,0,0,0,0,0,0,0,0};
+short			comp_short[10] = {0,0,0,0,0,0,0,0,0,0};
+unsigned int	comp_uint[10] = {0,0,0,0,0,0,0,0,0,0};
                                         
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 msd_write								//
@@ -917,7 +922,7 @@ void init_log ( void )
 	} 
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 msd_sendToPC							//
+// モジュール名 sendLog								//
 // 処理概要     PCへデータ転送							//
 // 引数         なし									//
 // 戻り値       なし									//
@@ -1086,6 +1091,98 @@ void msd_sendToPC ( void )
 				printf("%6d", CharTouInt (48));		// cnt_log
 				printf("\n");
 				i += WRITINGTIME;
+				msdBuffAddress += DATA_BYTE;
+				
+				if( msdBuffAddress >= 512 ) {
+					pattern_send = 2;
+					break;
+				}
+				break;
+		}
+	}
+}
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 msdgetData								//
+// 処理概要     ログの終了処理							//
+// 引数         なし									//
+// 戻り値       0:正常に終了 1:異常終了						//
+///////////////////////////////////////////////////////////////////////////
+void msdgetData () 
+{
+	volatile unsigned short i;
+	volatile short ret;
+	volatile char pattern_send = 1;
+	char flag[10],cnt_n[10] = {0,0,0,0,0,0,0,0,0,0} ;
+	
+	while ( pattern_send < 4 ) {
+		switch ( pattern_send ) {		
+			case 1:
+				// タイトル
+				printf(		"pattern,"			);
+				printf(		"Encoder,"			);
+				printf(		"EncoderTotal,"		);
+				printf("\n");
+				
+				msdEndAddress = msdWorkAddress2;	// 読み込み終了アドレス
+				msdWorkAddress = msdWorkAddress;	// 読み込み開始アドレス
+				pattern_send = 2;
+				break;
+				
+			case 2:
+				// microSDよりデータ読み込み
+				if( msdWorkAddress >= msdEndAddress ) {
+					// 書き込み終了アドレスになったら、終わり
+					printf( "End.\n" );
+					setBeepPatternS( 0xa8a8 );
+					pattern_send = 4;
+					break;
+				}
+				ret = readMicroSD( msdWorkAddress , msdBuff );
+				
+				if( ret != 0x00 ) {
+					// 読み込みエラー
+					printf( "\nmicroSD Read Error!!\n" );
+					pattern_send = 4;
+					break;
+				} else {
+					// エラーなし
+					msdWorkAddress += 512;		// microSDのアドレスを+512する
+					msdBuffAddress = 0;		// 配列からの読み込み位置を0に
+					pattern_send = 3;
+					break;
+				}
+				break;
+				
+			case 3:
+				// flag[0]	0: 脱出位置		1: 突入位置
+				// flag[1]	繰り返し回数
+				if ( flag[0]  == 1 ) {
+					// カーブに突入する位置を探す
+					if ( msdBuff[ msdBuffAddress + 0 ] == 12 ) flag[1]++;
+					else		flag[1] = 0;
+					
+					// 3つ以上あればカーブに突入したと判断する
+					if ( flag[1] >= 3 ) {
+						comp_uint[cnt_n[0]] = CharTouInt (40);
+						cnt_n[0]++;
+						flag[0]  == 0;
+						flag[1] = 0;
+					}
+				} else {
+					// カーブを脱出する位置を探す
+					if ( msdBuff[ msdBuffAddress + 0 ] == 11 ) flag[1]++;
+					else		flag[1] = 0;
+					
+					// 3つ以上あればカーブを脱出したと判断する
+					if ( flag[0] >= 3 ) {
+						comp_uint[cnt_n[0]] = CharTouInt (40);
+						cnt_n[0]++;
+						flag[0]  == 1;
+						flag[1] = 0;
+					}
+				}
+				
+				
 				msdBuffAddress += DATA_BYTE;
 				
 				if( msdBuffAddress >= 512 ) {

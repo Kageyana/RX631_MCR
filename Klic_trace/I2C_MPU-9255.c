@@ -7,7 +7,7 @@
 //====================================//
 // IMUから取得したデータ
 volatile int 	rawXa = 0, rawYa = 0, rawZa = 0;	// 加速度(16bitデータ)
-volatile int 	rawXg = 0, rawYg = 0, rawZg = 0;// 角加速度(16bitデータ)
+volatile int 	rawXg = 0, rawYg = 0, rawZg = 0;	// 角加速度(16bitデータ)
 
 short 	rawXa2 = 0, rawYa2 = 0, rawZa2 = 0;	// 加速度(16bitデータ)
 short 	rawXg2 = 0, rawYg2 = 0, rawZg2 = 0;// 角加速度(16bitデータ)
@@ -194,9 +194,9 @@ void caribrateIMU (void)
 	zy = (double)azg/GYROLSB;
 	zb = (double)zy - ( ZGSLOPE * TempIMU );
 	
-	offset[0] = (double)XGSLOPE * TempIMU + xb * GYROLSB;
-	offset[1] = (double)YGSLOPE * TempIMU + yb * GYROLSB;
-	offset[2] = (double)ZGSLOPE * TempIMU + zb * GYROLSB;
+	offset[0] = (((double)XGSLOPE * TempIMU ) + xb ) * GYROLSB;
+	offset[1] = (((double)YGSLOPE * TempIMU ) + yb ) * GYROLSB;
+	offset[2] = (((double)ZGSLOPE * TempIMU ) + zb ) * GYROLSB;
 	
 	if ( offset[0] < 0 ) offset[0] = -offset[0];
 	if ( offset[1] < 0 ) offset[1] = -offset[1];
