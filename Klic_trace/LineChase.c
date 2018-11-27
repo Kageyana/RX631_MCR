@@ -49,10 +49,10 @@ short	angle_rightchange;		// 右レーンチェンジ旋回角度
 short	angle_leftchange;		// 右レーンチェンジ旋回角度
 
 // タイマ関連
-short	cnt_gyro;				// 角度計算用カウンタ
+short			cnt_gyro;				// 角度計算用カウンタ
 
 // 角度関連
-double 	TurningAngleEnc;	// エンコーダから求めた旋回角度
+double 		TurningAngleEnc;	// エンコーダから求めた旋回角度
 
 // サーボ関連
 // 白線トレース

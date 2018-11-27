@@ -842,7 +842,7 @@ void setup( void )
 		//------------------------------------------------------------------
 		case 0xd:
 			lcdPosition( 0, 0 );
-			lcdPrintf("MicroSD ");
+			lcdPrintf("MicroSD%d", msdset);
 			
 			servo_test = 0;
 			angle_mode = 0;
@@ -1036,7 +1036,6 @@ void setup( void )
 					} else if ( tasw_get() == 0x2 && push1 == 0 && msdFlag == 1) {
 						push1 = 1;
 						msdEndLog();		// MicroSDの終了処理
-						//readFlashSetup();	// データフラッシュから前回パラメータを読み込む
 					} else if ( tasw_get() == 0x0 ) {
 						push1 = 0;
 					}
@@ -1050,6 +1049,7 @@ void setup( void )
 					if ( tasw_get() == 0x1 && push1 == 0 && msdFlag == 0) {
 						//ログ解析
 						msdgetData () ;
+						setBeepPatternS( 0xc000 );
 					} else if ( tasw_get() == 0x0 ) {
 						push1 = 0;
 					}

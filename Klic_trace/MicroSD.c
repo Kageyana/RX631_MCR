@@ -30,9 +30,9 @@ signed char 		*msdBuffPointa;		// RAM保存バッファ用ポインタ
 unsigned int 		msdAddrBuff[25];	// MicroSDカードの最終書き込みアドレス保存用
 
 // ログ解析関連
-char			comp_char[10] = {0,0,0,0,0,0,0,0,0,0};
-short			comp_short[10] = {0,0,0,0,0,0,0,0,0,0};
-unsigned int	comp_uint[10] = {0,0,0,0,0,0,0,0,0,0};
+char			comp_char[10][10] = {0,0,0,0,0,0,0,0,0,0};
+short			comp_short[10][10] = {0,0,0,0,0,0,0,0,0,0};
+unsigned int	comp_uint[10][10] = {0,0,0,0,0,0,0,0,0,0};
                                         
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 msd_write								//
@@ -1112,7 +1112,7 @@ void msdgetData ()
 	volatile unsigned short i;
 	volatile short ret;
 	volatile char pattern_send = 1;
-	char flag[10],cnt_n[10] = {0,0,0,0,0,0,0,0,0,0} ;
+	char flag[10][10],cnt_n[10][10] = {0,0,0,0,0,0,0,0,0,0} ;
 	
 	while ( pattern_send < 4 ) {
 		switch ( pattern_send ) {		
@@ -1156,29 +1156,35 @@ void msdgetData ()
 			case 3:
 				// flag[0]	0: 脱出位置		1: 突入位置
 				// flag[1]	繰り返し回数
-				if ( flag[0]  == 1 ) {
+				// cnt_n[0] カーブ突入､脱出位置の数
+				if ( flag[STRAIGHT][0]  == 1 ) {
 					// カーブに突入する位置を探す
-					if ( msdBuff[ msdBuffAddress + 0 ] == 12 ) flag[1]++;
-					else		flag[1] = 0;
+					if ( msdBuff[ msdBuffAddress + 0 ] == 12 ) flag[ STRAIGHT ][ 1 ]++;
+					else		flag[ STRAIGHT ][ 1 ] = 0;
 					
 					// 3つ以上あればカーブに突入したと判断する
-					if ( flag[1] >= 3 ) {
-						comp_uint[cnt_n[0]] = CharTouInt (40);
-						cnt_n[0]++;
-						flag[0]  == 0;
-						flag[1] = 0;
+					if ( flag[ STRAIGHT ][ 1 ] >= 3 && cnt_n[ STRAIGHT ][ 0 ] == 0 ) {
+						comp_uint[ STRAIGHT ][ cnt_n[ STRAIGHT ][ 0 ] ] = CharTouInt (40);
+						cnt_n[ STRAIGHT ][ 0 ]++;
+						flag[ STRAIGHT ][ 0 ]  == 0;
+						flag[ STRAIGHT ][ 1 ] = 0;
+					} else if ( flag[ STRAIGHT ][ 1 ] >= 3 && cnt_n[ STRAIGHT ][ 0 ] >= 1 ) {
+						comp_uint[ STRAIGHT ][ cnt_n[ STRAIGHT ][ 0 ] ] = CharTouInt (40) - comp_uint[ STRAIGHT ][ cnt_n[ STRAIGHT ][ 0 ] - 1 ];
+						cnt_n[ STRAIGHT ][ 0 ]++;
+						flag[ STRAIGHT ][ 0 ]  == 0;
+						flag[ STRAIGHT ][ 1 ] = 0;
 					}
 				} else {
 					// カーブを脱出する位置を探す
-					if ( msdBuff[ msdBuffAddress + 0 ] == 11 ) flag[1]++;
-					else		flag[1] = 0;
+					if ( msdBuff[ msdBuffAddress + 0 ] == 11 ) flag[ STRAIGHT ][ 1 ]++;
+					else		flag[ STRAIGHT ][ 1 ] = 0;
 					
 					// 3つ以上あればカーブを脱出したと判断する
-					if ( flag[0] >= 3 ) {
-						comp_uint[cnt_n[0]] = CharTouInt (40);
-						cnt_n[0]++;
-						flag[0]  == 1;
-						flag[1] = 0;
+					if ( flag[ STRAIGHT ][ 0 ] >= 3 ) {
+						comp_uint[ STRAIGHT ][ cnt_n[ STRAIGHT ][ 0 ] ] = CharTouInt (40);
+						cnt_n[ STRAIGHT ][ 0 ]++;
+						flag[ STRAIGHT ][ 0 ]  == 1;
+						flag[ STRAIGHT ][ 1 ] = 0;
 					}
 				}
 				

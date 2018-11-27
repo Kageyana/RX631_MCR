@@ -124,7 +124,8 @@ void main(void){
 		lcdPosition( 0, 1 );
 		lcdPrintf("   ERROR");
 	}
-
+	wait_lcd(100);
+	
 	IMUSet = i;
 	while(1){
 		__setpsw_i();
@@ -164,13 +165,15 @@ void main(void){
 				}
 			} else {			
 				// 手押しモードON
-				if (comp_uint[k]) {
-					if ( comp_uint[k] >= EncoderTotal && m >= 0) {
+				if (comp_uint[ STRAIGHT ][ k ]) {
+					if ( comp_uint[ STRAIGHT ][ k ] >=enc2 && m >= 0) {
 						l = 12;
 						m = -m;
-					} else if ( comp_uint[k] >= EncoderTotal && m < 0 ) {
+						k++;
+					} else if ( comp_uint[ STRAIGHT ][ k ] >= enc2 && m < 0 ) {
 						l = 11;
 						m = -m;
+						k++;
 					}
 				}
 				
@@ -377,6 +380,7 @@ void main(void){
 			
 			if ( enc1 > enc_mm( 60 ) ) {		// 60mm進む
 				enc1 = 0;
+				enc2 = 0;
 				TurningAngleEnc = 0;
 				TurningAngleIMU = 0;
 				pattern = 13;
@@ -504,6 +508,7 @@ void main(void){
 			
 			if ( enc1 >= enc_mm( 300 ) ) {		// 300mm進む
 				enc1 = 0;
+				enc2 = 0;
 				setBeepPatternS( 0x8000 );
 				curve_moed = 0;
 				pattern = 11;
@@ -1313,12 +1318,11 @@ void main(void){
 			// 最後のデータが書き込まれるまで待つ
 			//printf("case 104\n");
 			if( checkMicroSDProcess() == 11 ) {
-				msdFlag = 0;	// ログ記録終了
-				//printf("microSDProcessEndNOW\n");
+				msdFlag = 0;			// ログ記録終了
 				microSDProcessEnd();        // microSDProcess終了処理
 				pattern = 105;
 				break;
-			}else if( checkMicroSDProcess() == 0 ) {
+			} else if ( checkMicroSDProcess() == 0 ) {
 				setBeepPatternS( 0xf0f0 );
 				pattern = 106;
 				break;
