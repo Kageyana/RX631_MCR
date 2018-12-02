@@ -1113,22 +1113,16 @@ void msdgetData ()
 	volatile short ret;
 	volatile char pattern_send = 1;
 	char flag[10][10],cnt_n[10][10] = {0,0,0,0,0,0,0,0,0,0} ;
+	unsigned int workvar[10 ] = {0,0,0,0,0,0,0,0,0,0};
+	
+	flag[STRAIGHT][0] = 0;
+	
+	msdEndAddress = msdWorkAddress2;	// 読み込み終了アドレス
+	msdWorkAddress = msdWorkAddress;	// 読み込み開始アドレス
 	
 	while ( pattern_send < 4 ) {
-		switch ( pattern_send ) {		
+		switch ( pattern_send ) {			
 			case 1:
-				// タイトル
-				printf(		"pattern,"			);
-				printf(		"Encoder,"			);
-				printf(		"EncoderTotal,"		);
-				printf("\n");
-				
-				msdEndAddress = msdWorkAddress2;	// 読み込み終了アドレス
-				msdWorkAddress = msdWorkAddress;	// 読み込み開始アドレス
-				pattern_send = 2;
-				break;
-				
-			case 2:
 				// microSDよりデータ読み込み
 				if( msdWorkAddress >= msdEndAddress ) {
 					// 書き込み終了アドレスになったら、終わり
@@ -1148,31 +1142,33 @@ void msdgetData ()
 					// エラーなし
 					msdWorkAddress += 512;		// microSDのアドレスを+512する
 					msdBuffAddress = 0;		// 配列からの読み込み位置を0に
-					pattern_send = 3;
+					pattern_send = 2;
 					break;
 				}
 				break;
 				
-			case 3:
-				// flag[0]	0: 脱出位置		1: 突入位置
-				// flag[1]	繰り返し回数
-				// cnt_n[0] カーブ突入､脱出位置の数
-				if ( flag[STRAIGHT][0]  == 1 ) {
+			case 2:
+				// flag[ STRAIGHT ][0]	0: 脱出位置		1: 突入位置
+				// flag[ STRAIGHT ][ 1 ]	繰り返し回数
+				// cnt_n[ STRAIGHT ][0] 	カーブ突入､脱出位置の数
+				if ( flag[STRAIGHT][0]  == 0 ) {
 					// カーブに突入する位置を探す
 					if ( msdBuff[ msdBuffAddress + 0 ] == 12 ) flag[ STRAIGHT ][ 1 ]++;
 					else		flag[ STRAIGHT ][ 1 ] = 0;
 					
 					// 3つ以上あればカーブに突入したと判断する
 					if ( flag[ STRAIGHT ][ 1 ] >= 3 && cnt_n[ STRAIGHT ][ 0 ] == 0 ) {
+						// 1回目
 						comp_uint[ STRAIGHT ][ cnt_n[ STRAIGHT ][ 0 ] ] = CharTouInt (40);
 						cnt_n[ STRAIGHT ][ 0 ]++;
-						flag[ STRAIGHT ][ 0 ]  == 0;
-						flag[ STRAIGHT ][ 1 ] = 0;
+						flag[ STRAIGHT ][ 0 ]  = !flag[ STRAIGHT ][ 0 ];		// カーブ脱出位置探索
+						flag[ STRAIGHT ][ 1 ] = 0;		// 繰り返しカウントをリセット
 					} else if ( flag[ STRAIGHT ][ 1 ] >= 3 && cnt_n[ STRAIGHT ][ 0 ] >= 1 ) {
+						// 1回目以降
 						comp_uint[ STRAIGHT ][ cnt_n[ STRAIGHT ][ 0 ] ] = CharTouInt (40) - comp_uint[ STRAIGHT ][ cnt_n[ STRAIGHT ][ 0 ] - 1 ];
 						cnt_n[ STRAIGHT ][ 0 ]++;
-						flag[ STRAIGHT ][ 0 ]  == 0;
-						flag[ STRAIGHT ][ 1 ] = 0;
+						flag[ STRAIGHT ][ 0 ]  = !flag[ STRAIGHT ][ 0 ];		// カーブ脱出位置探索
+						flag[ STRAIGHT ][ 1 ] = 0;		// 繰り返しカウントをリセット
 					}
 				} else {
 					// カーブを脱出する位置を探す
@@ -1183,8 +1179,8 @@ void msdgetData ()
 					if ( flag[ STRAIGHT ][ 0 ] >= 3 ) {
 						comp_uint[ STRAIGHT ][ cnt_n[ STRAIGHT ][ 0 ] ] = CharTouInt (40);
 						cnt_n[ STRAIGHT ][ 0 ]++;
-						flag[ STRAIGHT ][ 0 ]  == 1;
-						flag[ STRAIGHT ][ 1 ] = 0;
+						flag[ STRAIGHT ][ 0 ]  = !flag[ STRAIGHT ][ 0 ];		// カーブ突入位置探索
+						flag[ STRAIGHT ][ 1 ] = 0;		// 繰り返しカウントをリセット
 					}
 				}
 				
@@ -1192,7 +1188,7 @@ void msdgetData ()
 				msdBuffAddress += DATA_BYTE;
 				
 				if( msdBuffAddress >= 512 ) {
-					pattern_send = 2;
+					pattern_send = 1;
 					break;
 				}
 				break;

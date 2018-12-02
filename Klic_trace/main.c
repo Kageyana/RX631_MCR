@@ -170,7 +170,7 @@ void main(void){
 						l = 12;
 						m = -m;
 						k++;
-					} else if ( comp_uint[ STRAIGHT ][ k ] >= enc2 && m < 0 ) {
+					} else if ( comp_uint[ STRAIGHT ][ k ] >= EncoderTotal && m < 0 ) {
 						l = 11;
 						m = -m;
 						k++;
@@ -238,6 +238,8 @@ void main(void){
 				break;
 			} else if ( start >= 1 && pushcart_mode ) {
 				// 手押しモードの場合すぐに通常トレース
+				if ( msdset == 1 ) init_log();	// ログ記録準備
+				
 				// 白線トレース用PIDゲイン保存
 				flashDataBuff[ 0 ] = kp_buff;
 				flashDataBuff[ 1 ] = ki_buff;
@@ -255,6 +257,8 @@ void main(void){
 				
 				EncoderTotal = 10;	// 総走行距離
 				cnt1 = 0;		// タイマリセット
+				enc1 = 0;
+				enc2 = 0;
 				lcd_mode = 1;		// LCD表示ON
 				msdFlag = 1;		// データ記録開始
 				pattern = 11;
@@ -295,6 +299,7 @@ void main(void){
 						
 					EncoderTotal = 10;	// 総走行距離
 					cnt1 = 0;		// タイマリセット
+					enc1 = 0;
 					lcd_mode = 0;		// LCD表示OFF
 					msdFlag = 1;		// データ記録開始
 					pattern = 11;
@@ -313,6 +318,7 @@ void main(void){
 			if ( !startbar_get() ) {
 				EncoderTotal = 10;	// 総走行距離
 				cnt1 = 0;		// タイマリセット
+				enc1 = 0;
 				lcd_mode = 1;		// LCD表示OFF
 				msdFlag = 1;		// データ記録開始
 				pattern = 11;
