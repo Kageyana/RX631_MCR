@@ -12,9 +12,9 @@
 #define TGR_MOTOR			4798		// ジェネラルレジスタ初期値(駆動モータ)
 #define TGR_SERVO			2878		// ジェネラルレジスタ初期値(サーボ)
 #define PALSE_METER		24750L	// 1mのパルス
-#define PALSE_MILLIMETER	24.75	// 1mmのパルス
+#define PALSE_MILLIMETER	24.75F	// 1mmのパルス
 #define SPEED_CURRENT		25		// 1m/sの時　1msのパルス
-#define SPEED_CURRENT_DETAIL	24.75	// 1m/sの時　1msのパルス
+#define SPEED_CURRENT_DETAIL	24.75F	// 1m/sの時　1msのパルス
 
 /*************************************** 自動生成関数 *************************************/
 // タイマ割り込み
@@ -57,7 +57,7 @@
 #define SET_MTU_C1		R_PG_Timer_Set_MTU_U0_C1();		// ch1
 #define SET_MTU_C2		R_PG_Timer_Set_MTU_U0_C2();		// ch2
 #define SET_MTU_C3		R_PG_Timer_Set_MTU_U0_C3();		// ch3
-// MTU0,2,3,4のカウント開始
+// MTU0,1,2,3のカウント開始
 #define START_MTU		R_PG_Timer_SynchronouslyStartCount_MTU_U0( 1, 1, 1, 1, 0);
 
 // 左前輪

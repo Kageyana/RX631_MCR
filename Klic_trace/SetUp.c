@@ -111,7 +111,7 @@ void setup( void )
 			lcdPosition( 0, 0 );
 			lcdPrintf("STOP    ");
 			lcdPosition( 0, 1 );
-			lcdPrintf("     %2dm", stopping_meter );
+			lcdPrintf("   %4dm", stopping_meter );
 			data_tuning ( &stopping_meter, 1, RIGHT );
 			break;
 		//------------------------------------------------------------------
@@ -709,6 +709,8 @@ void setup( void )
 					demo = 0;
 					if ( motor_test == 1 ) {
 						diff( 30 );
+						//motor_f( 30, 30 );
+						//motor_r( 30, 30 );
 					} else {
 						motor_f( 0, 0 );
 						motor_r( 0, 0 );
@@ -1023,12 +1025,14 @@ void setup( void )
 					break;
 					
 				case 11:
+				// ログ記録
 					if ( msdFlag == 0 ) { 
 						lcdPosition( 0, 1 );
 						lcdPrintf("LogWrite");
 					}
 					if ( tasw_get() == 0x1 && push1 == 0 && msdFlag == 0) {
 						push1 = 1;
+						readFlashSetup( 0, 0, 1 ,0 ,0 ,0 ,0);
 						init_log();	// ログ記録準備
 						msdFlag = 1;		// データ記録開始
 						lcdPosition( 0, 1 );
@@ -1042,6 +1046,7 @@ void setup( void )
 					break;
 					
 				case 12:
+				// コース解析
 					if ( msdFlag == 0 ) { 
 						lcdPosition( 0, 1 );
 						lcdPrintf("LogRead ");
@@ -1077,7 +1082,7 @@ void setup( void )
 			}
 			if ( tasw_get() == 0x4 && push1 == 0 ) {
 				push1 = 1;
-				writeFlashData( ANGLE0_AREA, ANGLE0_AREA, ANGLE0_DATA, 1 );
+				writeFlashData( ANGLE0_STARTAREA, ANGLE0_ENDAREA, ANGLE0_DATA, 1 );
 			} else if ( tasw_get() == 0x0 ) {
 				push1 = 0;
 			}
@@ -1193,20 +1198,8 @@ void data_tuning ( void *data, char add , char lr )
 				*data2 -= add;
 			} else if ( pushL != 0 ) {
 				// 長押しモード
-				if ( cnt_swL >= 400 && cnt_swL < 2000) {
-					if ( ( cnt_setup3 % 400 ) == 0 ) {
-						cnt_setup3 = 0;
-						if ( pushL == 1) *data2 += add;
-						else *data2 -= add;
-					}
-				} else if ( cnt_swL >= 2000 && cnt_swL < 4000 ) {
+				if ( cnt_swL >= 500 ) {
 					if ( ( cnt_setup3 % 200 ) == 0 ) {
-						cnt_setup3 = 0;
-						if ( pushL == 1) *data2 += add;
-						else *data2 -= add;
-					}
-				} else if ( cnt_swL >= 4000 ) {
-					if ( ( cnt_setup3 % 100 ) == 0 ) {
 						cnt_setup3 = 0;
 						if ( pushL == 1) *data2 += add;
 						else *data2 -= add;
@@ -1227,21 +1220,8 @@ void data_tuning ( void *data, char add , char lr )
 				*data2 -= add;
 			} else if ( pushR != 0 ) {
 				// 長押しモード
-				if ( cnt_swR >= 400 && cnt_swR < 2000 ) {
-					
-					if ( ( cnt_setup3 % 400 ) == 0 ) {
-						cnt_setup3 = 0;
-						if ( pushR == 1) *data2 += add;
-						else *data2 -= add;
-					}
-				} else if ( cnt_swR >= 2000 && cnt_swR < 4000 ) {
+				if ( cnt_swR >= 500 ) {
 					if ( ( cnt_setup3 % 200 ) == 0 ) {
-						cnt_setup3 = 0;
-						if ( pushR == 1) *data2 += add;
-						else *data2 -= add;
-					}
-				} else if ( cnt_swR >= 4000 ) {
-					if ( ( cnt_setup3 % 100 ) == 0 ) {
 						cnt_setup3 = 0;
 						if ( pushR == 1) *data2 += add;
 						else *data2 -= add;

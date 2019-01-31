@@ -53,7 +53,7 @@ void HardwareSetup(void)
 	
 	SET_ADC			// 12ビットA/Dコンバータ(S12AD0)を設定
 	
-	START_MTU		// MTU0,2,3,4のカウント開始
+	START_MTU		// MTU0,1,2,3のカウント開始
 	
 	START_ADC		// A/D変換開始
 	START_CMT_C0 	// カウントスタート(ch0)

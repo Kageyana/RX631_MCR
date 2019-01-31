@@ -18,6 +18,7 @@
         <Path>Klic_trace\PeripheralFunctions.c</Path>
         <Path>Klic_trace\SCI.c</Path>
         <Path>Klic_trace\SetUp.c</Path>
+        <Path>memorryTrace.c</Path>
       </Category>
       <Category Name="mcu">
         <Path>mcu\dbsct.c</Path>
@@ -40,6 +41,7 @@
         <Path>header\PeripheralFunctions.h</Path>
         <Path>header\SCI.h</Path>
         <Path>header\SetUp.h</Path>
+        <Path>memorryTrace.h</Path>
       </Category>
       <Category Name="AddFromPDG">
         <Category Name="SYSTEM">
@@ -247,6 +249,7 @@
           <Path>DefaultBuild\Interrupt_CMT.obj</Path>
           <Path>DefaultBuild\Interrupt_ADC_12.obj</Path>
           <Path>DefaultBuild\I2C_MPU-9255.obj</Path>
+          <Path>DefaultBuild\memorryTrace.obj</Path>
         </LinkOrder>
         <CommonOptions>
           <IncludePathForC>RX631_mcr_ver3.0</IncludePathForC>

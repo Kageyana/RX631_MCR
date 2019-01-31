@@ -722,7 +722,6 @@ void motorControl( void )
 		if ( Dev < 0 ) v = -v;
 		iRet = v;
 	}
-	
 	if ( Dev > 0 )	AccelefBefore = 0;
 	else		AccelefBefore = 1;
 	

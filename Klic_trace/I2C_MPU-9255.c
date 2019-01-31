@@ -35,7 +35,7 @@ void wait_IMU ( short waitTime )
 {
 	volatile int time, i = 0;
 	
-	time = (int)waitTime * ( CLOCK * 1000 )/ 16;
+	time = (int)waitTime * ( CLOCK * 1000 ) / 16;
 	for ( i = 0; i < time; i++) __nop();
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,9 +94,9 @@ char init_IMU (void)
 			
 			IMUWriteByte( PWR_MGMT_1, 0x00);	// スリープモード解除
 			IMUWriteByte( INT_PIN_CFG, 0x02);	// 内蔵プルアップ無効化
-			IMUWriteByte( CONFIG, 0x00);		// ローパスフィルタを使用しない
+			IMUWriteByte( CONFIG, 0x03);		// ローパスフィルタを使用しない
 			IMUWriteByte( ACCEL_CONFIG, 0x18);	// レンジ±16gに変更
-			IMUWriteByte( GYRO_CONFIG, 0x10);	// レンジ±1000deg/sに変更
+			IMUWriteByte( GYRO_CONFIG, 0x13);	// レンジ±1000deg/sに変更
 		} else {
 			ret = 1;
 		}
@@ -116,27 +116,23 @@ void IMUProcess (void)
 {
 	char 	axisData[14];	// 角加速度、温度の8bit分割データ格納先
 	
-	IMUReadArry( TEMP_OUT_H, 8, axisData);	// 3軸加速度取得
+	//IMUReadArry( GYRO_XOUT_H, 6, axisData);	// 3軸加速度取得
 	
 	//8bitデータを16bitデータに変換
 	// 温度
-	rawTemp = (short)((axisData[0] << 8 & 0xff00 ) | axisData[1]);
+	//rawTemp = (short)((axisData[0] << 8 & 0xff00 ) | axisData[1]);
 	
 	// 角速度
-	rawXg2 = (short)((axisData[2] << 8 & 0xff00 ) | axisData[3]);
-	rawYg2 = (short)((axisData[4] << 8 & 0xff00 ) | axisData[5]);
-	rawZg2 = (short)((axisData[6] << 8 & 0xff00 ) | axisData[7]);
+	rawXg = (short)((axisData[0] << 8 & 0xff00 ) | axisData[1]);
+	rawYg = (short)((axisData[2] << 8 & 0xff00 ) | axisData[3]);
+	rawZg = (short)((axisData[4] << 8 & 0xff00 ) | axisData[5]);
 	
-	if ( rawXg2 < 0 ) rawXg2 += offset[0];
-	else			rawXg2 -= offset[0];
-	if ( rawYg2 < 0 ) rawYg2 += offset[1];
-	else			rawYg2 -= offset[1];
-	if ( rawZg2 < 0 ) rawZg2 += offset[2];
-	else			rawZg2 -= offset[2];
-	
-	rawXg += rawXg2;
-	rawYg += rawYg2;
-	rawZg += rawZg2;
+	if ( rawXg < 0 ) rawXg += offset[0];
+	else			rawXg -= offset[0];
+	if ( rawYg < 0 ) rawYg += offset[1];
+	else			rawYg -= offset[1];
+	if ( rawZg < 0 ) rawZg += offset[2];
+	else			rawZg -= offset[2];
 	/*
 	IMUReadArry( ACCEL_XOUT_H, 14, axisData);	// 3軸加速度取得
 	
@@ -201,6 +197,10 @@ void caribrateIMU (void)
 	if ( offset[0] < 0 ) offset[0] = -offset[0];
 	if ( offset[1] < 0 ) offset[1] = -offset[1];
 	if ( offset[2] < 0 ) offset[2] = -offset[2];
+	
+	TurningAngleIMU = 0;
+	RollAngleIMU = 0;
+	PichAngleIMU = 0;
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 getTurningAngleIMU						//
@@ -212,9 +212,9 @@ void getTurningAngleIMU(void)
 {
 	double angularVelocity_zg;
 	
-	angularVelocity_zg = (double)(rawZg/10) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
+	angularVelocity_zg = (double)(rawZg/1) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
 	
-	TurningAngleIMU += (double)( angularVelocity_zg)* 0.01;
+	TurningAngleIMU += (double)( angularVelocity_zg)* 0.001;
 	
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -227,9 +227,9 @@ void getRollAngleIMU(void)
 {
 	double angularVelocity_yg;
 	
-	angularVelocity_yg = (double)(rawXg/10) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
+	angularVelocity_yg = (double)(rawXg/1) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
 	
-	RollAngleIMU += (double)( angularVelocity_yg)* 0.01;
+	RollAngleIMU += (double)( angularVelocity_yg)* 0.001;
 	
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -242,8 +242,8 @@ void getPichAngleIMU( void )
 {
 	double angularVelocity_xg;
 	
-	angularVelocity_xg = (double)(rawYg/10) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
+	angularVelocity_xg = (double)(rawYg/1) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
 	
-	PichAngleIMU += (double)( angularVelocity_xg)* 0.01;
+	PichAngleIMU += (double)( angularVelocity_xg)* 0.001;
 	
 }

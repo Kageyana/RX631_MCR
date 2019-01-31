@@ -10,6 +10,7 @@
 #include "MicroSD.h"
 #include "SCI.h"
 #include "I2C_MPU-9255.h"
+#include "MemorryTrace.h"
 #include <stdio.h>
 //======================================//
 // ƒVƒ“ƒ{ƒ‹’è‹`                         //
