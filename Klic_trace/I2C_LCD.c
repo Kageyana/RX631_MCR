@@ -2,9 +2,9 @@
 // インクルード                         //
 //======================================//
 #include "I2C_LCD.h"
-//======================================//
-// グローバル変数の宣言                 //
-//======================================//
+//====================================//
+// グローバル変数の宣言							//
+//====================================//
 // LCD関連
 static volatile char	buffLcdData[ LCD_MAX_X / LCD_MAX_Y ];		// 表示バッファ
 static char		buffLcdData2[ LCD_MAX_X / LCD_MAX_Y + 10 ]; 	// 表示バッファ一時作業エリア
@@ -33,7 +33,7 @@ void lcd_put( unsigned char data )
 void lcd_CMD( unsigned char cmd ) 
 {
 	char Command[] = { RSBIT0, cmd };
- 	I2C_LCD_CMD
+ 	I2C_LCD_READ
 }
 //////////////////////////////////////////////////////////////////////////
 // モジュール名 wait_lcd						//
@@ -55,33 +55,7 @@ void wait_lcd ( short waitTime )
 // 戻り値       なし                                                    //
 //////////////////////////////////////////////////////////////////////////
  void inti_lcd(void)
-{
-	/*int count;
-	char a[256];
-	uint8_t b[256];
-	
-	cnt0 = 0;
-	for ( int i = 0; i < 256; i++ ) {
-		a[i] = i;
-		b[i] = i;
-	}
-	
-	cnt0 = 0;
-	for ( int i = 0; i < 100; i++ ) {
-		send_SCI12_I2c(LCD_SLAVEADDRESS, a, 255);
-	}
-	count = cnt0;
-	printf("registor = %d[ms]\n", count);
-	
-	R_PG_SCI_Set_C12();
-	cnt0 = 0;
-	for ( int i = 0; i < 100; i++ ) {
-		R_PG_SCI_I2CMode_Send_C12(0, LCD_SLAVEADDRESS, b, 255);
-	}
-	count = cnt0;
-	printf("PDG = %d[ms]\n", count);*/
-	
-	
+ {
 	wait_lcd(4);
 	lcd_CMD(0x38);	// function set			: データ線は8本・表示は２行・フォントは5x8ドット
 	wait_lcd(1);

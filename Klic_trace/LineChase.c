@@ -1,16 +1,17 @@
-//======================================//
-// インクルード                         //
-//======================================//
+//====================================//
+// インクルード									//
+//====================================//
 #include "LineChase.h"
-//======================================//
-// グローバル変数の宣言                 //
+//====================================//
+// グローバル変数の宣言							//
+//====================================//
 // モード関連
-char 	lcd_mode = 1;	// LCD表示可否		1:表示		0:消灯		
-char 	slope_mode;	// 坂チェック		0:上り坂始め	1:上り坂終わり	2:下り坂始め
-char 	angle_mode;	// サーボPWM変更	0:白線トレース	1:角度制御
-char	pushcart_mode;	// 手押しモード可否	0:自動走行	1:手押し
-char	msdset;		// MicroSDが初期化されたか	0:初期化失敗	1:初期化成功
-char	IMUSet = 0;	// IMUが初期化されたか	0: 初期化失敗	1:初期化成功
+char 	lcd_mode = 1;		// LCD表示可否		1:表示		0:消灯		
+char 	slope_mode;		// 坂チェック		0:上り坂始め	1:上り坂終わり	2:下り坂始め
+char 	angle_mode;		// サーボPWM変更	0:白線トレース	1:角度制御
+char	pushcart_mode;		// 手押しモード可否	0:自動走行	1:手押し
+char	msdset;			// MicroSDが初期化されたか	0:初期化失敗	1:初期化成功
+char	IMUSet = 0;		// IMUが初期化されたか	0: 初期化失敗	1:初期化成功
 
 // パラメータ関連
 // 距離
@@ -22,20 +23,20 @@ short	speed_curve_r600;		// R600カーブ速度
 short	speed_curve_r450;		// R450カーブ速度
 short	speed_curve_straight;		// S字カーブ直線速度
 
-short	speed_crossline;		// クロスライン進入速度
+short	speed_crossline;			// クロスライン進入速度
 short	speed_ckank_trace;		// クランク進入速度
-short	speed_rightclank_curve;		// 右クランク旋回速度
+short	speed_rightclank_curve;	// 右クランク旋回速度
 short	speed_rightclank_escape;	// 右クランク復帰速度
-short	speed_leftclank_curve;		// 左クランク旋回速度
-short	speed_leftclank_escape;		// 左クランク復帰速度
+short	speed_leftclank_curve;	// 左クランク旋回速度
+short	speed_leftclank_escape;	// 左クランク復帰速度
 
 short	speed_halfine;			// ハーフライン進入速度
 short	speed_rightchange_trace;	// 右レーンチェンジ進入速度
 short	speed_rightchange_curve;	// 右レーンチェンジ旋回速度
-short	speed_rightchange_escape;	// 右レーンチェンジ復帰速度
+short	speed_rightchange_escape;// 右レーンチェンジ復帰速度
 
-short	speed_leftchange_trace;		// 左レーンチェンジ進入速度
-short	speed_leftchange_curve;		// 左レーンチェンジ旋回速度
+short	speed_leftchange_trace;	// 左レーンチェンジ進入速度
+short	speed_leftchange_curve;	// 左レーンチェンジ旋回速度
 short	speed_leftchange_escape;	// 左レーンチェンジ旋回速度
 
 short	speed_slope_brake;		// 下り坂終点速度
@@ -43,41 +44,37 @@ short	speed_slope_trace;		// 坂読み飛ばし速度
 
 // サーボ角度
 short	angle_rightclank;		// 右クランク旋回角度
-short	angle_leftclank;		// 左クランク旋回角度
+short	angle_leftclank;			// 左クランク旋回角度
 short	angle_rightchange;		// 右レーンチェンジ旋回角度
 short	angle_leftchange;		// 右レーンチェンジ旋回角度
 
 // タイマ関連
-short	cnt_gyro;			// 角度計算用カウンタ
+short			cnt_gyro;				// 角度計算用カウンタ
 
-// ジャイロ関連
-double 	TurningAngleEnc;	// エンコーダから求めた旋回角度
-double 	TurningAngleIMU;	// IMUから求めた旋回角度
-double	RollAngleIMU;		// IMUから求めたロール方向角度
-double	PichAngleIMU;		// IMUから求めたピッチ方向角度
-double	TempIMU;		// IMUの温度
+// 角度関連
+double 		TurningAngleEnc;	// エンコーダから求めた旋回角度
 
 // サーボ関連
 // 白線トレース
-signed char	ServoPwm;		// 白線トレースサーボPWM
-short 		SensorBefore;		// 1ms前のセンサ値
-char		DevBefore;		// I成分リセット用
+signed char	ServoPwm;	// 白線トレースサーボPWM
+short 		SensorBefore;	// 1ms前のセンサ値
+char			DevBefore;		// I成分リセット用
 double		Int;			// I成分積算値(白線トレース)
 // 角度制御
 signed char	ServoPwm2;		// 角度サーボPWM
 short 		SetAngle;		// 目標角度
-short		SetAngleBefore;		// 1ms前の目標角度
-short 		AngleBefore2;		// 1ms前の角度
-char		AngleBefore3;		// I成分リセット用
+short			SetAngleBefore;		// 1ms前の目標角度
+short 		AngleBefore2;	// 1ms前の角度
+char			AngleBefore3;		// I成分リセット用
 double		Int2;			// I成分積算値(角度制御)
 
 // モーター関連
-signed char 	motorPwm;		// モーター制御PWM
-char 		AccelefBefore;		// I成分リセット用
-short		EncoderBefore;		// 1ms前の速度
-int 		targetSpeedBefore;	// 1ms前の目標速度	
+signed char 	motorPwm;	// モーター制御PWM
+char 			AccelefBefore;		// I成分リセット用
+short			EncoderBefore;		// 1ms前の速度
+int 			targetSpeedBefore;	// 1ms前の目標速度	
 double 		Int3;			// I成分積算値(速度制御)
-short		targetSpeed;		// 目標速度
+short			targetSpeed;		// 目標速度
 
 // デモ関連
 char 	demo;
@@ -87,46 +84,43 @@ signed char	kp_buff, ki_buff, kd_buff;
 signed char	kp2_buff, ki2_buff, kd2_buff;
 signed char 	kp3_buff, ki3_buff, kd3_buff;
 
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 check_crossline						//
-// 処理概要     クロスライン検知					//
-// 引数         なし							//
-// 戻り値       0:クロスラインなし 1:あり				//
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 check_crossline							//
+// 処理概要     クロスライン検知							//
+// 引数         なし									//
+// 戻り値       0:クロスラインなし 1:あり					//
+///////////////////////////////////////////////////////////////////////////
 signed char check_crossline( void )
 {
 	unsigned char digital_sensor;
 	char ret = 0;
 
 	digital_sensor = sensor_inp();
-	if ( digital_sensor == 0x7 ) {
-		ret = 1;
-	}
+	if ( digital_sensor == 0x7 ) ret = 1;
+	
 	return ret;
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 check_rightline						//
-// 処理概要     右ハーフライン検出処理					//
-// 引数         なし							//
-// 戻り値       0:右ハーフラインなし 1:あり				//
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 check_rightline							//
+// 処理概要     右ハーフライン検出処理						//
+// 引数         なし									//
+// 戻り値       0:右ハーフラインなし 1:あり					//
+///////////////////////////////////////////////////////////////////////////
 signed char check_rightline( void )
 {
 	unsigned char digital_sensor;
 	char ret = 0;
 
 	digital_sensor = sensor_inp();
-	if ( digital_sensor == 0x3 ) {
-		ret = 1;
-	}
+	if ( digital_sensor == 0x3 ) ret = 1;
 	return ret;
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 check_leftline						//
-// 処理概要     左ハーフライン検出処理					//
-// 引数         なし							//
-// 戻り値       0:左ハーフラインなし 1:あり				//
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 check_leftline							//
+// 処理概要     左ハーフライン検出処理						//
+// 引数         なし									//
+// 戻り値       0:左ハーフラインなし 1:あり					//
+///////////////////////////////////////////////////////////////////////////
 signed char check_leftline( void )
 {
 	unsigned char digital_sensor;
@@ -138,12 +132,12 @@ signed char check_leftline( void )
 	}
 	return ret;
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 check_slope						//
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 check_slope								//
 // 処理概要     ジャイロセンサの値から坂道検出				//
-// 引数         なし							//
-// 戻り値       0:坂道なし 1:上り坂　-1:下り坂				//
-//////////////////////////////////////////////////////////////////////////
+// 引数         なし									//
+// 戻り値       0:坂道なし 1:上り坂　-1:下り坂					//
+///////////////////////////////////////////////////////////////////////////
 signed char check_slope( void )
 {
 	short deg, upperline, lowerline;
@@ -159,22 +153,22 @@ signed char check_slope( void )
 	
 	return ret;
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 enc_mm							//
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 enc_mm								//
 // 処理概要     mmをエンコーダのパルス数に変換して返す			//
-// 引数         mm:変換する長さ[mm]					//
-// 戻り値       変換したパルス数					//
-//////////////////////////////////////////////////////////////////////////
+// 引数         mm:変換する長さ[mm]						//
+// 戻り値       変換したパルス数							//
+///////////////////////////////////////////////////////////////////////////
 unsigned int enc_mm( short mm )
 {
 	return PALSE_MILLIMETER * mm;
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 servoControl						//
-// 処理概要     ライントレース時サーボのPWMの計算			//
-// 引数         なし							//
-// 戻り値       なし							//
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 servoControl							//
+// 処理概要     ライントレース時サーボのPWMの計算				//
+// 引数         なし									//
+// 戻り値       なし									//
+///////////////////////////////////////////////////////////////////////////
 void servoControl( void )
 {
 	int iP, iD, iI, iRet;
@@ -183,11 +177,8 @@ void servoControl( void )
 	//サーボモータ用PWM値計算
 	Dev = getAnalogSensor();
 	// 目標値を変更したらI成分リセット
-	if ( Dev >= 0 && DevBefore == 1 ) {
-		Int = 0;
-	} else if ( Dev < -0 && DevBefore == 0 ) {
-		Int = 0;
-	}
+	if ( Dev >= 0 && DevBefore == 1 ) Int = 0;
+	else if ( Dev < -0 && DevBefore == 0 ) Int = 0;
 	
 	Int += (double)Dev * 0.001;
 	Dif = ( Dev - SensorBefore ) * 1;	// dゲイン1/1000倍
@@ -200,24 +191,21 @@ void servoControl( void )
 
 	// PWMの上限の設定(安定したら70程度に)
 	if ( iRet >  70 ) iRet =  70;		// マイコンカーが安定したら
-	if ( iRet <  -70 ) iRet = -70;		// 上限を90くらいにしてください
-	if ( sensor_inp() == 0x1 ) {
-		iRet = -70;
-	} else if ( sensor_inp() == 0x4 ) {
-		iRet = 70;
-	}
+	if ( iRet <  -70 ) iRet = -70;	// 上限を90くらいにしてください
+	if ( sensor_inp() == 0x1 ) iRet = -70;
+	else if ( sensor_inp() == 0x4 ) iRet = 70;
 	
-	if ( Dev >= 0 )		DevBefore = 0;
+	if ( Dev >= 0 )	DevBefore = 0;
 	else			DevBefore = 1;
 	ServoPwm = iRet;
 	SensorBefore = Dev;				// 次回はこの値が1ms前の値となる
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 servoControl2						//
-// 処理概要     角度制御時サーボのPWMの計算				//
-// 引数         なし							//
-// 戻り値       なし							//
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 servoControl2							//
+// 処理概要     角度制御時サーボのPWMの計算					//
+// 引数         なし									//
+// 戻り値       なし									//
+///////////////////////////////////////////////////////////////////////////
 void servoControl2( void )
 {
 	short i, j, Dev, Dif;
@@ -231,11 +219,9 @@ void servoControl2( void )
 	Dev = i - j;
 		
 	// 目標値を超えたらI成分リセット
-	if ( Dev >= 0 && AngleBefore3 == 1 ) {
-		Int2 = 0;
-	} else if ( Dev < 0 && AngleBefore3 == 0 ) {
-		Int2 = 0;
-	}
+	if ( Dev >= 0 && AngleBefore3 == 1 ) Int2 = 0;
+	else if ( Dev < 0 && AngleBefore3 == 0 ) Int2 = 0;
+	
 	// 目標値を変更したらI成分リセット
 	if ( !(i == SetAngleBefore) ) Int2 = 0;
 	
@@ -258,12 +244,12 @@ void servoControl2( void )
 	ServoPwm2 = iRet;
 	AngleBefore2 = Dev;			// 次回はこの値が1ms前の値となる
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 diff							//
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 diff									//
 // 処理概要   	R1,R2,R3及びR4の計算					//
-// 引数         なし							//
-// 戻り値       なし							//
-//////////////////////////////////////////////////////////////////////////
+// 引数         なし									//
+// 戻り値       なし									//
+///////////////////////////////////////////////////////////////////////////
 void diff ( signed char pwm )
 {
 	const char rev_difference_B[] = {       // 角度から内輪、外輪回転差計算	
@@ -575,12 +561,12 @@ void diff ( signed char pwm )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 getTurningAngleEnc					//
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 getTurningAngleEnc						//
 // 処理概要   	ポテンションメータとエンコーダから旋回角度の計算	//
-// 引数         なし							//
-// 戻り値       なし							//
-//////////////////////////////////////////////////////////////////////////
+// 引数         なし									//
+// 戻り値       なし									//
+///////////////////////////////////////////////////////////////////////////
 void getTurningAngleEnc(void)
 {
 	const unsigned int rev_radius[] = {       // 旋回半径テーブル　エンコーダまでの距離を足す	
@@ -671,66 +657,12 @@ void getTurningAngleEnc(void)
 		TurningAngleEnc += 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 getTurningAngleIMU					//
-// 処理概要   	IMUからヨー角度の計算					//
-// 引数         なし							//
-// 戻り値       なし							//
-//////////////////////////////////////////////////////////////////////////
-void getTurningAngleIMU(void)
-{
-	double angularVelocity;
-	
-	angularVelocity = (double)(rawZg / GYROLSB );	// IMUのデータを角速度[deg/s]に変換
-	TurningAngleIMU += angularVelocity * 0.001;
-	
-}
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 getRollAngleIMU						//
-// 処理概要   	IMUからロール角度の計算					//
-// 引数         なし							//
-// 戻り値       なし							//
-//////////////////////////////////////////////////////////////////////////
-void getRollAngleIMU(void)
-{
-	double angularVelocity;
-	
-	angularVelocity = (double)(rawYg / GYROLSB );	// IMUのデータを角速度[deg/s]に変換
-	RollAngleIMU += angularVelocity * 0.001;
-	if ( cnt_gyro == INTEGRAL_LIMIT ) RollAngleIMU = 0;
-	
-}
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 getPichAngleIMU						//
-// 処理概要   	IMUからピッチ角度の計算					//
-// 引数         なし							//
-// 戻り値       なし							//
-//////////////////////////////////////////////////////////////////////////
-void getPichAngleIMU(void)
-{
-	double angularVelocity;
-	
-	angularVelocity = (double)(rawXg / GYROLSB );	// IMUのデータを角速度[deg/s]に変換
-	PichAngleIMU += angularVelocity * 0.001;
-	if ( cnt_gyro == INTEGRAL_LIMIT ) PichAngleIMU = 0;
-	
-}
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 getTempIMU						//
-// 処理概要   	IMUの温度を計算						//
-// 引数         なし							//
-// 戻り値       なし							//
-//////////////////////////////////////////////////////////////////////////
-void getTempIMU(void)
-{
-	TempIMU = (double)((rawTemp - ROOMTEMPOFFSET )/TEMP_LSB) + 21;	// IMUのデータを角速度[deg/s]に変換
-}
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 motorControl						//
-// 処理概要     モーターのPWM決計算					//
-// 引数         なし							//
-// 戻り値       なし							//
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 motorControl							//
+// 処理概要     モーターのPWM決計算						//
+// 引数         なし									//
+// 戻り値       なし									//
+///////////////////////////////////////////////////////////////////////////
 void motorControl( void )
 {
 	int i, j, iRet, Dif, iP, iI, iD, Dev;
@@ -767,11 +699,9 @@ void motorControl( void )
 	
 	if ( Dev > 50 || Dev < -50) {
 		// 目標値を超えたらI成分リセット
-		if ( Dev >= 0 && AccelefBefore == 1 ) {
-			Int3 = 0;
-		} else if ( Dev < 0 && AccelefBefore == 0 ) {
-			Int3 = 0;
-		}
+		if ( Dev >= 0 && AccelefBefore == 1 ) Int3 = 0;
+		else if ( Dev < 0 && AccelefBefore == 0 ) Int3 = 0;
+		
 		// 目標値を変更したらI成分リセット
 		if ( i != targetSpeedBefore ) Int3 = 0;
 		
@@ -784,9 +714,6 @@ void motorControl( void )
 		iRet = iP + iI + iD;
 		iRet = iRet >> 4;
 		
-		//v = rev_voltage[targetSpeed / SPEED_CURRENT];
-		//if ( Dev < 0 ) v = -v;
-		//iRet += v;
 		// PWMの上限の設定
 		if ( iRet >  100 )	iRet =  100;
 		if ( iRet <  -100 )	iRet = -100;
@@ -802,6 +729,4 @@ void motorControl( void )
 	motorPwm = iRet;
 	EncoderBefore = Dev;
 	targetSpeedBefore = i;
-	
-	
 }

@@ -1,52 +1,57 @@
-//======================================//
-// インクルード                         //
-//======================================//
+//====================================//
+// インクルード									//
+//====================================//
 #include "MicroSD.h"
-//======================================//
-// グローバル変数の宣言                 //
-//======================================//
+//====================================//
+// グローバル変数の宣言							//
+//====================================//
 // タイマ関連
-unsigned int			cnt_log;			// ログ漏れ確認用カウント
+unsigned int			cnt_log;				// ログ漏れ確認用カウント
 
-static unsigned char		msdlibBuff[512 + 128];		// 一時保管バッファ
+static unsigned char		msdlibBuff[512 + 128];	// 一時保管バッファ
 static volatile short		msdlibMode;			// 状態
-volatile short			msdlibCnt;			// 書き込み数
-static volatile unsigned char*	msdlibWrite;			// 書き込みデータのアドレス
+volatile short			msdlibCnt;				// 書き込み数
+static volatile unsigned char*	msdlibWrite;		// 書き込みデータのアドレス
 volatile char			msdlibError;			// エラー番号
-static volatile unsigned int	msdSize;			// microSDのサイズ(kB単位)
+static volatile unsigned int	msdSize;				// microSDのサイズ(kB単位)
 static volatile short		modeSector;			// 1:セクタ指定モード 0:アドレス
 volatile unsigned char		interrupt_msd_send_data = 0;	// 送信フラグ
 
 // microSD関連
 signed char		msdBuff[ 512 ];		// 一時保存バッファ
-short			msdBuffAddress;		// 一時記録バッファ書込アドレス
-short			msdFlag = 0;		// 1:データ記録 0:記録しない
-short			msdTimer;		// 取得間隔計算用
+short				msdBuffAddress;	// 一時記録バッファ書込アドレス
+short				msdFlag = 0;		// 1:データ記録 0:記録しない
+short				msdTimer;			// 取得間隔計算用
 unsigned int		msdStartAddress;	// 記録開始アドレス
-unsigned int		msdEndAddress;		// 記録終了アドレス
-unsigned int		msdWorkAddress;		// 作業用アドレス
+unsigned int		msdEndAddress;	// 記録終了アドレス
+unsigned int		msdWorkAddress;	// 作業用アドレス
 unsigned int		msdWorkAddress2;	// 作業用アドレス2
-signed char* 		msdBuffPointa;		// RAM保存バッファ用ポインタ
+signed char 		*msdBuffPointa;		// RAM保存バッファ用ポインタ
 unsigned int 		msdAddrBuff[25];	// MicroSDカードの最終書き込みアドレス保存用
+
+// ログ解析関連
+char			comp_char[10][10] = {0,0,0,0,0,0,0,0,0,0};
+short			comp_short[10][10] = {0,0,0,0,0,0,0,0,0,0};
+unsigned int	comp_uint[10][10] = {0,0,0,0,0,0,0,0,0,0};
                                         
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 msd_write						//
-// 処理概要     microSD 1バイト書き込み					//
-// 引数         char データ						//
-// 戻り値       なし							//
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 msd_write								//
+// 処理概要     microSD 1バイト書き込み						//
+// 引数         char データ								//
+// 戻り値       なし									//
+///////////////////////////////////////////////////////////////////////////
 void msd_write( unsigned char data )
 {
 	uint8_t data_tr[] = { data }, data_re[ 1 ];
 	
 	SPI_SEND
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 msd_read						//
-// 処理概要     microSD 1バイト読み込み					//
-// 引数         なし							//
-// 戻り値       char データ						//
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 msd_read								//
+// 処理概要     microSD 1バイト読み込み						//
+// 引数         なし									//
+// 戻り値       char データ								//
+///////////////////////////////////////////////////////////////////////////
 unsigned char msd_read( void )
 {
 	uint8_t data_tr[] = { 0xff }, data_re[ 1 ] = { 0x00 }, ret;
@@ -59,12 +64,12 @@ unsigned char msd_read( void )
 	
 	return  ret;
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 msd_CMD							//
-// 処理概要     コマンド送信						//
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 msd_CMD								//
+// 処理概要     コマンド送信								//
 // 引数         コマンド、引数1,引数2,引数3,引数4,CRC			//
-// 戻り値       microSDからの戻り値					//
-//////////////////////////////////////////////////////////////////////////
+// 戻り値       microSDからの戻り値						//
+///////////////////////////////////////////////////////////////////////////
 unsigned char msd_CMD ( unsigned char cmd, unsigned char arg1, unsigned char arg2,
 			unsigned char arg3, unsigned char arg4, unsigned char crc )
 {
@@ -91,12 +96,12 @@ unsigned char msd_CMD ( unsigned char cmd, unsigned char arg1, unsigned char arg
 	}
 	return ret;
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 init_msd						//
-// 処理概要     MicroSDの初期化						//
-// 引数         なし							//
-// 戻り値       0:初期化成功	1以上:初期化失敗			//
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 init_msd								//
+// 処理概要     MicroSDの初期化							//
+// 引数         なし									//
+// 戻り値       0:初期化成功	1以上:初期化失敗					//
+///////////////////////////////////////////////////////////////////////////
 char init_msd ( void )
 {
 	uint8_t sd_sw;
@@ -276,12 +281,12 @@ char init_msd ( void )
 	
 	return ret;
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 getMicroSD_CSD						//
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 getMicroSD_CSD							//
 // 処理概要     microSD Card Specific Data取得				//
 // 引数         signed char *読み込み配列(16バイト以上)			//
-// 戻り値       0:正常 1以上:エラー					//
-//////////////////////////////////////////////////////////////////////////
+// 戻り値       0:正常 1以上:エラー							//
+///////////////////////////////////////////////////////////////////////////
 char getMicroSD_CSD( volatile unsigned char *p )
 {
 	volatile char ret = 0;
@@ -320,13 +325,13 @@ char getMicroSD_CSD( volatile unsigned char *p )
 	MSD_CS_TERMINAL_HIGH			// CS端子をHIGHにする
 	return ret;
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 readMicroSD						//
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 readMicroSD							//
 // 処理概要     microSDからデータ読み込み(512バイト)			//
-// 引数         unsigned int	アドレス				//
+// 引数         unsigned int	アドレス						//
 //		signed char	*読み込む配列のアドレス			//
-// 戻り値       0:正常 1以上:エラー					//
-//////////////////////////////////////////////////////////////////////////
+// 戻り値       0:正常 1以上:エラー							//
+///////////////////////////////////////////////////////////////////////////
 char readMicroSD ( unsigned int address, signed char *read )
 {
 	volatile short            i, receive;
@@ -407,13 +412,13 @@ char readMicroSD ( unsigned int address, signed char *read )
 				
 	return ret;
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 writeMicroSD						//
-// 処理概要     microSD書き込み(512バイト)				//
-// 引数         unsigned int	アドレス				//
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 writeMicroSD							//
+// 処理概要     microSD書き込み(512バイト)					//
+// 引数         unsigned int	アドレス						//
 //		signed char	*書き込む配列のアドレス			//
-// 戻り値       0:正常 1以上:エラー					//
-//////////////////////////////////////////////////////////////////////////
+// 戻り値       0:正常 1以上:エラー							//
+///////////////////////////////////////////////////////////////////////////
 char writeMicroSD ( unsigned int address, signed char *write )
 {
 	volatile short            i, receive;
@@ -518,12 +523,12 @@ char writeMicroSD ( unsigned int address, signed char *write )
 				
 	return ret;
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 eraseMicroSD						//
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 eraseMicroSD							//
 // 処理概要     microSDのデータイレース(0x00書き込み)			//
-// 引数         unsigned int	開始アドレス , 終了アドレス		//
-// 戻り値       0:正常 1以上:エラー					//
-//////////////////////////////////////////////////////////////////////////
+// 引数         unsigned int	開始アドレス , 終了アドレス			//
+// 戻り値       0:正常 1以上:エラー							//
+///////////////////////////////////////////////////////////////////////////
 char eraseMicroSD( unsigned int st_address, unsigned int ed_address )
 {
 	volatile short		i, j, receive;
@@ -640,12 +645,12 @@ char eraseMicroSD( unsigned int st_address, unsigned int ed_address )
 	
 	return ret;
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 setMicroSDdata						//
-// 処理概要     microSDにデータセット					//
-// 引数         microSDに書き込むデータのある配列			//
+/////////////////////////////////////////////////////////////////////////////////
+// モジュール名 setMicroSDdata								//
+// 処理概要     microSDにデータセット							//
+// 引数         microSDに書き込むデータのある配列					//
 // 戻り値       12:正常に終了 それ以外:書き込み中で今回のセットは無効	//
-//////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 char setMicroSDdata( signed char *p )
 {	
 	volatile short i = 0;
@@ -671,12 +676,12 @@ char setMicroSDdata( signed char *p )
 		return msdlibMode;
 	}
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 microSDProcessStart					//
-// 処理概要     microSDProcess開始処理					//
-// 引数         microSDの書き込みアドレス				//
-// 戻り値       0:正常に終了 それ以外:既に書き込み中			//
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 microSDProcessStart						//
+// 処理概要     microSDProcess開始処理						//
+// 引数         microSDの書き込みアドレス					//
+// 戻り値       0:正常に終了 それ以外:既に書き込み中				//
+///////////////////////////////////////////////////////////////////////////
 char microSDProcessStart( unsigned int address )
 {
 	volatile short		receive;
@@ -713,12 +718,12 @@ char microSDProcessStart( unsigned int address )
 	}
 	return ret;
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 microSDProcessEnd					//
-// 処理概要     microSDProcess終了処理					//
-// 引数         microSDの書き込みアドレス				//
-// 戻り値       0:正常に終了 それ以外:既に書き込み中			//
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 microSDProcessEnd						//
+// 処理概要     microSDProcess終了処理						//
+// 引数         microSDの書き込みアドレス					//
+// 戻り値       0:正常に終了 それ以外:既に書き込み中				//
+///////////////////////////////////////////////////////////////////////////
 char microSDProcessEnd( void )
 {
 	volatile char ret = 1;
@@ -731,12 +736,12 @@ char microSDProcessEnd( void )
 	
 	return ret;
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 microSDProcess						//
-// 処理概要     microSD　間欠書き込み処理				//
-// 引数         なし							//
-// 戻り値       なし							//
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 microSDProcess							//
+// 処理概要     microSD　間欠書き込み処理					//
+// 引数         なし									//
+// 戻り値       なし									//
+///////////////////////////////////////////////////////////////////////////
 void microSDProcess( void )
 {
 	volatile short receive;
@@ -830,23 +835,23 @@ void microSDProcess( void )
 			break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 checkMicroSDProcess					//
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 checkMicroSDProcess						//
 // 処理概要     microSD　間欠書き込み処理の終了チェック			//
-// 引数         なし							//
+// 引数         なし									//
 // 戻り値       0:処理無し 11:開始後の待機 それ以外:処理中		//
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 char checkMicroSDProcess( void )
 {
 	return msdlibMode;
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 msd_send_data						//
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 msd_send_data							//
 // 処理概要     書き込みデータをMicroSDに送信				//
-// 引数         なし							//
-// 戻り値       なし							//
-// メモ		10usごとに実行させる					//
-//////////////////////////////////////////////////////////////////////////
+// 引数         なし									//
+// 戻り値       なし									//
+// メモ		10usごとに実行させる						//
+///////////////////////////////////////////////////////////////////////////
 void msd_send_data (void)
 {	
 	__setpsw_i();
@@ -859,12 +864,12 @@ void msd_send_data (void)
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 init_log						//
-// 処理概要     書き込み準備						//
-// 引数         なし							//
-// 戻り値       なし							//
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 init_log								//
+// 処理概要     書き込み準備								//
+// 引数         なし									//
+// 戻り値       なし									//
+///////////////////////////////////////////////////////////////////////////
 void init_log ( void )
 {
 	volatile char ret, pattern_inti_log = 0;
@@ -916,42 +921,48 @@ void init_log ( void )
 		}
 	} 
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 msd_sendToPC						//
-// 処理概要     PCへデータ転送						//
-// 引数         なし							//
-// 戻り値       なし							//
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 sendLog								//
+// 処理概要     PCへデータ転送							//
+// 引数         なし									//
+// 戻り値       なし									//
+///////////////////////////////////////////////////////////////////////////
 void sendLog (void) {
 	msdTimer++;
 	if( msdTimer == WRITINGTIME ) {
 		msdTimer = 0;
 		msdBuffPointa = msdBuff + msdBuffAddress;
 		// ここから記録
-		send_Char	(	pattern		);	// 0
-		send_Char	(	motorPwm 	);	// 1
-		send_Char	(	accele_fL 	);	// 2
-		send_Char	(	accele_fR 	);	// 3
-		send_Char	(	accele_rL 	);	// 4
-		send_Char	(	accele_rR 	);	// 5
-		send_Char	(	ServoPwm 	);	// 6
-		send_Char	(	ServoPwm2 	);	// 7
-		send_Char	(	sensor_inp() 	);	// 8
-		send_Char	( 	slope_mode	);	// 9
-		send_ShortToChar(	getServoAngle()	);	// 10
-		send_ShortToChar(	SetAngle	);	// 12
-		send_ShortToChar(	getAnalogSensor());	// 14
-		send_ShortToChar((short)TurningAngleEnc	);	// 16
-		send_ShortToChar((short)TurningAngleIMU	);	// 18
-		send_ShortToChar((short)RollAngleIMU	);	// 20
-		send_ShortToChar(	Encoder		);	// 22
-		send_ShortToChar(	targetSpeed	);	// 24
-		send_ShortToChar(	rawXg		);	// 26
-		send_ShortToChar(	rawYg		);	// 28
-		send_ShortToChar(	rawZg		);	// 30
-		send_uIntToChar (	EncoderTotal	);	// 32
-		send_uIntToChar (	enc1		);	// 36
-		send_uIntToChar (	cnt_log		);	// 40
+		send_Char			(	pattern		);
+		send_Char			(	motorPwm 	);
+		send_Char			(	accele_fL 		);
+		send_Char			(	accele_fR 		);
+		send_Char			(	accele_rL 		);
+		send_Char			(	accele_rR 		);
+		send_Char			(	ServoPwm 	);
+		send_Char			(	ServoPwm2 	);
+		send_Char			(	sensor_inp() 	);
+		send_Char			( 	slope_mode	);
+		
+		send_ShortToChar	(	getServoAngle()	);
+		send_ShortToChar	(	SetAngle		);
+		send_ShortToChar	(	getAnalogSensor()	);
+		send_ShortToChar	((short)PichAngleIMU*10	);
+		send_ShortToChar	((short)TurningAngleEnc	);
+		send_ShortToChar	((short)TurningAngleIMU*10);
+		send_ShortToChar	((short)RollAngleIMU*10	);
+		send_ShortToChar	(	Encoder		);
+		send_ShortToChar	(	targetSpeed	);
+		send_ShortToChar	(	rawXa2		);
+		send_ShortToChar	(	rawYa2		);
+		send_ShortToChar	(	rawZa2		);
+		send_ShortToChar	(	rawXg2		);
+		send_ShortToChar	(	rawYg2		);
+		send_ShortToChar	(	rawZg2		);
+		
+		send_uIntToChar 	(	EncoderTotal	);
+		send_uIntToChar 	(	enc1			);
+		send_uIntToChar 	(	cnt_log		);
 		// ここまで
 		cnt_log += WRITINGTIME;
 		msdBuffAddress += DATA_BYTE;       // RAMの記録アドレスを次へ
@@ -965,12 +976,12 @@ void sendLog (void) {
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 msd_sendToPC						//
-// 処理概要     PCへデータ転送						//
-// 引数         なし							//
-// 戻り値       なし							//
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 msd_sendToPC							//
+// 処理概要     PCへデータ転送							//
+// 引数         なし									//
+// 戻り値       なし									//
+///////////////////////////////////////////////////////////////////////////
 void msd_sendToPC ( void )
 {
 	volatile unsigned short i;
@@ -983,7 +994,7 @@ void msd_sendToPC ( void )
 				i = 0;
 				// タイトル
 				printf(		"Time[ms],"		);
-				printf(		"pattern,"		);
+				printf(		"pattern,"			);
 				printf(		"MotorPwm,"		);
 				printf(		"accele_fL,"		);
 				printf(		"accele_fR,"		);
@@ -997,11 +1008,15 @@ void msd_sendToPC ( void )
 				printf(		"getServoAngle,"	);
 				printf(		"SetAngle,"		);
 				printf(		"getAnalogSensor,"	);
+				printf(		"PichAngleIMU,"		);
 				printf(		"TurningAngleEnc,"	);
 				printf(		"TurningAngleIMU,"	);
 				printf(		"RollAngleIMU,"		);
-				printf(		"Encoder,"		 );
+				printf(		"Encoder,"			);
 				printf(		"targetSpeed,"		);
+				printf(		"xa[m/s^2],"		);
+				printf(		"ya[m/s^2],"		);
+				printf(		"za[m/s^2],"		);
 				printf(		"xg[degrees/sec],"	);
 				printf(		"yg[degrees/sec],"	);
 				printf(		"zg[degrees/sec],"	);
@@ -1054,20 +1069,26 @@ void msd_sendToPC ( void )
 				printf("%5d,", msdBuff[ msdBuffAddress + 7 ]);	// ServoPwm2
 				printf("%5d,", msdBuff[ msdBuffAddress + 8 ]);	// sensor_inp()
 				printf("%5d,", msdBuff[ msdBuffAddress + 9 ]);	// slope_mode
-				printf("%5d,", CharToShort(10));		// getServoAngle()
-				printf("%5d,", CharToShort(12));		// SetAngle
-				printf("%5d,", CharToShort(14));		// getAnalogSensor()
-				printf("%5d,", CharToShort(16));		// TurningAngleEnc
-				printf("%5d,", CharToShort(18));		// TurningAngleIMU
-				printf("%5d,", CharToShort(20));		// RollAngleIMU
-				printf("%5d,", CharToShort(22));		// Encoder
-				printf("%5d,", CharToShort(24) / 10);		// targetSpeed
-				printf("%4.4f,", (double)(CharToShort(26) * GYROLSB));// xg
-				printf("%4.4f,", (double)(CharToShort(28) * GYROLSB));// yg
-				printf("%4.4f,", (double)(CharToShort(30) * GYROLSB));// zg
-				printf("%6d,", CharTouInt (32));		// EncoderTotal
-				printf("%6d,", CharTouInt (36));		// enc1
-				printf("%6d", CharTouInt (40));			// cnt_log
+				
+				printf("%5d,", CharToShort(10));				// getServoAngle()
+				printf("%5d,", CharToShort(12));				// SetAngle
+				printf("%5d,", CharToShort(14));				// getAnalogSensor()
+				printf("%4.2f,", (double)CharToShort(16)/10);	// PichAngleIMU
+				printf("%5d,", CharToShort(18));				// TurningAngleEnc
+				printf("%4.2f,", (double)CharToShort(20)/10);	// TurningAngleIMU
+				printf("%4.2f,", (double)CharToShort(22)/10);	// RollAngleIMU
+				printf("%5d,", CharToShort(24));				// Encoder
+				printf("%5d,", CharToShort(26) / 10);			// targetSpeed
+				printf("%4.4f,", (double)CharToShort(28) / ACCELLSB * G_ACCELERATION);// xa
+				printf("%4.4f,", (double)CharToShort(30) / ACCELLSB * G_ACCELERATION);// ya
+				printf("%4.4f,", (double)CharToShort(32) / ACCELLSB * G_ACCELERATION);// za
+				printf("%4.4f,", (double)CharToShort(34) / GYROLSB);// xg
+				printf("%4.4f,", (double)CharToShort(36) / GYROLSB);// yg
+				printf("%4.4f,", (double)CharToShort(38) / GYROLSB);// zg
+				
+				printf("%6d,", CharTouInt (40));		// EncoderTotal
+				printf("%6d,", CharTouInt (44));		// enc1
+				printf("%6d", CharTouInt (48));		// cnt_log
 				printf("\n");
 				i += WRITINGTIME;
 				msdBuffAddress += DATA_BYTE;
@@ -1080,33 +1101,172 @@ void msd_sendToPC ( void )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 send_Char						//
-// 処理概要     char型変数をmsdBuffに送る				//
-// 引数         変換するchar型変数					//
-// 戻り値       なし							//
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 msdgetData								//
+// 処理概要     ログの終了処理							//
+// 引数         なし									//
+// 戻り値       0:正常に終了 1:異常終了						//
+///////////////////////////////////////////////////////////////////////////
+void msdgetData () 
+{
+	volatile unsigned short i;
+	volatile short ret;
+	volatile char pattern_send = 1;
+	char flag[10][10],cnt_n[10][10] = {0,0,0,0,0,0,0,0,0,0} ;
+	unsigned int workvar[10 ] = {0,0,0,0,0,0,0,0,0,0};
+	
+	flag[STRAIGHT][0] = 0;
+	
+	msdEndAddress = msdWorkAddress2;	// 読み込み終了アドレス
+	msdWorkAddress = msdWorkAddress;	// 読み込み開始アドレス
+	
+	while ( pattern_send < 4 ) {
+		switch ( pattern_send ) {			
+			case 1:
+				// microSDよりデータ読み込み
+				if( msdWorkAddress >= msdEndAddress ) {
+					// 書き込み終了アドレスになったら、終わり
+					printf( "End.\n" );
+					setBeepPatternS( 0xa8a8 );
+					pattern_send = 4;
+					break;
+				}
+				ret = readMicroSD( msdWorkAddress , msdBuff );
+				
+				if( ret != 0x00 ) {
+					// 読み込みエラー
+					printf( "\nmicroSD Read Error!!\n" );
+					pattern_send = 4;
+					break;
+				} else {
+					// エラーなし
+					msdWorkAddress += 512;		// microSDのアドレスを+512する
+					msdBuffAddress = 0;		// 配列からの読み込み位置を0に
+					pattern_send = 2;
+					break;
+				}
+				break;
+				
+			case 2:
+				// flag[ STRAIGHT ][0]	0: 脱出位置		1: 突入位置
+				// flag[ STRAIGHT ][ 1 ]	繰り返し回数
+				// cnt_n[ STRAIGHT ][0] 	カーブ突入､脱出位置の数
+				if ( flag[STRAIGHT][0]  == 0 ) {
+					// カーブに突入する位置を探す
+					if ( msdBuff[ msdBuffAddress + 0 ] == 12 ) flag[ STRAIGHT ][ 1 ]++;
+					else		flag[ STRAIGHT ][ 1 ] = 0;
+					
+					// 3つ以上あればカーブに突入したと判断する
+					if ( flag[ STRAIGHT ][ 1 ] >= 3 && cnt_n[ STRAIGHT ][ 0 ] == 0 ) {
+						// 1回目
+						comp_uint[ STRAIGHT ][ cnt_n[ STRAIGHT ][ 0 ] ] = CharTouInt (40);
+						cnt_n[ STRAIGHT ][ 0 ]++;
+						flag[ STRAIGHT ][ 0 ]  = !flag[ STRAIGHT ][ 0 ];		// カーブ脱出位置探索
+						flag[ STRAIGHT ][ 1 ] = 0;		// 繰り返しカウントをリセット
+					} else if ( flag[ STRAIGHT ][ 1 ] >= 3 && cnt_n[ STRAIGHT ][ 0 ] >= 1 ) {
+						// 1回目以降
+						comp_uint[ STRAIGHT ][ cnt_n[ STRAIGHT ][ 0 ] ] = CharTouInt (40) - comp_uint[ STRAIGHT ][ cnt_n[ STRAIGHT ][ 0 ] - 1 ];
+						cnt_n[ STRAIGHT ][ 0 ]++;
+						flag[ STRAIGHT ][ 0 ]  = !flag[ STRAIGHT ][ 0 ];		// カーブ脱出位置探索
+						flag[ STRAIGHT ][ 1 ] = 0;		// 繰り返しカウントをリセット
+					}
+				} else {
+					// カーブを脱出する位置を探す
+					if ( msdBuff[ msdBuffAddress + 0 ] == 11 ) flag[ STRAIGHT ][ 1 ]++;
+					else		flag[ STRAIGHT ][ 1 ] = 0;
+					
+					// 3つ以上あればカーブを脱出したと判断する
+					if ( flag[ STRAIGHT ][ 0 ] >= 3 ) {
+						comp_uint[ STRAIGHT ][ cnt_n[ STRAIGHT ][ 0 ] ] = CharTouInt (40);
+						cnt_n[ STRAIGHT ][ 0 ]++;
+						flag[ STRAIGHT ][ 0 ]  = !flag[ STRAIGHT ][ 0 ];		// カーブ突入位置探索
+						flag[ STRAIGHT ][ 1 ] = 0;		// 繰り返しカウントをリセット
+					}
+				}
+				
+				
+				msdBuffAddress += DATA_BYTE;
+				
+				if( msdBuffAddress >= 512 ) {
+					pattern_send = 1;
+					break;
+				}
+				break;
+		}
+	}
+}
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 msdEndLog								//
+// 処理概要     ログの終了処理							//
+// 引数         なし									//
+// 戻り値       0:正常に終了 1:異常終了						//
+///////////////////////////////////////////////////////////////////////////
+char msdEndLog ( void )
+{
+	char pattern_msdend = 0;
+	
+	while ( pattern_msdend < 2 ) {
+	switch( pattern_msdend ) {
+		case 0:
+				// 最後のデータが書き込まれるまで待つ
+				if ( checkMicroSDProcess() == 11 ) {
+					msdFlag = 0;			// ログ記録終了
+					microSDProcessEnd();        // microSDProcess終了処理
+					pattern_msdend = 1;
+					break;
+				} else if ( checkMicroSDProcess() == 0 ) {
+					setBeepPatternS( 0xf0f0 );
+					pattern_msdend = 3;
+					break;
+				}
+				break;
+				
+			case 1:
+				// 終了処理が終わるまで待つ
+				if ( checkMicroSDProcess() == 0 ) {
+					// MicroSD最終書き込みアドレス保存
+					flashDataBuff[ 0 ] = msdStartAddress >> 16;
+					flashDataBuff[ 1 ] = msdStartAddress & 0xffff;	// 開始アドレス
+					flashDataBuff[ 2 ] = msdWorkAddress >> 16;
+					flashDataBuff[ 3 ] = msdWorkAddress & 0xffff;	// 終了アドレス
+					writeFlashData( MSD_STARTAREA, MSD_ENDAREA, MSD_DATA, 4 );
+					pattern_msdend = 2;
+					setBeepPatternS( 0xa8a8 );
+					break;
+				}
+				break;
+	}
+	}
+	
+	return pattern - 2;
+}
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 send_Char								//
+// 処理概要     char型変数をmsdBuffに送る					//
+// 引数         変換するchar型変数							//
+// 戻り値       なし									//
+///////////////////////////////////////////////////////////////////////////
 void send_Char ( char data )
 {
 	*msdBuffPointa++ = data;
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 ShortToChar						//
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 ShortToChar							//
 // 処理概要     short型変数をchar型に変換してmsdBuffに送る		//
-// 引数         変換するshort型変数					//
-// 戻り値       なし							//
-//////////////////////////////////////////////////////////////////////////
+// 引数         変換するshort型変数							//
+// 戻り値       なし									//
+///////////////////////////////////////////////////////////////////////////
 void send_ShortToChar ( short data )
 {
 	*msdBuffPointa++ = data >> 8;
 	*msdBuffPointa++ = data & 0xff;
 }
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 uintToChar						//
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 uintToChar								//
 // 処理概要     unsigned int型変数をchar型に変換してmsdBuffに送る	//
-// 引数         変換するunsigned int型変数				//
-// 戻り値       なし							//
-//////////////////////////////////////////////////////////////////////////
+// 引数         変換するunsigned int型変数					//
+// 戻り値       なし									//
+///////////////////////////////////////////////////////////////////////////
 void send_uIntToChar ( unsigned int data )
 {
 	*msdBuffPointa++ = data >> 24;
@@ -1114,12 +1274,12 @@ void send_uIntToChar ( unsigned int data )
 	*msdBuffPointa++ = ( data & 0x0000ff00 ) >> 8;
 	*msdBuffPointa++ = data & 0x000000ff;
 }
-//////////////////////////////////////////////////////////////////////////////////
-// モジュール名 CharToShort							//
-// 処理概要     unsigned char型変数をshort型に変換する				//
+///////////////////////////////////////////////////////////////////////////////////////
+// モジュール名 CharToShort									//
+// 処理概要     unsigned char型変数をshort型に変換する					//
 // 引数         data:変換するsigned char型変数	offsetAddress: MicroSD内の順番	//
-// 戻り値       変換したshort型							//
-//////////////////////////////////////////////////////////////////////////////////
+// 戻り値       変換したshort型									//
+///////////////////////////////////////////////////////////////////////////////////////
 short CharToShort( unsigned char offsetAddress )
 {
 	volatile short s;
@@ -1129,12 +1289,12 @@ short CharToShort( unsigned char offsetAddress )
 					
 	return s;				
 }
-//////////////////////////////////////////////////////////////////////////////////
-// モジュール名 CharTouInt							//
-// 処理概要     unsigned char型変数をunsigned int型に変換する			//
+///////////////////////////////////////////////////////////////////////////////////////
+// モジュール名 CharTouInt										//
+// 処理概要     unsigned char型変数をunsigned int型に変換する				//
 // 引数         data:変換するsigned char型変数	offsetAddress: MicroSD内の順番	//
-// 戻り値       変換したunsigned int型						//
-//////////////////////////////////////////////////////////////////////////////////
+// 戻り値       変換したunsigned int型								//
+///////////////////////////////////////////////////////////////////////////////////////
 unsigned int CharTouInt( unsigned char offsetAddress )
 {
 	volatile unsigned int i;

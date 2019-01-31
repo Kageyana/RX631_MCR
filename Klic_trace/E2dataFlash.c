@@ -777,7 +777,7 @@ void readFlashSetup ( void )
 		angle_rightchange	= ANGLE_RIGHTCHANGE;
 		angle_leftchange	= ANGLE_LEFTCHANGE;
 		
-		printf("Patameter Initialize\n");
+		//printf("Patameter Initialize\n");
 	}
 	
 	// Angle0読み込み
@@ -789,7 +789,7 @@ void readFlashSetup ( void )
 	} else if ( checkBlank( ANGLE0_AREA, 0 ) == 0 ) {
 		// 全ブロックイレーズされていたら初期値に設定する
 		Angle0 = SERVO_CENTER;
-		printf("Angle0 Initialize\n");
+		//printf("Angle0 Initialize\n");
 	}
 	
 	// msdWorkAddress読み込み
@@ -828,7 +828,7 @@ void readFlashSetup ( void )
 		// 全ブロックイレーズされていたら初期値に設定する
 		msdWorkAddress = MSD_STARTADDRESS;	// 開始アドレス
 		msdWorkAddress2 = MSD_ENDADDRESS;	// 終了アドレス
-		printf("msdWorkAddress Initialize\n");
+		//printf("msdWorkAddress Initialize\n");
 	}
 	
 	// 白線トレース用PIDゲイン読み込み
@@ -845,7 +845,7 @@ void readFlashSetup ( void )
 		kp_buff = KP;
 		ki_buff = KI;
 		kd_buff = KD;
-		printf("PIDgain Initialize\n");
+	//	printf("PIDgain Initialize\n");
 	}
 	
 	// 角度制御用PIDゲイン読み込み
@@ -862,7 +862,7 @@ void readFlashSetup ( void )
 		kp2_buff = KP2;
 		ki2_buff = KI2;
 		kd2_buff = KD2;
-		printf("PID2gain Initialize\n");
+	//	printf("PID2gain Initialize\n");
 	}
 	
 	// 速度制御用PIDゲイン読み込み
@@ -879,7 +879,7 @@ void readFlashSetup ( void )
 		kp3_buff = KP3;
 		ki3_buff = KI3;
 		kd3_buff = KD3;
-		printf("PID3gain Initialize\n");
+		//printf("PID3gain Initialize\n");
 	}
 	
 	// 停止距離読み込み
@@ -891,7 +891,7 @@ void readFlashSetup ( void )
 	} else if ( checkBlank( STOPMETER_STARTAREA, 0 ) == 0 ) {
 		// 全ブロックイレーズされていたら初期値に設定する
 		stopping_meter = STOPPING_METER;
-		printf("StopMeter Initialize\n");
+		//printf("StopMeter Initialize\n");
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////
