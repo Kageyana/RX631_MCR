@@ -1344,13 +1344,13 @@ void main(void){
 			// 終了処理が終わるまで待つ
 			if( checkMicroSDProcess() == 0 ) {
 				// MicroSD最終書き込みアドレス保存
-				flashDataBuff[ 0 ] = msdStartAddress >> 16;
-				flashDataBuff[ 1 ] = msdStartAddress & 0xffff;	// 開始アドレス
-				flashDataBuff[ 2 ] = msdWorkAddress >> 16;
-				flashDataBuff[ 3 ] = msdWorkAddress & 0xffff;	// 終了アドレス
+				flashDataBuff[ 0 ] = msdStartaddress >> 16;
+				flashDataBuff[ 1 ] = msdStartaddress & 0xffff;	// 開始アドレス
+				flashDataBuff[ 2 ] = msdWorkaddress >> 16;
+				flashDataBuff[ 3 ] = msdWorkaddress & 0xffff;	// 終了アドレス
 				writeFlashData( MSD_STARTAREA, MSD_ENDAREA, MSD_DATA, 4 );
-				//printf("msdStartAddress = %d\n", msdStartAddress);
-				//printf("msdEndAddress = %d\n", msdWorkAddress);
+				//printf("msdStartaddress = %d\n", msdStartaddress);
+				//printf("msdEndaddress = %d\n", msdWorkaddress);
 				pattern = 106;
 				setBeepPatternS( 0xa8a8 );
 				break;

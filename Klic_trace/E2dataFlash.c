@@ -58,35 +58,35 @@ void FirmWareCopy ( void )
 //////////////////////////////////////////////////////////////////////////////////////////
 // モジュール名 fcuCommandByte							//
 // 処理概要     指定アドレスにFCUコマンド発行						//
-// 引数         block_number: ブロック番号　command:FCUコマンド(16進数)バイトサイズ 	//
-//		addr_number: 先頭アドレスからのオフセット値				//
+// 引数         Block_number: ブロック番号　command:FCUコマンド(16進数)バイトサイズ 	//
+//		Addr_number: 先頭アドレスからのオフセット値				//
 // 戻り値       なし									//
 //////////////////////////////////////////////////////////////////////////////////////////
-void fcuCommandByte ( unsigned short block_number, unsigned char command, char addr_number )
+void fcuCommandByte ( unsigned short Block_number, unsigned char command, char Addr_number )
 {
 	volatile unsigned char *e2data;
-	volatile unsigned int addr;
+	volatile unsigned int Addr;
 	
-	addr = ( block_number * 32 ) + 0x00100000 + addr_number;	// ブロックNのアドレスを算出
+	Addr = ( Block_number * 32 ) + 0x00100000 + Addr_number;	// ブロックNのアドレスを算出
 	
-	e2data = ( unsigned char *)addr;	// ポインタにアドレス代入
+	e2data = ( unsigned char *)Addr;	// ポインタにアドレス代入
 	*e2data = command;			// 指定アドレスにコマンド発行
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 // モジュール名 fcuCommandWord							//
 // 処理概要     指定アドレスにFCUコマンド発行						//
-// 引数         block_number: ブロック番号　command:FCUコマンド(16進数)ワードサイズ 	//
-//		addr_number: 先頭アドレスからのオフセット値				//
+// 引数         Block_number: ブロック番号　command:FCUコマンド(16進数)ワードサイズ 	//
+//		Addr_number: 先頭アドレスからのオフセット値				//
 // 戻り値       なし									//
 //////////////////////////////////////////////////////////////////////////////////////////
-void fcuCommandWord ( unsigned short block_number, unsigned short command, char addr_number )
+void fcuCommandWord ( unsigned short Block_number, unsigned short command, char Addr_number )
 {
 	volatile unsigned short *e2data;
-	volatile unsigned int addr;
+	volatile unsigned int Addr;
 	
-	addr = ( block_number * 32 ) + 0x00100000 + addr_number;	// ブロックNのアドレスを算出
+	Addr = ( Block_number * 32 ) + 0x00100000 + Addr_number;	// ブロックNのアドレスを算出
 	
-	e2data = ( unsigned short *)addr;	// ポインタにアドレス代入
+	e2data = ( unsigned short *)Addr;	// ポインタにアドレス代入
 	*e2data = command;			// 指定アドレスにコマンド発行
 }
 //////////////////////////////////////////////////////////////////////////
@@ -107,7 +107,7 @@ char checkFRDY ( unsigned short waittime )
 			if ( cnt_flash >= waittime ) {
 				cnt_flash = 0;
 				timeout = 1;
-				printf("FCU初期化\n");
+				//printf("FCU初期化\n");
 				break;
 			} else {
 				continue;
@@ -126,7 +126,7 @@ char checkFRDY ( unsigned short waittime )
 			if ( cnt_flash >= 5 ) {
 				FLASH.FRESETR.BIT.FRESET = 0;
 				FirmWareCopy();
-				printf("FCU初期化完了\n");
+				//printf("FCU初期化完了\n");
 				break;
 			}
 		}
@@ -146,25 +146,24 @@ char checkErrorFlash ( void )
 	volatile char error;
 	
 	if ( FLASH.FSTATR0.BIT.ILGLERR == 1 || FLASH.FSTATR0.BIT.ERSERR == 1 || FLASH.FSTATR0.BIT.PRGERR == 1 ) {
-		printf("エラー確認 ILGLERR = %d ERSERR = %d PRGERR = %d\n", FLASH.FSTATR0.BIT.ILGLERR, FLASH.FSTATR0.BIT.ERSERR, FLASH.FSTATR0.BIT.PRGERR);
+		//printf("エラー確認 ILGLERR = %d ERSERR = %d PRGERR = %d\n", FLASH.FSTATR0.BIT.ILGLERR, FLASH.FSTATR0.BIT.ERSERR, FLASH.FSTATR0.BIT.PRGERR);
 		error = 1;
 		
 		if ( FLASH.FSTATR0.BIT.ILGLERR == 1 ) {
-			printf("不正コマンド検出\n");
-			printf("ROMAE = %d DFLAE = %d DFLRPE = %d DFLWPE = %d\n", FLASH.FASTAT.BIT.ROMAE, FLASH.FASTAT.BIT.DFLAE, 
-			FLASH.FASTAT.BIT.DFLRPE, FLASH.FASTAT.BIT.DFLWPE);
+			//printf("不正コマンド検出\n");
+			//printf("ROMAE = %d DFLAE = %d DFLRPE = %d DFLWPE = %d\n", FLASH.FASTAT.BIT.ROMAE, FLASH.FASTAT.BIT.DFLAE, FLASH.FASTAT.BIT.DFLRPE, FLASH.FASTAT.BIT.DFLWPE);
 			
 			if ( FLASH.FASTAT.BYTE == 0x10 ) {
 				fcuCommandByte( 0, 0x50, 0 );
-				printf("ステータスクリアコマンド発行(FCUコマンドは受け付けてない)\n");
+				//printf("ステータスクリアコマンド発行(FCUコマンドは受け付けてない)\n");
 			} else {
 				FLASH.FASTAT.BYTE = 0x10;
 				fcuCommandByte( 0, 0x50, 0 );
-				printf("ステータスクリアコマンド発行(FCUコマンドを受け付けてる)\n");
+				//printf("ステータスクリアコマンド発行(FCUコマンドを受け付けてる)\n");
 			}
 		} else {
 			fcuCommandByte( 0, 0x50, 0 );
-			printf("ステータスクリアコマンド発行(ILGLERR = 0)\n");
+			//printf("ステータスクリアコマンド発行(ILGLERR = 0)\n");
 		}
 	} else {
 		//printf("エラーなし\n");
@@ -212,11 +211,11 @@ char initFlash ( void )
 			// E2データフラッシュ領域のP/Eをを許可
 			FLASH.DFLWE0.WORD = 0x1e00;
 		} else {
-			printf("E2データフラッシュ初期化エラー\n");
+			//printf("E2データフラッシュ初期化エラー\n");
 			ret = 1;
 		}
 	} else {
-		printf("E2データフラッシュ初期化エラー\n");
+		//printf("E2データフラッシュ初期化エラー\n");
 		ret = 1;
 	}
 	
@@ -247,7 +246,7 @@ void changeFlashPE ( void )
 			if ( checkErrorFlash() == 0 ) {
 				//printf("P/E モード移行完了\n");
 			} else {
-				printf("P/E モード移行エラー\n");
+				//printf("P/E モード移行エラー\n");
 			}
 		}
 	}
@@ -277,38 +276,38 @@ void changeFlashRead ( void )
 //////////////////////////////////////////////////////////////////////////////////
 // モジュール名 checkBlank							//
 // 処理概要     指定アドレスにブランクチェック					//
-// 引数         block_number: ブランクチェックするブロック番号			//
-//		addr_offset: 先頭アドレスからのオフセット値			//
+// 引数         Block_number: ブランクチェックするブロック番号			//
+//		Addr_offset: 先頭アドレスからのオフセット値			//
 // 戻り値       0:イレーズ済み　1:書き込み済み -1:エラーあり			//
 //////////////////////////////////////////////////////////////////////////////////
-signed char checkBlank ( short block_number, char addr_offset )
+signed char checkBlank ( short Block_number, char Addr_offset )
 {
 	volatile signed char ret;
-	volatile unsigned int addr, lead_addr, offset;
+	volatile unsigned int Addr, lead_Addr, offset;
 
 	// P/Eモード移行
 	changeFlashPE();
 	
-	addr = ( block_number * 32 ) + 0x00100000 + addr_offset;	// ブランクチェックするアドレスを算出
+	Addr = ( Block_number * 32 ) + 0x00100000 + Addr_offset;	// ブランクチェックするアドレスを算出
 	// 各ブロックの先頭アドレス算出
-	if ( block_number >= 0 && block_number <= 63 ) lead_addr = ( 0 * 32 ) + 0x00100000;
-	if ( block_number >= 64 && block_number <= 127 ) lead_addr = ( 64 * 32 ) + 0x00100000;
-	if ( block_number >= 128 && block_number <= 191 ) lead_addr = ( 128 * 32 ) + 0x00100000;
-	if ( block_number >= 192 && block_number <= 255 ) lead_addr = ( 192 * 32 ) + 0x00100000;
-	if ( block_number >= 256 && block_number <= 319 ) lead_addr = ( 256 * 32 ) + 0x00100000;
-	if ( block_number >= 320 && block_number <= 383 ) lead_addr = ( 320 * 32 ) + 0x00100000;
-	if ( block_number >= 384 && block_number <= 447 ) lead_addr = ( 384 * 32 ) + 0x00100000;
-	if ( block_number >= 448 && block_number <= 511 ) lead_addr = ( 448 * 32 ) + 0x00100000;
-	if ( block_number >= 512 && block_number <= 575 ) lead_addr = ( 512 * 32 ) + 0x00100000;
-	if ( block_number >= 576 && block_number <= 639 ) lead_addr = ( 576 * 32 ) + 0x00100000;
-	if ( block_number >= 640 && block_number <= 703 ) lead_addr = ( 640 * 32 ) + 0x00100000;
-	if ( block_number >= 704 && block_number <= 767 ) lead_addr = ( 704 * 32 ) + 0x00100000;
-	if ( block_number >= 768 && block_number <= 831 ) lead_addr = ( 768 * 32 ) + 0x00100000;
-	if ( block_number >= 832 && block_number <= 895 ) lead_addr = ( 832 * 32 ) + 0x00100000;
-	if ( block_number >= 896 && block_number <= 959 ) lead_addr = ( 896 * 32 ) + 0x00100000;
-	if ( block_number >= 960 && block_number <= 1023 ) lead_addr = ( 960 * 32 ) + 0x00100000;
+	if ( Block_number >= 0 && Block_number <= 63 ) lead_Addr = ( 0 * 32 ) + 0x00100000;
+	if ( Block_number >= 64 && Block_number <= 127 ) lead_Addr = ( 64 * 32 ) + 0x00100000;
+	if ( Block_number >= 128 && Block_number <= 191 ) lead_Addr = ( 128 * 32 ) + 0x00100000;
+	if ( Block_number >= 192 && Block_number <= 255 ) lead_Addr = ( 192 * 32 ) + 0x00100000;
+	if ( Block_number >= 256 && Block_number <= 319 ) lead_Addr = ( 256 * 32 ) + 0x00100000;
+	if ( Block_number >= 320 && Block_number <= 383 ) lead_Addr = ( 320 * 32 ) + 0x00100000;
+	if ( Block_number >= 384 && Block_number <= 447 ) lead_Addr = ( 384 * 32 ) + 0x00100000;
+	if ( Block_number >= 448 && Block_number <= 511 ) lead_Addr = ( 448 * 32 ) + 0x00100000;
+	if ( Block_number >= 512 && Block_number <= 575 ) lead_Addr = ( 512 * 32 ) + 0x00100000;
+	if ( Block_number >= 576 && Block_number <= 639 ) lead_Addr = ( 576 * 32 ) + 0x00100000;
+	if ( Block_number >= 640 && Block_number <= 703 ) lead_Addr = ( 640 * 32 ) + 0x00100000;
+	if ( Block_number >= 704 && Block_number <= 767 ) lead_Addr = ( 704 * 32 ) + 0x00100000;
+	if ( Block_number >= 768 && Block_number <= 831 ) lead_Addr = ( 768 * 32 ) + 0x00100000;
+	if ( Block_number >= 832 && Block_number <= 895 ) lead_Addr = ( 832 * 32 ) + 0x00100000;
+	if ( Block_number >= 896 && Block_number <= 959 ) lead_Addr = ( 896 * 32 ) + 0x00100000;
+	if ( Block_number >= 960 && Block_number <= 1023 ) lead_Addr = ( 960 * 32 ) + 0x00100000;
 	// オフセット量算出
-	offset = addr - lead_addr;
+	offset = Addr - lead_Addr;
 	
 	// ブランクチェック許可
 	FLASH.FMODR.BIT.FRDMD = 1;
@@ -318,8 +317,8 @@ signed char checkBlank ( short block_number, char addr_offset )
 	FLASH.DFLBCCNT.BIT.BCADR = offset;
 	
 	// ブランクチェックコマンド発行
-	fcuCommandByte( block_number, 0x71, 0 );
-	fcuCommandByte( block_number, 0xd0, addr_offset );
+	fcuCommandByte( Block_number, 0x71, 0 );
+	fcuCommandByte( Block_number, 0xd0, Addr_offset );
 	
 	// P/E処理中か確認
 	if ( checkFRDY( 6 * 1.1 ) == 0 ) {
@@ -327,10 +326,10 @@ signed char checkBlank ( short block_number, char addr_offset )
 		if ( checkErrorFlash() == 0 ) {
 			// ブランクチェック結果取得
 			if ( FLASH.DFLBCSTAT.BIT.BCST == 1 ) {
-				//printf("アドレス%pは書き込み済み\n", addr);
+				//printf("アドレス%pは書き込み済み\n", Addr);
 				ret = 1;
 			} else {
-				//printf("アドレス%pはイレーズ済み\n", addr);
+				//printf("アドレス%pはイレーズ済み\n", Addr);
 				ret = 0;
 			}
 		} else {
@@ -345,10 +344,10 @@ signed char checkBlank ( short block_number, char addr_offset )
 //////////////////////////////////////////////////////////////////////////////////
 // モジュール名 eraseE2DataFlash						//
 // 処理概要     指定データブロックをイレーズ					//
-// 引数         block_number: イレーズするブロック番号　			//
+// 引数         Block_number: イレーズするブロック番号　			//
 // 戻り値      	0:イレーズ完了 1:イレーズエラー					//
 //////////////////////////////////////////////////////////////////////////////////
-char eraseE2DataFlash ( unsigned short block_number )
+char eraseE2DataFlash ( unsigned short Block_number )
 {
 	volatile char ret = 0;
 	
@@ -364,7 +363,7 @@ char eraseE2DataFlash ( unsigned short block_number )
 	
 	// ブロックイレーズコマンド発行
 	fcuCommandByte( 0, 0x20, 0 );
-	fcuCommandByte( block_number, 0xd0, 0 );
+	fcuCommandByte( Block_number, 0xd0, 0 );
 	
 	if ( ( FLASH.DFLWE0.WORD & 0x00ff ) == 0x00ff ) {
 		// P/E処理中か確認
@@ -374,11 +373,11 @@ char eraseE2DataFlash ( unsigned short block_number )
 				FLASH.FWEPROR.BIT.FLWE = 2;	// 消去プロテクト
 				FLASH.DFLWE0.WORD = 0x1e00;	// 0000～0511ブロックまでP/E許可
 				FLASH.DFLWE1.WORD = 0xe100;	// 0512～1023ブロックまでP/E許可
-				//printf("Block%dErase\n", block_number);
+				//printf("Block%dErase\n", Block_number);
 			}
 		}
 	} else {
-		printf("Block%dUnErase\n", block_number);
+		//printf("Block%dUnErase\n", Block_number);
 		ret = 1;
 	}
 	
@@ -386,60 +385,63 @@ char eraseE2DataFlash ( unsigned short block_number )
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // モジュール名 checkWriteAddr										//
-// 処理概要     startblockからendbloockまでのイレーズ済み領域を探す					//
-// 引数         startblock: 開始ブロック番号 	endbloock: 終了ブロック番号				//
+// 処理概要     startBlockからendbloockまでのイレーズ済み領域を探す					//
+// 引数         startBlock: 開始ブロック番号 	endbloock: 終了ブロック番号				//
 //		startoffset: 開始オフセット値	width_data: 確保するデータ量				//
 // 戻り値       0: イレーズ済み領域あり 1:イレーズ済み領域なし						//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-void checkWriteAddr ( short startblock, short endblock, char startoffset, short width_data )
+void checkWriteAddr ( short startNumber, char startOffset, short endblock, short width_data, short startBlock )
 {
-	volatile char 	addr_offset, lead_addr_offset;
-	volatile short	block_number, lead_block_number, i, width = 0;
+	volatile char 	addrOffset, leadAddrOffset;
+	volatile short	blockNumber, leadBlockNumber, i, width = 0;
 	
-	block_number = startblock;
-	addr_offset = startoffset;
+	blockNumber = startNumber;
+	addrOffset = startOffset;
 
 	// 指定したデータ量の領域が見つかるまでブランクチェックする
-	while ( block_number <= endblock ) {
-		if ( checkBlank( block_number, addr_offset ) == 1 ) {
+	while ( blockNumber <= endblock ) {
+		if ( checkBlank( blockNumber, addrOffset ) > 0 ) {
 			width = 0;
-		} else if ( checkBlank( block_number, addr_offset ) == 0 ) {
-			width++;		
+		} else if ( checkBlank( blockNumber, addrOffset ) == 0 ) {
+			width++;
 			if ( width == 1 ) {
 				// 書き込み開始アドレス
-				lead_block_number = block_number;
-				lead_addr_offset = addr_offset;
+				leadBlockNumber = blockNumber;
+				leadAddrOffset = addrOffset;
 			}
 			// 必要なデータ量確保できたらストップ
 			if ( width >= width_data ) break;
 		} else {
-			printf("BlankCheakError\n");
+			//printf("BlankCheakError\n");
 			break;
 		}
 		
-		addr_offset += 2;
-		if ( addr_offset == 32 ) {
+		addrOffset += 2;
+		if ( addrOffset == 32 ) {
 			// 次のブロックに移動する
-			addr_offset = 0;
-			block_number++;
+			addrOffset = 0;
+			blockNumber++;
 		}
 	}
+	//printf("blockNumber = %d\n", blockNumber);
+	//printf("addrOffset = %d\n", addrOffset);
 	// 書き込み領域がなければイレーズする
-	if ( block_number > endblock || width < width_data ) {
-		//printf("書き込み領域なし\n");
-		i = startblock;
+	if ( blockNumber > endblock || width < width_data ) {
+		//printf("startBlock = %d\n", startBlock);
+		i = startBlock;
 		while ( i <= endblock ) {
+			//printf("i = %d\n", i);
 			eraseE2DataFlash(i);
 			i++;
 		}
 		
 		// 開始位置に戻す
-		lead_block_number = startblock;
-		lead_addr_offset = 0;
+		leadBlockNumber = startBlock + 1;
+		leadAddrOffset = 0;
 	}
 	
-	NowBlockNumber = lead_block_number;
-	NowAddrOffset = lead_addr_offset;
+	NowBlockNumber = leadBlockNumber;
+	NowAddrOffset = leadAddrOffset;
 }
 //////////////////////////////////////////////////////////////////////////////////
 // モジュール名 writeFlash							//
@@ -451,7 +453,7 @@ char writeFlash ( short* write_data, short width_data )
 {
 	volatile char ret = 0;
 	volatile short*	sendData;	// 転送用ポインタ
-	volatile unsigned int addr, i = 1;
+	volatile unsigned int Addr, i = 1;
 	
 	sendData = write_data;
 	
@@ -477,8 +479,8 @@ char writeFlash ( short* write_data, short width_data )
 			if ( checkFRDY( 20 * 1.1 ) == 0 ) {
 				// エラー確認
 				if ( checkErrorFlash() == 0 ) {
-					addr = ( NowBlockNumber * 32 ) + 0x00100000 + NowAddrOffset;	// ブロックNのアドレスを算出
-					//printf("Addr%p(%dブロック %dオフセット) %dWritten\n", addr, NowBlockNumber, NowAddrOffset, *sendData);
+					Addr = ( NowBlockNumber * 32 ) + 0x00100000 + NowAddrOffset;	// ブロックNのアドレスを算出
+					//printf("Addr%p(%dブロック %dオフセット) %dWritten\n", Addr, NowBlockNumber, NowAddrOffset, *sendData);
 					
 					NowAddrOffset += 2;
 					if ( NowAddrOffset == 32 ) {
@@ -489,17 +491,17 @@ char writeFlash ( short* write_data, short width_data )
 					i++;
 				} else {
 					ret = 1;
-					printf("Write Error\n");
+					//printf("Write Error\n");
 					break;
 				}
 			} else {
 				ret = 1;
-				printf("Write TimeOut\n");
+				//printf("Write TimeOut\n");
 				break;
 			}
 		} else {
 			ret = 1;
-			printf("BlockNumber Error\n");
+			//printf("BlockNumber Error\n");
 			break;
 		}
 	}
@@ -513,22 +515,22 @@ char writeFlash ( short* write_data, short width_data )
 //////////////////////////////////////////////////////////////////////////////////////////
 // モジュール名 readFlashBlock								//
 // 処理概要     指定ブロック番号、指定オフセット値に書かれている値を読む		//
-// 引数         block_number:ブロック番号 addr_number: 先頭アドレスからのオフセット値	//
+// 引数         Block_number:ブロック番号 Addr_number: 先頭アドレスからのオフセット値	//
 // 戻り値       読み込んだ値								//
 //////////////////////////////////////////////////////////////////////////////////////////
-short readFlashBlock ( short block_number, char addr_offset )
+short readFlashBlock ( short Block_number, char Addr_offset )
 {
 	volatile short ret;
-	volatile unsigned int addr;
+	volatile unsigned int Addr;
 	
 	// フラッシュリードモード移行
 	changeFlashRead();
 	// E2データフラッシュ領域の読み出しを許可
 	FLASH.DFLRE0.WORD = 0x2dff;
 	FLASH.DFLRE1.WORD = 0xd2ff;
-	addr = ( block_number * 32 ) + 0x00100000 + addr_offset;	// ブロックNのアドレスを算出
+	Addr = ( Block_number * 32 ) + 0x00100000 + Addr_offset;	// ブロックNのアドレスを算出
 	
-	ret = *(volatile unsigned short *)addr;
+	ret = *(volatile unsigned short *)Addr;
 	
 	// E2データフラッシュ領域の読み出し禁止
 	FLASH.DFLRE0.WORD = 0x2d00;
@@ -539,10 +541,10 @@ short readFlashBlock ( short block_number, char addr_offset )
 //////////////////////////////////////////////////////////////////////////////////////////
 // モジュール名 readFlashAddr								//
 // 処理概要     指定アドレスの値を読む							//
-// 引数         addr: E2データフラッシュ領域のアドレス					//
-// 戻り値       addrの値								//
+// 引数         Addr: E2データフラッシュ領域のアドレス					//
+// 戻り値       Addrの値								//
 //////////////////////////////////////////////////////////////////////////////////////////
-short readFlashAddr ( unsigned int addr )
+short readFlashAddr ( unsigned int Addr )
 {
 	volatile short ret;
 	
@@ -552,7 +554,7 @@ short readFlashAddr ( unsigned int addr )
 	FLASH.DFLRE0.WORD = 0x2dff;
 	FLASH.DFLRE1.WORD = 0xd2ff;
 	
-	ret = *(volatile unsigned short *)addr;
+	ret = *(volatile unsigned short *)Addr;
 	//printf("ReadData = %d\n", ret );
 	// E2データフラッシュ領域の読み出し禁止
 	FLASH.DFLRE0.WORD = 0x2d00;
@@ -628,54 +630,55 @@ void readFlashArray2 ( volatile short* dataArray, short width_data, short limitA
 //////////////////////////////////////////////////////////////////////////////////////////
 // モジュール名 readBeforeAddr								//
 // 処理概要     指定ブロック間に記録されているブロック番号、オフセット値を読む		//
-// 引数         startblock: 開始ブロック番号 	endbloock: 終了ブロック番号		//
+// 引数         startBlock: 開始ブロック番号 	endbloock: 終了ブロック番号		//
 // 戻り値       なし									//
 //////////////////////////////////////////////////////////////////////////////////////////
 void readBeforeAddr ( short startBlockNumber, short endBlockNumber )
 {
-	volatile short blocknumber;	// 前回保存時のブロック番号の書いてあるブロック番号
-	volatile short addroffset = 0;
+	volatile short Blocknumber;	// 前回保存時のブロック番号の書いてあるブロック番号
+	volatile short Addroffset = 0;
 	
 	// startBlockNumber～endBlockNumberに書いた前回書き込み時の最終アドレスを取得する
-	blocknumber = startBlockNumber;
-	if ( checkBlank( blocknumber, addroffset ) == 0 ) {
+	Blocknumber = startBlockNumber;
+	if ( checkBlank( Blocknumber, Addroffset ) == 0 ) {
 		// イレーズ済みなら初期値にセットする
 		BeforeBlockNumber = endBlockNumber + 1;
 		BeforeAddrNumber = 0;
 	} else {
-		while ( checkBlank( blocknumber, addroffset ) == 1 ) {
-			addroffset += 2;
-			if ( addroffset == 32 ) {
+		while ( checkBlank( Blocknumber, Addroffset ) == 1 ) {
+			Addroffset += 2;
+			if ( Addroffset == 32 ) {
 				// 次のブロックに移動する
-				addroffset = 0;
-				blocknumber++;
-				if ( blocknumber == endBlockNumber + 1 ) break;
+				Addroffset = 0;
+				Blocknumber++;
+				if ( Blocknumber == endBlockNumber + 1 ) break;
 			}
 		}
 		
 		// ブロックをまたいだ時1つ前のブロックを指定する
-		if ( addroffset == 0 ) {
-			blocknumber--;
-			addroffset = 32;
+		if ( Addroffset == 0 ) {
+			Blocknumber--;
+			Addroffset = 32;
 		}
 		// 最終ブロック番号、最終オフセットアドレス取得
-		BeforeBlockNumber = readFlashBlock( blocknumber, ( addroffset - 4 ) );
-		BeforeAddrNumber = readFlashBlock( blocknumber, ( addroffset - 2 ) );
+		BeforeBlockNumber = readFlashBlock( Blocknumber, ( Addroffset - 4 ) );
+		BeforeAddrNumber = readFlashBlock( Blocknumber, ( Addroffset - 2 ) );
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 // モジュール名 writeFlashData								//
 // 処理概要     指定ブロック間にflashDataBuffを書き込みアドレスを記録する		//
-// 引数          startblock: 開始ブロック番号 	endbloock: 終了ブロック番号		//
+// 引数          startBlock: 開始ブロック番号 	endbloock: 終了ブロック番号		//
 //		endData: データ保存最後ブロック	width_data: 確保するデータ量		//
 // 戻り値       なし									//
 //////////////////////////////////////////////////////////////////////////////////////////
 void writeFlashData ( short startBlockNumber, short endBlockNumber, short endData, short width_data )
 {
+	//__clrpsw_i();
 	// 前回保存時のアドレス読み込み
 	readBeforeAddr( startBlockNumber, endBlockNumber );
 	// 書き込み領域確保
-	checkWriteAddr ( BeforeBlockNumber, endData, BeforeAddrNumber, width_data );
+	checkWriteAddr ( BeforeBlockNumber, BeforeAddrNumber, endData, width_data, endBlockNumber + 1 );
 	// 書き込み開始
 	writeFlash ( flashDataBuff, width_data );
 
@@ -691,15 +694,17 @@ void writeFlashData ( short startBlockNumber, short endBlockNumber, short endDat
 	flashDataBuff[ 1 ] = EndAddrOffset;
 	
 	// 書き込み領域確保
-	checkWriteAddr ( startBlockNumber, endBlockNumber, 0, 2 );
+	checkWriteAddr ( startBlockNumber, 0, endBlockNumber, 2, startBlockNumber );
+	led_out(0x1f);
 	// 書き込み開始
 	writeFlash ( flashDataBuff, 2 );
+	
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 // モジュール名 readFlashSetup								//
 // 処理概要     指定アドレスの値を読む							//
-// 引数         addr: E2データフラッシュ領域のアドレス					//
-// 戻り値       addrの値								//
+// 引数         Addr: E2データフラッシュ領域のアドレス					//
+// 戻り値       Addrの値								//
 //////////////////////////////////////////////////////////////////////////////////////////
 void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pid_angle, bool pid_speed, bool meter )
 {
@@ -807,9 +812,9 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 			s = 0;
 			s2 = 0;
 			while ( s < 19 ) {
-				msdAddrBuff[s++] = (unsigned int)( (unsigned short)flashDataBuff[ s2+1 ] * 0x10000 + 
+				msdaddrBuff[s++] = (unsigned int)( (unsigned short)flashDataBuff[ s2+1 ] * 0x10000 + 
 							(unsigned short)flashDataBuff[ s2 ]);
-				msdAddrBuff[s++] = (unsigned int)( (unsigned short)flashDataBuff[ s2+3 ] * 0x10000 + 
+				msdaddrBuff[s++] = (unsigned int)( (unsigned short)flashDataBuff[ s2+3 ] * 0x10000 + 
 							(unsigned short)flashDataBuff[ s2+2 ]);
 				s2 += 4;
 			}
@@ -827,12 +832,12 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 			printf("msdAddrBuff[18] = %d msdAddrBuff[19] = %d\n", msdAddrBuff[18], msdAddrBuff[19]);
 			*/
 			
-			msdWorkAddress = msdAddrBuff[1];	// 前回開始アドレス
-			msdWorkAddress2 = msdAddrBuff[0];	// 前回終了アドレス
+			msdWorkaddress = msdaddrBuff[1];	// 前回開始アドレス
+			msdWorkaddress2 = msdaddrBuff[0];	// 前回終了アドレス
 		} else if ( checkBlank( MSD_STARTAREA, 0 ) == 0 ) {
 			// 全ブロックイレーズされていたら初期値に設定する
-			msdWorkAddress = MSD_STARTADDRESS;	// 開始アドレス
-			msdWorkAddress2 = MSD_ENDADDRESS;	// 終了アドレス
+			msdWorkaddress = MSD_STARTADDRESS;	// 開始アドレス
+			msdWorkaddress2 = MSD_ENDADDRESS;	// 終了アドレス
 			//printf("msdWorkAddress Initialize\n");
 		}
 	}
@@ -911,8 +916,8 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 //////////////////////////////////////////////////////////////////////////////////////////
 // モジュール名 writeFlashBeforeStart							//
 // 処理概要     指定アドレスの値を読む							//
-// 引数         addr: E2データフラッシュ領域のアドレス					//
-// 戻り値       addrの値								//
+// 引数         Addr: E2データフラッシュ領域のアドレス					//
+// 戻り値       Addrの値								//
 //////////////////////////////////////////////////////////////////////////////////////////
 void writeFlashBeforeStart ( void )
 {

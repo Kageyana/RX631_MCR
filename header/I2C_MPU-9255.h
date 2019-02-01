@@ -33,19 +33,19 @@
 #define WOM_THR			0x1F
 #define FIFO_EN			0x23
 #define I2C_MST_CTRL		0x24
-#define I2C_SLV0_ADDR		0x25
+#define I2C_SLV0_addr		0x25
 #define I2C_SLV0_REG		0x26
 #define I2C_SLV0_CTRL		0x27
-#define I2C_SLV1_ADDR		0x28
+#define I2C_SLV1_addr		0x28
 #define I2C_SLV1_REG		0x29
 #define I2C_SLV1_CTRL		0x2A
-#define I2C_SLV2_ADDR		0x2B
+#define I2C_SLV2_addr		0x2B
 #define I2C_SLV2_REG		0x2C
 #define I2C_SLV2_CTRL		0x2D
-#define I2C_SLV3_ADDR		0x2E
+#define I2C_SLV3_addr		0x2E
 #define I2C_SLV3_REG		0x2F
 #define I2C_SLV3_CTRL		0x30
-#define I2C_SLV4_ADDR		0x31
+#define I2C_SLV4_addr		0x31
 #define I2C_SLV4_REG		0x32
 #define I2C_SLV4_DO		0x33
 #define I2C_SLV4_CTRL		0x34
@@ -113,7 +113,7 @@
 #define ZA_OFFSET_H		0x7D
 #define ZA_OFFSET_L		0x7E
 
-#define MPU9255_ADDRESS     	0xd0		// 書き込み時のスレーブアドレス
+#define MPU9255_addrESS     	0xd0		// 書き込み時のスレーブアドレス
 
 #define ACCELLSB			2048		// 16[g]
 #define GYROLSB			32.8		// 1000[deg/s]
@@ -133,9 +133,9 @@
 #define SAMPLE				5000
 #define REC_NUM			8
 /*************************************** 自動生成関数 **********************************/
-#define I2C_IMU_COMMAND	send_SCI1_I2cWait( MPU9255_ADDRESS, sendData, num)
-#define I2C_IMU_RECIVE		receive_SCI1_I2c( MPU9255_ADDRESS, reciveData, num )
-#define I2C_IMU_ARRY		receive_data_SCI1_I2c(MPU9255_ADDRESS, sendData, reciveData, num)
+#define I2C_IMU_COMMAND	send_SCI1_I2cWait( MPU9255_addrESS, sendData, num)
+#define I2C_IMU_RECIVE		receive_SCI1_I2c( MPU9255_addrESS, reciveData, num )
+#define I2C_IMU_ARRY		receive_data_SCI1_I2c(MPU9255_addrESS, sendData, reciveData, num)
 /************************************************************************************/
 //====================================//
 // グローバル変数の宣言							//

@@ -68,7 +68,7 @@ extern char	command;			// 0:コマンド受信待ち 1:コマンド入力中 2:コマンド判定中
 
 extern char	SCI1_Req_mode;	// 0:スタート 1:ストップ 2;リスタート 3:データ送受信中
 extern char	SCI1_RW_mode;	// 0:受信 1:送信 2:レジスタ読み込み
-extern char	SCI1_SlaveAddr;	// スレーブアドレス
+extern char	SCI1_Slaveaddr;	// スレーブアドレス
 extern char	SCI1_NumData;		// 送信データ数
 extern char	SCI1_NumData2;	// 送信データ数2
 extern char*	SCI1_DataArry;		// 送信データ配列
@@ -77,7 +77,7 @@ extern char	SCI1_DataBuff[255];	// 送信データバッファ
 
 // SCI12関連
 extern char	SCI12_Req_mode;		// 0:スタート 1:ストップ 2;リスタート 3:データ送受信中
-extern char	SCI12_SlaveAddr;		// スレーブアドレス
+extern char	SCI12_Slaveaddr;		// スレーブアドレス
 extern char	SCI12_NumData;		// 送信データ数
 extern char*	SCI12_DataArry;		// 送信データ配列
 extern char	SCI12_DataBuff[255];	// 送信データバッファ
@@ -91,13 +91,13 @@ void Excep_SCI1_RXI1( void );
 void Excep_SCI1_TXI1( void );
 void Excep_SCI1_TEI1( void );
 void commandSCI1 (void);
-void send_SCI1_I2c( char slaveAddr, char* data, char num );
-char send_SCI1_I2cWait( char slaveAddr, char* data, char num );
-void receive_SCI1_I2c( char slaveAddr, char* data, char num );
-void receive_data_SCI1_I2c( char slaveAddr, char* sendData, char* receiveData, char num );
+void send_SCI1_I2c( char slaveaddr, char* data, char num );
+char send_SCI1_I2cWait( char slaveaddr, char* data, char num );
+void receive_SCI1_I2c( char slaveaddr, char* data, char num );
+void receive_data_SCI1_I2c( char slaveaddr, char* sendData, char* receiveData, char num );
 
 void init_SCI12( void );
-void send_SCI12_I2c( char slaveAddr, char* data, char num );
+void send_SCI12_I2c( char slaveaddr, char* data, char num );
 void Excep_SCI12_TXI12( void );
 void Excep_SCI12_TEI12( void );
 

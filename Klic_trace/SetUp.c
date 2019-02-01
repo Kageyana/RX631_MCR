@@ -111,7 +111,7 @@ void setup( void )
 			lcdPosition( 0, 0 );
 			lcdPrintf("STOP    ");
 			lcdPosition( 0, 1 );
-			lcdPrintf("     %2dm", stopping_meter );
+			lcdPrintf("   %4dm", stopping_meter );
 			data_tuning ( &stopping_meter, 1, RIGHT );
 			break;
 		//------------------------------------------------------------------
@@ -791,7 +791,7 @@ void setup( void )
 						lcdPosition( 0, 0 );
 						lcdPrintf("za%2.3f",(double)rawZa / ACCELLSB);
 						lcdPosition( 0, 1 );
-						lcdPrintf("xg%2.3f",(double)rawXg2/GYROLSB);
+						lcdPrintf("xg%2.3f",(double)rawXg/GYROLSB);
 					}
 					break;
 					
@@ -800,9 +800,9 @@ void setup( void )
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 0 );
-						lcdPrintf("yg%2.3f",(double)rawYg2/GYROLSB);
+						lcdPrintf("yg%2.3f",(double)rawYg/GYROLSB);
 						lcdPosition( 0, 1 );
-						lcdPrintf("zg%2.3f",(double)rawZg2/GYROLSB);
+						lcdPrintf("zg%2.3f",(double)rawZg/GYROLSB);
 					}
 					break;
 					
@@ -852,9 +852,9 @@ void setup( void )
 			
 			switch ( pattern_msd ) {
 				case 1:
-					msdWorkAddress = msdAddrBuff[1];
-					msdWorkAddress2 = msdAddrBuff[0];
-					if ( msdWorkAddress == 0 && msdWorkAddress2 == 0 ) {
+					msdWorkaddress = msdaddrBuff[1];
+					msdWorkaddress2 = msdaddrBuff[0];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
 						lcdPrintf("No data");
 					} else {
@@ -869,9 +869,9 @@ void setup( void )
 					}
 					break;
 				case 2:
-					msdWorkAddress = msdAddrBuff[3];
-					msdWorkAddress2 = msdAddrBuff[2];
-					if ( msdWorkAddress == 0 && msdWorkAddress2 == 0 ) {
+					msdWorkaddress = msdaddrBuff[3];
+					msdWorkaddress2 = msdaddrBuff[2];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
 						lcdPrintf("No data");
 					} else {
@@ -886,9 +886,9 @@ void setup( void )
 					}
 					break;
 				case 3:
-					msdWorkAddress = msdAddrBuff[5];
-					msdWorkAddress2 = msdAddrBuff[4];
-					if ( msdWorkAddress == 0 && msdWorkAddress2 == 0 ) {
+					msdWorkaddress = msdaddrBuff[5];
+					msdWorkaddress2 = msdaddrBuff[4];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
 						lcdPrintf("No data");
 					} else {
@@ -903,9 +903,9 @@ void setup( void )
 					}
 					break;
 				case 4:
-					msdWorkAddress = msdAddrBuff[7];
-					msdWorkAddress2 = msdAddrBuff[6];
-					if ( msdWorkAddress == 0 && msdWorkAddress2 == 0 ) {
+					msdWorkaddress = msdaddrBuff[7];
+					msdWorkaddress2 = msdaddrBuff[6];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
 						lcdPrintf("No data");
 					} else {
@@ -920,9 +920,9 @@ void setup( void )
 					}
 					break;
 				case 5:
-					msdWorkAddress = msdAddrBuff[9];
-					msdWorkAddress2 = msdAddrBuff[8];
-					if ( msdWorkAddress == 0 && msdWorkAddress2 == 0 ) {
+					msdWorkaddress = msdaddrBuff[9];
+					msdWorkaddress2 = msdaddrBuff[8];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
 						lcdPrintf("No data");
 					} else {
@@ -937,9 +937,9 @@ void setup( void )
 					}
 					break;
 				case 6:
-					msdWorkAddress = msdAddrBuff[11];
-					msdWorkAddress2 = msdAddrBuff[10];
-					if ( msdWorkAddress == 0 && msdWorkAddress2 == 0 ) {
+					msdWorkaddress = msdaddrBuff[11];
+					msdWorkaddress2 = msdaddrBuff[10];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
 						lcdPrintf("No data");
 					} else {
@@ -954,9 +954,9 @@ void setup( void )
 					}
 					break;
 				case 7:
-					msdWorkAddress = msdAddrBuff[13];
-					msdWorkAddress2 = msdAddrBuff[12];
-					if ( msdWorkAddress == 0 && msdWorkAddress2 == 0 ) {
+					msdWorkaddress = msdaddrBuff[13];
+					msdWorkaddress2 = msdaddrBuff[12];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
 						lcdPrintf("No data");
 					} else {
@@ -971,9 +971,9 @@ void setup( void )
 					}
 					break;
 				case 8:
-					msdWorkAddress = msdAddrBuff[15];
-					msdWorkAddress2 = msdAddrBuff[14];
-					if ( msdWorkAddress == 0 && msdWorkAddress2 == 0 ) {
+					msdWorkaddress = msdaddrBuff[15];
+					msdWorkaddress2 = msdaddrBuff[14];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
 						lcdPrintf("No data");
 					} else {
@@ -988,9 +988,9 @@ void setup( void )
 					}
 					break;
 				case 9:
-					msdWorkAddress = msdAddrBuff[17];
-					msdWorkAddress2 = msdAddrBuff[16];
-					if ( msdWorkAddress == 0 && msdWorkAddress2 == 0 ) {
+					msdWorkaddress = msdaddrBuff[17];
+					msdWorkaddress2 = msdaddrBuff[16];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
 						lcdPrintf("No data");
 					} else {
@@ -1005,9 +1005,9 @@ void setup( void )
 					}
 					break;
 				case 10:
-					msdWorkAddress = msdAddrBuff[19];
-					msdWorkAddress2 = msdAddrBuff[18];
-					if ( msdWorkAddress == 0 && msdWorkAddress2 == 0 ) {
+					msdWorkaddress = msdaddrBuff[19];
+					msdWorkaddress2 = msdaddrBuff[18];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
 						lcdPrintf("No data");
 					} else {
@@ -1029,6 +1029,7 @@ void setup( void )
 					}
 					if ( tasw_get() == 0x1 && push1 == 0 && msdFlag == 0) {
 						push1 = 1;
+						readFlashSetup( 0, 0, 1 ,0 ,0 ,0 ,0);
 						init_log();	// ログ記録準備
 						msdFlag = 1;		// データ記録開始
 						lcdPosition( 0, 1 );
