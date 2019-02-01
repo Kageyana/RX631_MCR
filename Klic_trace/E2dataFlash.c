@@ -9,11 +9,11 @@
 unsigned short	cnt_flash;	// フラッシュ用カウント
 
 // フラッシュ関連
-static volatile short 		BeforeBlockNumber;	// 前回保存時のブロック番号
-static volatile short 		BeforeAddrNumber;	// 前回保存時のオフセット値
-static volatile short 		EndBlockNumber;		// 今回書き込みの最終ブロック番号
-static volatile short 		EndAddrOffset;		// 今回書き込みの最終オフセット値
-short 				flashDataBuff[45];	// 一時保存バッファ
+volatile short 		BeforeBlockNumber;	// 前回保存時のブロック番号
+volatile short 		BeforeAddrNumber;	// 前回保存時のオフセット値
+volatile short 		EndBlockNumber;		// 今回書き込みの最終ブロック番号
+volatile short 		EndAddrOffset;		// 今回書き込みの最終オフセット値
+short 			flashDataBuff[45];	// 一時保存バッファ
 
 static volatile short 		NowBlockNumber;		// 現在の書き込まれているブロック番号
 static volatile short 		NowAddrOffset;		// 現在の書き込まれているオフセット値
@@ -279,11 +279,11 @@ void changeFlashRead ( void )
 // 処理概要     指定アドレスにブランクチェック					//
 // 引数         block_number: ブランクチェックするブロック番号			//
 //		addr_offset: 先頭アドレスからのオフセット値			//
-// 戻り値       0:イレーズ済み　1:書き込み済み 2:エラーあり			//
+// 戻り値       0:イレーズ済み　1:書き込み済み -1:エラーあり			//
 //////////////////////////////////////////////////////////////////////////////////
-char checkBlank ( short block_number, char addr_offset )
+signed char checkBlank ( short block_number, char addr_offset )
 {
-	volatile char ret;
+	volatile signed char ret;
 	volatile unsigned int addr, lead_addr, offset;
 
 	// P/Eモード移行
@@ -334,10 +334,10 @@ char checkBlank ( short block_number, char addr_offset )
 				ret = 0;
 			}
 		} else {
-			ret = 2;
+			ret = -1;
 		}
 	} else {
-		ret = 2;
+		ret = -1;
 	}
 	
 	return ret;
@@ -701,197 +701,211 @@ void writeFlashData ( short startBlockNumber, short endBlockNumber, short endDat
 // 引数         addr: E2データフラッシュ領域のアドレス					//
 // 戻り値       addrの値								//
 //////////////////////////////////////////////////////////////////////////////////////////
-void readFlashSetup ( void )
+void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pid_angle, bool pid_speed, bool meter )
 {
 	short s, s2;
 	// フラッシュ読み込み開始
 	//printf("前回パラメータ読み込み開始\n");
 	
 	// パラメータ読み込み
-	// 全ブロックイレーズされているか確認する
-	if ( checkBlank( 0, 0 ) == 1 ) {
+	if ( speed ) {
+		// 全ブロックイレーズされているか確認する
+		if ( checkBlank( 0, 0 ) > 0 ) {
+			
+			// 前回保存時のアドレス読み込み
+			readBeforeAddr( 0, 10 );
+			// flashDataBuffにパラメータ読み込み
+			readFlashArray( flashDataBuff, NUMDATA );
+			
+			// 各データ取得
+			speed_straight		= flashDataBuff[ 0 ];
+			speed_curve_brake	= flashDataBuff[ 1 ];
+			speed_curve_r600	= flashDataBuff[ 2 ];
+			speed_curve_r450	= flashDataBuff[ 3 ];
+			speed_curve_straight	= flashDataBuff[ 4 ];
+			
+			speed_crossline		= flashDataBuff[ 5 ];
+			speed_ckank_trace	= flashDataBuff[ 6 ];
+			speed_rightclank_curve	= flashDataBuff[ 7 ];
+			speed_rightclank_escape	= flashDataBuff[ 8 ];
+			speed_leftclank_curve	= flashDataBuff[ 9 ];
+			speed_leftclank_escape	= flashDataBuff[ 10 ];
+			
+			speed_halfine		= flashDataBuff[ 11 ];
+			speed_rightchange_trace = flashDataBuff[ 12 ];
+			speed_rightchange_curve	= flashDataBuff[ 13 ];
+			speed_rightchange_escape= flashDataBuff[ 14 ];
+			speed_leftchange_trace 	= flashDataBuff[ 15 ];
+			speed_leftchange_curve	= flashDataBuff[ 16 ];
+			speed_leftchange_escape	= flashDataBuff[ 17  ];
+			
+			speed_slope_brake	= flashDataBuff[ 18 ];
+			speed_slope_trace	= flashDataBuff[ 19 ];
+					
+			angle_rightclank	= flashDataBuff[ 20 ];
+			angle_leftclank		= flashDataBuff[ 21 ];
+			angle_rightchange	= flashDataBuff[ 22 ];
+			angle_leftchange	= flashDataBuff[ 23 ];
 		
-		// 前回保存時のアドレス読み込み
-		readBeforeAddr( 0, 10 );
-		// flashDataBuffにパラメータ読み込み
-		readFlashArray( flashDataBuff, NUMDATA );
-		
-		// 各データ取得
-		speed_straight		= flashDataBuff[ 0 ];
-		speed_curve_brake	= flashDataBuff[ 1 ];
-		speed_curve_r600	= flashDataBuff[ 2 ];
-		speed_curve_r450	= flashDataBuff[ 3 ];
-		speed_curve_straight	= flashDataBuff[ 4 ];
-		
-		speed_crossline		= flashDataBuff[ 5 ];
-		speed_ckank_trace	= flashDataBuff[ 6 ];
-		speed_rightclank_curve	= flashDataBuff[ 7 ];
-		speed_rightclank_escape	= flashDataBuff[ 8 ];
-		speed_leftclank_curve	= flashDataBuff[ 9 ];
-		speed_leftclank_escape	= flashDataBuff[ 10 ];
-		
-		speed_halfine		= flashDataBuff[ 11 ];
-		speed_rightchange_trace = flashDataBuff[ 12 ];
-		speed_rightchange_curve	= flashDataBuff[ 13 ];
-		speed_rightchange_escape= flashDataBuff[ 14 ];
-		speed_leftchange_trace 	= flashDataBuff[ 15 ];
-		speed_leftchange_curve	= flashDataBuff[ 16 ];
-		speed_leftchange_escape	= flashDataBuff[ 17  ];
-		
-		speed_slope_brake	= flashDataBuff[ 18 ];
-		speed_slope_trace	= flashDataBuff[ 19 ];
-				
-		angle_rightclank	= flashDataBuff[ 20 ];
-		angle_leftclank		= flashDataBuff[ 21 ];
-		angle_rightchange	= flashDataBuff[ 22 ];
-		angle_leftchange	= flashDataBuff[ 23 ];
-	
-	} else if ( checkBlank( 0, 0 ) == 0 ) {
-		// 全ブロックイレーズされていたら初期値に設定する
-		speed_straight		= SPEED_STRAIGHT;
-		speed_curve_brake	= SPEED_CURVE_BRAKE;
-		speed_curve_r600	= SPEED_CURVE_R600;
-		speed_curve_r450	= SPEED_CURVE_R450;
-		speed_curve_straight	= SPEED_CURVE_STRAIGHT;
-		
-		speed_crossline		= SPEED_CROSSLINE;
-		speed_ckank_trace	= SPEED_CLANK_TRACE;
-		speed_rightclank_curve	= SPEED_RIGHTCLANK_CURVE;
-		speed_rightclank_escape	= SPEED_RIGHTCLANK_ESCAPE;
-		speed_leftclank_curve	= SPEED_LEFTCLANK_CURVE;
-		speed_leftclank_escape	= SPEED_LEFTCLANK_ESCAPE;
-		
-		speed_halfine		= SPEED_HALFLINE;
-		speed_rightchange_trace = SPEED_RIGHTCHANGE_TRACE;
-		speed_rightchange_curve	= SPEED_RIGHTCHANGE_CURVE;
-		speed_rightchange_escape= SPEED_RIGHTCHANGE_ESCAPE;
-		speed_leftchange_trace 	= SPEED_LEFTCHANGE_TRACE;
-		speed_leftchange_curve	= SPEED_LEFTCHANGE_CURVE;
-		speed_leftchange_escape	= SPEED_LEFTCHANGE_ESCAPE;
-		
-		speed_slope_brake	= SPEED_SLOPE_BRAKE;
-		speed_slope_trace	= SPEED_SLOPE_TRACE;
-		
-		angle_rightclank	= ANGLE_RIGHTCLANK;
-		angle_leftclank		= ANGLE_LEFTCLANK;
-		angle_rightchange	= ANGLE_RIGHTCHANGE;
-		angle_leftchange	= ANGLE_LEFTCHANGE;
-		
-		//printf("Patameter Initialize\n");
+		} else if ( checkBlank( 0, 0 ) == 0 ) {
+			// 全ブロックイレーズされていたら初期値に設定する
+			speed_straight		= SPEED_STRAIGHT;
+			speed_curve_brake	= SPEED_CURVE_BRAKE;
+			speed_curve_r600	= SPEED_CURVE_R600;
+			speed_curve_r450	= SPEED_CURVE_R450;
+			speed_curve_straight	= SPEED_CURVE_STRAIGHT;
+			
+			speed_crossline		= SPEED_CROSSLINE;
+			speed_ckank_trace	= SPEED_CLANK_TRACE;
+			speed_rightclank_curve	= SPEED_RIGHTCLANK_CURVE;
+			speed_rightclank_escape	= SPEED_RIGHTCLANK_ESCAPE;
+			speed_leftclank_curve	= SPEED_LEFTCLANK_CURVE;
+			speed_leftclank_escape	= SPEED_LEFTCLANK_ESCAPE;
+			
+			speed_halfine		= SPEED_HALFLINE;
+			speed_rightchange_trace = SPEED_RIGHTCHANGE_TRACE;
+			speed_rightchange_curve	= SPEED_RIGHTCHANGE_CURVE;
+			speed_rightchange_escape= SPEED_RIGHTCHANGE_ESCAPE;
+			speed_leftchange_trace 	= SPEED_LEFTCHANGE_TRACE;
+			speed_leftchange_curve	= SPEED_LEFTCHANGE_CURVE;
+			speed_leftchange_escape	= SPEED_LEFTCHANGE_ESCAPE;
+			
+			speed_slope_brake	= SPEED_SLOPE_BRAKE;
+			speed_slope_trace	= SPEED_SLOPE_TRACE;
+			
+			angle_rightclank	= ANGLE_RIGHTCLANK;
+			angle_leftclank		= ANGLE_LEFTCLANK;
+			angle_rightchange	= ANGLE_RIGHTCHANGE;
+			angle_leftchange	= ANGLE_LEFTCHANGE;
+			
+			//printf("Patameter Initialize\n");
+		}
 	}
-	
+		
 	// Angle0読み込み
-	// 全ブロックイレーズされているか確認する
-	if ( checkBlank( ANGLE0_AREA, 0 ) == 1 ) {
-		readBeforeAddr( ANGLE0_AREA, ANGLE0_AREA );	// 前回保存時のアドレス読み込み
-		readFlashArray( flashDataBuff, 1 );		// flashDataBuffにAngle0読み込み
-		Angle0 = flashDataBuff[ 0 ];			// データ取得
-	} else if ( checkBlank( ANGLE0_AREA, 0 ) == 0 ) {
-		// 全ブロックイレーズされていたら初期値に設定する
-		Angle0 = SERVO_CENTER;
-		//printf("Angle0 Initialize\n");
+	if ( C_angle ) {
+		// 全ブロックイレーズされているか確認する
+		if ( checkBlank( ANGLE0_STARTAREA, 0 ) > 0 ) {
+			readBeforeAddr( ANGLE0_STARTAREA, ANGLE0_ENDAREA );	// 前回保存時のアドレス読み込み
+			readFlashArray( flashDataBuff, 1 );		// flashDataBuffにAngle0読み込み
+			Angle0 = flashDataBuff[ 0 ];			// データ取得
+		} else if ( checkBlank( ANGLE0_STARTAREA, 0 ) == 0 ) {
+			// 全ブロックイレーズされていたら初期値に設定する
+			Angle0 = SERVO_CENTER;
+			//printf("Angle0 Initialize\n");
+		}
 	}
 	
 	// msdWorkAddress読み込み
-	// 全ブロックイレーズされているか確認する
-	if ( checkBlank( MSD_STARTAREA, 0 ) == 1 ) {
-		readBeforeAddr( MSD_STARTAREA, MSD_ENDAREA );	// 前回保存時のアドレス読み込み
-		readFlashArray2( flashDataBuff, 40, MSD_ENDAREA);// flashDataBuffにmsdWorkAddress読み込み読み込み
-		// データ取得
-		// 直近のログアドレス10個を取得
-		s = 0;
-		s2 = 0;
-		while ( s < 19 ) {
-			msdAddrBuff[s++] = (unsigned int)( (unsigned short)flashDataBuff[ s2+1 ] * 0x10000 + 
-						(unsigned short)flashDataBuff[ s2 ]);
-			msdAddrBuff[s++] = (unsigned int)( (unsigned short)flashDataBuff[ s2+3 ] * 0x10000 + 
-						(unsigned short)flashDataBuff[ s2+2 ]);
-			s2 += 4;
+	if ( msd ) {
+		// 全ブロックイレーズされているか確認する
+		if ( checkBlank( MSD_STARTAREA, 0 ) > 0 ) {
+			readBeforeAddr( MSD_STARTAREA, MSD_ENDAREA );	// 前回保存時のアドレス読み込み
+			readFlashArray2( flashDataBuff, 40, MSD_ENDAREA);// flashDataBuffにmsdWorkAddress読み込み読み込み
+			// データ取得
+			// 直近のログアドレス10個を取得
+			s = 0;
+			s2 = 0;
+			while ( s < 19 ) {
+				msdAddrBuff[s++] = (unsigned int)( (unsigned short)flashDataBuff[ s2+1 ] * 0x10000 + 
+							(unsigned short)flashDataBuff[ s2 ]);
+				msdAddrBuff[s++] = (unsigned int)( (unsigned short)flashDataBuff[ s2+3 ] * 0x10000 + 
+							(unsigned short)flashDataBuff[ s2+2 ]);
+				s2 += 4;
+			}
+			// 最新のログアドレス
+			/*
+			printf("msdAddrBuff[0] = %d msdAddrBuff[1] = %d\n", msdAddrBuff[0], msdAddrBuff[1]);
+			printf("msdAddrBuff[2] = %d msdAddrBuff[3] = %d\n", msdAddrBuff[2], msdAddrBuff[3]);
+			printf("msdAddrBuff[4] = %d msdAddrBuff[5] = %d\n", msdAddrBuff[4], msdAddrBuff[5]);
+			printf("msdAddrBuff[6] = %d msdAddrBuff[7] = %d\n", msdAddrBuff[6], msdAddrBuff[7]);
+			printf("msdAddrBuff[8] = %d msdAddrBuff[9] = %d\n", msdAddrBuff[8], msdAddrBuff[9]);
+			printf("msdAddrBuff[10] = %d msdAddrBuff[11] = %d\n", msdAddrBuff[10], msdAddrBuff[11]);
+			printf("msdAddrBuff[12] = %d msdAddrBuff[13] = %d\n", msdAddrBuff[12], msdAddrBuff[13]);
+			printf("msdAddrBuff[14] = %d msdAddrBuff[15] = %d\n", msdAddrBuff[14], msdAddrBuff[15]);
+			printf("msdAddrBuff[16] = %d msdAddrBuff[17] = %d\n", msdAddrBuff[16], msdAddrBuff[17]);
+			printf("msdAddrBuff[18] = %d msdAddrBuff[19] = %d\n", msdAddrBuff[18], msdAddrBuff[19]);
+			*/
+			
+			msdWorkAddress = msdAddrBuff[1];	// 前回開始アドレス
+			msdWorkAddress2 = msdAddrBuff[0];	// 前回終了アドレス
+		} else if ( checkBlank( MSD_STARTAREA, 0 ) == 0 ) {
+			// 全ブロックイレーズされていたら初期値に設定する
+			msdWorkAddress = MSD_STARTADDRESS;	// 開始アドレス
+			msdWorkAddress2 = MSD_ENDADDRESS;	// 終了アドレス
+			//printf("msdWorkAddress Initialize\n");
 		}
-		// 最新のログアドレス
-		/*
-		printf("msdAddrBuff[0] = %d msdAddrBuff[1] = %d\n", msdAddrBuff[0], msdAddrBuff[1]);
-		printf("msdAddrBuff[2] = %d msdAddrBuff[3] = %d\n", msdAddrBuff[2], msdAddrBuff[3]);
-		printf("msdAddrBuff[4] = %d msdAddrBuff[5] = %d\n", msdAddrBuff[4], msdAddrBuff[5]);
-		printf("msdAddrBuff[6] = %d msdAddrBuff[7] = %d\n", msdAddrBuff[6], msdAddrBuff[7]);
-		printf("msdAddrBuff[8] = %d msdAddrBuff[9] = %d\n", msdAddrBuff[8], msdAddrBuff[9]);
-		printf("msdAddrBuff[10] = %d msdAddrBuff[11] = %d\n", msdAddrBuff[10], msdAddrBuff[11]);
-		printf("msdAddrBuff[12] = %d msdAddrBuff[13] = %d\n", msdAddrBuff[12], msdAddrBuff[13]);
-		printf("msdAddrBuff[14] = %d msdAddrBuff[15] = %d\n", msdAddrBuff[14], msdAddrBuff[15]);
-		printf("msdAddrBuff[16] = %d msdAddrBuff[17] = %d\n", msdAddrBuff[16], msdAddrBuff[17]);
-		printf("msdAddrBuff[18] = %d msdAddrBuff[19] = %d\n", msdAddrBuff[18], msdAddrBuff[19]);
-		*/
-		
-		msdWorkAddress = msdAddrBuff[1];	// 前回開始アドレス
-		msdWorkAddress2 = msdAddrBuff[0];	// 前回終了アドレス
-	} else if ( checkBlank( MSD_STARTAREA, 0 ) == 0 ) {
-		// 全ブロックイレーズされていたら初期値に設定する
-		msdWorkAddress = MSD_STARTADDRESS;	// 開始アドレス
-		msdWorkAddress2 = MSD_ENDADDRESS;	// 終了アドレス
-		//printf("msdWorkAddress Initialize\n");
 	}
 	
 	// 白線トレース用PIDゲイン読み込み
-	// 全ブロックイレーズされているか確認する
-	if ( checkBlank( PID_STARTAREA, 0 ) == 1 ) {
-		readBeforeAddr( PID_STARTAREA, PID_ENDAREA );	// 前回保存時のアドレス読み込み
-		readFlashArray( flashDataBuff, 3 );		// flashDataBuffにPIDゲイン読み込み
-		// データ取得
-		kp_buff = flashDataBuff[ 0 ];
-		ki_buff = flashDataBuff[ 1 ];
-		kd_buff = flashDataBuff[ 2 ];
-	} else if ( checkBlank( PID_STARTAREA, 0 ) == 0 ) {
-		// 全ブロックイレーズされていたら初期値に設定する
-		kp_buff = KP;
-		ki_buff = KI;
-		kd_buff = KD;
-	//	printf("PIDgain Initialize\n");
+	if ( pid_line ) {
+		// 全ブロックイレーズされているか確認する
+		if ( checkBlank( PID_STARTAREA, 0 ) > 0 ) {
+			readBeforeAddr( PID_STARTAREA, PID_ENDAREA );	// 前回保存時のアドレス読み込み
+			readFlashArray( flashDataBuff, 3 );		// flashDataBuffにPIDゲイン読み込み
+			// データ取得
+			kp_buff = flashDataBuff[ 0 ];
+			ki_buff = flashDataBuff[ 1 ];
+			kd_buff = flashDataBuff[ 2 ];
+		} else if ( checkBlank( PID_STARTAREA, 0 ) == 0 ) {
+			// 全ブロックイレーズされていたら初期値に設定する
+			kp_buff = KP;
+			ki_buff = KI;
+			kd_buff = KD;
+		//	printf("PIDgain Initialize\n");
+		}
 	}
 	
 	// 角度制御用PIDゲイン読み込み
-	// 全ブロックイレーズされているか確認する
-	if ( checkBlank( PID2_STARTAREA, 0 ) == 1 ) {
-		readBeforeAddr( PID2_STARTAREA, PID2_ENDAREA );	// 前回保存時のアドレス読み込み
-		readFlashArray( flashDataBuff, 3 );		// flashDataBuffにPIDゲイン読み込み
-		// データ取得
-		kp2_buff = flashDataBuff[ 0 ];
-		ki2_buff = flashDataBuff[ 1 ];
-		kd2_buff = flashDataBuff[ 2 ];
-	} else if ( checkBlank( PID2_STARTAREA, 0 ) == 0 ) {
-		// 全ブロックイレーズされていたら初期値に設定する
-		kp2_buff = KP2;
-		ki2_buff = KI2;
-		kd2_buff = KD2;
-	//	printf("PID2gain Initialize\n");
+	if ( pid_angle ) {
+		// 全ブロックイレーズされているか確認する
+		if ( checkBlank( PID2_STARTAREA, 0 ) > 0 ) {
+			readBeforeAddr( PID2_STARTAREA, PID2_ENDAREA );	// 前回保存時のアドレス読み込み
+			readFlashArray( flashDataBuff, 3 );		// flashDataBuffにPIDゲイン読み込み
+			// データ取得
+			kp2_buff = flashDataBuff[ 0 ];
+			ki2_buff = flashDataBuff[ 1 ];
+			kd2_buff = flashDataBuff[ 2 ];
+		} else if ( checkBlank( PID2_STARTAREA, 0 ) == 0 ) {
+			// 全ブロックイレーズされていたら初期値に設定する
+			kp2_buff = KP2;
+			ki2_buff = KI2;
+			kd2_buff = KD2;
+		//	printf("PID2gain Initialize\n");
+		}
 	}
 	
 	// 速度制御用PIDゲイン読み込み
-	// 全ブロックイレーズされているか確認する
-	if ( checkBlank( PID3_STARTAREA, 0 ) == 1 ) {
-		readBeforeAddr( PID3_STARTAREA, PID3_ENDAREA );	// 前回保存時のアドレス読み込み
-		readFlashArray( flashDataBuff, 3 );		// flashDataBuffにPIDゲイン読み込み
-		// データ取得
-		kp3_buff = flashDataBuff[ 0 ];
-		ki3_buff = flashDataBuff[ 1 ];
-		kd3_buff = flashDataBuff[ 2 ];
-	} else if ( checkBlank( PID3_STARTAREA, 0 ) == 0 ) {
-		// 全ブロックイレーズされていたら初期値に設定する
-		kp3_buff = KP3;
-		ki3_buff = KI3;
-		kd3_buff = KD3;
-		//printf("PID3gain Initialize\n");
+	if ( pid_speed ) {
+		// 全ブロックイレーズされているか確認する
+		if ( checkBlank( PID3_STARTAREA, 0 ) > 1 ) {
+			readBeforeAddr( PID3_STARTAREA, PID3_ENDAREA );	// 前回保存時のアドレス読み込み
+			readFlashArray( flashDataBuff, 3 );		// flashDataBuffにPIDゲイン読み込み
+			// データ取得
+			kp3_buff = flashDataBuff[ 0 ];
+			ki3_buff = flashDataBuff[ 1 ];
+			kd3_buff = flashDataBuff[ 2 ];
+		} else if ( checkBlank( PID3_STARTAREA, 0 ) == 0 ) {
+			// 全ブロックイレーズされていたら初期値に設定する
+			kp3_buff = KP3;
+			ki3_buff = KI3;
+			kd3_buff = KD3;
+			//printf("PID3gain Initialize\n");
+		}
 	}
 	
 	// 停止距離読み込み
-	// 全ブロックイレーズされているか確認する
-	if ( checkBlank( STOPMETER_STARTAREA, 0 ) == 1 ) {
-		readBeforeAddr( STOPMETER_STARTAREA, STOPMETER_ENDAREA );	// 前回保存時のアドレス読み込み
-		readFlashArray( flashDataBuff, 1 );				// flashDataBuffに停止距離読み込み
-		stopping_meter = flashDataBuff[ 0 ];				// データ取得
-	} else if ( checkBlank( STOPMETER_STARTAREA, 0 ) == 0 ) {
-		// 全ブロックイレーズされていたら初期値に設定する
-		stopping_meter = STOPPING_METER;
-		//printf("StopMeter Initialize\n");
+	if ( meter ) {
+		// 全ブロックイレーズされているか確認する
+		if ( checkBlank( STOPMETER_STARTAREA, 0 ) == 1 ) {
+			readBeforeAddr( STOPMETER_STARTAREA, STOPMETER_ENDAREA );	// 前回保存時のアドレス読み込み
+			readFlashArray( flashDataBuff, 1 );				// flashDataBuffに停止距離読み込み
+			stopping_meter = flashDataBuff[ 0 ];				// データ取得
+		} else if ( checkBlank( STOPMETER_STARTAREA, 0 ) == 0 ) {
+			// 全ブロックイレーズされていたら初期値に設定する
+			stopping_meter = STOPPING_METER;
+			//printf("StopMeter Initialize\n");
+		}
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -933,5 +947,5 @@ void writeFlashBeforeStart ( void )
 	flashDataBuff[ 22 ] = angle_rightchange;
 	flashDataBuff[ 23 ] = angle_leftchange;
 	
-	writeFlashData( 0, 10, PARAMETER_AREA, NUMDATA );
+	writeFlashData( PARAMETER_STARTAREA, PARAMETER_ENDAREA, PARAMETER_AREA, NUMDATA );
 }

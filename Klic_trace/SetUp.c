@@ -1077,7 +1077,7 @@ void setup( void )
 			}
 			if ( tasw_get() == 0x4 && push1 == 0 ) {
 				push1 = 1;
-				writeFlashData( ANGLE0_AREA, ANGLE0_AREA, ANGLE0_DATA, 1 );
+				writeFlashData( ANGLE0_STARTAREA, ANGLE0_ENDAREA, ANGLE0_DATA, 1 );
 			} else if ( tasw_get() == 0x0 ) {
 				push1 = 0;
 			}

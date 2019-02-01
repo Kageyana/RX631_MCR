@@ -18,6 +18,7 @@
         <Path>Klic_trace\PeripheralFunctions.c</Path>
         <Path>Klic_trace\SCI.c</Path>
         <Path>Klic_trace\SetUp.c</Path>
+        <Path>Klic_trace\MemorryTrace.c</Path>
       </Category>
       <Category Name="mcu">
         <Path>mcu\dbsct.c</Path>
@@ -40,6 +41,7 @@
         <Path>header\PeripheralFunctions.h</Path>
         <Path>header\SCI.h</Path>
         <Path>header\SetUp.h</Path>
+        <Path>header\MemorryTrace.h</Path>
       </Category>
       <Category Name="AddFromPDG">
         <Category Name="SYSTEM">
@@ -134,8 +136,7 @@
           <Option>-isa=rxv1</Option>
           <Option>-fpu</Option>
           <Option>-dbl_size=8</Option>
-          <Option>-auto_enum</Option>
-          <Option>-lang=c99</Option>
+          <Option>-lang=c</Option>
           <Option>-include=RX631_mcr_ver3.0</Option>
           <Option>-include=RX631_mcr_ver3.0\i_src</Option>
           <Option>-include=RX631_mcr_ver3.0\AD_12</Option>
@@ -205,7 +206,6 @@
           <Option>-isa=rxv1</Option>
           <Option>-fpu</Option>
           <Option>-dbl_size=8</Option>
-          <Option>-auto_enum</Option>
           <Option>-head=runtime,math,stdarg,stdio,stdlib,string,new</Option>
           <Option>-output=%BuildModeName%\%ProjectName%.lib</Option>
           <Option>-nologo</Option>
@@ -249,6 +249,7 @@
           <Path>DefaultBuild\Interrupt_CMT.obj</Path>
           <Path>DefaultBuild\Interrupt_ADC_12.obj</Path>
           <Path>DefaultBuild\I2C_MPU-9255.obj</Path>
+          <Path>DefaultBuild\MemorryTrace.obj</Path>
         </LinkOrder>
         <CommonOptions>
           <IncludePathForC>RX631_mcr_ver3.0</IncludePathForC>

@@ -56,15 +56,10 @@ extern unsigned int		msdWorkAddress2;	// 作業用アドレス2
 extern volatile char		msdlibError;		// エラー番号
 extern signed char 		*msdBuffPointa;		// RAM保存バッファ用ポインタ
 
-extern volatile short		msdlibCnt;
+extern volatile short			msdlibCnt;
 extern volatile unsigned char	interrupt_msd_send_data;	// 送信フラグ
 
-extern unsigned int 		msdAddrBuff[25];	// MicroSDカードの最終書き込みアドレス保存用
-
-// ログ解析関連
-extern char			comp_char[10][10];
-extern short			comp_short[10][10];
-extern unsigned int		comp_uint[10][10];
+extern unsigned int 			msdAddrBuff[25];	// MicroSDカードの最終書き込みアドレス保存用
 //========================================//
 // プロトタイプ宣言									//
 //=======================================//
