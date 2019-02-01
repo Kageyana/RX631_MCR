@@ -674,7 +674,6 @@ void readBeforeAddr ( short startBlockNumber, short endBlockNumber )
 //////////////////////////////////////////////////////////////////////////////////////////
 void writeFlashData ( short startBlockNumber, short endBlockNumber, short endData, short width_data )
 {
-	//__clrpsw_i();
 	// 前回保存時のアドレス読み込み
 	readBeforeAddr( startBlockNumber, endBlockNumber );
 	// 書き込み領域確保

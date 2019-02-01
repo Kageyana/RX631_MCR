@@ -85,12 +85,8 @@
           <Path>RX631_mcr_ver3.0\CMT\R_PG_Timer_CMT_U1.h</Path>
         </Category>
         <Category Name="SCI">
-          <Path>RX631_mcr_ver3.0\SCI\R_PG_SCI_C1.c</Path>
-          <Path>RX631_mcr_ver3.0\SCI\R_PG_SCI_C1.h</Path>
           <Path>RX631_mcr_ver3.0\SCI\R_PG_SCI_C5.c</Path>
           <Path>RX631_mcr_ver3.0\SCI\R_PG_SCI_C5.h</Path>
-          <Path>RX631_mcr_ver3.0\SCI\R_PG_SCI_C12.c</Path>
-          <Path>RX631_mcr_ver3.0\SCI\R_PG_SCI_C12.h</Path>
         </Category>
         <Category Name="AD_12">
           <Path>RX631_mcr_ver3.0\AD_12\R_PG_ADC_12_S12AD0.c</Path>
@@ -225,6 +221,8 @@
           <Path>DefaultBuild\lowsrc.obj</Path>
           <Path>DefaultBuild\resetprg.obj</Path>
           <Path>DefaultBuild\sbrk.obj</Path>
+          <Path>DefaultBuild\I2C_MPU-9255.obj</Path>
+          <Path>DefaultBuild\MemorryTrace.obj</Path>
           <Path>DefaultBuild\R_PG_Clock.obj</Path>
           <Path>DefaultBuild\R_PG_IO_PORT.obj</Path>
           <Path>DefaultBuild\R_PG_IO_PORT_P1.obj</Path>
@@ -241,15 +239,11 @@
           <Path>DefaultBuild\R_PG_Timer_MTU_U0.obj</Path>
           <Path>DefaultBuild\R_PG_Timer_CMT_U0.obj</Path>
           <Path>DefaultBuild\R_PG_Timer_CMT_U1.obj</Path>
-          <Path>DefaultBuild\R_PG_SCI_C1.obj</Path>
           <Path>DefaultBuild\R_PG_SCI_C5.obj</Path>
-          <Path>DefaultBuild\R_PG_SCI_C12.obj</Path>
           <Path>DefaultBuild\R_PG_ADC_12_S12AD0.obj</Path>
           <Path>DefaultBuild\Interrupt_INTC.obj</Path>
           <Path>DefaultBuild\Interrupt_CMT.obj</Path>
           <Path>DefaultBuild\Interrupt_ADC_12.obj</Path>
-          <Path>DefaultBuild\I2C_MPU-9255.obj</Path>
-          <Path>DefaultBuild\MemorryTrace.obj</Path>
         </LinkOrder>
         <CommonOptions>
           <IncludePathForC>RX631_mcr_ver3.0</IncludePathForC>
