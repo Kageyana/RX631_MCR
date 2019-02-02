@@ -36,7 +36,7 @@ void msdgetData ()
 				// microSDよりデータ読み込み
 				if( msdWorkaddress >= msdEndaddress ) {
 					// 書き込み終了アドレスになったら、終わり
-					printf( "End.\n" );
+					//printf( "End.\n" );
 					setBeepPatternS( 0xa8a8 );
 					pattern_send = 4;
 					break;
@@ -45,7 +45,7 @@ void msdgetData ()
 				
 				if( ret != 0x00 ) {
 					// 読み込みエラー
-					printf( "\nmicroSD Read Error!!\n" );
+					//printf( "\nmicroSD Read Error!!\n" );
 					pattern_send = 4;
 					break;
 				} else {
@@ -99,7 +99,7 @@ bool serchPattern ( char process, char spattern )
 	// 3つ以上あればカーブを脱出したと判断する
 	if ( flag[ process ][ spattern ] >= 3 ) {
 		comp_uint[ process ][ cnt[ process ] ] = CharTouInt (40);		// 距離取得
-		printf("%d, %6d\n", spattern, comp_uint[ process ][ cnt[ process ] ] );
+		//printf("%d, %6d\n", spattern, comp_uint[ process ][ cnt[ process ] ] );
 		cnt[ process ]++;
 		flag[ process ][ spattern ] = 0;	// 繰り返しカウントをリセット
 		return true;

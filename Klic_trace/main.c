@@ -45,7 +45,7 @@ static char			Timer10;	// 1msカウント用
 // メインプログラム								//
 //====================================//
 void main(void){
-	short i, j, k = 0, l = 11, m;
+	short i, j, k = 0, l = 11, m = 1;
 	unsigned int ui;
 	
 	//=================================//
@@ -146,10 +146,10 @@ void main(void){
 					} else if ( cnt_out3 >= STOP_ENCODER ) {	// エンコーダ停止(ひっくり返った？)
 						error_mode = 3;
 						pattern = 101;
-					}/* else if( cnt_out4 >= STOP_GYRO ) {	// マイナスの加速度検知(コースから落ちた？)
+					} else if( cnt_out4 >= STOP_GYRO ) {	// マイナスの加速度検知(コースから落ちた？)
 						error_mode = 4;	
 						pattern = 101;
-					}*/
+					}
 					/*
 					// Buletoothで外部から停止
 					if ( stopWord == 1 ) {
@@ -302,7 +302,7 @@ void main(void){
 					EncoderTotal = 10;	// 総走行距離
 					cnt1 = 0;		// タイマリセット
 					enc1 = 0;
-					lcd_mode = 0;		// LCD表示OFF
+					//lcd_mode = 0;		// LCD表示OFF
 					msdFlag = 1;		// データ記録開始
 					pattern = 11;
 					break;
@@ -321,7 +321,7 @@ void main(void){
 				EncoderTotal = 10;	// 総走行距離
 				cnt1 = 0;		// タイマリセット
 				enc1 = 0;
-				lcd_mode = 1;		// LCD表示OFF
+				lcd_mode = 0;		// LCD表示OFF
 				msdFlag = 1;		// データ記録開始
 				pattern = 11;
 				break;

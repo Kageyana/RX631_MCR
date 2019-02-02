@@ -226,7 +226,7 @@ void getRollAngleIMU(void)
 	
 	angularVelocity_yg = (double)(rawXg) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
 	
-	RollAngleIMU += (double)( angularVelocity_yg) * 0.001;
+	RollAngleIMU -= (double)( angularVelocity_yg) * 0.001;
 	
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -241,6 +241,6 @@ void getPichAngleIMU( void )
 	
 	angularVelocity_xg = (double)(rawYg) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
 	
-	PichAngleIMU += (double)( angularVelocity_xg) * 0.001;
+	PichAngleIMU -= (double)( angularVelocity_xg) * 0.001;
 	
 }
