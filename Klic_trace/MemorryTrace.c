@@ -10,7 +10,7 @@ char			comp_char[10][100] = {0,0,0,0,0,0,0,0,0,0};
 short			comp_short[10][100] = {0,0,0,0,0,0,0,0,0,0};
 unsigned int	comp_uint[10][100] = {0,0,0,0,0,0,0,0,0,0};
 char			flag[100][20] = {0,0,0,0,0,0,0,0,0,0};
-char			cnt[10] = {0,0,0,0,0,0,0,0,0,0};
+short			cnt[10];
 
 char			mpattern = 11;
 ///////////////////////////////////////////////////////////////////////////
@@ -25,6 +25,7 @@ void msdgetData ()
 	volatile short ret;
 	volatile char pattern_send = 1;
 	flag[STRAIGHT][0] = 12;
+	cnt[0] = 0;
 	mpattern = 11;
 	
 	msdEndaddress = msdWorkaddress2;	// 読み込み終了アドレス

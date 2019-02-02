@@ -644,13 +644,14 @@ void setup( void )
 					
 				case 2:
 					// ジャイロ
-					lcdPosition( 0, 0 );
-					lcdPrintf("Gyro   %d", s);
 					if ( tasw_get() == 0x1 ) PichAngleIMU = 0;
+					if ( tasw_get() == 0x2 ) RollAngleIMU = 0;
 					if ( cnt_setup >= 100 ) {
 						cnt_setup = 0;
+						lcdPosition( 0, 0 );
+						lcdPrintf("Roll%4d", (short)RollAngleIMU);
 						lcdPosition( 0, 1 );
-						lcdPrintf("   %5d",(short)PichAngleIMU);
+						lcdPrintf("Pich%4d",(short)PichAngleIMU);
 					}
 					break;
 					
@@ -759,21 +760,6 @@ void setup( void )
 					break;
 					
 				case 12:
-					// ロール角度
-					lcdPosition( 0, 0 );
-					lcdPrintf("Roll%4d", (short)RollAngleIMU);
-					lcdPosition( 0, 1 );
-					lcdPrintf("Temp%2.1f", (double)TempIMU);
-					if ( tasw_get() == 0x2 ) RollAngleIMU = 0;
-					if ( tasw_get() == 0x1 ) {
-						wait_lcd(1000);
-						IMUSet = 0;
-						caribrateIMU();
-						IMUSet = 1;
-					}
-					break;
-					
-				case 13:
 					// IMU
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;
@@ -784,7 +770,7 @@ void setup( void )
 					}
 					break;
 					
-				case 14:
+				case 13:
 					// IMU
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;
@@ -795,7 +781,7 @@ void setup( void )
 					}
 					break;
 					
-				case 15:
+				case 14:
 					// IMU
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;
@@ -806,14 +792,20 @@ void setup( void )
 					}
 					break;
 					
-				case 16:
+				case 15:
 					// who am i
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 0 );
-						lcdPrintf("who am i");
+						lcdPrintf("wai 0x%d", whoami);
 						lcdPosition( 0, 1 );
-						lcdPrintf("%d     %x",IMUSet, whoami);
+						lcdPrintf("Temp%2.1f", (double)TempIMU);
+						if ( tasw_get() == 0x1 ) {
+							wait_lcd(1000);
+							IMUSet = 0;
+							caribrateIMU();
+							IMUSet = 1;
+						}
 					}
 					break;
 			}

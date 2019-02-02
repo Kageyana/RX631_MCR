@@ -688,7 +688,7 @@ void motorControl( void )
 		kp3 = 49;
 		ki3 = 41;
 		kd3 = 0;
-	} else if ( !demo  ) {
+	} else {
 		kp3 = kp3_buff;
 		ki3 = ki3_buff;
 		kd3 = kd3_buff;
