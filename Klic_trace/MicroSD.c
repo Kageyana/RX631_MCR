@@ -19,16 +19,16 @@ volatile unsigned char		interrupt_msd_send_data = 0;	// 送信フラグ
 
 // microSD関連
 signed char		msdBuff[ 512 ];		// 一時保存バッファ
-short				msdBuffAddress;	// 一時記録バッファ書込アドレス
+short				msdBuffaddress;	// 一時記録バッファ書込アドレス
 short				msdFlag = 0;		// 1:データ記録 0:記録しない
 short				msdTimer;			// 取得間隔計算用
-unsigned int		msdStartAddress;	// 記録開始アドレス
-unsigned int		msdEndAddress;	// 記録終了アドレス
-unsigned int		msdWorkAddress;	// 作業用アドレス
-unsigned int		msdWorkAddress2;	// 作業用アドレス2
+unsigned int		msdStartaddress;	// 記録開始アドレス
+unsigned int		msdEndaddress;	// 記録終了アドレス
+unsigned int		msdWorkaddress;	// 作業用アドレス
+unsigned int		msdWorkaddress2;	// 作業用アドレス2
 signed char 		*msdBuffPointa;		// RAM保存バッファ用ポインタ
-unsigned int 		msdAddrBuff[25];	// MicroSDカードの最終書き込みアドレス保存用
-
+unsigned int 		msdaddrBuff[25];	// MicroSDカードの最終書き込みアドレス保存用
+                                        
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 msd_write								//
 // 処理概要     microSD 1バイト書き込み						//
@@ -313,6 +313,7 @@ char getMicroSD_CSD( volatile unsigned char *p )
 	
 	// ダミーリード
 	msd_read();
+	msd_read();
 	
 	// ダミークロック送信
 	msd_write( 0xff );
@@ -342,7 +343,7 @@ char readMicroSD ( unsigned int address, signed char *read )
 	a1 = ( unsigned char )( ( address&0xff000000 ) >> 24 );
 	a2 = ( unsigned char )( ( address&0x00ff0000 ) >> 16 );
 	a3 = ( unsigned char )( ( address&0x0000ff00 ) >>  8 );
-	a4 = ( unsigned char )(  address&0x000000ff );
+	a4 = ( unsigned char )(  address&0x000000ff       );
 	
 	while ( ret < 1 && pattern_msd_read <= 3 ) {
 		switch ( pattern_msd_read ) {
@@ -870,27 +871,27 @@ void init_log ( void )
 	
 	// microSD 書き込み開始アドレス
 	// 512の倍数に設定する
-	msdStartAddress = msdAddrBuff[0] + 1;
+	msdStartaddress = msdaddrBuff[0] + 1;
 	// 終了アドレスが初期値の場合開始アドレスを0にする
-	if ( msdStartAddress == MSD_ENDADDRESS + 1 || msdStartAddress >= 4000000000 ) msdStartAddress = 0;
+	if ( msdStartaddress == MSD_ENDADDRESS + 1 || msdStartaddress >= 4000000000 ) msdStartaddress = 0;
 
 	// microSD 書き込み終了アドレス
 	// 書き込みしたい時間[ms] : x = 10[ms] : 64バイト(保存バイト数)
 	// 5000msなら、x = 5000 * 64 / 10 = 32000
 	// 結果は512の倍数になるように繰り上げする。よって、32256にする。
-	// msdEndAddressBuff = RecodeTime * Data_Size / WriteTime
-	// msdEndAddressBuff = ( 512 - ( msdEndAddressBuff % 512 ) ) + msdEndAddressBuff;
+	// msdEndaddressBuff = RecodeTime * Data_Size / WriteTime
+	// msdEndaddressBuff = ( 512 - ( msdEndaddressBuff % 512 ) ) + msdEndaddressBuff;
 	
-	msdEndAddress = MSD_ENDADDRESS;
-	msdEndAddress += msdStartAddress;   // スタート分足す
-	printf("msdStartAddress = %d\n", msdStartAddress);
-	printf("msdEndAddress = %d\n", msdEndAddress);
+	msdEndaddress = MSD_ENDADDRESS;
+	msdEndaddress += msdStartaddress;   // スタート分足す
+	printf("msdStartaddress = %d\n", msdStartaddress);
+	printf("msdEndaddress = %d\n", msdEndaddress);
 	
 	while ( pattern_inti_log < 2 ) {
 		switch ( pattern_inti_log ) {
 			case 0:
 				// microSDクリア
-				ret = eraseMicroSD( msdStartAddress, msdEndAddress - 1 );
+				ret = eraseMicroSD( msdStartaddress, msdEndaddress - 1 );
 				if( ret != 0x00 ) {
 					setBeepPatternS( 0xaa00 );
 					printf( "\nmicroSD Erase Error!!\n" );  // エラー
@@ -901,14 +902,14 @@ void init_log ( void )
 				
 			case 1:
 				// microSDProcess開始処理
-				ret = microSDProcessStart( msdStartAddress );
+				ret = microSDProcessStart( msdStartaddress );
 			        if( ret != 0x00 ) {
 					setBeepPatternS( 0xaa00 );
 					printf( "\nmicroSD microSDProcess Error!!\n" );  // エラー
 					break;
 				}
-				msdBuffAddress = 0;
-				msdWorkAddress = msdStartAddress;
+				msdBuffaddress = 0;
+				msdWorkaddress = msdStartaddress;
 				
 				pattern_inti_log = 2;
 				break;
@@ -917,7 +918,7 @@ void init_log ( void )
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 sendLog								//
-// 処理概要     Microsdへデータ転送						//
+// 処理概要     PCへデータ転送							//
 // 引数         なし									//
 // 戻り値       なし									//
 ///////////////////////////////////////////////////////////////////////////
@@ -925,7 +926,7 @@ void sendLog (void) {
 	msdTimer++;
 	if( msdTimer == WRITINGTIME ) {
 		msdTimer = 0;
-		msdBuffPointa = msdBuff + msdBuffAddress;
+		msdBuffPointa = msdBuff + msdBuffaddress;
 		// ここから記録
 		send_Char			(	pattern		);
 		send_Char			(	motorPwm 	);
@@ -947,24 +948,24 @@ void sendLog (void) {
 		send_ShortToChar	((short)RollAngleIMU*10	);
 		send_ShortToChar	(	Encoder		);
 		send_ShortToChar	(	targetSpeed	);
-		send_ShortToChar	(	rawXa2		);
-		send_ShortToChar	(	rawYa2		);
-		send_ShortToChar	(	rawZa2		);
-		send_ShortToChar	(	rawXg2		);
-		send_ShortToChar	(	rawYg2		);
-		send_ShortToChar	(	rawZg2		);
+		send_ShortToChar	(	rawXa		);
+		send_ShortToChar	(	rawYa		);
+		send_ShortToChar	(	rawZa		);
+		send_ShortToChar	(	rawXg		);
+		send_ShortToChar	(	rawYg		);
+		send_ShortToChar	(	rawZg		);
 		
 		send_uIntToChar 	(	EncoderTotal	);
 		send_uIntToChar 	(	enc1			);
 		send_uIntToChar 	(	cnt_log		);
 		// ここまで
 		cnt_log += WRITINGTIME;
-		msdBuffAddress += DATA_BYTE;       // RAMの記録アドレスを次へ
-		if( msdBuffAddress >= 512 ) {
-			msdBuffAddress = 0;
+		msdBuffaddress += DATA_BYTE;       // RAMの記録アドレスを次へ
+		if( msdBuffaddress >= 512 ) {
+			msdBuffaddress = 0;
 			setMicroSDdata( msdBuff ); 
-			msdWorkAddress += 512;
-			if( msdWorkAddress >= msdEndAddress ) {
+			msdWorkaddress += 512;
+			if( msdWorkaddress >= msdEndaddress ) {
 				msdFlag = 0;
 			}
 		}
@@ -1020,21 +1021,21 @@ void msd_sendToPC ( void )
 				printf(		"cnt_log[ms]"		);
 				printf("\n");
 				
-				msdEndAddress = msdWorkAddress2;	// 読み込み終了アドレス
-				msdWorkAddress = msdWorkAddress;	// 読み込み開始アドレス
+				msdEndaddress = msdWorkaddress2;	// 読み込み終了アドレス
+				msdWorkaddress = msdWorkaddress;	// 読み込み開始アドレス
 				pattern_send = 2;
 				break;
 				
 			case 2:
 				// microSDよりデータ読み込み
-				if( msdWorkAddress >= msdEndAddress ) {
+				if( msdWorkaddress >= msdEndaddress ) {
 					// 書き込み終了アドレスになったら、終わり
 					printf( "End.\n" );
 					setBeepPatternS( 0xa8a8 );
 					pattern_send = 4;
 					break;
 				}
-				ret = readMicroSD( msdWorkAddress , msdBuff );
+				ret = readMicroSD( msdWorkaddress , msdBuff );
 				
 				if( ret != 0x00 ) {
 					// 読み込みエラー
@@ -1043,8 +1044,8 @@ void msd_sendToPC ( void )
 					break;
 				} else {
 					// エラーなし
-					msdWorkAddress += 512;		// microSDのアドレスを+512する
-					msdBuffAddress = 0;		// 配列からの読み込み位置を0に
+					msdWorkaddress += 512;		// microSDのアドレスを+512する
+					msdBuffaddress = 0;		// 配列からの読み込み位置を0に
 					pattern_send = 3;
 					break;
 				}
@@ -1053,16 +1054,16 @@ void msd_sendToPC ( void )
 			case 3:
 				// データ転送
 				printf("%5d,", i);
-				printf("%5d,", msdBuff[ msdBuffAddress + 0 ]);	// pattern
-				printf("%5d,", msdBuff[ msdBuffAddress + 1 ]);	// motorPwm
-				printf("%5d,", msdBuff[ msdBuffAddress + 2 ]);	// accele_fL
-				printf("%5d,", msdBuff[ msdBuffAddress + 3 ]);	// accele_fR
-				printf("%5d,", msdBuff[ msdBuffAddress + 4 ]);	// accele_rL
-				printf("%5d,", msdBuff[ msdBuffAddress + 5 ]);	// accele_rR
-				printf("%5d,", msdBuff[ msdBuffAddress + 6 ]);	// ServoPwm
-				printf("%5d,", msdBuff[ msdBuffAddress + 7 ]);	// ServoPwm2
-				printf("%5d,", msdBuff[ msdBuffAddress + 8 ]);	// sensor_inp()
-				printf("%5d,", msdBuff[ msdBuffAddress + 9 ]);	// slope_mode
+				printf("%5d,", msdBuff[ msdBuffaddress + 0 ]);	// pattern
+				printf("%5d,", msdBuff[ msdBuffaddress + 1 ]);	// motorPwm
+				printf("%5d,", msdBuff[ msdBuffaddress + 2 ]);	// accele_fL
+				printf("%5d,", msdBuff[ msdBuffaddress + 3 ]);	// accele_fR
+				printf("%5d,", msdBuff[ msdBuffaddress + 4 ]);	// accele_rL
+				printf("%5d,", msdBuff[ msdBuffaddress + 5 ]);	// accele_rR
+				printf("%5d,", msdBuff[ msdBuffaddress + 6 ]);	// ServoPwm
+				printf("%5d,", msdBuff[ msdBuffaddress + 7 ]);	// ServoPwm2
+				printf("%5d,", msdBuff[ msdBuffaddress + 8 ]);	// sensor_inp()
+				printf("%5d,", msdBuff[ msdBuffaddress + 9 ]);	// slope_mode
 				
 				printf("%5d,", CharToShort(10));				// getServoAngle()
 				printf("%5d,", CharToShort(12));				// SetAngle
@@ -1085,9 +1086,9 @@ void msd_sendToPC ( void )
 				printf("%6d", CharTouInt (48));		// cnt_log
 				printf("\n");
 				i += WRITINGTIME;
-				msdBuffAddress += DATA_BYTE;
+				msdBuffaddress += DATA_BYTE;
 				
-				if( msdBuffAddress >= 512 ) {
+				if( msdBuffaddress >= 512 ) {
 					pattern_send = 2;
 					break;
 				}
@@ -1115,7 +1116,7 @@ char msdEndLog ( void )
 					pattern_msdend = 1;
 					break;
 				} else if ( checkMicroSDProcess() == 0 ) {
-					//setBeepPatternS( 0xf0f0 );
+					setBeepPatternS( 0xf0f0 );
 					pattern_msdend = 3;
 					break;
 				}
@@ -1125,15 +1126,13 @@ char msdEndLog ( void )
 				// 終了処理が終わるまで待つ
 				if ( checkMicroSDProcess() == 0 ) {
 					// MicroSD最終書き込みアドレス保存
-					flashDataBuff[ 0 ] = msdStartAddress >> 16;
-					flashDataBuff[ 1 ] = msdStartAddress & 0xffff;	// 開始アドレス
-					flashDataBuff[ 2 ] = msdWorkAddress >> 16;
-					flashDataBuff[ 3 ] = msdWorkAddress & 0xffff;	// 終了アドレス
+					flashDataBuff[ 0 ] = msdStartaddress >> 16;
+					flashDataBuff[ 1 ] = msdStartaddress & 0xffff;	// 開始アドレス
+					flashDataBuff[ 2 ] = msdWorkaddress >> 16;
+					flashDataBuff[ 3 ] = msdWorkaddress & 0xffff;	// 終了アドレス
 					writeFlashData( MSD_STARTAREA, MSD_ENDAREA, MSD_DATA, 4 );
-					printf("EndblockNumber = %d\n",EndblockNumber);
-					printf("EndaddrOffset = %d\n",EndaddrOffset);
 					pattern_msdend = 2;
-					//setBeepPatternS( 0xa8a8 );
+					setBeepPatternS( 0xa8a8 );
 					break;
 				}
 				break;
@@ -1179,32 +1178,32 @@ void send_uIntToChar ( unsigned int data )
 ///////////////////////////////////////////////////////////////////////////////////////
 // モジュール名 CharToShort									//
 // 処理概要     unsigned char型変数をshort型に変換する					//
-// 引数         data:変換するsigned char型変数	offsetAddress: MicroSD内の順番	//
+// 引数         data:変換するsigned char型変数	offsetaddress: MicroSD内の順番	//
 // 戻り値       変換したshort型									//
 ///////////////////////////////////////////////////////////////////////////////////////
-short CharToShort( unsigned char offsetAddress )
+short CharToShort( unsigned char offsetaddress )
 {
 	volatile short s;
 	
-	s = (short)( (unsigned char)msdBuff[msdBuffAddress + offsetAddress] * 0x100 + 
-			(unsigned char)msdBuff[msdBuffAddress + offsetAddress + 1] );
+	s = (short)( (unsigned char)msdBuff[msdBuffaddress + offsetaddress] * 0x100 + 
+			(unsigned char)msdBuff[msdBuffaddress + offsetaddress + 1] );
 					
 	return s;				
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 // モジュール名 CharTouInt										//
 // 処理概要     unsigned char型変数をunsigned int型に変換する				//
-// 引数         data:変換するsigned char型変数	offsetAddress: MicroSD内の順番	//
+// 引数         data:変換するsigned char型変数	offsetaddress: MicroSD内の順番	//
 // 戻り値       変換したunsigned int型								//
 ///////////////////////////////////////////////////////////////////////////////////////
-unsigned int CharTouInt( unsigned char offsetAddress )
+unsigned int CharTouInt( unsigned char offsetaddress )
 {
 	volatile unsigned int i;
 	
-	i = (unsigned int)(unsigned char)msdBuff[msdBuffAddress + offsetAddress] * 0x1000000;
-	i += (unsigned int)(unsigned char)msdBuff[msdBuffAddress + offsetAddress + 1] * 0x10000;
-	i += (unsigned int)(unsigned char)msdBuff[msdBuffAddress + offsetAddress + 2] * 0x100;
-	i += (unsigned int)(unsigned char)msdBuff[msdBuffAddress + offsetAddress + 3];
+	i = (unsigned int)(unsigned char)msdBuff[msdBuffaddress + offsetaddress] * 0x1000000;
+	i += (unsigned int)(unsigned char)msdBuff[msdBuffaddress + offsetaddress + 1] * 0x10000;
+	i += (unsigned int)(unsigned char)msdBuff[msdBuffaddress + offsetaddress + 2] * 0x100;
+	i += (unsigned int)(unsigned char)msdBuff[msdBuffaddress + offsetaddress + 3];
 					
 	return i;				
 }

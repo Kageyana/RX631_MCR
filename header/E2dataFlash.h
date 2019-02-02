@@ -74,33 +74,33 @@ extern unsigned short		cnt_flash;	// フラッシュ用カウント
 
 extern short			flashDataBuff[45];	// 一時保存バッファ
 
-extern volatile short 		EndblockNumber;	// 今回書き込みの最終ブロック番号
-extern volatile short 		EndaddrOffset;		// 今回書き込みの最終オフセット値
+extern volatile short 		EndBlockNumber;	// 今回書き込みの最終ブロック番号
+extern volatile short 		EndAddrOffset;		// 今回書き込みの最終オフセット値
 
-extern volatile short 		BeforeblockNumber;	// 前回保存時のブロック番号
+extern volatile short 		BeforeBlockNumber;	// 前回保存時のブロック番号
 extern volatile short 		BeforeAddrNumber;	// 前回保存時のオフセット値
 //======================================//
 // プロトタイプ宣言                     //
 //======================================//
 void wait_flash ( short waitTime );
 void FirmWareCopy ( void );
-void fcuCommandByte ( unsigned short block_number, unsigned char command, char addr_number );
-void fcuCommandWord ( unsigned short block_number, unsigned short command, char addr_number );
+void fcuCommandByte ( unsigned short Block_number, unsigned char command, char Addr_number );
+void fcuCommandWord ( unsigned short Block_number, unsigned short command, char Addr_number );
 char checkFRDY ( unsigned short waittime );
 char checkErrorFlash ( void );
 char initFlash ( void );
 void changeFlashPE ( void );
 void changeFlashRead ( void );
-signed char checkBlank ( short block_number, char addr_offset );
-char eraseE2DataFlash ( unsigned short block_number );
-void checkWriteAddr ( short startNumber, char startoffset, short endblock, short width_data, short startblock );
+signed char checkBlank ( short Block_number, char Addr_offset );
+char eraseE2DataFlash ( unsigned short Block_number );
+void checkWriteAddr ( short startNumber, char startOffset, short endblock, short width_data, short startBlock );
 char writeFlash ( short* write_data, short width_data );
-short readFlashBlock ( short block_number, char addr_number );
-short readFlashAddr ( unsigned int addr );
+short readFlashBlock ( short Block_number, char Addr_number );
+short readFlashAddr ( unsigned int Addr );
 void readFlashArray ( volatile short* array, short width_data );
 void readFlashArray2 ( volatile short* dataArray, short width_data, short limitArea );
-void readBeforeAddr ( short startblockNumber, short endblockNumber );
-void writeFlashData ( short startblockNumber, short endblockNumber, short endData, short width_data );
+void readBeforeAddr ( short startBlockNumber, short endBlockNumber );
+void writeFlashData ( short startBlockNumber, short endBlockNumber, short endData, short width_data );
 void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pid_angle, bool pid_speed, bool meter );
 void writeFlashBeforeStart ( void );
 

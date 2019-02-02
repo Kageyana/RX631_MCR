@@ -684,11 +684,11 @@ void motorControl( void )
 	j = Encoder * 10;		// 現在値
 	
 	// デモモードのときゲイン変更
-	if ( demo == 1 ) {
+	if ( demo ) {
 		kp3 = 49;
 		ki3 = 41;
 		kd3 = 0;
-	} else if ( demo == 0 ) {
+	} else {
 		kp3 = kp3_buff;
 		ki3 = ki3_buff;
 		kd3 = kd3_buff;
@@ -726,6 +726,7 @@ void motorControl( void )
 	else		AccelefBefore = 1;
 	
 	motorPwm = iRet;
+	
 	EncoderBefore = Dev;
 	targetSpeedBefore = i;
 }

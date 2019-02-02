@@ -328,8 +328,8 @@ void Excep_ICU_GROUP5(void);
 void Excep_ICU_GROUP6(void);
 
 // ICU GROUP12
-#pragma interrupt (Excep_ICU_GROUP12(vect=114))
-void Excep_ICU_GROUP12(void);
+//#pragma interrupt (Excep_ICU_GROUP12(vect=114))
+//void Excep_ICU_GROUP12(void);
 
 // SCI12 SCIX0
 #pragma interrupt (Excep_SCI12_SCIX0(vect=122))
@@ -738,10 +738,10 @@ void Excep_SCI0_TXI0(void);
 // SCI0 TEI0
 #pragma interrupt (Excep_SCI0_TEI0(vect=216))
 void Excep_SCI0_TEI0(void);
-
+/*
 // SCI1 RXI1
-//#pragma interrupt (Excep_SCI1_RXI1(vect=217))
-//void Excep_SCI1_RXI1(void);
+#pragma interrupt (Excep_SCI1_RXI1(vect=217))
+void Excep_SCI1_RXI1(void);
 
 // SCI1 TXI1
 #pragma interrupt (Excep_SCI1_TXI1(vect=218))
@@ -750,7 +750,7 @@ void Excep_SCI1_TXI1(void);
 // SCI1 TEI1
 #pragma interrupt (Excep_SCI1_TEI1(vect=219))
 void Excep_SCI1_TEI1(void);
-
+*/
 // SCI2 RXI2
 #pragma interrupt (Excep_SCI2_RXI2(vect=220))
 void Excep_SCI2_RXI2(void);
@@ -786,7 +786,7 @@ void Excep_SCI4_TXI4(void);
 // SCI4 TEI4
 #pragma interrupt (Excep_SCI4_TEI4(vect=228))
 void Excep_SCI4_TEI4(void);
-
+/*
 // SCI5 RXI5
 #pragma interrupt (Excep_SCI5_RXI5(vect=229))
 void Excep_SCI5_RXI5(void);
@@ -798,7 +798,7 @@ void Excep_SCI5_TXI5(void);
 // SCI5 TEI5
 #pragma interrupt (Excep_SCI5_TEI5(vect=231))
 void Excep_SCI5_TEI5(void);
-
+*/
 // SCI6 RXI6
 #pragma interrupt (Excep_SCI6_RXI6(vect=232))
 void Excep_SCI6_RXI6(void);
@@ -870,7 +870,7 @@ void Excep_SCI11_TXI11(void);
 // SCI11 TEI11
 #pragma interrupt (Excep_SCI11_TEI11(vect=249))
 void Excep_SCI11_TEI11(void);
-
+/*
 // SCI12 RXI12
 #pragma interrupt (Excep_SCI12_RXI12(vect=250))
 void Excep_SCI12_RXI12(void);
@@ -882,10 +882,11 @@ void Excep_SCI12_TXI12(void);
 // SCI12 TEI12
 #pragma interrupt (Excep_SCI12_TEI12(vect=252))
 void Excep_SCI12_TEI12(void);
-
+*/
 // IEB IEBINT
 #pragma interrupt (Excep_IEB_IEBINT(vect=253))
 void Excep_IEB_IEBINT(void);
+
 
 //;<<VECTOR DATA START (POWER ON RESET)>>
 //;Power On Reset PC
