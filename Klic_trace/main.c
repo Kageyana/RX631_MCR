@@ -869,7 +869,7 @@ void main(void){
 				pattern = 52;
 				break;
 			}
-			/*if( enc1 <= 20 * PALSE_MILLIMETER ) {
+			/*if( enc1 <=  enc_mm( 20 ) ) {
 				if( sensor_inp() == 0x2 ) {
 					enc1 = 0;
 					pattern = 11;
@@ -1007,7 +1007,7 @@ void main(void){
 				pattern = 62;
 				break;
 			}
-			/*if( enc1 <= 20 * PALSE_MILLIMETER ) {
+			/*if( enc1 <=  enc_mm( 20 ) ) {
 				if( sensor_inp() == 0x2 ) {
 					enc1 = 0;
 					pattern = 11;

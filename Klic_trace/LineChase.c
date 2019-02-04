@@ -647,7 +647,7 @@ void getTurningAngleEnc(void)
 		}
 		v = Encoder;	// ë¨ìxéÊìæ
 		if ( angle != 0 ) {
-			angularVelocity = (double)( 180 * v) / (r1 * SPEED_CURRENT_DETAIL * PI);// äpë¨ìxåvéZ É÷ = (v/r)*(180/pi)
+			angularVelocity = (double)( 180 * v) / (r1 * PALSE_MILLIMETER * PI);// äpë¨ìxåvéZ É÷ = (v/r)*(180/pi)
 		} else {
 			angularVelocity = 0;
 		}

@@ -7,25 +7,25 @@
 //====================================//
 // シンボル定義									//
 //====================================//
-#define	SERVO_CENTER		2010		// サーボセンターのAD値
-#define	SERVO_LIMIT		430		// サーボリミットAD値±
+#define SERVO_CENTER		2010		// サーボセンターのAD値
+#define SERVO_LIMIT		430		// サーボリミットAD値±
 #define TGR_MOTOR			4798		// ジェネラルレジスタ初期値(駆動モータ)
 #define TGR_SERVO			2878		// ジェネラルレジスタ初期値(サーボ)
-#define PALSE_METER		24750L	// 1mのパルス
+#define PALSE_METER		24750	// 1mのパルス
 #define PALSE_MILLIMETER	24.75F	// 1mmのパルス
 #define SPEED_CURRENT		25		// 1m/sの時　1msのパルス
-#define SPEED_CURRENT_DETAIL	24.75F	// 1m/sの時　1msのパルス
 
 /*************************************** 自動生成関数 *************************************/
 // タイマ割り込み
-#define SET_CMT_C0		R_PG_Timer_Set_CMT_U0_C0();	// コンペアマッチタイマ初期化(ch0)
-#define START_CMT_C0	R_PG_Timer_StartCount_CMT_U0_C0();	// // カウントスタート(ch0)
+#define SET_CMT_C0		R_PG_Timer_Set_CMT_U0_C0();			// コンペアマッチタイマ初期化(ch0)
+#define START_CMT_C0	R_PG_Timer_StartCount_CMT_U0_C0();	// カウントスタート(ch0)
 
 // エンコーダ
 #define ENCODER_COUNT	R_PG_Timer_GetCounterValue_MTU_U0_C1( &cnt_Encoder );	// カウント取得
 
 // タクトスイッチ
 // デジタルインプット
+#define TACTSWITCH2	R_PG_IO_PORT_Read_PC5(&tasw_d[0]);
 #define TACTSWITCH1	R_PG_IO_PORT_Read_PC4(&tasw_d[1]);
 #define TACTSWITCH3	R_PG_IO_PORT_Read_PC6(&tasw_d[2]);
 #define TACTSWITCH4	R_PG_IO_PORT_Read_P50(&tasw_d[3]);
@@ -36,12 +36,12 @@
 #define DIPSWITCH4		R_PG_IO_PORT_Read_PC0(&dpsw_d[3]);
 
 // ADコンバータ
-#define SET_ADC		R_PG_ADC_12_Set_S12AD0(); 			// 12ビットA/Dコンバータ(S12AD0)を設定
+#define SET_ADC		R_PG_ADC_12_Set_S12AD0(); 				// 12ビットA/Dコンバータ(S12AD0)を設定
 #define START_ADC		R_PG_ADC_12_StartConversionSW_S12AD0();	// A/D変換開始
-#define GET_ADC		R_PG_ADC_12_GetResult_S12AD0( result );// AD値を取得
+#define GET_ADC		R_PG_ADC_12_GetResult_S12AD0( result );	// AD値を取得
 
 // ディレイ
-#define DELAY			R_PG_IO_PORT_Write_P27(0);			// 未接続の端子を割り当てる
+#define DELAY			R_PG_IO_PORT_Write_P27(0);		// 未接続の端子を割り当てる
 
 // LED
 #define LED_OUT		R_PG_IO_PORT_Write_P5( led2 );	// LED点灯
@@ -53,10 +53,10 @@
 
 // モータ
 // MTU初期化(PWM機能、エンコーダ)
-#define SET_MTU_C0		R_PG_Timer_Set_MTU_U0_C0();		// ch0
-#define SET_MTU_C1		R_PG_Timer_Set_MTU_U0_C1();		// ch1
-#define SET_MTU_C2		R_PG_Timer_Set_MTU_U0_C2();		// ch2
-#define SET_MTU_C3		R_PG_Timer_Set_MTU_U0_C3();		// ch3
+#define SET_MTU_C0		R_PG_Timer_Set_MTU_U0_C0();	// ch0
+#define SET_MTU_C1		R_PG_Timer_Set_MTU_U0_C1();	// ch1
+#define SET_MTU_C2		R_PG_Timer_Set_MTU_U0_C2();	// ch2
+#define SET_MTU_C3		R_PG_Timer_Set_MTU_U0_C3();	// ch3
 // MTU0,1,2,3のカウント開始
 #define START_MTU		R_PG_Timer_SynchronouslyStartCount_MTU_U0( 1, 1, 1, 1, 0);
 
@@ -66,7 +66,6 @@
 #define PWM_FL_OUT	R_PG_Timer_SetTGR_D_MTU_U0_C0( pwmfl );	// PWM出力
 // 右前輪
 #define DIR_FR_FOR		R_PG_IO_PORT_Write_PB4( 0 );
-#define TACTSWITCH2	R_PG_IO_PORT_Read_PC5(&tasw_d[0]);
 #define DIR_FR_REV		R_PG_IO_PORT_Write_PB4( 1 );
 #define PWM_FR_OUT	R_PG_Timer_SetTGR_B_MTU_U0_C0( pwmfr );
 // 左後輪
