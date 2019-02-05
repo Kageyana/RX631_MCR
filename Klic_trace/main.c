@@ -86,8 +86,12 @@ void main(void){
 		lcdPosition( 0, 1 );
 		lcdPrintf("      OK");
 	}
+	IMUSet = i;
 	
 	wait_lcd(100);
+	printf("kp3\n");
+	printf("kp3\n");
+	printf("kp3\n");
 	// フラッシュ初期化
 	if( initFlash() == 0 ) {
 		setBeepPatternS( 0x8000 );
@@ -127,7 +131,7 @@ void main(void){
 	}
 	wait_lcd(100);
 	
-	IMUSet = i;
+	
 	while(1){
 		__setpsw_i();
 		if( pattern >= 11 && pattern <= 99 ) {
@@ -226,6 +230,7 @@ void main(void){
 				flashDataBuff[ 2 ] = kd2_buff;
 				writeFlashData( PID2_STARTAREA, PID2_ENDAREA, PID2_DATA, 3 );
 				// 速度制御用PIDゲイン保存
+				printf("kp3 = %d, ki3 = %d kd3 = %d", kp3_buff, ki3_buff, kd3_buff);
 				flashDataBuff[ 0 ] = kp3_buff;
 				flashDataBuff[ 1 ] = ki3_buff;
 				flashDataBuff[ 2 ] = kd3_buff;

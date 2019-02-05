@@ -714,7 +714,7 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 	// パラメータ読み込み
 	if ( speed ) {
 		// 全ブロックイレーズされているか確認する
-		if ( checkBlank( 0, 0 ) > 0 ) {
+		if ( checkBlank( PARAMETER_STARTAREA, 0 ) ) {
 			
 			// 前回保存時のアドレス読み込み
 			readBeforeAddr( 0, 10 );
@@ -751,8 +751,8 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 			angle_rightchange	= flashDataBuff[ 22 ];
 			angle_leftchange	= flashDataBuff[ 23 ];
 		
-		} else if ( checkBlank( 0, 0 ) == 0 ) {
-			// 全ブロックイレーズされていたら初期値に設定する
+		} else if ( checkBlank( PARAMETER_STARTAREA, 0 ) <= 0 ) {
+			// 全ブロックイレーズまたはエラーが発生したら初期値に設定する
 			speed_straight		= SPEED_STRAIGHT;
 			speed_curve_brake	= SPEED_CURVE_BRAKE;
 			speed_curve_r600	= SPEED_CURVE_R600;
@@ -789,12 +789,12 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 	// Angle0読み込み
 	if ( C_angle ) {
 		// 全ブロックイレーズされているか確認する
-		if ( checkBlank( ANGLE0_STARTAREA, 0 ) > 0 ) {
+		if ( checkBlank( ANGLE0_STARTAREA, 0 ) ) {
 			readBeforeAddr( ANGLE0_STARTAREA, ANGLE0_ENDAREA );	// 前回保存時のアドレス読み込み
 			readFlashArray( flashDataBuff, 1 );		// flashDataBuffにAngle0読み込み
 			Angle0 = flashDataBuff[ 0 ];			// データ取得
-		} else if ( checkBlank( ANGLE0_STARTAREA, 0 ) == 0 ) {
-			// 全ブロックイレーズされていたら初期値に設定する
+		} else if ( checkBlank( ANGLE0_STARTAREA, 0 ) <= 0 ) {
+			// 全ブロックイレーズまたはエラーが発生したら初期値に設定する
 			Angle0 = SERVO_CENTER;
 			//printf("Angle0 Initialize\n");
 		}
@@ -803,7 +803,7 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 	// msdWorkAddress読み込み
 	if ( msd ) {
 		// 全ブロックイレーズされているか確認する
-		if ( checkBlank( MSD_STARTAREA, 0 ) > 0 ) {
+		if ( checkBlank( MSD_STARTAREA, 0 ) ) {
 			readBeforeAddr( MSD_STARTAREA, MSD_ENDAREA );	// 前回保存時のアドレス読み込み
 			readFlashArray2( flashDataBuff, 40, MSD_ENDAREA);// flashDataBuffにmsdWorkAddress読み込み読み込み
 			// データ取得
@@ -833,8 +833,8 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 			
 			msdWorkaddress = msdaddrBuff[1];	// 前回開始アドレス
 			msdWorkaddress2 = msdaddrBuff[0];	// 前回終了アドレス
-		} else if ( checkBlank( MSD_STARTAREA, 0 ) == 0 ) {
-			// 全ブロックイレーズされていたら初期値に設定する
+		} else if ( checkBlank( MSD_STARTAREA, 0 ) <= 0 ) {
+			// 全ブロックイレーズまたはエラーが発生したら初期値に設定する
 			msdWorkaddress = MSD_STARTADDRESS;	// 開始アドレス
 			msdWorkaddress2 = MSD_ENDADDRESS;	// 終了アドレス
 			//printf("msdWorkAddress Initialize\n");
@@ -844,53 +844,53 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 	// 白線トレース用PIDゲイン読み込み
 	if ( pid_line ) {
 		// 全ブロックイレーズされているか確認する
-		if ( checkBlank( PID_STARTAREA, 0 ) > 0 ) {
+		if ( checkBlank( PID_STARTAREA, 0 ) ) {
 			readBeforeAddr( PID_STARTAREA, PID_ENDAREA );	// 前回保存時のアドレス読み込み
 			readFlashArray( flashDataBuff, 3 );		// flashDataBuffにPIDゲイン読み込み
 			// データ取得
 			kp_buff = flashDataBuff[ 0 ];
 			ki_buff = flashDataBuff[ 1 ];
 			kd_buff = flashDataBuff[ 2 ];
-		} else if ( checkBlank( PID_STARTAREA, 0 ) == 0 ) {
-			// 全ブロックイレーズされていたら初期値に設定する
+		} else if ( checkBlank( PID_STARTAREA, 0 ) <= 0 ) {
+			// 全ブロックイレーズまたはエラーが発生したら初期値に設定する
 			kp_buff = KP;
 			ki_buff = KI;
 			kd_buff = KD;
-		//	printf("PIDgain Initialize\n");
+			//printf("PIDgain Initialize\n");
 		}
 	}
 	
 	// 角度制御用PIDゲイン読み込み
 	if ( pid_angle ) {
 		// 全ブロックイレーズされているか確認する
-		if ( checkBlank( PID2_STARTAREA, 0 ) > 0 ) {
+		if ( checkBlank( PID2_STARTAREA, 0 ) ) {
 			readBeforeAddr( PID2_STARTAREA, PID2_ENDAREA );	// 前回保存時のアドレス読み込み
 			readFlashArray( flashDataBuff, 3 );		// flashDataBuffにPIDゲイン読み込み
-			// データ取得
 			kp2_buff = flashDataBuff[ 0 ];
 			ki2_buff = flashDataBuff[ 1 ];
 			kd2_buff = flashDataBuff[ 2 ];
-		} else if ( checkBlank( PID2_STARTAREA, 0 ) == 0 ) {
-			// 全ブロックイレーズされていたら初期値に設定する
+		} else if ( checkBlank( PID2_STARTAREA, 0 ) <= 0 ) {
+			// 全ブロックイレーズまたはエラーが発生したら初期値に設定する
 			kp2_buff = KP2;
 			ki2_buff = KI2;
 			kd2_buff = KD2;
-		//	printf("PID2gain Initialize\n");
+			//printf("PID2gain Initialize\n");
 		}
 	}
 	
 	// 速度制御用PIDゲイン読み込み
 	if ( pid_speed ) {
 		// 全ブロックイレーズされているか確認する
-		if ( checkBlank( PID3_STARTAREA, 0 ) > 1 ) {
+		if ( checkBlank( PID3_STARTAREA, 0 ) ) {
 			readBeforeAddr( PID3_STARTAREA, PID3_ENDAREA );	// 前回保存時のアドレス読み込み
 			readFlashArray( flashDataBuff, 3 );		// flashDataBuffにPIDゲイン読み込み
 			// データ取得
+			printf("kp3 = %d, ki3 = %d kd3 = %d\n", flashDataBuff[ 0 ], flashDataBuff[ 1 ], flashDataBuff[ 2 ]);
 			kp3_buff = flashDataBuff[ 0 ];
 			ki3_buff = flashDataBuff[ 1 ];
 			kd3_buff = flashDataBuff[ 2 ];
-		} else if ( checkBlank( PID3_STARTAREA, 0 ) == 0 ) {
-			// 全ブロックイレーズされていたら初期値に設定する
+		} else if ( checkBlank( PID3_STARTAREA, 0 ) <= 0 ) {
+			// 全ブロックイレーズまたはエラーが発生したら初期値に設定する
 			kp3_buff = KP3;
 			ki3_buff = KI3;
 			kd3_buff = KD3;
@@ -901,12 +901,12 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 	// 停止距離読み込み
 	if ( meter ) {
 		// 全ブロックイレーズされているか確認する
-		if ( checkBlank( STOPMETER_STARTAREA, 0 ) == 1 ) {
+		if ( checkBlank( STOPMETER_STARTAREA, 0 ) ) {
 			readBeforeAddr( STOPMETER_STARTAREA, STOPMETER_ENDAREA );	// 前回保存時のアドレス読み込み
 			readFlashArray( flashDataBuff, 1 );				// flashDataBuffに停止距離読み込み
 			stopping_meter = flashDataBuff[ 0 ];				// データ取得
-		} else if ( checkBlank( STOPMETER_STARTAREA, 0 ) == 0 ) {
-			// 全ブロックイレーズされていたら初期値に設定する
+		} else if ( checkBlank( STOPMETER_STARTAREA, 0 ) <= 0 ) {
+			// 全ブロックイレーズまたはエラーが発生したら初期値に設定する
 			stopping_meter = STOPPING_METER;
 			//printf("StopMeter Initialize\n");
 		}
