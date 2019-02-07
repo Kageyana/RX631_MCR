@@ -45,7 +45,7 @@ static char			Timer10;	// 1msカウント用
 // メインプログラム								//
 //====================================//
 void main(void){
-	short i, j, k = 0, l = 11, m = 1;
+	short i, j;
 	unsigned int ui;
 	
 	//=================================//
@@ -86,7 +86,6 @@ void main(void){
 		lcdPosition( 0, 1 );
 		lcdPrintf("      OK");
 	}
-	IMUSet = i;
 	
 	wait_lcd(100);
 	// フラッシュ初期化
@@ -128,7 +127,8 @@ void main(void){
 	}
 	wait_lcd(100);
 	
-	
+	IMUSet = i;
+
 	while(1){
 		__setpsw_i();
 		if( pattern >= 11 && pattern <= 99 ) {
@@ -167,22 +167,12 @@ void main(void){
 				}
 			} else {			
 				// 手押しモードON
-				if (comp_uint[ STRAIGHT ][ k ]) {
-					if ( comp_uint[ STRAIGHT ][ k ] <=EncoderTotal && m >= 0) {
-						l = 12;
-						m = -m;
-						k++;
-					} else if ( comp_uint[ STRAIGHT ][ k ] <= EncoderTotal && m < 0 ) {
-						l = 11;
-						m = -m;
-						k++;
-					}
-				}
+				logmeter();
 				
 				lcdPosition( 0, 0 );
 				lcdPrintf("now %3d", pattern);
 				lcdPosition( 0, 1 );
-				lcdPrintf("log %3d", l);
+				//lcdPrintf("log %3d", l);
 			}
 			// スイッチで停止
 			if ( tasw_get() == 0x4 ) {
@@ -240,7 +230,7 @@ void main(void){
 				break;
 			} else if ( start >= 1 && pushcart_mode ) {
 				// 手押しモードの場合すぐに通常トレース
-				//if ( msdset == 1 ) init_log();	// ログ記録準備
+				if ( msdset == 1 ) init_log();	// ログ記録準備
 				
 				// 白線トレース用PIDゲイン保存
 				flashDataBuff[ 0 ] = kp_buff;
@@ -262,7 +252,7 @@ void main(void){
 				enc1 = 0;
 				enc2 = 0;
 				lcd_mode = 1;		// LCD表示ON
-				//msdFlag = 1;		// データ記録開始
+				msdFlag = 1;		// データ記録開始
 				pattern = 11;
 				break;
 			}
@@ -302,7 +292,7 @@ void main(void){
 					EncoderTotal = 10;	// 総走行距離
 					cnt1 = 0;		// タイマリセット
 					enc1 = 0;
-					//lcd_mode = 0;		// LCD表示OFF
+					lcd_mode = 0;		// LCD表示OFF
 					msdFlag = 1;		// データ記録開始
 					pattern = 11;
 					break;
@@ -1317,6 +1307,7 @@ void main(void){
 			
 			if( msdset == 1 ) {
 				pattern = 104;
+				cnt1 = 0;
 				break;
 			}else{
 				setBeepPatternS( 0xaa00 );
@@ -1328,12 +1319,14 @@ void main(void){
 		case 104:
 			// 最後のデータが書き込まれるまで待つ
 			//printf("case 104\n");
-			if( checkMicroSDProcess() == 11 ) {
-				msdFlag = 0;			// ログ記録終了
-				microSDProcessEnd();        // microSDProcess終了処理
-				pattern = 105;
-				break;
-			} else if ( checkMicroSDProcess() == 0 ) {
+			if ( cnt1 <= 500 ) {	// 500ms待つ
+				if( checkMicroSDProcess() == 11 ) {
+					msdFlag = 0;			// ログ記録終了
+					microSDProcessEnd();        // microSDProcess終了処理
+					pattern = 105;
+					break;
+				}
+			} else {			// 500ms以上経過したら終了
 				setBeepPatternS( 0xf0f0 );
 				pattern = 107;
 				break;
