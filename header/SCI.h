@@ -94,7 +94,7 @@ void commandSCI1 (void);
 void send_SCI1_I2c( char slaveaddr, char* data, char num );
 char send_SCI1_I2cWait( char slaveaddr, char* data, char num );
 void receive_SCI1_I2c( char slaveaddr, char* data, char num );
-void receive_data_SCI1_I2c( char slaveaddr, char* sendData, char* receiveData, char num );
+bool receive_data_SCI1_I2c( char slaveaddr, char* sendData, char* receiveData, char num );
 
 void init_SCI12( void );
 void send_SCI12_I2c( char slaveaddr, char* data, char num );

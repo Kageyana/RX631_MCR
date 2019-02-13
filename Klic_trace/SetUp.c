@@ -662,7 +662,7 @@ void setup( void )
 					if ( cnt_setup >= 100 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 1 );
-						lcdPrintf("  %4.1f",(double)EncoderTotal/PALSE_MILLIMETER);
+						lcdPrintf("   %4.1f",(double)EncoderTotal/PALSE_MILLIMETER);
 					}
 					break;
 							

@@ -25,7 +25,7 @@
 //====================================//
 // 走行パターン関連
 char		pattern = 0;	// パターン番号
-char		countdown = 4;
+char		countdown = 0x10;
 short 	angle_center;
 
 // モード関連
@@ -40,7 +40,10 @@ unsigned short	 	cnt_out2;	// コースアウト判定用タイマ2
 unsigned short	 	cnt_out3;	// コースアウト判定用タイマ3
 unsigned short	 	cnt_out4;	// コースアウト判定用タイマ4
 static char			Timer10;	// 1msカウント用
-
+//====================================//
+// プロトタイプ宣言								//
+//====================================//
+void init_Parameter ( bool lcd );
 //====================================//
 // メインプログラム								//
 //====================================//
@@ -69,66 +72,51 @@ void main(void){
 	init_BeepS();			// ブザー初期化
 	
 	// SCI1初期化
-	if ( init_IMU() ) {
+	lcdPosition( 0, 0 );
+	lcdPrintf("SCI1    ");
+	lcdPosition( 0, 1 );
+	if ( !init_IMU() ) {
+		setBeepPatternS( 0x8000 );
+		i = 1;
+		lcdPrintf("      OK");
+	} else {
 		setBeepPatternS( 0xcc00 );
 		init_SCI1( UART, RATE_230400 );
 		i = 0;
-		
-		lcdPosition( 0, 0 );
-		lcdPrintf("SCI1    ");
-		lcdPosition( 0, 1 );
 		lcdPrintf("   ERROR");
-	} else {
-		setBeepPatternS( 0x8000 );
-		i = 1;
-		lcdPosition( 0, 0 );
-		lcdPrintf("SCI1    ");
-		lcdPosition( 0, 1 );
-		lcdPrintf("      OK");
 	}
 	
 	wait_lcd(100);
 	// フラッシュ初期化
-	if( initFlash() == 0 ) {
+	lcdPosition( 0, 0 );
+	lcdPrintf("FLASH   ");
+	lcdPosition( 0, 1 );
+	if( !initFlash() ) {
 		setBeepPatternS( 0x8000 );
 		readFlashSetup( 1, 1, 1 ,1 ,1 ,1 ,1);	// データフラッシュから前回パラメータを読み込む
-		
-		lcdPosition( 0, 0 );
-		lcdPrintf("FLASH   ");
-		lcdPosition( 0, 1 );
 		lcdPrintf("      OK");
 	} else{
 		setBeepPatternS( 0xcc00 );
-		
-		lcdPosition( 0, 1 );
-		lcdPrintf("FLASH   ");
-		lcdPosition( 0, 0 );
 		lcdPrintf("   ERROR");
 	}
 	
 	wait_lcd(100);
 	// MicroSDカード初期化
-	if( init_msd() == 0 ) {
-		setBeepPatternS( 0x4000 );
+	lcdPosition( 0, 0 );
+	lcdPrintf("MicroSD ");
+	lcdPosition( 0, 1 );
+	if( !init_msd() ) {
+		setBeepPatternS( 0x8000 );
 		msdset = 1;
-		
-		lcdPosition( 0, 0 );
-		lcdPrintf("MicroSD ");
-		lcdPosition( 0, 1 );
 		lcdPrintf("      OK");
 	} else {
 		setBeepPatternS( 0xcc00 );
 		msdset = 0;
-		
-		lcdPosition( 0, 0 );
-		lcdPrintf("MicroSD ");
-		lcdPosition( 0, 1 );
 		lcdPrintf("   ERROR");
 	}
 	wait_lcd(100);
 	
 	IMUSet = i;
-	printf("Hello MCworld\n");
 	while(1){
 		__setpsw_i();
 		if( pattern >= 11 && pattern <= 99 ) {
@@ -192,67 +180,30 @@ void main(void){
 		case 0:
 			// スタート前設定
 			setup();
-			if ( start >= 1 && !pushcart_mode ) {
+			if ( start && !pushcart_mode ) {
 				demo = 0;		// デモモード解除
 				angle_mode = 0;	// 白線トレース
 				txt= txt_data;		// 受信配列リセット
 				cnt_byte = 0;		// 受信カウントリセット
-				TurningAngleIMU = 0;
-				RollAngleIMU = 0;
-				PichAngleIMU = 0;
-				if ( msdset == 1 ) init_log();	// ログ記録準備
-				if ( fixSpeed == 0 ) writeFlashBeforeStart();	// 速度パラメータをデータフラッシュに保存
 				
-				// 白線トレース用PIDゲイン保存
-				flashDataBuff[ 0 ] = kp_buff;
-				flashDataBuff[ 1 ] = ki_buff;
-				flashDataBuff[ 2 ] = kd_buff;
-				writeFlashData( PID_STARTAREA, PID_ENDAREA, PID_DATA, 3 );
-				// 角度制御用PIDゲイン保存
-				flashDataBuff[ 0 ] = kp2_buff;
-				flashDataBuff[ 1 ] = ki2_buff;
-				flashDataBuff[ 2 ] = kd2_buff;
-				writeFlashData( PID2_STARTAREA, PID2_ENDAREA, PID2_DATA, 3 );
-				// 速度制御用PIDゲイン保存
-				flashDataBuff[ 0 ] = kp3_buff;
-				flashDataBuff[ 1 ] = ki3_buff;
-				flashDataBuff[ 2 ] = kd3_buff;
-				writeFlashData( PID3_STARTAREA, PID3_ENDAREA, PID3_DATA, 3 );
-				// 停止距離保存
-				flashDataBuff[ 0 ] = stopping_meter;
-				writeFlashData( STOPMETER_STARTAREA, STOPMETER_ENDAREA, STOPMETER_DATA, 1 );
+				if ( msdset ) init_log();	// ログ記録準備
+				if ( !fixSpeed ) writeFlashBeforeStart(1, 0, 1, 1, 1, 1);	// 速度パラメータをデータフラッシュに保存
+				else writeFlashBeforeStart(0, 0, 1, 1, 1, 1);		// 速度パラメータ以外を保存
 				
-				targetSpeed = speed_straight * SPEED_CURRENT; // 目標速度設定
-				cnt1 = 0;		// タイマリセット
+				wait_lcd(500);		// 500ms待つ
+				cnt1 = 0;
 				pattern = 1;
 				break;
-			} else if ( start >= 1 && pushcart_mode ) {
+			} else if ( start && pushcart_mode ) {
 				// 手押しモードの場合すぐに通常トレース
-				if ( msdset == 1 ) init_log();	// ログ記録準備
+				if ( msdset ) init_log();	// ログ記録準備
 				
 				// 白線トレース用PIDゲイン保存
-				flashDataBuff[ 0 ] = kp_buff;
-				flashDataBuff[ 1 ] = ki_buff;
-				flashDataBuff[ 2 ] = kd_buff;
-				writeFlashData( PID_STARTAREA, PID_ENDAREA, PID_DATA, 3 );
 				// 角度制御用PIDゲイン保存
-				flashDataBuff[ 0 ] = kp2_buff;
-				flashDataBuff[ 1 ] = ki2_buff;
-				flashDataBuff[ 2 ] = kd2_buff;
-				writeFlashData( PID2_STARTAREA, PID2_ENDAREA, PID2_DATA, 3 );
-				
-				lcdPosition( 0, 1 );
-				lcdPrintf("        ");
+				writeFlashBeforeStart(0, 0, 1, 1, 0, 0);
 				setBeepPatternS( 0xfff0 );
-				
-				cntmpattern2 = 0;
-				EncoderTotal = 10;	// 総走行距離
-				cnt1 = 0;		// タイマリセット
-				enc1 = 0;
-				enc2 = 0;
-				lcd_mode = 1;		// LCD表示ON
-				msdFlag = 1;		// データ記録開始
-				pattern = 11;
+				// 変数初期化
+				init_Parameter( 1 );
 				break;
 			}
 			break;
@@ -261,40 +212,16 @@ void main(void){
 			servoPwmOut( ServoPwm );
 			if ( start == 1 ) {
 				// カウントダウンスタート
-				if ( cnt1 >= 1500 && countdown == 4 ) {
-					countdown = 3;
-					lcdPosition( 0, 1 );
-					lcdPrintf("       3");
-					setBeepPatternS( 0x8000 );
-					led_out( 0x10 );
-				}
-				if ( cnt1 >= 2500 && countdown == 3 ) {
-					countdown = 2;
-					lcdPosition( 0, 1 );
-					lcdPrintf("       2");
-					setBeepPatternS( 0x8000 );
-					led_out( 0x04 );
-				}
-				if ( cnt1 >= 3500 && countdown == 2 ) {
-					countdown = 1;
-					lcdPosition( 0, 1 );
-					lcdPrintf("       1");
-					setBeepPatternS( 0x8000 );
-					led_out( 0x01 );
-				}
-				if ( cnt1 >= 4500 && countdown == 1 ) {
-					countdown = 0;
-					lcdPosition( 0, 1 );
-					lcdPrintf("        ");
+				if ( cnt1 >= 4000 ) {
 					setBeepPatternS( 0xfff0 );
 						
-					cntmpattern2 = 0;
-					EncoderTotal = 10;	// 総走行距離
-					cnt1 = 0;		// タイマリセット
-					enc1 = 0;
-					lcd_mode = 0;		// LCD表示OFF
-					msdFlag = 1;		// データ記録開始
-					pattern = 11;
+					// 変数初期化
+					init_Parameter( 0 );
+					break;
+				} else if ( !(cnt1 % 1000) ) {
+					setBeepPatternS( 0x8000 );
+					led_out( countdown );
+					countdown = countdown >> 1;
 					break;
 				}
 			} else if ( start == 2 ) {
@@ -308,13 +235,8 @@ void main(void){
 			servoPwmOut( ServoPwm );
 			// スタートバー開閉待ち
 			if ( !startbar_get() ) {
-				cntmpattern2 = 0;
-				EncoderTotal = 10;	// 総走行距離
-				cnt1 = 0;		// タイマリセット
-				enc1 = 0;
-				lcd_mode = 0;		// LCD表示OFF
-				msdFlag = 1;		// データ記録開始
-				pattern = 11;
+				// 変数初期化
+				init_Parameter( 0 );
 				break;
 			}
 			// LED点滅処理
@@ -379,7 +301,6 @@ void main(void){
 			
 			if ( enc1 > enc_mm( 60 ) ) {		// 60mm進む
 				enc1 = 0;
-				enc2 = 0;
 				TurningAngleEnc = 0;
 				TurningAngleIMU = 0;
 				pattern = 13;
@@ -509,7 +430,6 @@ void main(void){
 			
 			if ( enc1 >= enc_mm( 300 ) ) {		// 300mm進む
 				enc1 = 0;
-				enc2 = 0;
 				setBeepPatternS( 0x8000 );
 				curve_moed = 0;
 				pattern = 11;
@@ -1482,4 +1402,26 @@ void Timer (void) {
 		break;
 	}
 
+}
+
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 init_Parameter							//
+// 処理概要     変数の初期化								//
+// 引数         lcd: 1 lcd表示  0 lcd非表示						//
+// 戻り値       なし									//
+///////////////////////////////////////////////////////////////////////////
+void init_Parameter ( bool lcd ) {
+	cntmpattern2 = 0;	// 記録走行カウントリセット
+	EncoderTotal = 10;	// 総走行距離
+	cnt1 = 0;			// タイマリセット
+	enc1 = 0;			// 区間距離リセット
+	lcd_mode = lcd;		// LCD表示OFF
+	msdFlag = 1;		// データ記録開始
+	targetSpeed = speed_straight * SPEED_CURRENT; // 目標速度設定
+	
+	// 角度積算値リセット
+	TurningAngleIMU = 0;
+	RollAngleIMU = 0;
+	PichAngleIMU = 0;
+	pattern = 11;		// 通常走行
 }

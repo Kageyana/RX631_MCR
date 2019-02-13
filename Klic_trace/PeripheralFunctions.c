@@ -53,7 +53,6 @@ static unsigned short	encbuff;		// 前回のエンコーダ値
 short				Encoder;		// 1msごとのパルス
 unsigned int		EncoderTotal;	// 総走行距離
 unsigned int		enc1;		// 走行用距離カウント
-unsigned int		enc2;		// コース記憶走行用距離カウント
 unsigned int		enc_slope;		// 坂上距離カウント
 
 // モーター関連
@@ -160,7 +159,6 @@ void getEncoder (void)
 	// 積算
 	EncoderTotal += Encoder;
 	enc1 += Encoder;
-	enc2 += Encoder;
 	enc_slope += Encoder;
 	
 	encbuff = cnt_Encoder;	// 次回はこの値が1ms前の値となる

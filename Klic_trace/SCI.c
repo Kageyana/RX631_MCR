@@ -467,7 +467,7 @@ void send_SCI1_I2c( char slaveaddr, char* data, char num )
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // モジュール名 send_SCI1_I2cWait											//
-// 処理概要     SCI1I2cの送信												//
+// 処理概要     SCI1I2cの送信(waitあり)											//
 // 引数         slaveaddr:スレーブアドレス data:送信データの先頭アドレス num: 送信するデータ数	//
 // 戻り値       0:ACK受信 1: NACK受信 2:デバイスが未接続							//
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -479,7 +479,7 @@ char send_SCI1_I2cWait( char slaveaddr, char* data, char num )
 	while ( SCI1.SIMR3.BYTE != 0xf0 ) {	// バスがフリーになるまで待つ
 		if ( cnt0 ) {
 			err = 1;
-			SCI1.SIMR3.BYTE = 0xf0;
+			init_SCI1( UART, RATE_230400 );
 			break;
 		}
 	}
@@ -501,7 +501,6 @@ char send_SCI1_I2cWait( char slaveaddr, char* data, char num )
 		while ( SCI1.SIMR3.BYTE != 0xf0 ) {	// バスがフリーになるまで待つ
 			if ( cnt0 >= 1 ) {
 				err = 1;
-				SCI1.SIMR3.BYTE = 0xf0;
 				break;
 			}
 		}
@@ -512,7 +511,7 @@ char send_SCI1_I2cWait( char slaveaddr, char* data, char num )
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // モジュール名 receive_SCI1_I2c												//
-// 処理概要     SCI1I2cの送信												//
+// 処理概要     SCI1 I2cの受信												//
 // 引数         slaveaddr:スレーブアドレス data:送信データの先頭アドレス num: 送信するデータ数	//
 // 戻り値       なし														//
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -550,19 +549,18 @@ void receive_SCI1_I2c( char slaveaddr, char* data, char num )
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // モジュール名 receive_data_SCI1_I2c											//
-// 処理概要     SCI1I2cの送信												//
+// 処理概要     SCI1 I2cの送受信												//
 // 引数         slaveaddr:スレーブアドレス data:送信データの先頭アドレス num: 送信するデータ数	//
 // 戻り値       なし														//
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-void receive_data_SCI1_I2c( char slaveaddr, char* sendData, char* receiveData, char num )
+bool receive_data_SCI1_I2c( char slaveaddr, char* sendData, char* receiveData, char num )
 {
 	volatile char err = 0;
 	
 	cnt0 = 0;
 	while ( SCI1.SIMR3.BYTE != 0xf0 ) {	// バスがフリーになるまで待つ
-		if ( cnt0 ) {
+		if ( cnt0 > 1 ) {
 			err = 1;
-			SCI1.SIMR3.BYTE = 0xf0;
 			break;
 		}
 	}
@@ -586,8 +584,16 @@ void receive_data_SCI1_I2c( char slaveaddr, char* sendData, char* receiveData, c
 		SCI1.SIMR3.BYTE = 0x51;	// スタートコンディション発行
 		
 		// データは割り込みで送信
-		while ( SCI1.SIMR3.BYTE != 0xf0 );	// バスがフリーになるまで待つ
+		cnt0 = 0;
+		while ( SCI1.SIMR3.BYTE != 0xf0 ) {	// バスがフリーになるまで待つ
+			if ( cnt0 > 1 ) {
+				err = 1;
+				break;
+			}
+		}
 	}
+	if ( err == 1 ) return true;
+	else return false;
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 init_SCI12								//

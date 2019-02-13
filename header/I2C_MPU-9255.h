@@ -146,7 +146,7 @@ extern volatile int 	rawXg, rawYg, rawZg;	// 角加速度(16bitデータ)
 extern volatile short 	rawTemp;				// 温度(16bitデータ)
 
 extern short 	rawXa2, rawYa2, rawZa2;	// 加速度(16bitデータ)
-extern short 	rawXg2, rawYg2, rawZg2;// 角加速度(16bitデータ)
+extern short 	rawXg2, rawYg2, rawZg2;	// 角加速度(16bitデータ)
 
 // データ処理
 extern double 		TurningAngleIMU;	// IMUから求めた旋回角度
@@ -165,7 +165,7 @@ extern char	cnt_imu;
 void wait_IMU ( short waitTime );
 void IMUWriteByte( char reg, char data );
 char IMUReadByte( char reg , char* reciveData );
-void IMUReadArry( char reg, char num, char* dataArry );
+bool IMUReadArry( char reg, char num, char* dataArry );
 char init_IMU (void);
 void IMUProcess (void);
 void caribrateIMU (void);

@@ -846,38 +846,76 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 // 引数         Addr: E2データフラッシュ領域のアドレス					//
 // 戻り値       Addrの値								//
 //////////////////////////////////////////////////////////////////////////////////////////
-void writeFlashBeforeStart ( void )
+void writeFlashBeforeStart ( bool speed, bool C_angle, bool pid_line, bool pid_angle, bool pid_speed, bool meter )
 {
 	// フラッシュ書き込み開始
-	// 各データをバッファに保存
-	flashDataBuff[ 0 ] = speed_straight;
-	flashDataBuff[ 1 ] = speed_curve_brake;
-	flashDataBuff[ 2 ] = speed_curve_r600;
-	flashDataBuff[ 3 ] = speed_curve_r450;
-	flashDataBuff[ 4 ] = speed_curve_straight;
+	if ( speed ) {
+		// 各速度データをバッファに保存
+		flashDataBuff[ 0 ] = speed_straight;
+		flashDataBuff[ 1 ] = speed_curve_brake;
+		flashDataBuff[ 2 ] = speed_curve_r600;
+		flashDataBuff[ 3 ] = speed_curve_r450;
+		flashDataBuff[ 4 ] = speed_curve_straight;
+		
+		flashDataBuff[ 5 ] = speed_crossline;
+		flashDataBuff[ 6 ] = speed_ckank_trace;
+		flashDataBuff[ 7 ] = speed_rightclank_curve;
+		flashDataBuff[ 8 ] = speed_rightclank_escape;
+		flashDataBuff[ 9 ] = speed_leftclank_curve;
+		flashDataBuff[ 10 ] = speed_leftclank_escape;
+		
+		flashDataBuff[ 11 ] = speed_halfine;
+		flashDataBuff[ 12 ] = speed_rightchange_trace;
+		flashDataBuff[ 13 ] = speed_rightchange_curve;
+		flashDataBuff[ 14 ] = speed_rightchange_escape;
+		flashDataBuff[ 15 ] = speed_leftchange_trace;
+		flashDataBuff[ 16 ] = speed_leftchange_curve;
+		flashDataBuff[ 17 ] = speed_leftchange_escape;
+		
+		flashDataBuff[ 18 ] = speed_slope_brake;
+		flashDataBuff[ 19 ] = speed_slope_trace;
+		
+		flashDataBuff[ 20 ] = angle_rightclank;
+		flashDataBuff[ 21 ] = angle_leftclank;
+		flashDataBuff[ 22 ] = angle_rightchange;
+		flashDataBuff[ 23 ] = angle_leftchange;
+		
+		writeFlashData( PARAMETER_STARTAREA, PARAMETER_ENDAREA, PARAMETER_AREA, NUMDATA );
+	}
 	
-	flashDataBuff[ 5 ] = speed_crossline;
-	flashDataBuff[ 6 ] = speed_ckank_trace;
-	flashDataBuff[ 7 ] = speed_rightclank_curve;
-	flashDataBuff[ 8 ] = speed_rightclank_escape;
-	flashDataBuff[ 9 ] = speed_leftclank_curve;
-	flashDataBuff[ 10 ] = speed_leftclank_escape;
+	if ( C_angle ) {
+		// ポテンションメータ0°値(Angle0)保存
+		flashDataBuff[0] = Angle0;
+		writeFlashData( ANGLE0_STARTAREA, ANGLE0_ENDAREA, ANGLE0_DATA, 1 );
+	}
 	
-	flashDataBuff[ 11 ] = speed_halfine;
-	flashDataBuff[ 12 ] = speed_rightchange_trace;
-	flashDataBuff[ 13 ] = speed_rightchange_curve;
-	flashDataBuff[ 14 ] = speed_rightchange_escape;
-	flashDataBuff[ 15 ] = speed_leftchange_trace;
-	flashDataBuff[ 16 ] = speed_leftchange_curve;
-	flashDataBuff[ 17 ] = speed_leftchange_escape;
+	if ( pid_line ) {
+		// 白線トレース用PIDゲイン保存
+		flashDataBuff[ 0 ] = kp_buff;
+		flashDataBuff[ 1 ] = ki_buff;
+		flashDataBuff[ 2 ] = kd_buff;
+		writeFlashData( PID_STARTAREA, PID_ENDAREA, PID_DATA, 3 );
+	}
 	
-	flashDataBuff[ 18 ] = speed_slope_brake;
-	flashDataBuff[ 19 ] = speed_slope_trace;
+	if ( pid_angle ) {
+		// 角度制御用PIDゲイン保存
+		flashDataBuff[ 0 ] = kp2_buff;
+		flashDataBuff[ 1 ] = ki2_buff;
+		flashDataBuff[ 2 ] = kd2_buff;
+		writeFlashData( PID2_STARTAREA, PID2_ENDAREA, PID2_DATA, 3 );
+	}
 	
-	flashDataBuff[ 20 ] = angle_rightclank;
-	flashDataBuff[ 21 ] = angle_leftclank;
-	flashDataBuff[ 22 ] = angle_rightchange;
-	flashDataBuff[ 23 ] = angle_leftchange;
+	if ( pid_speed ) {
+		// 速度制御用PIDゲイン保存
+		flashDataBuff[ 0 ] = kp3_buff;
+		flashDataBuff[ 1 ] = ki3_buff;
+		flashDataBuff[ 2 ] = kd3_buff;
+		writeFlashData( PID3_STARTAREA, PID3_ENDAREA, PID3_DATA, 3 );
+	}
 	
-	writeFlashData( PARAMETER_STARTAREA, PARAMETER_ENDAREA, PARAMETER_AREA, NUMDATA );
+	if ( meter ) {
+		// 停止距離保存
+		flashDataBuff[ 0 ] = stopping_meter;
+		writeFlashData( STOPMETER_STARTAREA, STOPMETER_ENDAREA, STOPMETER_DATA, 1 );
+	}
 }
