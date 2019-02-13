@@ -7,10 +7,7 @@
 //====================================//
 // IMUから取得したデータ
 volatile int 	rawXa = 0, rawYa = 0, rawZa = 0;	// 加速度(16bitデータ)
-volatile int 	rawXg = 0, rawYg = 0, rawZg = 0;// 角加速度(16bitデータ)
-
-short 	rawXa2 = 0, rawYa2 = 0, rawZa2 = 0;	// 加速度(16bitデータ)
-short 	rawXg2 = 0, rawYg2 = 0, rawZg2 = 0;// 角加速度(16bitデータ)
+volatile int 	rawXg = 0, rawYg = 0, rawZg = 0;	// 角加速度(16bitデータ)
 
 volatile short 	rawTemp;			// 温度(16bitデータ)
 
@@ -35,13 +32,13 @@ void wait_IMU ( short waitTime )
 {
 	volatile int time, i = 0;
 	
-	time = (int)waitTime * ( CLOCK * 1000 )/ 16;
+	time = (int)waitTime * ( CLOCK * 1000 ) / 16;
 	for ( i = 0; i < time; i++) __nop();
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // モジュール名 IMUWriteByte											//
 // 処理概要     指定したレジスタにデータを書き込む								//
-// 引数         slaveAddr:スレーブアドレス reg:レジスタのアドレス data:書き込みデータ	//
+// 引数         slaveaddr:スレーブアドレス reg:レジスタのアドレス data:書き込みデータ	//
 // 戻り値       なし													//
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 void IMUWriteByte( char reg, char data )
@@ -53,7 +50,7 @@ void IMUWriteByte( char reg, char data )
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 IMUReadByte							//
 // 処理概要     指定したレジスタのデータを読む				//
-// 引数         slaveAddr:スレーブアドレス reg:レジスタのアドレス	//
+// 引数         slaveaddr:スレーブアドレス reg:レジスタのアドレス	//
 // 戻り値       0:正常に受信　1:受信不可						//
 ///////////////////////////////////////////////////////////////////////////
 char IMUReadByte( char reg , char* reciveData )
@@ -70,7 +67,7 @@ char IMUReadByte( char reg , char* reciveData )
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // モジュール名 IMUReadArry																//
 // 処理概要     指定したレジスタから指定の数だけデータを読む											//
-// 引数         slaveAddr:スレーブアドレス addr:レジスタのアドレス num:読み取るデータ数 dataArry:データの格納先	//
+// 引数         slaveaddr:スレーブアドレス addr:レジスタのアドレス num:読み取るデータ数 dataArry:データの格納先	//
 // 戻り値       なし																		//
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void IMUReadArry( char reg, char num, char* reciveData )
@@ -116,27 +113,23 @@ void IMUProcess (void)
 {
 	char 	axisData[14];	// 角加速度、温度の8bit分割データ格納先
 	
-	IMUReadArry( TEMP_OUT_H, 8, axisData);	// 3軸加速度取得
+	IMUReadArry( GYRO_XOUT_H, 6, axisData);	// 3軸加速度取得
 	
 	//8bitデータを16bitデータに変換
 	// 温度
-	rawTemp = (short)((axisData[0] << 8 & 0xff00 ) | axisData[1]);
+	//rawTemp = (short)((axisData[0] << 8 & 0xff00 ) | axisData[1]);
 	
 	// 角速度
-	rawXg2 = (short)((axisData[2] << 8 & 0xff00 ) | axisData[3]);
-	rawYg2 = (short)((axisData[4] << 8 & 0xff00 ) | axisData[5]);
-	rawZg2 = (short)((axisData[6] << 8 & 0xff00 ) | axisData[7]);
+	rawXg = (short)((axisData[0] << 8 & 0xff00 ) | axisData[1]);
+	rawYg = (short)((axisData[2] << 8 & 0xff00 ) | axisData[3]);
+	rawZg = (short)((axisData[4] << 8 & 0xff00 ) | axisData[5]);
 	
-	if ( rawXg2 < 0 ) rawXg2 += offset[0];
-	else			rawXg2 -= offset[0];
-	if ( rawYg2 < 0 ) rawYg2 += offset[1];
-	else			rawYg2 -= offset[1];
-	if ( rawZg2 < 0 ) rawZg2 += offset[2];
-	else			rawZg2 -= offset[2];
-	
-	rawXg += rawXg2;
-	rawYg += rawYg2;
-	rawZg += rawZg2;
+	if ( rawXg < 0 ) rawXg += offset[0];
+	else			rawXg -= offset[0];
+	if ( rawYg < 0 ) rawYg += offset[1];
+	else			rawYg -= offset[1];
+	if ( rawZg < 0 ) rawZg += offset[2];
+	else			rawZg -= offset[2];
 	/*
 	IMUReadArry( ACCEL_XOUT_H, 14, axisData);	// 3軸加速度取得
 	
@@ -194,13 +187,17 @@ void caribrateIMU (void)
 	zy = (double)azg/GYROLSB;
 	zb = (double)zy - ( ZGSLOPE * TempIMU );
 	
-	offset[0] = (double)XGSLOPE * TempIMU + xb * GYROLSB;
-	offset[1] = (double)YGSLOPE * TempIMU + yb * GYROLSB;
-	offset[2] = (double)ZGSLOPE * TempIMU + zb * GYROLSB;
+	offset[0] = (((double)XGSLOPE * TempIMU ) + xb ) * GYROLSB;
+	offset[1] = (((double)YGSLOPE * TempIMU ) + yb ) * GYROLSB;
+	offset[2] = (((double)ZGSLOPE * TempIMU ) + zb ) * GYROLSB;
 	
 	if ( offset[0] < 0 ) offset[0] = -offset[0];
 	if ( offset[1] < 0 ) offset[1] = -offset[1];
 	if ( offset[2] < 0 ) offset[2] = -offset[2];
+	
+	TurningAngleIMU = 0;
+	RollAngleIMU = 0;
+	PichAngleIMU = 0;
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 getTurningAngleIMU						//
@@ -212,9 +209,9 @@ void getTurningAngleIMU(void)
 {
 	double angularVelocity_zg;
 	
-	angularVelocity_zg = (double)(rawZg/10) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
+	angularVelocity_zg = (double)(rawZg) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
 	
-	TurningAngleIMU += (double)( angularVelocity_zg)* 0.01;
+	TurningAngleIMU += (double)( angularVelocity_zg) * 0.001;
 	
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -227,9 +224,9 @@ void getRollAngleIMU(void)
 {
 	double angularVelocity_yg;
 	
-	angularVelocity_yg = (double)(rawXg/10) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
+	angularVelocity_yg = (double)(rawXg) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
 	
-	RollAngleIMU += (double)( angularVelocity_yg)* 0.01;
+	RollAngleIMU -= (double)( angularVelocity_yg) * 0.001;
 	
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -242,8 +239,8 @@ void getPichAngleIMU( void )
 {
 	double angularVelocity_xg;
 	
-	angularVelocity_xg = (double)(rawYg/10) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
+	angularVelocity_xg = (double)(rawYg) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
 	
-	PichAngleIMU += (double)( angularVelocity_xg)* 0.01;
+	PichAngleIMU -= (double)( angularVelocity_xg) * 0.001;
 	
 }

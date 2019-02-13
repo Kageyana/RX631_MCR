@@ -17,6 +17,7 @@
 #include "I2C_LCD.h"
 #include "MicroSD.h"
 #include "I2C_MPU-9255.h"
+#include "MemorryTrace.h"
 #include <stdio.h>
 
 //====================================//
@@ -90,7 +91,7 @@ void main(void){
 	// フラッシュ初期化
 	if( initFlash() == 0 ) {
 		setBeepPatternS( 0x8000 );
-		readFlashSetup();	// データフラッシュから前回パラメータを読み込む
+		readFlashSetup( 1, 1, 1 ,1 ,1 ,1 ,1);	// データフラッシュから前回パラメータを読み込む
 		
 		lcdPosition( 0, 0 );
 		lcdPrintf("FLASH   ");
@@ -124,8 +125,10 @@ void main(void){
 		lcdPosition( 0, 1 );
 		lcdPrintf("   ERROR");
 	}
-
+	wait_lcd(100);
+	
 	IMUSet = i;
+	printf("Hello MCworld\n");
 	while(1){
 		__setpsw_i();
 		if( pattern >= 11 && pattern <= 99 ) {
@@ -144,16 +147,19 @@ void main(void){
 					} else if ( cnt_out3 >= STOP_ENCODER ) {	// エンコーダ停止(ひっくり返った？)
 						error_mode = 3;
 						pattern = 101;
-					}/* else if( cnt_out4 >= STOP_GYRO ) {	// マイナスの加速度検知(コースから落ちた？)
+					} else if( cnt_out4 >= STOP_GYRO ) {	// マイナスの加速度検知(コースから落ちた？)
 						error_mode = 4;	
 						pattern = 101;
-					}*/
-					
+					}
+					/*
+					// Buletoothで外部から停止
 					if ( stopWord == 1 ) {
 						error_mode = 5;
 						pattern = 101;
 					}
+					*/
 					/*
+					// 一定時間で停止
 					if( cnt1 >= STOP_COUNT ) {
 						pattern = 101;
 					}
@@ -162,9 +168,9 @@ void main(void){
 			} else {			
 				// 手押しモードON
 				lcdPosition( 0, 0 );
-				lcdPrintf("case %3d", pattern);
+				lcdPrintf("now %3d", pattern);
 				lcdPosition( 0, 1 );
-				lcdPrintf("%4d", (short)TurningAngleIMU);
+				lcdPrintf("log %3d", logmeter());
 			}
 			// スイッチで停止
 			if ( tasw_get() == 0x4 ) {
@@ -222,6 +228,8 @@ void main(void){
 				break;
 			} else if ( start >= 1 && pushcart_mode ) {
 				// 手押しモードの場合すぐに通常トレース
+				if ( msdset == 1 ) init_log();	// ログ記録準備
+				
 				// 白線トレース用PIDゲイン保存
 				flashDataBuff[ 0 ] = kp_buff;
 				flashDataBuff[ 1 ] = ki_buff;
@@ -237,8 +245,11 @@ void main(void){
 				lcdPrintf("        ");
 				setBeepPatternS( 0xfff0 );
 				
+				cntmpattern2 = 0;
 				EncoderTotal = 10;	// 総走行距離
 				cnt1 = 0;		// タイマリセット
+				enc1 = 0;
+				enc2 = 0;
 				lcd_mode = 1;		// LCD表示ON
 				msdFlag = 1;		// データ記録開始
 				pattern = 11;
@@ -277,8 +288,10 @@ void main(void){
 					lcdPrintf("        ");
 					setBeepPatternS( 0xfff0 );
 						
+					cntmpattern2 = 0;
 					EncoderTotal = 10;	// 総走行距離
 					cnt1 = 0;		// タイマリセット
+					enc1 = 0;
 					lcd_mode = 0;		// LCD表示OFF
 					msdFlag = 1;		// データ記録開始
 					pattern = 11;
@@ -295,9 +308,11 @@ void main(void){
 			servoPwmOut( ServoPwm );
 			// スタートバー開閉待ち
 			if ( !startbar_get() ) {
+				cntmpattern2 = 0;
 				EncoderTotal = 10;	// 総走行距離
 				cnt1 = 0;		// タイマリセット
-				lcd_mode = 1;		// LCD表示OFF
+				enc1 = 0;
+				lcd_mode = 0;		// LCD表示OFF
 				msdFlag = 1;		// データ記録開始
 				pattern = 11;
 				break;
@@ -364,11 +379,13 @@ void main(void){
 			
 			if ( enc1 > enc_mm( 60 ) ) {		// 60mm進む
 				enc1 = 0;
+				enc2 = 0;
 				TurningAngleEnc = 0;
 				TurningAngleIMU = 0;
 				pattern = 13;
 				break;
 			}
+			
 			// クロスラインチェック
 			if ( check_crossline() ) {
 				enc1 = 0;
@@ -407,6 +424,7 @@ void main(void){
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_curve_r600 * SPEED_CURRENT;
 			diff( motorPwm );
+			i = getServoAngle();
 			
 			// クロスラインチェック
 			if ( check_crossline() ) {
@@ -491,11 +509,13 @@ void main(void){
 			
 			if ( enc1 >= enc_mm( 300 ) ) {		// 300mm進む
 				enc1 = 0;
+				enc2 = 0;
 				setBeepPatternS( 0x8000 );
 				curve_moed = 0;
 				pattern = 11;
 				break;
 			}
+			
 			// クロスラインチェック
 			if ( check_crossline() ) {
 				enc1 = 0;
@@ -840,7 +860,7 @@ void main(void){
 				pattern = 52;
 				break;
 			}
-			/*if( enc1 <= 20 * PALSE_MILLIMETER ) {
+			/*if( enc1 <=  enc_mm( 20 ) ) {
 				if( sensor_inp() == 0x2 ) {
 					enc1 = 0;
 					pattern = 11;
@@ -978,7 +998,7 @@ void main(void){
 				pattern = 62;
 				break;
 			}
-			/*if( enc1 <= 20 * PALSE_MILLIMETER ) {
+			/*if( enc1 <=  enc_mm( 20 ) ) {
 				if( sensor_inp() == 0x2 ) {
 					enc1 = 0;
 					pattern = 11;
@@ -1288,6 +1308,7 @@ void main(void){
 			
 			if( msdset == 1 ) {
 				pattern = 104;
+				cnt1 = 0;
 				break;
 			}else{
 				setBeepPatternS( 0xaa00 );
@@ -1299,15 +1320,16 @@ void main(void){
 		case 104:
 			// 最後のデータが書き込まれるまで待つ
 			//printf("case 104\n");
-			if( checkMicroSDProcess() == 11 ) {
-				msdFlag = 0;	// ログ記録終了
-				//printf("microSDProcessEndNOW\n");
-				microSDProcessEnd();        // microSDProcess終了処理
-				pattern = 105;
-				break;
-			}else if( checkMicroSDProcess() == 0 ) {
+			if ( cnt1 <= 1000 ) {	// 500ms待つ
+				if( checkMicroSDProcess() == 11 ) {
+					msdFlag = 0;			// ログ記録終了
+					microSDProcessEnd();        // microSDProcess終了処理
+					pattern = 105;
+					break;
+				}
+			} else {			// 500ms以上経過したら終了
 				setBeepPatternS( 0xf0f0 );
-				pattern = 106;
+				pattern = 107;
 				break;
 			}
 			break;
@@ -1316,13 +1338,13 @@ void main(void){
 			// 終了処理が終わるまで待つ
 			if( checkMicroSDProcess() == 0 ) {
 				// MicroSD最終書き込みアドレス保存
-				flashDataBuff[ 0 ] = msdStartAddress >> 16;
-				flashDataBuff[ 1 ] = msdStartAddress & 0xffff;	// 開始アドレス
-				flashDataBuff[ 2 ] = msdWorkAddress >> 16;
-				flashDataBuff[ 3 ] = msdWorkAddress & 0xffff;	// 終了アドレス
+				flashDataBuff[ 0 ] = msdStartaddress >> 16;
+				flashDataBuff[ 1 ] = msdStartaddress & 0xffff;	// 開始アドレス
+				flashDataBuff[ 2 ] = msdWorkaddress >> 16;
+				flashDataBuff[ 3 ] = msdWorkaddress & 0xffff;	// 終了アドレス
 				writeFlashData( MSD_STARTAREA, MSD_ENDAREA, MSD_DATA, 4 );
-				//printf("msdStartAddress = %d\n", msdStartAddress);
-				//printf("msdEndAddress = %d\n", msdWorkAddress);
+				//printf("msdStartaddress = %d\n", msdStartaddress);
+				//printf("msdEndaddress = %d\n", msdWorkaddress);
 				pattern = 106;
 				setBeepPatternS( 0xa8a8 );
 				break;
@@ -1334,6 +1356,16 @@ void main(void){
 			if( cnt1 >= 200 ) cnt1 = 0;
 			if( cnt1 < 100 ) {
 				led_out( 0x1f );
+			}else{
+				led_out( 0x00 );
+			}
+			break;
+			
+		case 107:
+			// LED点滅処理
+			if( cnt1 >= 200 ) cnt1 = 0;
+			if( cnt1 < 100 ) {
+				led_out( 0x15 );
 			}else{
 				led_out( 0x00 );
 			}
@@ -1393,22 +1425,32 @@ void Timer (void) {
 	getEncoder();
 
 	// PID制御値算出
-	if ( angle_mode == 0 ) servoControl();
-	else 				servoControl2();
+	if ( angle_mode ) servoControl2();		// 角度
+	else 			servoControl();	// 白線
+	motorControl();		// モータ
 	
-	motorControl();
-	
-	if ( IMUSet == 0 ) {
+	// 通信
+	if ( IMUSet ) {
+		// I2C通信で加速度及び角速度を取得
+		IMUProcess();
+	} else {
 		// UART受信
 		commandSCI1();
-	} else {
-		// 加速度及び角速度を取得
-		IMUProcess();
+	}
+	
+	//getTurningAngleEnc();
+	getTurningAngleIMU();
+	getPichAngleIMU();
+	getRollAngleIMU();
+	if (cnt_gyro > 200) {
+		RollAngleIMU = 0;
+		PichAngleIMU = 0;
+		cnt_gyro  = 0;
 	}
 	
 	// MicroSD書き込み
 	microSDProcess();
-	if ( msdFlag == 1 ) sendLog();
+	if ( msdFlag ) sendLog();
 	
 	Timer10++;
 	// 10ｍごとに実行
@@ -1422,14 +1464,6 @@ void Timer (void) {
 		getSwitch();
 		break;
 	case 3:
-		// 角度計算
-		getPichAngleIMU();
-		//getTurningAngleEnc();
-		getTurningAngleIMU();
-		getRollAngleIMU();
-		rawXg=0;
-		rawYg=0;
-		rawZg=0;
 		break;
 	case 5:
 		break;

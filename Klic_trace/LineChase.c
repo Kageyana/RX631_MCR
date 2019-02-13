@@ -49,10 +49,10 @@ short	angle_rightchange;		// 右レーンチェンジ旋回角度
 short	angle_leftchange;		// 右レーンチェンジ旋回角度
 
 // タイマ関連
-short	cnt_gyro;				// 角度計算用カウンタ
+short			cnt_gyro;				// 角度計算用カウンタ
 
 // 角度関連
-double 	TurningAngleEnc;	// エンコーダから求めた旋回角度
+double 		TurningAngleEnc;	// エンコーダから求めた旋回角度
 
 // サーボ関連
 // 白線トレース
@@ -647,7 +647,7 @@ void getTurningAngleEnc(void)
 		}
 		v = Encoder;	// 速度取得
 		if ( angle != 0 ) {
-			angularVelocity = (double)( 180 * v) / (r1 * SPEED_CURRENT_DETAIL * PI);// 角速度計算 ω = (v/r)*(180/pi)
+			angularVelocity = (double)( 180 * v) / (r1 * PALSE_MILLIMETER * PI);// 角速度計算 ω = (v/r)*(180/pi)
 		} else {
 			angularVelocity = 0;
 		}
@@ -684,11 +684,11 @@ void motorControl( void )
 	j = Encoder * 10;		// 現在値
 	
 	// デモモードのときゲイン変更
-	if ( demo == 1 ) {
+	if ( demo ) {
 		kp3 = 49;
 		ki3 = 41;
 		kd3 = 0;
-	} else if ( demo == 0 ) {
+	} else {
 		kp3 = kp3_buff;
 		ki3 = ki3_buff;
 		kd3 = kd3_buff;
@@ -722,11 +722,11 @@ void motorControl( void )
 		if ( Dev < 0 ) v = -v;
 		iRet = v;
 	}
-	
 	if ( Dev > 0 )	AccelefBefore = 0;
 	else		AccelefBefore = 1;
 	
 	motorPwm = iRet;
+	
 	EncoderBefore = Dev;
 	targetSpeedBefore = i;
 }

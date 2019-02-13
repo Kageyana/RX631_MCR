@@ -11,7 +11,7 @@
 // シンボル定義									//
 //====================================//
 // スレーブアドレス
-#define LCD_SLAVEADDRESS	0x7c
+#define LCD_SLAVEaddrESS	0x7c
 // 液晶関連変数
 #define LCD_MAX_X	17		// 表示文字数 横 16 or 20
 #define LCD_MAX_Y	2		// 表示文字数 縦  2 or  4
@@ -22,8 +22,8 @@
 
 /******************************** 自動生成関数 *********************************/
 #define	SET_SCI_C12	init_SCI12();	// I2C初期化
-#define	I2C_LCD_SEND	send_SCI12_I2c(LCD_SLAVEADDRESS, word, 2);
-#define	I2C_LCD_READ	send_SCI12_I2c(LCD_SLAVEADDRESS, Command, 2);
+#define	I2C_LCD_SEND	send_SCI12_I2c(LCD_SLAVEaddrESS, word, 2);
+#define	I2C_LCD_READ	send_SCI12_I2c(LCD_SLAVEaddrESS, Command, 2);
 /***************************************************************************/
 //====================================//
 // グローバル変数の宣言							//

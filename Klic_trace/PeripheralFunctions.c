@@ -23,22 +23,24 @@ static unsigned char 	dpsw_d[4];	// ディップスイッチの格納先
 static unsigned char	tasw_d[4];	// スイッチ値の格納先
 
 // センサ関連
-static unsigned short 	result[21]; 	// 12bitA/D変換結果の格納先
-static short		senR[10];		// 右アナログセンサAD値
-static short		senL[10];		// 左アナログセンサAD値
-static short		senG[10];		// ゲートセンサAD値
-static short		senC[10];		// 中心アナログセンサAD値
-static short		senLL[10];		// 最左端アナログセンサAD値
-static short		senRR[10];	// 最右端アナログセンサAD値
-static short		gy[10];		// ジャイロセンサAD値
-static short		pot[10];		// ポテンションメーターAD値
-short				sensorR;		// 右アナログセンサAD値平均値
-short				sensorL;		// 左アナログセンサAD値平均値
-short				sensorG;		// ゲートセンサAD値平均値
-short				sensorC;		// 中心アナログセンサAD値平均値
-short				sensorLL;		// 最左端アナログセンサAD値平均値
-short				sensorRR;		// 最右端アナログセンサAD値平均値
-short				Angle0;		// サーボセンター値
+static unsigned short 	result[14]; 	// 12bitA/D変換結果の格納先
+static int			senR;	// 右アナログセンサ積算AD値
+static int			senL;		// 左アナログセンサ積算AD値
+static int			senG;	// ゲートセンサ積算AD値
+static int			senC;	// 中心アナログセンサ積算AD値
+static int			senLL;	// 最左端アナログセンサ積算AD値
+static int			senRR;	// 最右端アナログセンサ積算AD値
+static int			gy;		// ジャイロセンサ積算AD値
+short 			gyro;		// ジャイロセンサ平均AD値
+static int			pot;		// ポテンションメーター積算AD値
+short 			Angle;	// ポテンションメーター平均AD値
+short				sensorR;	// 右アナログセンサ平均AD値
+short				sensorL;	// 左アナログセンサ平均AD値
+short				sensorG;	// ゲートセンサ平均AD値
+short				sensorC;	// 中心アナログセンサ平均AD値
+short				sensorLL;	// 最左端アナログセンサ平均AD値
+short				sensorRR;	// 最右端アナログセンサ平均AD値
+short				Angle0;	// サーボセンター値
 
 // ブザー関連
 unsigned short 		BeepPattern;	// ビープ音の出力パターン
@@ -51,6 +53,7 @@ static unsigned short	encbuff;		// 前回のエンコーダ値
 short				Encoder;		// 1msごとのパルス
 unsigned int		EncoderTotal;	// 総走行距離
 unsigned int		enc1;		// 走行用距離カウント
+unsigned int		enc2;		// コース記憶走行用距離カウント
 unsigned int		enc_slope;		// 坂上距離カウント
 
 // モーター関連
@@ -74,17 +77,35 @@ void ADconverter ( void )
 	ADTimer10++;
 	if ( ADTimer10 == 10 ) {
 		ADTimer10 = 0;
+		
+		gyro = gy / 10;
+		Angle = pot / 10;
+		sensorR = senR / 10;
+		sensorL = senL / 10;
+		sensorC = senC / 10;
+		sensorLL = senLL / 10;
+		sensorRR = senRR / 10;
+		sensorG = senG / 10;
+		
+		senLL = 0;
+		senL = 0;
+		senG = 0;
+		senC = 0;
+		senR = 0;
+		senRR = 0;
+		gy = 0;
+		pot = 0;
 	}
 	
 	// AD変換値をバッファに格納
-	senLL[ADTimer10] = result[3];
-	senL[ADTimer10] = result[4];
-	senG[ADTimer10] = result[5];
-	senC[ADTimer10] = result[6];
-	senR[ADTimer10] = result[7];
-	senRR[ADTimer10] = result[8];
-	gy[ADTimer10] = result[12];
-	pot[ADTimer10] = result[13];
+	senLL += result[3];
+	senL += result[4];
+	senG += result[5];
+	senC += result[6];
+	senR += result[7];
+	senRR += result[8];
+	gy += result[12];
+	pot += result[13];
 	
 }
 /////////////////////////////////////////////////////////////////////
@@ -139,6 +160,7 @@ void getEncoder (void)
 	// 積算
 	EncoderTotal += Encoder;
 	enc1 += Encoder;
+	enc2 += Encoder;
 	enc_slope += Encoder;
 	
 	encbuff = cnt_Encoder;	// 次回はこの値が1ms前の値となる
@@ -219,10 +241,6 @@ unsigned char tasw_get(void)
 ///////////////////////////////////////////////////////////////////////////
 short getGyro(void) 
 {
-	short gyro;
-	// 平均値の計算
-	gyro =  ( gy[0] + gy[1] + gy[2] + gy[3] + gy[4] + gy[5] + gy[6] + gy[7] + gy[8] + gy[9] ) / 10;
-	
 	return ( gyro - 1796 );
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -233,11 +251,6 @@ short getGyro(void)
 ///////////////////////////////////////////////////////////////////////////
 short getServoAngle(void) 
 {	
-	short Angle;
-	
-	// 平均値の計算
-	Angle =  ( pot[0] + pot[1] + pot[2] + pot[3] + pot[4] + pot[5] + pot[6] + pot[7] + pot[8] + pot[9] ) / 10;
-	
 	return  ( Angle - Angle0 );
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -248,12 +261,6 @@ short getServoAngle(void)
 ///////////////////////////////////////////////////////////////////////////
 short getAnalogSensor(void) 
 {
-	// 平均値の計算
-	sensorR = ( senR[0] + senR[1] + senR[2] + senR[3] + senR[4] + senR[5] + senR[6] + senR[7] + senR[8] + senR[9] ) / 10;
-	//sensorR >>= 1;
-	sensorL = ( senL[0] + senL[1] + senL[2] + senL[3] + senL[4] + senL[5] + senL[6] + senL[7] + senL[8] + senL[9] ) / 10;
-	//sensorL += 100;
-
 	return sensorR - sensorL;
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -265,10 +272,6 @@ short getAnalogSensor(void)
 unsigned char sensor_inp(void) 
 {
 	char l, c, r;
-	
-	sensorC = ( senC[0] + senC[1] + senC[2] + senC[3] + senC[4] + senC[5] + senC[6] + senC[7] + senC[8] + senC[9] ) / 10;
-	sensorLL = ( senLL[0] + senLL[1] + senLL[2] + senLL[3] + senLL[4] + senLL[5] + senLL[6] + senLL[7] + senLL[8] + senLL[9] ) / 10;
-	sensorRR = ( senRR[0] + senRR[1] + senRR[2] + senRR[3] + senRR[4] + senRR[5] + senRR[6] + senRR[7] + senRR[8] + senRR[9] ) / 10;
 	
 	if (sensorRR < 3000 ) r = 0x1;
 	else r = 0;
@@ -288,9 +291,8 @@ unsigned char sensor_inp(void)
 unsigned char startbar_get(void) 
 {
 	char ret;
-		
-	sensorG = ( senG[0] + senG[1] + senG[2] + senG[3] + senG[4] + senG[5] + senG[6] + senG[7] + senG[8] + senG[9] ) / 10;
-	if ( sensorG <= 2900 )	ret = 1;
+	
+	if ( sensorG <= 1000 )	ret = 1;
 	else			ret = 0;
 	
 	return ret;
