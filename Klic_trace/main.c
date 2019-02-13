@@ -128,7 +128,7 @@ void main(void){
 	wait_lcd(100);
 	
 	IMUSet = i;
-
+	printf("Hello MCworld\n");
 	while(1){
 		__setpsw_i();
 		if( pattern >= 11 && pattern <= 99 ) {
@@ -167,12 +167,10 @@ void main(void){
 				}
 			} else {			
 				// 手押しモードON
-				logmeter();
-				
 				lcdPosition( 0, 0 );
 				lcdPrintf("now %3d", pattern);
 				lcdPosition( 0, 1 );
-				//lcdPrintf("log %3d", l);
+				lcdPrintf("log %3d", logmeter());
 			}
 			// スイッチで停止
 			if ( tasw_get() == 0x4 ) {
@@ -247,6 +245,7 @@ void main(void){
 				lcdPrintf("        ");
 				setBeepPatternS( 0xfff0 );
 				
+				cntmpattern2 = 0;
 				EncoderTotal = 10;	// 総走行距離
 				cnt1 = 0;		// タイマリセット
 				enc1 = 0;
@@ -289,6 +288,7 @@ void main(void){
 					lcdPrintf("        ");
 					setBeepPatternS( 0xfff0 );
 						
+					cntmpattern2 = 0;
 					EncoderTotal = 10;	// 総走行距離
 					cnt1 = 0;		// タイマリセット
 					enc1 = 0;
@@ -308,6 +308,7 @@ void main(void){
 			servoPwmOut( ServoPwm );
 			// スタートバー開閉待ち
 			if ( !startbar_get() ) {
+				cntmpattern2 = 0;
 				EncoderTotal = 10;	// 総走行距離
 				cnt1 = 0;		// タイマリセット
 				enc1 = 0;
@@ -1319,7 +1320,7 @@ void main(void){
 		case 104:
 			// 最後のデータが書き込まれるまで待つ
 			//printf("case 104\n");
-			if ( cnt1 <= 500 ) {	// 500ms待つ
+			if ( cnt1 <= 1000 ) {	// 500ms待つ
 				if( checkMicroSDProcess() == 11 ) {
 					msdFlag = 0;			// ログ記録終了
 					microSDProcessEnd();        // microSDProcess終了処理

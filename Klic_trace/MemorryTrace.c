@@ -6,13 +6,13 @@
 // グローバル変数の宣言							//
 //====================================//
 // ログ解析関連
-char			comp_char[10][100] = {0,0,0,0,0,0,0,0,0,0};
-short			comp_short[10][100] = {0,0,0,0,0,0,0,0,0,0};
-unsigned int	comp_uint[10][100] = {0,0,0,0,0,0,0,0,0,0};
+char			comp_char[10][100];
+short			comp_short[10][100];
+unsigned int	comp_uint[10][100];
 char			flag[10][100];
 unsigned short	cntp[10];
 char 			cntmpattern[500];
-char			i;
+short			cntmpattern2;
 
 char			mpattern = 11;
 ///////////////////////////////////////////////////////////////////////////
@@ -24,13 +24,23 @@ char			mpattern = 11;
 void msdgetData () 
 {
 	volatile unsigned short i;
+	char j,k;
 	volatile short ret;
 	volatile char pattern_send = 1;
-	flag[STRAIGHT][0] = 12;
 	mpattern = 11;
+	cntmpattern2 = 0;
 	
 	msdEndaddress = msdWorkaddress2;	// 読み込み終了アドレス
 	msdWorkaddress = msdWorkaddress;	// 読み込み開始アドレス
+	
+	for ( j = 0;j < 10; j++ ) {
+		for ( k = 0;k < 100; k++ ) {
+			comp_char[ j ][ k ] = 0;
+			comp_short[ j ][ k ] = 0;
+			comp_uint[ j ][ k ] = 0;
+			flag[ j ][ k ] = 0;
+		}
+	}
 	
 	while ( pattern_send < 4 ) {
 		switch ( pattern_send ) {			
@@ -39,6 +49,7 @@ void msdgetData ()
 				if( msdWorkaddress >= msdEndaddress ) {
 					// 書き込み終了アドレスになったら、終わり
 					//printf( "End.\n" );
+					cntmpattern2 = 0;
 					setBeepPatternS( 0xa8a8 );
 					pattern_send = 4;
 					break;
@@ -183,7 +194,6 @@ bool serchPattern ( char process, char spattern )
 	// flag[ STRAIGHT ][ 1 ]	繰り返し回数
 	// cnt[ STRAIGHT ][0] 	カーブ突入､脱出位置の数
 	// comp_uint[ STRAIGHT ][ cnt[ STRAIGHT ][ 0 ] ]	EncoderTotalを格納する
-	// printf("%2d, %6d\n", msdBuff[ msdBuffaddress + 0 ], CharTouInt (40) );		// EncoderTotal
 	// カーブを脱出する位置を探す
 	// spattern を3つ見つける
 	if ( msdBuff[ msdBuffaddress + 0 ] == spattern ) flag[ process ][ spattern ]++;
@@ -191,36 +201,32 @@ bool serchPattern ( char process, char spattern )
 	
 	// 3つ以上あればカーブを脱出したと判断する
 	if ( flag[ process ][ spattern ] >= 3 ) {
-		comp_uint[ process ][ cntp[ process ] ] = CharTouInt (40);		// 距離取得
-		//printf("%d, %6d\n", spattern, comp_uint[ process ][ cnt[ process ] ] );
-		cntp[ process ]++;
+		cntmpattern[ cntmpattern2 ] = spattern;	// patternを記録 
+		comp_uint[ process ][ cntmpattern2++ ] = CharTouInt (40);		// 距離取得
 		flag[ process ][ spattern ] = 0;	// 繰り返しカウントをリセット
-		cntmpattern[ i ] = spattern;
-		i++;
+		//printf("cntmpattern[ %d ] = %d\n", cntmpattern2 - 1, cntmpattern[ cntmpattern2 - 1 ]);	
+		//printf("comp_uint[%d][%d] = %d\n", process, cntmpattern2 - 1, comp_uint[ process ][ cntmpattern2 - 1 ] );
+		//printf("logpattern = %d\n",cntmpattern[ cntmpattern2-1 ] / 10);
 		return true;
 	} else {
 		return false;
 	}
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 serchPattern							//
-// 処理概要     ログから各処理開始時の位置を見つける			//
-// 引数         なし									//
+// モジュール名 logmeter								//
+// 処理概要     ログから前回の位置でのpatternを表示する			//
+// 引数         なし			 						//
 // 戻り値       0:正常に終了 1:異常終了						//
 ///////////////////////////////////////////////////////////////////////////
-void logmeter( void )
+char logmeter( void )
 {
-	short k, m, l;
+	char logpattern;
 	
-	if (comp_uint[ STRAIGHT ][ k ]) {
-		if ( comp_uint[ STRAIGHT ][ k ] <=EncoderTotal && m >= 0) {
-			l = 12;
-			m = -m;
-			k++;
-		} else if ( comp_uint[ STRAIGHT ][ k ] <= EncoderTotal && m < 0 ) {
-			l = 11;
-			m = -m;
-			k++;
+	logpattern = cntmpattern[ cntmpattern2 ] / 10;		// 記録したpatternを呼び出し
+	if ( comp_uint[ logpattern ][ cntmpattern2 ] ) {	
+		if ( comp_uint[ logpattern ][ cntmpattern2 ] <= EncoderTotal ) {
+			cntmpattern2++;
 		}
 	}
+	return cntmpattern[ cntmpattern2 ];
 }

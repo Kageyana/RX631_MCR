@@ -24,9 +24,11 @@
 extern char		comp_char[10][100];
 extern short		comp_short[10][100];
 extern unsigned int	comp_uint[10][100];
+
+extern short		cntmpattern2;
 //====================================//
 // プロトタイプ宣言								//
 //====================================//
 bool serchPattern ( char process, char spattern );
-void logmeter( void );
+char logmeter( void );
 #endif /* MEMMORYTRACE_H */

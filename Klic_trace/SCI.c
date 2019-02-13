@@ -437,20 +437,31 @@ void commandSCI1 (void)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 void send_SCI1_I2c( char slaveaddr, char* data, char num )
 {
-	while ( SCI1.SIMR3.BYTE != 0xf0 );	// バスがフリーになるまで待つ
+	volatile char err = 0;
 	
-	SCI1_RW_mode = 1;	// 送信モード
-	memcpy( SCI1_DataBuff, data, num );	// 送信データをバッファに移動
+	cnt0 = 0;
+	while ( SCI1.SIMR3.BYTE != 0xf0 ) {	// バスがフリーになるまで待つ
+		if ( cnt0 ) {
+			err = 1;
+			SCI1.SIMR3.BYTE = 0xf0;
+			break;
+		}
+	}
 	
-	SCI1_Slaveaddr = slaveaddr;
-	SCI1_NumData = num;
-	SCI1_DataArry = SCI1_DataBuff;
-	
-	SCI1_Req_mode = 0;
-	SCI1.SCR.BIT.TEIE = 1;		// STI割り込み許可
-	SCI1.SCR.BIT.TIE = 1;		// TXI割り込み許可
-	
-	SCI1.SIMR3.BYTE = 0x51;	// スタートコンディション発行
+	if ( !err ) {
+		SCI1_RW_mode = 1;	// 送信モード
+		memcpy( SCI1_DataBuff, data, num );	// 送信データをバッファに移動
+		
+		SCI1_Slaveaddr = slaveaddr;
+		SCI1_NumData = num;
+		SCI1_DataArry = SCI1_DataBuff;
+		
+		SCI1_Req_mode = 0;
+		SCI1.SCR.BIT.TEIE = 1;		// STI割り込み許可
+		SCI1.SCR.BIT.TIE = 1;		// TXI割り込み許可
+		
+		SCI1.SIMR3.BYTE = 0x51;	// スタートコンディション発行
+	}
 	
 	// データは割り込みで送信
 }
@@ -464,27 +475,38 @@ char send_SCI1_I2cWait( char slaveaddr, char* data, char num )
 {
 	volatile char err = 0;
 	
-	while ( SCI1.SIMR3.BYTE != 0xf0 );	// バスがフリーになるまで待つ
-	
-	SCI1_RW_mode = 1;	// 送信モード
-	memcpy( SCI1_DataBuff, data, num );	// 送信データをバッファに移動
-	
-	SCI1_Slaveaddr = slaveaddr;
-	SCI1_NumData = num;
-	SCI1_DataArry = SCI1_DataBuff;
-	
-	SCI1_Req_mode = 0;		// スタートコンディション待ち
-	SCI1.SCR.BIT.TEIE = 1;	// STI割り込み許可
-	SCI1.SCR.BIT.TIE = 1;	// TXI割り込み許可
-	SCI1.SIMR3.BYTE = 0x51;		// スタートコンディション発行
-	// データは割り込みで送信
 	cnt0 = 0;
-	while ( SCI1.SIMR3.BYTE != 0xf0 ) {
-		if ( cnt0 >= 1 ) {
+	while ( SCI1.SIMR3.BYTE != 0xf0 ) {	// バスがフリーになるまで待つ
+		if ( cnt0 ) {
 			err = 1;
+			SCI1.SIMR3.BYTE = 0xf0;
 			break;
 		}
 	}
+	
+	if ( !err ) {
+		SCI1_RW_mode = 1;	// 送信モード
+		memcpy( SCI1_DataBuff, data, num );	// 送信データをバッファに移動
+		
+		SCI1_Slaveaddr = slaveaddr;
+		SCI1_NumData = num;
+		SCI1_DataArry = SCI1_DataBuff;
+		
+		SCI1_Req_mode = 0;		// スタートコンディション待ち
+		SCI1.SCR.BIT.TEIE = 1;	// STI割り込み許可
+		SCI1.SCR.BIT.TIE = 1;	// TXI割り込み許可
+		SCI1.SIMR3.BYTE = 0x51;		// スタートコンディション発行
+		// データは割り込みで送信
+		cnt0 = 0;
+		while ( SCI1.SIMR3.BYTE != 0xf0 ) {	// バスがフリーになるまで待つ
+			if ( cnt0 >= 1 ) {
+				err = 1;
+				SCI1.SIMR3.BYTE = 0xf0;
+				break;
+			}
+		}
+	}
+	
 	if ( err == 1 ) return 2;
 	else return SCI1.SISR.BIT.IICACKR;
 }
@@ -496,24 +518,35 @@ char send_SCI1_I2cWait( char slaveaddr, char* data, char num )
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 void receive_SCI1_I2c( char slaveaddr, char* data, char num )
 {
-	while ( SCI1.SIMR3.BYTE != 0xf0 );	// バスがフリーになるまで待つ
+	volatile char err = 0;
 	
-	SCI1_RW_mode = 0;	// 受信モード
-	SCI1_Slaveaddr = slaveaddr | RW_BIT;
-	SCI1_NumData = num;
-	SCI1_DataArry = data;
+	cnt0 = 0;
+	while ( SCI1.SIMR3.BYTE != 0xf0 ) {	// バスがフリーになるまで待つ
+		if ( cnt0 ) {
+			err = 1;
+			SCI1.SIMR3.BYTE = 0xf0;
+			break;
+		}
+	}
 	
-	SCI1_Req_mode = 0;		// スタートコンディション待ち
-	SCI1.SCR.BIT.RIE = 0;		// RXI割り込み禁止
-	SCI1.SCR.BIT.TEIE = 1;		// STI割り込み許可
-	SCI1.SCR.BIT.TIE = 1;		// TXI割り込み許可
-	
-	SCI1.SIMR3.BYTE = 0x51;	// スタートコンディション発行
-	
-	// データは割り込みで送信
-	PORT5.PODR.BIT.B2 = 1;
-	while ( SCI1.SIMR3.BYTE != 0xf0 );	// バスがフリーになるまで待つ
-	PORT5.PODR.BIT.B2 = 0;
+	if ( !err ) {
+		SCI1_RW_mode = 0;	// 受信モード
+		SCI1_Slaveaddr = slaveaddr | RW_BIT;
+		SCI1_NumData = num;
+		SCI1_DataArry = data;
+		
+		SCI1_Req_mode = 0;		// スタートコンディション待ち
+		SCI1.SCR.BIT.RIE = 0;		// RXI割り込み禁止
+		SCI1.SCR.BIT.TEIE = 1;		// STI割り込み許可
+		SCI1.SCR.BIT.TIE = 1;		// TXI割り込み許可
+		
+		SCI1.SIMR3.BYTE = 0x51;	// スタートコンディション発行
+		
+		// データは割り込みで送信
+		PORT5.PODR.BIT.B2 = 1;
+		while ( SCI1.SIMR3.BYTE != 0xf0 );	// バスがフリーになるまで待つ
+		PORT5.PODR.BIT.B2 = 0;
+	}
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // モジュール名 receive_data_SCI1_I2c											//
@@ -523,32 +556,39 @@ void receive_SCI1_I2c( char slaveaddr, char* data, char num )
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 void receive_data_SCI1_I2c( char slaveaddr, char* sendData, char* receiveData, char num )
 {
-	while ( SCI1.SIMR3.BYTE != 0xf0 );	// バスがフリーになるまで待つ
+	volatile char err = 0;
 	
-	SCI1_RW_mode = 2;	// レジスタ読み込みモード
+	cnt0 = 0;
+	while ( SCI1.SIMR3.BYTE != 0xf0 ) {	// バスがフリーになるまで待つ
+		if ( cnt0 ) {
+			err = 1;
+			SCI1.SIMR3.BYTE = 0xf0;
+			break;
+		}
+	}
 	
-	memcpy( SCI1_DataBuff, sendData, 1 );	// 送信データをバッファに移動
-	SCI1_Slaveaddr = slaveaddr;
-	SCI1_NumData = 1;
-	SCI1_DataArry = SCI1_DataBuff;
-	
-	SCI1_NumData2 = num;
-	SCI1_DataArry2 = receiveData;
-	
-	SCI1_Req_mode = 0;		// スタートコンディション待ち
-	SCI1.SCR.BIT.RIE = 0;		// RXI割り込み禁止
-	SCI1.SCR.BIT.TEIE = 1;		// STI割り込み許可
-	SCI1.SCR.BIT.TIE = 1;		// TXI割り込み許可
-	
-	SCI1.SIMR3.BYTE = 0x51;	// スタートコンディション発行
-	
-	// データは割り込みで送信
-	while ( SCI1.SIMR3.BYTE != 0xf0 );	// バスがフリーになるまで待つ
+	if ( !err ) {
+		SCI1_RW_mode = 2;	// レジスタ読み込みモード
+		
+		memcpy( SCI1_DataBuff, sendData, 1 );	// 送信データをバッファに移動
+		SCI1_Slaveaddr = slaveaddr;
+		SCI1_NumData = 1;
+		SCI1_DataArry = SCI1_DataBuff;
+		
+		SCI1_NumData2 = num;
+		SCI1_DataArry2 = receiveData;
+		
+		SCI1_Req_mode = 0;		// スタートコンディション待ち
+		SCI1.SCR.BIT.RIE = 0;		// RXI割り込み禁止
+		SCI1.SCR.BIT.TEIE = 1;		// STI割り込み許可
+		SCI1.SCR.BIT.TIE = 1;		// TXI割り込み許可
+		
+		SCI1.SIMR3.BYTE = 0x51;	// スタートコンディション発行
+		
+		// データは割り込みで送信
+		while ( SCI1.SIMR3.BYTE != 0xf0 );	// バスがフリーになるまで待つ
+	}
 }
-
-
-
-
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 init_SCI12								//
 // 処理概要     SCI12の初期化							//
