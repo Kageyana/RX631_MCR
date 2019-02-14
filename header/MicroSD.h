@@ -17,7 +17,7 @@
 #define DATA_BYTE			64		// 一回に保存するデータ数(byte)
 #define RECODTIME			30000	// 記録時間(ms)
 #define MSD_STARTADDRESS	0		// 開始アドレス
-#define MSD_ENDADDRESS	1920000	// 終了アドレス　RECODTIME * DATA_BYTE / WRITINGTIME
+#define MSD_ENDADDRESS	1083000	// 終了アドレス　RECODTIME * DATA_BYTE / WRITINGTIME
 
 /******************************************** 自動生成関数 *****************************************/
 #define SET_SCI_C5		R_PG_SCI_Set_C5();		// シリアルI/Oチャネルを設定(SPI)
