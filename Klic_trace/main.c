@@ -541,19 +541,37 @@ void main(void){
 				motor_f( lpwm, rpwm);
 				motor_r( lpwm, rpwm);	
 			}*/
-			if( -TurningAngleIMU <= 30 ) {
-				if( sensor_inp() == 0x2 ) {
-					enc1 = 0;
-					angle_mode = 0;
-					pattern = 36;
-					break;
+			if ( IMUSet ) {
+				if( -TurningAngleIMU <= 30 ) {
+					if( sensor_inp() == 0x2 ) {
+						enc1 = 0;
+						angle_mode = 0;
+						pattern = 36;
+						break;
+					}
+				} else if ( -TurningAngleIMU >= 20 ) {
+					if( j <= -1800 ) {
+						enc1 = 0;
+						i = (short)-TurningAngleIMU;
+						pattern = 34;
+						break;
+					}
 				}
-			} else if ( -TurningAngleIMU >= 20 ) {
-				if( j <= -1800 ) {
-					enc1 = 0;
-					i = (short)-TurningAngleIMU;
-					pattern = 34;
-					break;
+			} else {
+				if( -TurningAngleEnc <= 30 ) {
+					if( sensor_inp() == 0x2 ) {
+						enc1 = 0;
+						angle_mode = 0;
+						pattern = 36;
+						break;
+					}
+				} else if ( -TurningAngleEnc >= 20 ) {
+					if( j <= -1800 ) {
+						enc1 = 0;
+						i = (short)-TurningAngleEnc;
+						pattern = 34;
+						break;
+					}
 				}
 			}
 			if ( sensor_inp() == 0x4 ) {
@@ -571,13 +589,24 @@ void main(void){
 			j = getAnalogSensor();
 			diff( motorPwm );
 			
-			if( -TurningAngleIMU <= 90 && -TurningAngleIMU >= 40) {
-				if( j <= -1800 ) {
-					enc1 = 0;
-					i = (short)TurningAngleIMU;
-					i = -i;
-					pattern = 34;
-					break;
+			if ( IMUSet ) {
+				if( -TurningAngleIMU <= 90 && -TurningAngleIMU >= 40) {
+					if( j <= -1800 ) {
+						enc1 = 0;
+						i = (short)TurningAngleIMU;
+						i = -i;
+						pattern = 34;
+						break;
+					}
+				}
+			} else {
+				if( TurningAngleEnc <= 90 && TurningAngleEnc >= 40) {
+					if( j <= -1800 ) {
+						enc1 = 0;
+						i = (short)TurningAngleEnc;
+						pattern = 34;
+						break;
+					}
 				}
 			}
 			break;
@@ -665,19 +694,38 @@ void main(void){
 				motor_f( lpwm, rpwm);
 				motor_r( lpwm, rpwm);	
 			}*/
-			if( TurningAngleIMU <= 30 ) {
-				if( sensor_inp() == 0x2 ) {
-					enc1 = 0;
-					angle_mode = 0;
-					pattern = 46;
-					break;
+			
+			if ( IMUSet ) {
+				if( TurningAngleIMU <= 30 ) {
+					if( sensor_inp() == 0x2 ) {
+						enc1 = 0;
+						angle_mode = 0;
+						pattern = 46;
+						break;
+					}
+				} else if ( TurningAngleIMU >= 20 ) {
+					if( j >= 1800 ) {
+						enc1 = 0;
+						i = TurningAngleIMU;
+						pattern = 44;
+						break;
+					}
 				}
-			} else if ( TurningAngleIMU >= 20 ) {
-				if( j >= 1800 ) {
-					enc1 = 0;
-					i = TurningAngleIMU;
-					pattern = 44;
-					break;
+			} else {
+				if( TurningAngleEnc <= 30 ) {
+					if( sensor_inp() == 0x2 ) {
+						enc1 = 0;
+						angle_mode = 0;
+						pattern = 46;
+						break;
+					}
+				} else if ( TurningAngleEnc >= 20 ) {
+					if( j >= 1800 ) {
+						enc1 = 0;
+						i = TurningAngleEnc;
+						pattern = 44;
+						break;
+					}
 				}
 			}
 			if ( sensor_inp() == 0x1 ) {
@@ -695,12 +743,23 @@ void main(void){
 			j = getAnalogSensor();
 			diff( motorPwm );
 			
-			if( TurningAngleIMU <= 90 && TurningAngleIMU >= 40) {
-				if( j >= 1800 ) {
-					enc1 = 0;
-					i = TurningAngleIMU;
-					pattern = 44;
-					break;
+			if ( IMUSet ) {
+				if( TurningAngleIMU <= 90 && TurningAngleIMU >= 40) {
+					if( j >= 1800 ) {
+						enc1 = 0;
+						i = TurningAngleIMU;
+						pattern = 44;
+						break;
+					}
+				}
+			} else {
+				if( TurningAngleEnc <= 90 && TurningAngleEnc >= 40) {
+					if( j >= 1800 ) {
+						enc1 = 0;
+						i = TurningAngleEnc;
+						pattern = 44;
+						break;
+					}
 				}
 			}
 			break;
@@ -1337,9 +1396,7 @@ void Timer (void) {
 	cnt_gyro++;
 			
 	// LCD表示
-	if ( lcd_mode ) {
-		lcdShowProcess();
-	}
+	if ( lcd_mode ) lcdShowProcess();
 
 	// エンコーダカウント
 	getEncoder();
@@ -1349,30 +1406,32 @@ void Timer (void) {
 	else 			servoControl();	// 白線
 	motorControl();		// モータ
 	
-	// 通信
-	if ( IMUSet ) {
-		// I2C通信で加速度及び角速度を取得
-		IMUProcess();
-	} else {
-		// UART受信
-		commandSCI1();
-	}
-	
-	//getTurningAngleEnc();
-	getTurningAngleIMU();
-	getPichAngleIMU();
-	getRollAngleIMU();
-	if (cnt_gyro > 200) {
-		RollAngleIMU = 0;
-		PichAngleIMU = 0;
-		cnt_gyro  = 0;
-	}
-	
 	// MicroSD書き込み
 	microSDProcess();
 	if ( msdFlag ) sendLog();
 	
 	Timer10++;
+	
+	// 通信
+	if ( IMUSet ) {
+		// I2C通信で加速度及び角速度を取得
+		if ( Timer10 % 5 == 0 ) {
+			IMUProcess();
+			getTurningAngleIMU();
+			getPichAngleIMU();
+			getRollAngleIMU();
+			if (cnt_gyro > 200) {
+				RollAngleIMU = 0;
+				PichAngleIMU = 0;
+				cnt_gyro  = 0;
+			}
+		}
+	} else {
+		// UART受信
+		commandSCI1();
+		getTurningAngleEnc();
+	}
+	
 	// 10ｍごとに実行
 	switch ( Timer10 ) {	
 	case 1:

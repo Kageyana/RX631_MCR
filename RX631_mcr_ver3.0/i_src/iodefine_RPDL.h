@@ -72,14 +72,14 @@
 #pragma bit_order left
 #pragma unpack
 struct st_ad {
-	unsigned short addrA;
-	unsigned short addrB;
-	unsigned short addrC;
-	unsigned short addrD;
-	unsigned short addrE;
-	unsigned short addrF;
-	unsigned short addrG;
-	unsigned short addrH;
+	unsigned short ADDRA;
+	unsigned short ADDRB;
+	unsigned short ADDRC;
+	unsigned short ADDRD;
+	unsigned short ADDRE;
+	unsigned short ADDRF;
+	unsigned short ADDRG;
+	unsigned short ADDRH;
 	union {
 		unsigned char BYTE;
 		struct {
@@ -150,7 +150,7 @@ struct st_bsc {
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned short addr:13;
+			unsigned short ADDR:13;
 		} BIT;
 	} BERSR2;
 	char           wk3[4];
@@ -7749,27 +7749,27 @@ struct st_s12ad {
 	unsigned short ADTSDR;
 	unsigned short ADOCDR;
 	char           wk4[2];
-	unsigned short addr0;
-	unsigned short addr1;
-	unsigned short addr2;
-	unsigned short addr3;
-	unsigned short addr4;
-	unsigned short addr5;
-	unsigned short addr6;
-	unsigned short addr7;
-	unsigned short addr8;
-	unsigned short addr9;
-	unsigned short addr10;
-	unsigned short addr11;
-	unsigned short addr12;
-	unsigned short addr13;
-	unsigned short addr14;
-	unsigned short addr15;
-	unsigned short addr16;
-	unsigned short addr17;
-	unsigned short addr18;
-	unsigned short addr19;
-	unsigned short addr20;
+	unsigned short ADDR0;
+	unsigned short ADDR1;
+	unsigned short ADDR2;
+	unsigned short ADDR3;
+	unsigned short ADDR4;
+	unsigned short ADDR5;
+	unsigned short ADDR6;
+	unsigned short ADDR7;
+	unsigned short ADDR8;
+	unsigned short ADDR9;
+	unsigned short ADDR10;
+	unsigned short ADDR11;
+	unsigned short ADDR12;
+	unsigned short ADDR13;
+	unsigned short ADDR14;
+	unsigned short ADDR15;
+	unsigned short ADDR16;
+	unsigned short ADDR17;
+	unsigned short ADDR18;
+	unsigned short ADDR19;
+	unsigned short ADDR20;
 	char           wk5[22];
 	union {
 		unsigned short WORD;
@@ -9751,9 +9751,9 @@ struct st_usb0 {
 			unsigned short :4;
 			unsigned short STSRECOV:4;
 			unsigned short :1;
-			unsigned short USBaddr:7;
+			unsigned short USBADDR:7;
 		} BIT;
-	} USBaddr;
+	} USBADDR;
 	char           wk10[2];
 	union {
 		unsigned short WORD;
@@ -10352,9 +10352,9 @@ struct st_usb1 {
 			unsigned short :4;
 			unsigned short STSRECOV:4;
 			unsigned short :1;
-			unsigned short USBaddr:7;
+			unsigned short USBADDR:7;
 		} BIT;
-	} USBaddr;
+	} USBADDR;
 	char           wk10[2];
 	union {
 		unsigned short WORD;

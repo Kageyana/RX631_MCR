@@ -194,13 +194,13 @@ void init_SCI1( char mode, char rate )
 		SCI1.SCMR.BIT.SINV = 0;		// 送信、受信データをそのまま送受信する
 		SCI1.SCMR.BIT.SMIF = 0;		// シリアルコミュニケーションインターフェイスモード
 		
-		SCI1.BRR = 3;			// ビットレート 375kHz
+		SCI1.BRR = 2;			// ビットレート 375kHz
 		
 		SCI1.SPMR.BYTE = 0;
 		SCI1.SEMR.BIT.NFEN = 0;		// ノイズ除去機能無効
 		SCI1.SNFR.BIT.NFCS = 2;		// 2分周のクロックをノイズフィルタに使用
-		SCI1.SIMR1.BIT.IICM = 1;	// 簡易IICモード
-		SCI1.SIMR1.BIT.IICDL = 1;	// 0～1サイクル遅延
+		SCI1.SIMR1.BIT.IICM = 1;		// 簡易IICモード
+		SCI1.SIMR1.BIT.IICDL = 1;		// 0～1サイクル遅延
 		SCI1.SIMR2.BIT.IICINTM = 1;	// 受信割り込み、送信割り込み可能
 		SCI1.SIMR2.BIT.IICCSC = 1;	// クロック同期を行う
 		SCI1.SIMR2.BIT.IICACKT = 1;	// NACK送信またはACK/NACK受信
@@ -479,7 +479,6 @@ char send_SCI1_I2cWait( char slaveaddr, char* data, char num )
 	while ( SCI1.SIMR3.BYTE != 0xf0 ) {	// バスがフリーになるまで待つ
 		if ( cnt0 ) {
 			err = 1;
-			init_SCI1( UART, RATE_230400 );
 			break;
 		}
 	}
@@ -499,7 +498,7 @@ char send_SCI1_I2cWait( char slaveaddr, char* data, char num )
 		// データは割り込みで送信
 		cnt0 = 0;
 		while ( SCI1.SIMR3.BYTE != 0xf0 ) {	// バスがフリーになるまで待つ
-			if ( cnt0 >= 1 ) {
+			if ( cnt0 ) {
 				err = 1;
 				break;
 			}
@@ -523,7 +522,6 @@ void receive_SCI1_I2c( char slaveaddr, char* data, char num )
 	while ( SCI1.SIMR3.BYTE != 0xf0 ) {	// バスがフリーになるまで待つ
 		if ( cnt0 ) {
 			err = 1;
-			SCI1.SIMR3.BYTE = 0xf0;
 			break;
 		}
 	}
@@ -543,7 +541,12 @@ void receive_SCI1_I2c( char slaveaddr, char* data, char num )
 		
 		// データは割り込みで送信
 		PORT5.PODR.BIT.B2 = 1;
-		while ( SCI1.SIMR3.BYTE != 0xf0 );	// バスがフリーになるまで待つ
+		while ( SCI1.SIMR3.BYTE != 0xf0 ) {	// バスがフリーになるまで待つ
+			if ( cnt0 ) {
+				err = 1;
+				break;
+			}
+		}
 		PORT5.PODR.BIT.B2 = 0;
 	}
 }
@@ -559,7 +562,7 @@ bool receive_data_SCI1_I2c( char slaveaddr, char* sendData, char* receiveData, c
 	
 	cnt0 = 0;
 	while ( SCI1.SIMR3.BYTE != 0xf0 ) {	// バスがフリーになるまで待つ
-		if ( cnt0 > 1 ) {
+		if ( cnt0 ) {
 			err = 1;
 			break;
 		}
@@ -586,7 +589,7 @@ bool receive_data_SCI1_I2c( char slaveaddr, char* sendData, char* receiveData, c
 		// データは割り込みで送信
 		cnt0 = 0;
 		while ( SCI1.SIMR3.BYTE != 0xf0 ) {	// バスがフリーになるまで待つ
-			if ( cnt0 > 1 ) {
+			if ( cnt0 ) {
 				err = 1;
 				break;
 			}

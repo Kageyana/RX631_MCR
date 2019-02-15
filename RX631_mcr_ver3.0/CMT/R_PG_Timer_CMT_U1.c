@@ -36,7 +36,7 @@
 * Description  : 
 * Limitations  : 
 ******************************************************************************
-* History : 01.02.2019 Version Description
+* History : 15.02.2019 Version Description
 *         :   
 ******************************************************************************/
 
@@ -74,9 +74,9 @@ bool R_PG_Timer_Set_CMT_U1_C2(void)
 	return R_CMT_Create(
 		2,
 		PDL_CMT_PCLK_DIV_8 | PDL_CMT_DMAC_DTC_TRIGGER_DISABLE | PDL_CMT_STOP,
-		59,
+		299,
 		msd_send_data,
-		7
+		10
 	);
 
 }

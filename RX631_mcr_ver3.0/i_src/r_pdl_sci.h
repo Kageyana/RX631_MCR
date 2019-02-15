@@ -786,8 +786,8 @@ to next available bit position*/
 /* ----------------------------------------------- */
 /* R_SCI_IIC_TransferAll						   */
 /* ----------------------------------------------- */
-#define PDL_SCI_IIC_7_BIT_SLAVE_addrESS			0x0001u
-#define PDL_SCI_IIC_10_BIT_SLAVE_addrESS		0x0002u
+#define PDL_SCI_IIC_7_BIT_SLAVE_ADDRESS			0x0001u
+#define PDL_SCI_IIC_10_BIT_SLAVE_ADDRESS		0x0002u
 
 #define PDL_SCI_IIC_DMAC_DTC_TRIGGER_DISABLE	0x0004u
 #define PDL_SCI_IIC_DMAC_TRIGGER_ENABLE			0x0008u

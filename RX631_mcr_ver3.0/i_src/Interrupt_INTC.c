@@ -33,7 +33,7 @@ extern void rpdl_ADC_10_Start(void);
 #endif
 
 /* CMT control register definition */
-#define CMSTR_addrESS(a) ( (volatile uint16_t __evenaccess *)&CMT.CMSTR0 + ((0x10u * (a >> 1)) / sizeof(uint16_t)) )
+#define CMSTR_ADDRESS(a) ( (volatile uint16_t __evenaccess *)&CMT.CMSTR0 + ((0x10u * (a >> 1)) / sizeof(uint16_t)) )
 
 /*""FUNC COMMENT""*************************************************************
 * Module outline: External interrupt processing
@@ -1113,11 +1113,11 @@ void Interrupt_BRK(void)
 			break;
 		case BRK_CMT_START:
 			/* Set STRn to 1 */
-			*(CMSTR_addrESS(rpdl_INTC_brk_data8)) |= (uint16_t)((rpdl_INTC_brk_data8 & 0x01u) + 1);
+			*(CMSTR_ADDRESS(rpdl_INTC_brk_data8)) |= (uint16_t)((rpdl_INTC_brk_data8 & 0x01u) + 1);
 			break;
 		case BRK_CMT_STOP:
 			/* Set STRn to 0 */
-			*(CMSTR_addrESS(rpdl_INTC_brk_data8)) &= (uint16_t)(0x2u >> (rpdl_INTC_brk_data8 & 0x01u));
+			*(CMSTR_ADDRESS(rpdl_INTC_brk_data8)) &= (uint16_t)(0x2u >> (rpdl_INTC_brk_data8 & 0x01u));
 			break;
 		case BRK_MODIFY_PROTECTION:
 			/* Call the modification function */

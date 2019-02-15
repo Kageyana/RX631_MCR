@@ -113,7 +113,7 @@
 #define ZA_OFFSET_H		0x7D
 #define ZA_OFFSET_L		0x7E
 
-#define MPU9255_addrESS     	0xd0		// 書き込み時のスレーブアドレス
+#define MPU9255_ADDRESS     	0xd0		// 書き込み時のスレーブアドレス
 
 #define ACCELLSB			2048		// 16[g]
 #define GYROLSB			32.8		// 1000[deg/s]
@@ -125,6 +125,7 @@
 
 #define MAXDATA_RANGE		32764	// 16bitデータの最大値
 #define G_ACCELERATION		9.81		// 重力加速度
+#define DELTATIMU			0.005	// 取得周期
 
 // キャリブレーション
 #define XGSLOPE			0.0048
@@ -133,9 +134,9 @@
 #define SAMPLE				5000
 #define REC_NUM			8
 /*************************************** 自動生成関数 **********************************/
-#define I2C_IMU_COMMAND	send_SCI1_I2cWait( MPU9255_addrESS, sendData, num)
-#define I2C_IMU_RECIVE		receive_SCI1_I2c( MPU9255_addrESS, reciveData, num )
-#define I2C_IMU_ARRY		receive_data_SCI1_I2c(MPU9255_addrESS, sendData, reciveData, num)
+#define I2C_IMU_COMMAND	send_SCI1_I2cWait( MPU9255_ADDRESS, sendData, num)
+#define I2C_IMU_RECIVE		receive_SCI1_I2c( MPU9255_ADDRESS, reciveData, num )
+#define I2C_IMU_ARRY		receive_data_SCI1_I2c(MPU9255_ADDRESS, sendData, reciveData, num)
 /************************************************************************************/
 //====================================//
 // グローバル変数の宣言							//

@@ -14,10 +14,10 @@
 // シンボル定義										//
 //=======================================//
 #define WRITINGTIME		2		// ログ取得周期(ms)
-#define DATA_BYTE			64		// 一回に保存するデータ数(byte)
+#define DATA_BYTE			32		// 一回に保存するデータ数(byte)
 #define RECODTIME			30000	// 記録時間(ms)
 #define MSD_STARTADDRESS	0		// 開始アドレス
-#define MSD_ENDADDRESS	1083000	// 終了アドレス　RECODTIME * DATA_BYTE / WRITINGTIME
+#define MSD_ENDADDRESS	960000	// 終了アドレス　RECODTIME * DATA_BYTE / WRITINGTIME
 
 /******************************************** 自動生成関数 *****************************************/
 #define SET_SCI_C5		R_PG_SCI_Set_C5();		// シリアルI/Oチャネルを設定(SPI)
@@ -39,7 +39,7 @@
 // グローバル変数の宣言								//
 //=======================================//
 // タイマ関連
-extern unsigned int		cnt_log;		// ログ漏れ確認用カウント
+extern unsigned short		cnt_log;		// ログ漏れ確認用カウント
 
 // microSD関連
 extern signed char		msdBuff[ 512 ];        // 一時保存バッファ

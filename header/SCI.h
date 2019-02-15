@@ -37,9 +37,9 @@
 #define	IPR_TXI5		10
 #define	IPR_TEI5		9
 
-#define	IPR_RXI12		11
-#define	IPR_TXI12		10
-#define	IPR_TEI12		9
+#define	IPR_RXI12		9
+#define	IPR_TXI12		8
+#define	IPR_TEI12		7
 
 #define	IPR_RXI11		14
 #define	IPR_TXI11		13
