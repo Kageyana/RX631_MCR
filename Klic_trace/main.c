@@ -55,10 +55,6 @@ void main(void){
 	// 初期化									//
 	//=================================//
 	inti_lcd();			// LCD初期化
-	lcdPosition( 0, 0 );
-	lcdPrintf("INITIALI");
-	lcdPosition( 0, 1 );
-	lcdPrintf("    ZING");
 	
 	motor_f( 0, 0 );		// モーター停止
 	motor_r( 0, 0 );
@@ -70,55 +66,41 @@ void main(void){
 	start = 0;				// ゲートスタート
 	
 	init_BeepS();			// ブザー初期化
+	SET_SCI_C1
 	
 	// SCI1初期化
-	lcdPosition( 0, 0 );
-	lcdPrintf("SCI1    ");
-	lcdPosition( 0, 1 );
 	if ( !init_IMU() ) {
 		setBeepPatternS( 0x8000 );
 		i = 1;
-		lcdPrintf("      OK");
 	} else {
 		setBeepPatternS( 0xcc00 );
 		init_SCI1( UART, RATE_230400 );
 		i = 0;
-		lcdPrintf("   ERROR");
 	}
-	
 	wait_lcd(100);
 	// フラッシュ初期化
-	lcdPosition( 0, 0 );
-	lcdPrintf("FLASH   ");
-	lcdPosition( 0, 1 );
 	if( !initFlash() ) {
 		setBeepPatternS( 0x8000 );
 		readFlashSetup( 1, 1, 1 ,1 ,1 ,1 ,1);	// データフラッシュから前回パラメータを読み込む
-		lcdPrintf("      OK");
 	} else{
 		setBeepPatternS( 0xcc00 );
-		lcdPrintf("   ERROR");
 	}
-	
 	wait_lcd(100);
 	// MicroSDカード初期化
-	lcdPosition( 0, 0 );
-	lcdPrintf("MicroSD ");
-	lcdPosition( 0, 1 );
 	if( !init_msd() ) {
 		setBeepPatternS( 0x8000 );
 		msdset = 1;
-		lcdPrintf("      OK");
 	} else {
 		setBeepPatternS( 0xcc00 );
 		msdset = 0;
-		lcdPrintf("   ERROR");
 	}
 	wait_lcd(100);
-	
 	IMUSet = i;
+	R_PG_Timer_Start_IWDT();	// 独立ウォッチドッグタイマのカウントスタート
 	while(1){
 		__setpsw_i();
+		// カウントリフレッシュ
+		R_PG_Timer_RefreshCounter_IWDT();
 		if( pattern >= 11 && pattern <= 99 ) {
 			if( !pushcart_mode ) {		
 				// 手押しモードOFF

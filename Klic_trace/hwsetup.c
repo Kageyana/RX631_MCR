@@ -42,7 +42,7 @@ void HardwareSetup(void)
 	SET_MTU_C2
 	SET_MTU_C3
 	
-	SET_SCI_C1
+	//SET_SCI_C1
 	SET_SCI_C5 		// シリアルI/Oチャネルを設定(SPI)
 	SET_SCI_C12 		// シリアルI/Oチャネルを設定(I2C)
 	

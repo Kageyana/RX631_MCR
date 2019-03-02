@@ -933,7 +933,7 @@ void sendLog (void) {
 		send_Char			(	sensor_inp() 	);
 		send_Char			( 	slope_mode	);
 		send_Char			(	(char)Encoder		);
-		send_Char			(	(char)targetSpeed	);
+		send_Char			(	(char)targetSpeed/10	);
 		send_Char			(	(char)PichAngleIMU*10	);
 		send_Char			(	(char)RollAngleIMU*10	);
 		

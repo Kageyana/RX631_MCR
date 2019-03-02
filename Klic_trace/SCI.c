@@ -194,7 +194,7 @@ void init_SCI1( char mode, char rate )
 		SCI1.SCMR.BIT.SINV = 0;		// 送信、受信データをそのまま送受信する
 		SCI1.SCMR.BIT.SMIF = 0;		// シリアルコミュニケーションインターフェイスモード
 		
-		SCI1.BRR = 2;			// ビットレート 375kHz
+		SCI1.BRR = 3;			// ビットレート 375kHz
 		
 		SCI1.SPMR.BYTE = 0;
 		SCI1.SEMR.BIT.NFEN = 0;		// ノイズ除去機能無効
