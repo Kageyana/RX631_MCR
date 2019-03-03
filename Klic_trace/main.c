@@ -96,7 +96,6 @@ void main(void){
 	}
 	wait_lcd(100);
 	IMUSet = i;
-	R_PG_Timer_Start_IWDT();	// 独立ウォッチドッグタイマのカウントスタート
 	while(1){
 		__setpsw_i();
 		// カウントリフレッシュ
@@ -194,9 +193,9 @@ void main(void){
 			servoPwmOut( ServoPwm );
 			if ( start == 1 ) {
 				// カウントダウンスタート
-				if ( cnt1 >= 4000 ) {
+				if ( cnt1 >= 3000 ) {
 					setBeepPatternS( 0xfff0 );
-						
+					
 					// 変数初期化
 					init_Parameter( 0 );
 					break;
@@ -1464,5 +1463,6 @@ void init_Parameter ( bool lcd ) {
 	TurningAngleIMU = 0;
 	RollAngleIMU = 0;
 	PichAngleIMU = 0;
+	R_PG_Timer_Start_IWDT();	// 独立ウォッチドッグタイマのカウントスタート
 	pattern = 11;		// 通常走行
 }
