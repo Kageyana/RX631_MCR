@@ -168,6 +168,9 @@ void main(void){
 				cnt_byte = 0;		// 受信カウントリセット
 				
 				if ( msdset ) init_log();	// ログ記録準備
+				flashDataBuff[ 0 ] = msdStartaddress >> 16;
+				flashDataBuff[ 1 ] = msdStartaddress & 0xffff;	// 開始アドレス
+				writeFlashData( MSD_STARTAREA, MSD_ENDAREA, MSD_DATA, 2 );
 				if ( !fixSpeed ) writeFlashBeforeStart(1, 0, 1, 1, 1, 1);	// 速度パラメータをデータフラッシュに保存
 				else writeFlashBeforeStart(0, 0, 1, 1, 1, 1);		// 速度パラメータ以外を保存
 				
@@ -1298,11 +1301,9 @@ void main(void){
 			// 終了処理が終わるまで待つ
 			if( checkMicroSDProcess() == 0 ) {
 				// MicroSD最終書き込みアドレス保存
-				flashDataBuff[ 0 ] = msdStartaddress >> 16;
-				flashDataBuff[ 1 ] = msdStartaddress & 0xffff;	// 開始アドレス
-				flashDataBuff[ 2 ] = msdWorkaddress >> 16;
-				flashDataBuff[ 3 ] = msdWorkaddress & 0xffff;	// 終了アドレス
-				writeFlashData( MSD_STARTAREA, MSD_ENDAREA, MSD_DATA, 4 );
+				flashDataBuff[ 0 ] = msdWorkaddress >> 16;
+				flashDataBuff[ 1 ] = msdWorkaddress & 0xffff;	// 終了アドレス
+				writeFlashData( MSD_STARTAREA, MSD_ENDAREA, MSD_DATA, 2 );
 				//printf("msdStartaddress = %d\n", msdStartaddress);
 				//printf("msdEndaddress = %d\n", msdWorkaddress);
 				pattern = 106;

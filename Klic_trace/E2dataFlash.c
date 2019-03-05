@@ -740,11 +740,20 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 			s = 0;
 			s2 = 0;
 			while ( s < 19 ) {
+				// 終了アドレス
 				msdaddrBuff[s++] = (unsigned int)( (unsigned short)flashDataBuff[ s2+1 ] * 0x10000 + 
 							(unsigned short)flashDataBuff[ s2 ]);
+				// 開始アドレス
 				msdaddrBuff[s++] = (unsigned int)( (unsigned short)flashDataBuff[ s2+3 ] * 0x10000 + 
 							(unsigned short)flashDataBuff[ s2+2 ]);
-				s2 += 4;
+							
+				if ( ( msdaddrBuff[s-2] - 1 )== msdaddrBuff[s-1] ) {
+					msdaddrBuff[s-1] = msdaddrBuff[s-2];		// 開始アドレス
+					msdaddrBuff[s-2] = 240000;			// 15秒分のアドレス
+					s2 += 2;
+				} else {
+					s2 += 4;
+				}
 			}
 			// 最新のログアドレス
 			
