@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <MicomToolCommonProjectFile Version="1.00">
-  <CreatorType Name="CubeSuite+" Version="V6.01.00  [01 Dec 2017]" />
+  <CreatorType Name="CubeSuite+" Version="V8.01.00  [03 Dec 2018]" />
   <Placeholders>
     <PlaceholderPrefix>%</PlaceholderPrefix>
     <PlaceholderPostfix>%</PlaceholderPostfix>
@@ -116,14 +116,26 @@
           <Path>RX631_mcr_ver3.0\i_src\r_pdl_sci_RX63Nxx.h</Path>
           <Path>RX631_mcr_ver3.0\i_src\r_pdl_adc_12.h</Path>
           <Path>RX631_mcr_ver3.0\i_src\r_pdl_adc_12_RX63Nxx.h</Path>
+          <Path>RX631_mcr_ver3.0\i_src\r_pdl_mcu_ofs.h</Path>
+          <Path>RX631_mcr_ver3.0\i_src\r_pdl_iwdt.h</Path>
+          <Path>RX631_mcr_ver3.0\i_src\r_pdl_iwdt_RX63Nxx.h</Path>
         </Category>
         <Path>RX631_mcr_ver3.0\R_PG_RX631_mcr_ver3.0.h</Path>
         <Path>RX631_mcr_ver3.0\R_PG_IntFuncsExtern.h</Path>
         <Path>RX631_mcr_ver3.0\R_PG_RPDL_headers.h</Path>
+        <Category Name="IWDT">
+          <Path>RX631_mcr_ver3.0\IWDT\R_PG_Timer_IWDT.c</Path>
+          <Path>RX631_mcr_ver3.0\IWDT\R_PG_Timer_IWDT.h</Path>
+        </Category>
       </Category>
     </Files>
+    <DebugOptions>
+      <DebugTool>Simulator</DebugTool>
+      <ConnectSettings />
+      <DebugToolSettings />
+    </DebugOptions>
     <Device Series="RX">R5F5631FDxFP</Device>
-    <BuildOptions Name="CC-RX" Version="V2.08.00">
+    <BuildOptions Name="CC-RX" Version="V3.01.00">
       <BuildMode Name="DefaultBuild" Active="True">
         <GeneralOptions>
           <SimultaneouslyBuild>true</SimultaneouslyBuild>
@@ -133,6 +145,7 @@
           <Option>-fpu</Option>
           <Option>-dbl_size=8</Option>
           <Option>-lang=c</Option>
+          <Option>-include=RX631_mcr_ver3.0\IWDT</Option>
           <Option>-include=RX631_mcr_ver3.0</Option>
           <Option>-include=RX631_mcr_ver3.0\i_src</Option>
           <Option>-include=RX631_mcr_ver3.0\AD_12</Option>
@@ -181,6 +194,7 @@
           <Option>-fpu</Option>
           <Option>-output=%BuildModeName%\%FileLeaf%.obj</Option>
           <Option>-nologo</Option>
+          <Option>-debug</Option>
         </AssembleOptions>
         <LinkOptions>
           <Option>-library=C:\Renesas\PDG2\lib\RX63N\RX63N_library_100_little.lib</Option>
@@ -244,8 +258,10 @@
           <Path>DefaultBuild\Interrupt_INTC.obj</Path>
           <Path>DefaultBuild\Interrupt_CMT.obj</Path>
           <Path>DefaultBuild\Interrupt_ADC_12.obj</Path>
+          <Path>DefaultBuild\R_PG_Timer_IWDT.obj</Path>
         </LinkOrder>
         <CommonOptions>
+          <IncludePathForC>RX631_mcr_ver3.0\IWDT</IncludePathForC>
           <IncludePathForC>RX631_mcr_ver3.0</IncludePathForC>
           <IncludePathForC>RX631_mcr_ver3.0\i_src</IncludePathForC>
           <IncludePathForC>RX631_mcr_ver3.0\AD_12</IncludePathForC>

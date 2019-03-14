@@ -81,7 +81,8 @@ void main(void){
 	// フラッシュ初期化
 	if( !initFlash() ) {
 		setBeepPatternS( 0x8000 );
-		readFlashSetup( 1, 1, 1 ,1 ,1 ,1 ,1);	// データフラッシュから前回パラメータを読み込む
+		if ( i ) readFlashSetup( 1, 1, 1 ,1 ,1 ,1 ,1, PRINT_OFF);	// データフラッシュから前回パラメータを読み込む
+		else  readFlashSetup( 1, 1, 1 ,1 ,1 ,1 ,1, PRINT_ON);
 	} else{
 		setBeepPatternS( 0xcc00 );
 	}
@@ -98,8 +99,6 @@ void main(void){
 	IMUSet = i;
 	while(1){
 		__setpsw_i();
-		// カウントリフレッシュ
-		R_PG_Timer_RefreshCounter_IWDT();
 		if( pattern >= 11 && pattern <= 99 ) {
 			if( !pushcart_mode ) {		
 				// 手押しモードOFF
@@ -168,9 +167,7 @@ void main(void){
 				cnt_byte = 0;		// 受信カウントリセット
 				
 				if ( msdset ) init_log();	// ログ記録準備
-				flashDataBuff[ 0 ] = msdStartaddress >> 16;
-				flashDataBuff[ 1 ] = msdStartaddress & 0xffff;	// 開始アドレス
-				writeFlashData( MSD_STARTAREA, MSD_ENDAREA, MSD_DATA, 2 );
+				
 				if ( !fixSpeed ) writeFlashBeforeStart(1, 0, 1, 1, 1, 1);	// 速度パラメータをデータフラッシュに保存
 				else writeFlashBeforeStart(0, 0, 1, 1, 1, 1);		// 速度パラメータ以外を保存
 				
@@ -316,6 +313,11 @@ void main(void){
 					break;
 				}
 			}
+			if ( memory_mode ) {
+				enc1 = 0;
+				pattern = 16;
+				break;
+			}
 			// 直線チェック
 			if ( i <  CURVE_R600_START && i > -CURVE_R600_START ) {
 				enc1 = 0;
@@ -454,6 +456,13 @@ void main(void){
 				break;
 			}
 			break;
+			
+		case 16:
+			servoPwmOut( ServoPwm );
+			targetSpeed = speed_straight * SPEED_CURRENT;
+			diff( motorPwm );
+			
+			break;
 		//-------------------------------------------------------------------
 		//【020】クランク検出処理
 		//-------------------------------------------------------------------
@@ -512,19 +521,7 @@ void main(void){
 			i = (Encoder * 10) - targetSpeed;	// 目標値との偏差
 			j = getAnalogSensor();
 			diff( motorPwm );
-			/*if( i >= 200 && enc1 <= enc_mm( 40 ) ) {
-				// 速度超過なら急ブレーキ
-				motor_f( -100, 0 );
-				motor_r( -100, 0 );
-			} else {
-				// 左を加速、右を減速のみに使用する
-				if( motorPwm > 0 ) rpwm = 0;		// 加速時　右0
-				else rpwm = motorPwm;			// 減速時　右減速
-				if( motorPwm > 0 ) lpwm = motorPwm;	// 加速時　左加速
-				else lpwm = 0;				// 減速時　左0
-				motor_f( lpwm, rpwm);
-				motor_r( lpwm, rpwm);	
-			}*/
+			
 			if ( IMUSet ) {
 				if( -TurningAngleIMU <= 30 ) {
 					if( sensor_inp() == 0x2 ) {
@@ -603,16 +600,6 @@ void main(void){
 			servoPwmOut( ServoPwm2 );
 			j = getAnalogSensor();
 			diff( motorPwm );
-			// 左を減速、右を加速のみに使用する
-			/*
-			if( motorPwm > 0 ) rpwm = 0;		// 加速時　右0
-			else rpwm = motorPwm;			// 減速時　右減速
-			if( motorPwm > 0 ) lpwm = motorPwm;	// 加速時　左加速
-			else lpwm = 0;				// 減速時　左0
-			motor_f( lpwm, rpwm);
-			motor_r( lpwm, rpwm);
-			led_out(0x18);
-			*/
 			
 			if( sensor_inp() == 0x2 && j >= -1800) {
 				enc1 = 0;
@@ -665,19 +652,6 @@ void main(void){
 			i = (Encoder * 10) - targetSpeed;	// 目標値との偏差
 			j = getAnalogSensor();
 			diff( motorPwm );
-			/*if( i >= 200 && enc1 <= enc_mm( 40 ) ) {
-				// 速度超過なら急ブレーキ
-				motor_f( -100, 0 );
-				motor_r( -100, 0 );
-			} else {
-				// 左を加速、右を減速のみに使用する
-				if( motorPwm < 0 ) rpwm = 0;
-				else rpwm = motorPwm;
-				if( motorPwm > 0 ) lpwm = 0;
-				else lpwm = motorPwm;
-				motor_f( lpwm, rpwm);
-				motor_r( lpwm, rpwm);	
-			}*/
 			
 			if ( IMUSet ) {
 				if( TurningAngleIMU <= 30 ) {
@@ -756,16 +730,6 @@ void main(void){
 			servoPwmOut( ServoPwm2 );
 			j = getAnalogSensor();
 			diff( motorPwm );
-			// 左を減速、右を加速のみに使用する
-			/*
-			if( motorPwm < 0 ) rpwm = 0;
-			else rpwm = motorPwm;
-			if( motorPwm > 0 ) lpwm = 0;
-			else lpwm = motorPwm;
-			motor_f( lpwm, rpwm);
-			motor_r( lpwm, rpwm);
-			led_out(0x18);
-			*/
 			
 			if( sensor_inp() == 0x2 && j <= 1800) {
 				enc1 = 0;
@@ -1282,7 +1246,6 @@ void main(void){
 			
 		case 104:
 			// 最後のデータが書き込まれるまで待つ
-			//printf("case 104\n");
 			if ( cnt1 <= 1000 ) {	// 500ms待つ
 				if( checkMicroSDProcess() == 11 ) {
 					msdFlag = 0;			// ログ記録終了
@@ -1304,8 +1267,6 @@ void main(void){
 				flashDataBuff[ 0 ] = msdWorkaddress >> 16;
 				flashDataBuff[ 1 ] = msdWorkaddress & 0xffff;	// 終了アドレス
 				writeFlashData( MSD_STARTAREA, MSD_ENDAREA, MSD_DATA, 2 );
-				//printf("msdStartaddress = %d\n", msdStartaddress);
-				//printf("msdEndaddress = %d\n", msdWorkaddress);
 				pattern = 106;
 				setBeepPatternS( 0xa8a8 );
 				break;
@@ -1350,21 +1311,25 @@ void Timer (void) {
 	
 	__setpsw_i();
 	//　タイマカウント
-	if ( pattern >= 11 && pattern <= 99 ) {	
-		if ( pattern != 21 ) {				// クロスライン通過時は無視
-			if ( sensor_inp() == 0x7 || sensor_inp() == 0x5 ) {	// センサ全灯
-				cnt_out++;	
-			} else {
-				cnt_out = 0;
+	if ( pattern >= 11 ) {
+		if ( pattern <= 99 ) {
+			if ( pattern != 21 ) {				// クロスライン通過時は無視
+				if ( sensor_inp() == 0x7 || sensor_inp() == 0x5 ) {	// センサ全灯
+					cnt_out++;	
+				} else {
+					cnt_out = 0;
+				}
 			}
+			if ( sensor_inp() == 0x0 && pattern != 53 && pattern != 63 ) cnt_out2++;	// センサ全消灯
+			else cnt_out2 = 0;
+			if ( Encoder <= 1 && Encoder >= -1 ) cnt_out3++;		// エンコーダ停止(ひっくり返った？)
+			else cnt_out3 = 0;
+			s = (short)RollAngleIMU;
+			if ( s >= 5 || s <= -5 ) cnt_out4++;
+			else	cnt_out4 = 0;
 		}
-		if ( sensor_inp() == 0x0 && pattern != 53 && pattern != 63 ) cnt_out2++;	// センサ全消灯
-		else cnt_out2 = 0;
-		if ( Encoder <= 1 && Encoder >= -1 ) cnt_out3++;		// エンコーダ停止(ひっくり返った？)
-		else cnt_out3 = 0;
-		s = (short)RollAngleIMU;
-		if ( s >= 5 || s <= -5 ) cnt_out4++;
-		else	cnt_out4 = 0;
+		// ウォッチドッグタイマの｣カウントリフレッシュ
+		R_PG_Timer_RefreshCounter_IWDT();
 	} else if ( pattern < 11 ) {
 		cnt_setup++;
 		cnt_setup2++;
@@ -1413,7 +1378,7 @@ void Timer (void) {
 		commandSCI1();
 		getTurningAngleEnc();
 	}
-	
+
 	// 10ｍごとに実行
 	switch ( Timer10 ) {	
 	case 1:

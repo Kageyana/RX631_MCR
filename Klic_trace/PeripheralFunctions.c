@@ -372,11 +372,9 @@ void motor_f( signed char accelefL, signed char accelefR )
 		PWM_FL_OUT
 	} else if ( accelefL == 100 || accelefL == -100 ) {	
 		// 100%
-		if ( accelefL > 0 ) {
-			DIR_FL_FOR
-		} else {
-			DIR_FL_REV
-		}
+		if ( accelefL > 0 ) DIR_FL_FOR
+		else DIR_FL_REV
+		
 		pwmfl = TGR_MOTOR + 2;
 		PWM_FL_OUT
 	} else {						
@@ -393,11 +391,9 @@ void motor_f( signed char accelefL, signed char accelefR )
 		PWM_FR_OUT
 	} else if ( accelefR == 100 || accelefR == -100 ) {	
 		// 100%
-		if ( accelefR > 0 ) {
-			DIR_FR_FOR
-		} else {
-			DIR_FR_REV
-		}
+		if ( accelefR > 0 ) DIR_FR_FOR
+		else DIR_FR_REV
+		
 		pwmfr = TGR_MOTOR + 2;
 		PWM_FR_OUT
 	} else {						
@@ -435,11 +431,9 @@ void motor_r( signed char accelerL, signed char accelerR )
 		PWM_RL_OUT
 	} else if ( accelerL == 100 || accelerL == -100 ) {	
 		// 100%
-		if (accelerL > 0) {
-			DIR_RL_FOR
-		} else {
-			DIR_RL_REV
-		}
+		if (accelerL > 0) DIR_RL_FOR
+		else DIR_RL_REV
+		
 		pwmrl = TGR_MOTOR + 2;
 		PWM_RL_OUT
 	} else {						
@@ -456,11 +450,9 @@ void motor_r( signed char accelerL, signed char accelerR )
 		PWM_RR_OUT
 	} else if ( accelerR == 100 || accelerR == -100 ) {	
 		// 100%
-		if ( accelerR > 0 ) {
-			DIR_RR_FOR
-		} else {
-			DIR_RR_REV
-		}
+		if ( accelerR > 0 ) DIR_RR_FOR
+		else DIR_RR_REV
+		
 		pwmrr = TGR_MOTOR + 2;
 		PWM_RR_OUT
 	} else {						

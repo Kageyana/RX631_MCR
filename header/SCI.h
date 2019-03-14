@@ -51,6 +51,8 @@
 #define	RW_BIT		1
 
 #define	SET_SCI_C1	init_SCI1( I2C, 0);
+#define	PRINT_ON		1
+#define	PRINT_OFF	0
 //====================================//
 // ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾							//
 //====================================//

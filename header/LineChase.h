@@ -140,9 +140,9 @@ extern signed char 	motorPwm;	// モーター制御PWM
 extern short		targetSpeed;	// 目標速度
 
 // ゲイン関連
-extern signed char	kp_buff, ki_buff, kd_buff;
-extern signed char	kp2_buff, ki2_buff, kd2_buff;
-extern signed char 	kp3_buff, ki3_buff, kd3_buff;
+extern char	kp_buff, ki_buff, kd_buff;
+extern char	kp2_buff, ki2_buff, kd2_buff;
+extern char 	kp3_buff, ki3_buff, kd3_buff;
 
 // デモ関連
 extern char demo;

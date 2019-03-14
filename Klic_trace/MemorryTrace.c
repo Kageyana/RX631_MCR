@@ -15,6 +15,7 @@ char 			cntmpattern[500];
 short			cntmpattern2;
 
 char			mpattern = 11;
+char			memory_mode = 0;
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 msdgetData								//
 // 処理概要     ログから角各処理開始時の位置を見つける			//
@@ -48,9 +49,9 @@ void msdgetData ()
 				// microSDよりデータ読み込み
 				if( msdWorkaddress >= msdEndaddress ) {
 					// 書き込み終了アドレスになったら、終わり
-					//printf( "End.\n" );
 					cntmpattern2 = 0;
 					setBeepPatternS( 0xa8a8 );
+					memory_mode = 1;
 					pattern_send = 4;
 					break;
 				}

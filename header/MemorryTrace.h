@@ -26,6 +26,7 @@ extern short		comp_short[10][100];
 extern unsigned int	comp_uint[10][100];
 
 extern short		cntmpattern2;
+extern char		memory_mode;
 //====================================//
 // プロトタイプ宣言								//
 //====================================//

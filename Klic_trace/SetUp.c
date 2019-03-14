@@ -1024,7 +1024,7 @@ void setup( void )
 					}
 					if ( tasw_get() == 0x1 && push1 == 0 && msdFlag == 0) {
 						push1 = 1;
-						readFlashSetup( 0, 0, 1 ,0 ,0 ,0 ,0);
+						readFlashSetup( 0, 0, 1 ,0 ,0 ,0 ,0,PRINT_ON);
 						init_log();	// ログ記録準備
 						msdFlag = 1;		// データ記録開始
 						lcdPosition( 0, 1 );

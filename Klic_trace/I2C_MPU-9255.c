@@ -84,8 +84,14 @@ bool IMUReadArry( char reg, char num, char* reciveData )
 ///////////////////////////////////////////////////////////////////////////
 char init_IMU (void)
 {
-	char ret  = 0, reciveData[1];
-	if ( !IMUReadByte( WHO_AM_I, reciveData) ) {
+	char ret  = 0, reciveData[1], i, j = 0;
+	for ( i = 0; i < 9; i++ ) {
+		if ( !IMUReadByte( WHO_AM_I, reciveData) ) {
+			j = 1;
+			break;
+		}
+	}
+	if ( j ) {
 		if ( reciveData[0] == 0x71 || reciveData[0] == 0x73 ) {
 			whoami = reciveData[0];
 			wait_IMU(35);

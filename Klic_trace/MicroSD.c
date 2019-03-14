@@ -911,10 +911,57 @@ void init_log ( void )
 				msdBuffaddress = 0;
 				msdWorkaddress = msdStartaddress;
 				
+				flashDataBuff[ 0 ] = msdStartaddress >> 16;
+				flashDataBuff[ 1 ] = msdStartaddress & 0xffff;	// 開始アドレス
+				writeFlashData( MSD_STARTAREA, MSD_ENDAREA, MSD_DATA, 2 );
+				
 				pattern_inti_log = 2;
 				break;
 		}
 	} 
+}
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 msdEndLog								//
+// 処理概要     ログの終了処理							//
+// 引数         なし									//
+// 戻り値       0:正常に終了 1:異常終了						//
+///////////////////////////////////////////////////////////////////////////
+char msdEndLog ( void )
+{
+	char pattern_msdend = 0;
+	
+	while ( pattern_msdend < 2 ) {
+	switch( pattern_msdend ) {
+		case 0:
+				// 最後のデータが書き込まれるまで待つ
+				if ( checkMicroSDProcess() == 11 ) {
+					msdFlag = 0;			// ログ記録終了
+					microSDProcessEnd();        // microSDProcess終了処理
+					pattern_msdend = 1;
+					break;
+				} else if ( checkMicroSDProcess() == 0 ) {
+					setBeepPatternS( 0xf0f0 );
+					pattern_msdend = 3;
+					break;
+				}
+				break;
+				
+			case 1:
+				// 終了処理が終わるまで待つ
+				if ( checkMicroSDProcess() == 0 ) {
+					// MicroSD最終書き込みアドレス保存
+					flashDataBuff[ 0 ] = msdWorkaddress >> 16;
+					flashDataBuff[ 1 ] = msdWorkaddress & 0xffff;	// 終了アドレス
+					writeFlashData( MSD_STARTAREA, MSD_ENDAREA, MSD_DATA, 2 );
+					pattern_msdend = 2;
+					setBeepPatternS( 0xa8a8 );
+					break;
+				}
+				break;
+	}
+	}
+	
+	return pattern - 2;
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 sendLog								//
@@ -1068,51 +1115,6 @@ void msd_sendToPC ( void )
 				break;
 		}
 	}
-}
-///////////////////////////////////////////////////////////////////////////
-// モジュール名 msdEndLog								//
-// 処理概要     ログの終了処理							//
-// 引数         なし									//
-// 戻り値       0:正常に終了 1:異常終了						//
-///////////////////////////////////////////////////////////////////////////
-char msdEndLog ( void )
-{
-	char pattern_msdend = 0;
-	
-	while ( pattern_msdend < 2 ) {
-	switch( pattern_msdend ) {
-		case 0:
-				// 最後のデータが書き込まれるまで待つ
-				if ( checkMicroSDProcess() == 11 ) {
-					msdFlag = 0;			// ログ記録終了
-					microSDProcessEnd();        // microSDProcess終了処理
-					pattern_msdend = 1;
-					break;
-				} else if ( checkMicroSDProcess() == 0 ) {
-					setBeepPatternS( 0xf0f0 );
-					pattern_msdend = 3;
-					break;
-				}
-				break;
-				
-			case 1:
-				// 終了処理が終わるまで待つ
-				if ( checkMicroSDProcess() == 0 ) {
-					// MicroSD最終書き込みアドレス保存
-					flashDataBuff[ 0 ] = msdStartaddress >> 16;
-					flashDataBuff[ 1 ] = msdStartaddress & 0xffff;	// 開始アドレス
-					flashDataBuff[ 2 ] = msdWorkaddress >> 16;
-					flashDataBuff[ 3 ] = msdWorkaddress & 0xffff;	// 終了アドレス
-					writeFlashData( MSD_STARTAREA, MSD_ENDAREA, MSD_DATA, 4 );
-					pattern_msdend = 2;
-					setBeepPatternS( 0xa8a8 );
-					break;
-				}
-				break;
-	}
-	}
-	
-	return pattern - 2;
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 send_Char								//

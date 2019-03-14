@@ -80,9 +80,9 @@ short			targetSpeed;		// 目標速度
 char 	demo;
 
 // ゲイン関連
-signed char	kp_buff, ki_buff, kd_buff;
-signed char	kp2_buff, ki2_buff, kd2_buff;
-signed char 	kp3_buff, ki3_buff, kd3_buff;
+char	kp_buff, ki_buff, kd_buff;
+char	kp2_buff, ki2_buff, kd2_buff;
+char kp3_buff, ki3_buff, kd3_buff;
 
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 check_crossline							//

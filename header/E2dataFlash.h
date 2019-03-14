@@ -98,7 +98,7 @@ void readFlashArray ( unsigned int Addr, volatile short* dataArray, short width_
 void readFlashArray2 ( unsigned int Addr, volatile short* dataArray, short width_data, short limitArea );
 void readBeforeAddr ( short startBlockNumber, short endBlockNumber );
 void writeFlashData ( short startBlockNumber, short endBlockNumber, short endData, short width_data );
-void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pid_angle, bool pid_speed, bool meter );
+void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pid_angle, bool pid_speed, bool meter, bool print );
 void writeFlashBeforeStart ( bool speed, bool C_angle, bool pid_line, bool pid_angle, bool pid_speed, bool meter );
 
 #endif // E2DATAFLASH_H_
