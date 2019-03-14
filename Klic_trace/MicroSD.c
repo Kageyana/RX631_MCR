@@ -979,12 +979,12 @@ void sendLog (void) {
 		send_Char			(	motorPwm 	);
 		send_Char			(	sensor_inp() 	);
 		send_Char			( 	slope_mode	);
-		send_Char			(	(char)Encoder		);
-		send_Char			(	(char)targetSpeed/10	);
+		send_Char			(	(char)Encoder	);
+		send_Char			(	(char)(targetSpeed/10)	);
 		send_Char			(	(char)PichAngleIMU*10	);
 		send_Char			(	(char)RollAngleIMU*10	);
 		
-		send_ShortToChar	(	(short)TurningAngleIMU*10	);
+		send_ShortToChar	(	(short)TurningAngleIMU*10);
 		send_ShortToChar	(	rawXg		);
 		send_ShortToChar	(	rawYg		);
 		send_ShortToChar	(	rawZg		);
@@ -1021,6 +1021,10 @@ void msd_sendToPC ( void )
 	volatile char pattern_send = 1;
 	
 	while ( pattern_send < 4 ) {
+		if( tasw_get() == 0x2 ) {
+			msdWorkaddress = msdEndaddress;
+			pattern_send = 2;
+		}
 		switch ( pattern_send ) {		
 			case 1:
 				i = 0;
@@ -1060,7 +1064,6 @@ void msd_sendToPC ( void )
 				// microSDよりデータ読み込み
 				if( msdWorkaddress >= msdEndaddress ) {
 					// 書き込み終了アドレスになったら、終わり
-					//printf( "End.\n" );
 					setBeepPatternS( 0xa8a8 );
 					pattern_send = 4;
 					break;
@@ -1089,7 +1092,7 @@ void msd_sendToPC ( void )
 				printf("%5d,", msdBuff[ msdBuffaddress + 2 ]);	// sensor_inp()
 				printf("%5d,", msdBuff[ msdBuffaddress + 3 ]);	// slope_mode
 				printf("%5d,", msdBuff[ msdBuffaddress + 4 ]);	// Encoder
-				printf("%5d,", msdBuff[ msdBuffaddress + 5 ]);	// targetSpeed
+				printf("%5d,", msdBuff[ msdBuffaddress + 5 ]*10);	// targetSpeed
 				printf("%5d,", msdBuff[ msdBuffaddress + 6 ]/10);	// PichAngleIMU
 				printf("%5d,", msdBuff[ msdBuffaddress + 7 ]/10);	// RollAngleIMU
 				

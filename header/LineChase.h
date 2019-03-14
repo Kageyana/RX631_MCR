@@ -11,7 +11,7 @@
 // シンボル定義									//
 //====================================//
 // 緊急停止
-#define	STOPPING_METER		23		// 停止距離
+#define	STOPPING_METER		40		// 停止距離
 
 // 各セクションでの目標速度　x/10[m/s]
 #define SPEED_STRAIGHT			54	// 通常トレース
@@ -91,8 +91,6 @@ extern char	slope_mode;		// 坂チェック		0:上り坂始め	1:上り坂終わり	2:下り坂始め
 extern char	angle_mode;		// サーボPWM変更	0:白線トレース	1:角度制御
 extern char	pushcart_mode;		// 手押しモード可否	0:自動走行	1:手押し
 extern char	msdset;			// MicroSDが初期化されたか	0:初期化失敗	1:初期化成功
-extern char	IMUSet;			// IMUが初期化されたか	0: 初期化失敗	1:初期化成功
-
 
 // パラメータ関連
 // 距離

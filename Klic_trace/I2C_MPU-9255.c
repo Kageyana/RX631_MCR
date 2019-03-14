@@ -18,7 +18,6 @@ double 	PichAngleIMU;		// IMUから求めたピッチ方向角度
 double	TempIMU;			// IMUの温度
 short		offset[3];			// オフセット値(16bit)
 
-char	IMUset = 0;		// 0:初期化失敗		1:初期化完了
 char	whoami;
 char cnt_imu = 0;
 
@@ -153,7 +152,7 @@ void IMUProcess (void)
 	} else {
 		setBeepPatternS( 0x8000 );
 		init_SCI1( UART, RATE_230400 );
-		IMUSet = 0;
+		SCIset = 0;
 	}
 	
 }

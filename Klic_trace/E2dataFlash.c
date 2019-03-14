@@ -634,7 +634,7 @@ void writeFlashData ( short startBlockNumber, short endBlockNumber, short endDat
 // 引数         Addr: E2データフラッシュ領域のアドレス					//
 // 戻り値       Addrの値								//
 //////////////////////////////////////////////////////////////////////////////////////////
-void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pid_angle, bool pid_speed, bool meter, bool print)
+void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pid_angle, bool pid_speed, bool meter)
 {
 	short s, s2;
 	// フラッシュ読み込み開始
@@ -725,7 +725,7 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 		} else if ( checkBlank( ( ANGLE0_STARTAREA *32 ) + FLASHSTARTADDR ) <= 0 ) {
 			// 全ブロックイレーズまたはエラーが発生したら初期値に設定する
 			Angle0 = SERVO_CENTER;
-			if( print ) printf("Angle0 Initialize\n");
+			printf("Angle0 Initialize\n");
 		}
 	}
 	
@@ -756,18 +756,16 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 				}
 			}
 			// 最新のログアドレス
-			if ( print ) {
-				printf("msdAddrBuff[0] = %d msdAddrBuff[1] = %d\n", msdaddrBuff[0], msdaddrBuff[1]);
-				printf("msdaddrBuff[2] = %d msdaddrBuff[3] = %d\n", msdaddrBuff[2], msdaddrBuff[3]);
-				printf("msdaddrBuff[4] = %d msdaddrBuff[5] = %d\n", msdaddrBuff[4], msdaddrBuff[5]);
-				printf("msdaddrBuff[6] = %d msdaddrBuff[7] = %d\n", msdaddrBuff[6], msdaddrBuff[7]);
-				printf("msdaddrBuff[8] = %d msdaddrBuff[9] = %d\n", msdaddrBuff[8], msdaddrBuff[9]);
-				printf("msdaddrBuff[10] = %d msdaddrBuff[11] = %d\n", msdaddrBuff[10], msdaddrBuff[11]);
-				printf("msdaddrBuff[12] = %d msdaddrBuff[13] = %d\n", msdaddrBuff[12], msdaddrBuff[13]);
-				printf("msdaddrBuff[14] = %d msdaddrBuff[15] = %d\n", msdaddrBuff[14], msdaddrBuff[15]);
-				printf("msdaddrBuff[16] = %d msdaddrBuff[17] = %d\n", msdaddrBuff[16], msdaddrBuff[17]);
-				printf("msdaddrBuff[18] = %d msdaddrBuff[19] = %d\n", msdaddrBuff[18], msdaddrBuff[19]);
-			}
+			printf("msdAddrBuff[0] = %d msdAddrBuff[1] = %d\n", msdaddrBuff[0], msdaddrBuff[1]);
+			printf("msdaddrBuff[2] = %d msdaddrBuff[3] = %d\n", msdaddrBuff[2], msdaddrBuff[3]);
+			printf("msdaddrBuff[4] = %d msdaddrBuff[5] = %d\n", msdaddrBuff[4], msdaddrBuff[5]);
+			printf("msdaddrBuff[6] = %d msdaddrBuff[7] = %d\n", msdaddrBuff[6], msdaddrBuff[7]);
+			printf("msdaddrBuff[8] = %d msdaddrBuff[9] = %d\n", msdaddrBuff[8], msdaddrBuff[9]);
+			printf("msdaddrBuff[10] = %d msdaddrBuff[11] = %d\n", msdaddrBuff[10], msdaddrBuff[11]);
+			printf("msdaddrBuff[12] = %d msdaddrBuff[13] = %d\n", msdaddrBuff[12], msdaddrBuff[13]);
+			printf("msdaddrBuff[14] = %d msdaddrBuff[15] = %d\n", msdaddrBuff[14], msdaddrBuff[15]);
+			printf("msdaddrBuff[16] = %d msdaddrBuff[17] = %d\n", msdaddrBuff[16], msdaddrBuff[17]);
+			printf("msdaddrBuff[18] = %d msdaddrBuff[19] = %d\n", msdaddrBuff[18], msdaddrBuff[19]);
 			
 			msdWorkaddress = msdaddrBuff[1];	// 前回開始アドレス
 			msdWorkaddress2 = msdaddrBuff[0];	// 前回終了アドレス
@@ -775,7 +773,7 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 			// 全ブロックイレーズまたはエラーが発生したら初期値に設定する
 			msdWorkaddress = MSD_STARTADDRESS;	// 開始アドレス
 			msdWorkaddress2 = MSD_ENDADDRESS;	// 終了アドレス
-			if ( print ) printf("msdWorkAddress Initialize\n");
+			printf("msdWorkAddress Initialize\n");
 		}
 	}
 	
@@ -794,7 +792,7 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 			kp_buff = KP;
 			ki_buff = KI;
 			kd_buff = KD;
-			if ( print ) printf("PIDgain Initialize\n");
+			printf("PIDgain Initialize\n");
 		}
 	}
 	
@@ -812,7 +810,7 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 			kp2_buff = KP2;
 			ki2_buff = KI2;
 			kd2_buff = KD2;
-			if ( print ) printf("PID2gain Initialize\n");
+			printf("PID2gain Initialize\n");
 		}
 	}
 	
@@ -831,7 +829,7 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 			kp3_buff = KP3;
 			ki3_buff = KI3;
 			kd3_buff = KD3;
-			if ( print ) printf("PID3gain Initialize\n");
+			printf("PID3gain Initialize\n");
 		}
 	}
 	
@@ -845,7 +843,7 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 		} else if ( checkBlank( ( STOPMETER_STARTAREA *32 ) + FLASHSTARTADDR ) <= 0 ) {
 			// 全ブロックイレーズまたはエラーが発生したら初期値に設定する
 			stopping_meter = STOPPING_METER;
-			if ( print ) printf("StopMeter Initialize\n");
+			printf("StopMeter Initialize\n");
 		}
 	}
 }

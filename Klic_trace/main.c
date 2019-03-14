@@ -71,18 +71,17 @@ void main(void){
 	// SCI1初期化
 	if ( !init_IMU() ) {
 		setBeepPatternS( 0x8000 );
-		i = 1;
+		SCIset = 1;
 	} else {
 		setBeepPatternS( 0xcc00 );
 		init_SCI1( UART, RATE_230400 );
-		i = 0;
+		SCIset = 0;
 	}
 	wait_lcd(100);
 	// フラッシュ初期化
 	if( !initFlash() ) {
 		setBeepPatternS( 0x8000 );
-		if ( i ) readFlashSetup( 1, 1, 1 ,1 ,1 ,1 ,1, PRINT_OFF);	// データフラッシュから前回パラメータを読み込む
-		else  readFlashSetup( 1, 1, 1 ,1 ,1 ,1 ,1, PRINT_ON);
+		readFlashSetup( 1, 1, 1 ,1 ,1 ,1 ,1);	// データフラッシュから前回パラメータを読み込む
 	} else{
 		setBeepPatternS( 0xcc00 );
 	}
@@ -96,7 +95,7 @@ void main(void){
 		msdset = 0;
 	}
 	wait_lcd(100);
-	IMUSet = i;
+	
 	while(1){
 		__setpsw_i();
 		if( pattern >= 11 && pattern <= 99 ) {
@@ -105,19 +104,19 @@ void main(void){
 				if( cnt1 >= 100 ) {		// 動き出してから
 					if ( EncoderTotal >= ( PALSE_METER * stopping_meter ) ) { // 距離超過の場合
 						error_mode = 0;
-						pattern = 101;
+						//pattern = 101;
 					} else if ( cnt_out >= STOP_SENSOR1 ) {	// センサ全灯
 						error_mode = 1;
-						pattern = 101;
+						//pattern = 101;
 					} else if ( cnt_out2 >= STOP_SENSOR2 ) {	// センサ全消灯
 						error_mode = 2;
-						pattern = 101;
+						//pattern = 101;
 					} else if ( cnt_out3 >= STOP_ENCODER ) {	// エンコーダ停止(ひっくり返った？)
 						error_mode = 3;
-						pattern = 101;
+						//pattern = 101;
 					} else if( cnt_out4 >= STOP_GYRO ) {	// マイナスの加速度検知(コースから落ちた？)
 						error_mode = 4;	
-						pattern = 101;
+						//pattern = 101;
 					}
 					/*
 					// Buletoothで外部から停止
@@ -522,7 +521,7 @@ void main(void){
 			j = getAnalogSensor();
 			diff( motorPwm );
 			
-			if ( IMUSet ) {
+			if ( SCIset ) {
 				if( -TurningAngleIMU <= 30 ) {
 					if( sensor_inp() == 0x2 ) {
 						enc1 = 0;
@@ -570,7 +569,7 @@ void main(void){
 			j = getAnalogSensor();
 			diff( motorPwm );
 			
-			if ( IMUSet ) {
+			if ( SCIset ) {
 				if( -TurningAngleIMU <= 90 && -TurningAngleIMU >= 40) {
 					if( j <= -1800 ) {
 						enc1 = 0;
@@ -653,7 +652,7 @@ void main(void){
 			j = getAnalogSensor();
 			diff( motorPwm );
 			
-			if ( IMUSet ) {
+			if ( SCIset ) {
 				if( TurningAngleIMU <= 30 ) {
 					if( sensor_inp() == 0x2 ) {
 						enc1 = 0;
@@ -701,7 +700,7 @@ void main(void){
 			j = getAnalogSensor();
 			diff( motorPwm );
 			
-			if ( IMUSet ) {
+			if ( SCIset ) {
 				if( TurningAngleIMU <= 90 && TurningAngleIMU >= 40) {
 					if( j >= 1800 ) {
 						enc1 = 0;
@@ -787,13 +786,13 @@ void main(void){
 				pattern = 52;
 				break;
 			}
-			/*if( enc1 <=  enc_mm( 20 ) ) {
+			if( enc1 <=  enc_mm( 20 ) ) {
 				if( sensor_inp() == 0x2 ) {
 					enc1 = 0;
 					pattern = 11;
 					break;
 				}
-			}*/
+			}
 			if( check_crossline() ) {		// クロスラインチェック
 				enc1 = 0;
 				setBeepPatternS( 0x8000 );
@@ -876,7 +875,8 @@ void main(void){
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_rightchange_escape * SPEED_CURRENT;
 			diff( motorPwm );
-			
+			i = getServoAngle();
+			/*
 			// クロスラインチェック
 			if( check_crossline() ) {
 				enc1 = 0;
@@ -895,13 +895,20 @@ void main(void){
 				enc1 = 0;
 				pattern = 61;
 				break;
-			}
+			}*/
 			// 坂道チェック
 			if( EncoderTotal >= 5609 ) {
 				if( check_slope() == 1 || check_slope() == -1 ) {
 					pattern = 71;
 					break;
 				}
+			}
+			// カーブチェック
+			if ( i >=  CURVE_R600_START || i <= -CURVE_R600_START ) {
+				enc1 = 0;
+				curve_moed = 1;
+				pattern = 12;
+				break;
 			}
 			if( enc1 >= enc_mm( 600 ) ) {
 				enc1 = 0;
@@ -1013,7 +1020,8 @@ void main(void){
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_leftchange_escape * SPEED_CURRENT;
 			diff( motorPwm );
-			
+			i = getServoAngle();
+			/*
 			// クロスラインチェック
 			if( check_crossline() ) {
 				enc1 = 0;
@@ -1033,12 +1041,19 @@ void main(void){
 				pattern = 61;
 				break;
 			}
+			*/
 			// 坂道チェック
 			if( EncoderTotal >= 5609 ) {
 				if( check_slope() == 1 || check_slope() == -1 ) {
 					pattern = 71;
 					break;
 				}
+			}
+			if ( i >=  CURVE_R600_START || i <= -CURVE_R600_START ) {
+				enc1 = 0;
+				curve_moed = 1;
+				pattern = 12;
+				break;
 			}
 			if( enc1 >= enc_mm( 600 ) ) {
 				enc1 = 0;
@@ -1360,7 +1375,7 @@ void Timer (void) {
 	Timer10++;
 	
 	// 通信
-	if ( IMUSet ) {
+	if ( SCIset ) {
 		// I2C通信で加速度及び角速度を取得
 		if ( Timer10 % 5 == 0 ) {
 			IMUProcess();

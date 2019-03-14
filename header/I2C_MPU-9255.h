@@ -156,7 +156,6 @@ extern double 		PichAngleIMU;		// IMUから求めたピッチ方向角度
 extern double		TempIMU;			// IMUの温度
 
 // モード関連
-extern char	IMUset;			// 0:初期化失敗		1:初期化完了
 extern char	whoami;
 extern char	cnt_imu;
 
