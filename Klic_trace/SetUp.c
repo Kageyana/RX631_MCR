@@ -622,8 +622,8 @@ void setup( void )
 			data_tuning ( &pattern_sensor, 1, LEFT );
 			angle_mode = 0;
 			
-			if ( pattern_sensor == 18 ) pattern_sensor = 1;
-			else if ( pattern_sensor == 0 ) pattern_sensor = 17;
+			if ( pattern_sensor == 16 ) pattern_sensor = 1;
+			else if ( pattern_sensor == 0 ) pattern_sensor = 15;
 			
 			switch( pattern_sensor ) {
 				case 1:
@@ -799,7 +799,7 @@ void setup( void )
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 0 );
-						lcdPrintf("wai 0x%d", whoami);
+						lcdPrintf("wai 0x%x", whoami);
 						lcdPosition( 0, 1 );
 						lcdPrintf("Temp%2.1f", (double)TempIMU);
 						if ( tasw_get() == 0x1 ) {
@@ -1024,7 +1024,7 @@ void setup( void )
 					}
 					if ( tasw_get() == 0x1 && push1 == 0 && msdFlag == 0) {
 						push1 = 1;
-						readFlashSetup( 0, 0, 1 ,0 ,0 ,0 ,0,PRINT_ON);
+						readFlashSetup( 0, 0, 1 ,0 ,0 ,0 ,0);
 						init_log();	// ログ記録準備
 						msdFlag = 1;		// データ記録開始
 						lcdPosition( 0, 1 );
@@ -1165,6 +1165,7 @@ void data_select ( char *data , char button )
 		} else if ( *data == 0 && push == 0) {
 			push = 1;
 			*data = 1;
+			Int = 0;
 		}
 	} else {
 		push = 0;

@@ -11,7 +11,7 @@
 // シンボル定義									//
 //====================================//
 // 緊急停止
-#define	STOPPING_METER		23		// 停止距離
+#define	STOPPING_METER		40		// 停止距離
 
 // 各セクションでの目標速度　x/10[m/s]
 #define SPEED_STRAIGHT			54	// 通常トレース
@@ -61,9 +61,9 @@
 
 // PIDゲイン関連
 //白線トレース
-#define KP			20
-#define KI			2
-#define KD		58
+#define KP			28
+#define KI			16
+#define KD		99
 
 // 角度制御
 #define KP2		9
@@ -148,7 +148,8 @@ extern char 	kp3_buff, ki3_buff, kd3_buff;
 extern char demo;
 
 // サーボ関連
-extern short 		SetAngle;	// 目標角度
+extern double		Int;			// I成分積算値(白線トレース)
+extern short 		SetAngle;		// 目標角度
 extern signed char 	ServoPwm;	// 白線トレースサーボPWM
 extern signed char 	ServoPwm2;	// 角度サーボPWM
 

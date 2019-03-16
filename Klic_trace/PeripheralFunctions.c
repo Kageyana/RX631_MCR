@@ -259,7 +259,7 @@ short getServoAngle(void)
 ///////////////////////////////////////////////////////////////////////////
 short getAnalogSensor(void) 
 {
-	return sensorR - sensorL;
+	return sensorR - sensorL + 300;
 }
 ///////////////////////////////////////////////////////////////////////////
 // ÉÇÉWÉÖÅ[Éãñº sensor_inp								//
@@ -290,7 +290,7 @@ unsigned char startbar_get(void)
 {
 	char ret;
 	
-	if ( sensorG <= 1000 )	ret = 1;
+	if ( sensorG <= 1500 )	ret = 1;
 	else			ret = 0;
 	
 	return ret;

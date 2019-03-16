@@ -177,10 +177,13 @@ void servoControl( void )
 	//サーボモータ用PWM値計算
 	Dev = getAnalogSensor();
 	// 目標値を変更したらI成分リセット
+	/*
 	if ( Dev >= 0 && DevBefore == 1 ) Int = 0;
 	else if ( Dev < -0 && DevBefore == 0 ) Int = 0;
-	
+	*/
 	Int += (double)Dev * 0.001;
+	if ( Int > 10000 ) Int = 10000;
+	else if ( Int < -10000 ) Int = -10000;
 	Dif = ( Dev - SensorBefore ) * 1;	// dゲイン1/1000倍
 
 	iP = (int)kp_buff * Dev;		// 比例
@@ -192,8 +195,8 @@ void servoControl( void )
 	// PWMの上限の設定(安定したら70程度に)
 	if ( iRet >  70 ) iRet =  70;		// マイコンカーが安定したら
 	if ( iRet <  -70 ) iRet = -70;	// 上限を90くらいにしてください
-	if ( sensor_inp() == 0x1 ) iRet = -70;
-	else if ( sensor_inp() == 0x4 ) iRet = 70;
+	//if ( sensor_inp() == 0x1 ) iRet = -50;
+	//else if ( sensor_inp() == 0x4 ) iRet = 50;
 	
 	if ( Dev >= 0 )	DevBefore = 0;
 	else			DevBefore = 1;

@@ -114,7 +114,7 @@ char init_msd ( void )
 						receive = msd_read();		// 80クロック(ダミーデータ10バイト)を送る
 					}
 					
-					//printf("Dumydata send\n");
+					printf("Dumydata send\n");
 					pattern_intimsd = 2;
 					break;
 					
@@ -128,7 +128,7 @@ char init_msd ( void )
 						
 						if ( i >= 10 ) {
 							ret = 3;
-							//printf("CMD0 error\n");
+							printf("CMD0 error\n");
 							break;
 						}
 						i++;
@@ -138,7 +138,7 @@ char init_msd ( void )
 					break;
 					
 				case 3:
-					//printf("CMD0 send\n");
+					printf("CMD0 send\n");
 					i = 0;
 					do {
 						// CMD8送信
@@ -147,7 +147,7 @@ char init_msd ( void )
 						i++;
 						if ( i >= 20 ) {
 							ret = 4;
-							//printf("CMD8 error\n");
+							printf("CMD8 error\n");
 							break;
 						}
 					} while ( receive == 0xff );
@@ -159,7 +159,7 @@ char init_msd ( void )
 					
 					if ( response_register[ 2 ] != 0x01 || response_register[ 3 ] != 0xaa ) {
 						ret = 4;
-						//printf("CMD8 error\n");
+						printf("CMD8 error\n");
 						break;
 					}
 					
@@ -167,7 +167,7 @@ char init_msd ( void )
 					break;
 						
 				case 4:
-					//printf("CMD8 send\n");
+					printf("CMD8 send\n");
 					i = 0;
 					do {
 						// CMD58送信
@@ -176,7 +176,7 @@ char init_msd ( void )
 						i++;
 						if ( i > 50 ) {
 							ret = 5;
-							//printf("CMD58 error\n");
+							printf("CMD58 error\n");
 							break;
 						}
 					} while ( receive != 0x01 );
@@ -190,7 +190,7 @@ char init_msd ( void )
 					break;
 						
 				case 5:
-					//printf("CMD58 send\n");
+					printf("CMD58 send\n");
 					i = 0;
 					do {
 						// CMD55送信
@@ -201,7 +201,7 @@ char init_msd ( void )
 						i++;
 						if ( i > 1000 ) {
 							ret = 6;
-							//printf("ACMD41 error\n");
+							printf("ACMD41 error\n");
 							break;
 						}
 					} while ( receive != 0x00 );
@@ -210,7 +210,7 @@ char init_msd ( void )
 					break;
 						
 				case 6:
-					//printf("ACMD41 send\n");
+					printf("ACMD41 send\n");
 					i = 0;
 					do {
 						// CMD58送信
@@ -218,7 +218,7 @@ char init_msd ( void )
 						
 						if ( i >= 10 ) {
 							ret = 7;
-							//printf("CMD58 error\n");
+							printf("CMD58 error\n");
 							break;
 						}
 						i++;
@@ -230,20 +230,20 @@ char init_msd ( void )
 					}
 						
 					if ( response_register[ 0 ] & 0x40 ) {
-						//printf("SDHCcard\n");
+						printf("SDHCcard\n");
 					} else {
-						//printf("SDcard\n");
+						printf("SDcard\n");
 					}
 					pattern_intimsd = 7;
 					break;
 						
 				case 7:
-					//printf("CMD58 send\n");
+					printf("CMD58 send\n");
 					// CSD取得
 					receive = getMicroSD_CSD( response_register );
 					if ( receive == 1 ) {
 						ret = 8;
-						//printf("CSD error\n");
+						printf("CSD error\n");
 						break;
 					}
 					// 容量計算
@@ -253,7 +253,7 @@ char init_msd ( void )
 					msdSize  |=  ( unsigned short )response_register[9];
 					msdSize  += 1;
 					msdSize <<= 9;
-					//printf("%dkB\n", msdSize);
+					printf("%dkB\n", msdSize);
 					pattern_intimsd = 8;
 					break;
 						
@@ -269,9 +269,9 @@ char init_msd ( void )
 	}
 	
 	if ( ret == 0 ) {
-		//printf("SDcard Initialize\n");
+		printf("SDcard Initialize\n");
 	} else if ( ret == 1 ) {
-		//printf("No slot card\n");
+		printf("No slot card\n");
 	}
 	
 	return ret;
@@ -398,11 +398,11 @@ char readMicroSD ( unsigned int address, signed char *read )
 	msdlibMode = ( ret != 0 ) ? 99 : 0;	// 初期化エラーなら99をセット
 	
 	if ( ret == 0 ) {
-		////printf("読み込み完了\n");
+		//printf("読み込み完了\n");
 	} else if ( ret == 1 ) {
-		//printf("CMD17 error\n");
+		printf("CMD17 error\n");
 	} else if ( ret == 2 ) {
-		//printf("response error\n");
+		printf("response error\n");
 	}
 				
 	return ret;
@@ -507,13 +507,13 @@ char writeMicroSD ( unsigned int address, signed char *write )
 	msdlibMode = (ret != 0) ? 99 : 0;	// 初期化エラーなら99をセット
 	
 	if ( ret == 0 ) {
-		////printf("書き込み正常終了\n");
+		//printf("書き込み正常終了\n");
 	} else if ( ret == 1 ) {
-		//printf("CMD24 error\n");
+		printf("CMD24 error\n");
 	} else if ( ret == 2 ) {
-		//printf("Write error\n");
+		printf("Write error\n");
 	} else if ( ret == 3 ) {
-		//printf("Other error\n");
+		printf("Other error\n");
 	}
 				
 	return ret;
@@ -629,13 +629,13 @@ char eraseMicroSD( unsigned int st_address, unsigned int ed_address )
 	msdlibMode = (ret != 0) ? 99 : 0;   // 初期化エラーなら99をセット
 	
 	if ( ret == 0 ) {
-		////printf("イレーズ正常終了\n");
+		//printf("イレーズ正常終了\n");
 	} else if ( ret == 1 ) {
-		//printf("CMD32 error\n");
+		printf("CMD32 error\n");
 	} else if ( ret == 2 ) {
-		//printf("CMD33 error\n");
+		printf("CMD33 error\n");
 	} else if ( ret == 3 ) {
-		//printf("CMD38 errorn");
+		printf("CMD38 errorn");
 	}
 	
 	return ret;
@@ -707,7 +707,7 @@ char microSDProcessStart( unsigned int address )
 			ret = 2;                        // セットできず 
 			MSD_CS_TERMINAL_HIGH		// CS端子をHIGHにする
 		} else {
-			//printf("CMD25 send\n");
+			printf("CMD25 send\n");
 			msdlibMode = 11;                // セット完了
 		}
 	}
@@ -741,8 +741,8 @@ void microSDProcess( void )
 {
 	volatile short receive;
 	
-	// microSD msd//printf関数処理(1msごとに実行)
-	//microSD//printfProcess();
+	// microSD msdprintf関数処理(1msごとに実行)
+	//microSDprintfProcess();
 	
 	switch( msdlibMode ) {
 		case 0:
@@ -884,8 +884,8 @@ void init_log ( void )
 	
 	msdEndaddress = MSD_ENDADDRESS;
 	msdEndaddress += msdStartaddress;   // スタート分足す
-	//printf("msdStartaddress = %d\n", msdStartaddress);
-	//printf("msdEndaddress = %d\n", msdEndaddress);
+	printf("msdStartaddress = %d\n", msdStartaddress);
+	printf("msdEndaddress = %d\n", msdEndaddress);
 	
 	while ( pattern_inti_log < 2 ) {
 		switch ( pattern_inti_log ) {
@@ -894,7 +894,7 @@ void init_log ( void )
 				ret = eraseMicroSD( msdStartaddress, msdEndaddress - 1 );
 				if( ret != 0x00 ) {
 					setBeepPatternS( 0xaa00 );
-					//printf( "\nmicroSD Erase Error!!\n" );  // エラー
+					printf( "\nmicroSD Erase Error!!\n" );  // エラー
 					break;
 				}
 				pattern_inti_log = 1;
@@ -905,7 +905,7 @@ void init_log ( void )
 				ret = microSDProcessStart( msdStartaddress );
 			        if( ret != 0x00 ) {
 					setBeepPatternS( 0xaa00 );
-					//printf( "\nmicroSD microSDProcess Error!!\n" );  // エラー
+					printf( "\nmicroSD microSDProcess Error!!\n" );  // エラー
 					break;
 				}
 				msdBuffaddress = 0;
@@ -1021,6 +1021,10 @@ void msd_sendToPC ( void )
 	volatile char pattern_send = 1;
 	
 	while ( pattern_send < 4 ) {
+		if( tasw_get() == 0x2 ) {
+			msdWorkaddress = msdEndaddress;
+			pattern_send = 2;
+		}
 		switch ( pattern_send ) {		
 			case 1:
 				i = 0;
@@ -1051,8 +1055,6 @@ void msd_sendToPC ( void )
 				msdEndaddress = msdWorkaddress2;	// 読み込み終了アドレス
 				msdWorkaddress = msdWorkaddress;	// 読み込み開始アドレス
 				
-				//printf("msdWorkaddress = %d\n", msdWorkaddress);
-				//printf("msdWorkaddress2 = %d\n", msdWorkaddress2);
 				pattern_send = 2;
 				break;
 				
@@ -1060,7 +1062,7 @@ void msd_sendToPC ( void )
 				// microSDよりデータ読み込み
 				if( msdWorkaddress >= msdEndaddress ) {
 					// 書き込み終了アドレスになったら、終わり
-					//printf( "End.\n" );
+					printf( "End.\n" );
 					setBeepPatternS( 0xa8a8 );
 					pattern_send = 4;
 					break;
@@ -1069,7 +1071,7 @@ void msd_sendToPC ( void )
 				
 				if( ret != 0x00 ) {
 					// 読み込みエラー
-					//printf( "\nmicroSD Read Error!!\n" );
+					printf( "\nmicroSD Read Error!!\n" );
 					pattern_send = 4;
 					break;
 				} else {

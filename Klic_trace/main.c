@@ -71,18 +71,17 @@ void main(void){
 	// SCI1初期化
 	if ( !init_IMU() ) {
 		setBeepPatternS( 0x8000 );
-		i = 1;
+		IMUSet = 1;
 	} else {
 		setBeepPatternS( 0xcc00 );
 		init_SCI1( UART, RATE_230400 );
-		i = 0;
+		IMUSet = 0;
 	}
 	wait_lcd(100);
 	// フラッシュ初期化
 	if( !initFlash() ) {
 		setBeepPatternS( 0x8000 );
-		if ( i ) readFlashSetup( 1, 1, 1 ,1 ,1 ,1 ,1, PRINT_OFF);	// データフラッシュから前回パラメータを読み込む
-		else  readFlashSetup( 1, 1, 1 ,1 ,1 ,1 ,1, PRINT_ON);
+		readFlashSetup( 1, 1, 1 ,1 ,1 ,1 ,1);	// データフラッシュから前回パラメータを読み込む
 	} else{
 		setBeepPatternS( 0xcc00 );
 	}
@@ -96,7 +95,6 @@ void main(void){
 		msdset = 0;
 	}
 	wait_lcd(100);
-	IMUSet = i;
 	while(1){
 		__setpsw_i();
 		if( pattern >= 11 && pattern <= 99 ) {
@@ -163,6 +161,7 @@ void main(void){
 			if ( start && !pushcart_mode ) {
 				demo = 0;		// デモモード解除
 				angle_mode = 0;	// 白線トレース
+				Int = 0;			// 積分リセット
 				txt= txt_data;		// 受信配列リセット
 				cnt_byte = 0;		// 受信カウントリセット
 				
@@ -527,6 +526,7 @@ void main(void){
 					if( sensor_inp() == 0x2 ) {
 						enc1 = 0;
 						angle_mode = 0;
+						Int = 0;			// 積分リセット
 						pattern = 36;
 						break;
 					}
@@ -543,6 +543,7 @@ void main(void){
 					if( sensor_inp() == 0x2 ) {
 						enc1 = 0;
 						angle_mode = 0;
+						Int = 0;			// 積分リセット
 						pattern = 36;
 						break;
 					}
@@ -555,11 +556,13 @@ void main(void){
 					}
 				}
 			}
+			/*
 			if ( sensor_inp() == 0x4 ) {
 				enc1 = 0;
 				pattern = 32;
 				break;
 			}
+			*/
 			break;
 			
 		case 32:
@@ -604,6 +607,7 @@ void main(void){
 			if( sensor_inp() == 0x2 && j >= -1800) {
 				enc1 = 0;
 				angle_mode = 0;
+				Int = 0;			// 積分リセット
 				pattern = 36;
 				break;
 			}
@@ -658,6 +662,7 @@ void main(void){
 					if( sensor_inp() == 0x2 ) {
 						enc1 = 0;
 						angle_mode = 0;
+						Int = 0;			// 積分リセット
 						pattern = 46;
 						break;
 					}
@@ -674,6 +679,7 @@ void main(void){
 					if( sensor_inp() == 0x2 ) {
 						enc1 = 0;
 						angle_mode = 0;
+						Int = 0;			// 積分リセット
 						pattern = 46;
 						break;
 					}
@@ -686,11 +692,13 @@ void main(void){
 					}
 				}
 			}
+			/*
 			if ( sensor_inp() == 0x1 ) {
 				enc1 = 0;
 				pattern = 42;
 				break;
 			}
+			*/
 			break;
 			
 		case 42:
@@ -734,6 +742,7 @@ void main(void){
 			if( sensor_inp() == 0x2 && j <= 1800) {
 				enc1 = 0;
 				angle_mode = 0;
+				Int = 0;			// 積分リセット
 				pattern = 46;
 				break;
 			}
@@ -783,6 +792,7 @@ void main(void){
 			if( enc1 > enc_mm( 60 ) ) {
 				enc1 = 0;
 				angle_mode = 0;
+				Int = 0;			// 積分リセット
 				setBeepPatternS( 0xe000 );
 				pattern = 52;
 				break;
@@ -839,6 +849,7 @@ void main(void){
 			if( sensor_inp() == 0x2 && getAnalogSensor() < 1500 && getAnalogSensor() > -1500 ) {
 				enc1 = 0;
 				angle_mode = 0;
+				Int = 0;			// 積分リセット
 				pattern = 57;
 				break;
 			}
@@ -867,6 +878,7 @@ void main(void){
 				angle_center = getServoAngle();
 				enc1 = 0;
 				angle_mode = 0;
+				Int = 0;			// 積分リセット
 				pattern = 57;
 				break;
 			}
@@ -876,7 +888,7 @@ void main(void){
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_rightchange_escape * SPEED_CURRENT;
 			diff( motorPwm );
-			
+			/*
 			// クロスラインチェック
 			if( check_crossline() ) {
 				enc1 = 0;
@@ -895,7 +907,7 @@ void main(void){
 				enc1 = 0;
 				pattern = 61;
 				break;
-			}
+			}*/
 			// 坂道チェック
 			if( EncoderTotal >= 5609 ) {
 				if( check_slope() == 1 || check_slope() == -1 ) {
@@ -922,6 +934,7 @@ void main(void){
 				enc1 = 0;
 				setBeepPatternS( 0xe400 );
 				angle_mode = 0;
+				Int = 0;			// 積分リセット
 				pattern = 62;
 				break;
 			}
@@ -977,6 +990,7 @@ void main(void){
 			if( sensor_inp() == 0x2 && getAnalogSensor() < 1500 && getAnalogSensor() > -1500 ) {
 				enc1 = 0;
 				angle_mode = 0;
+				Int = 0;			// 積分リセット
 				pattern = 67;
 				break;
 			}
@@ -1004,6 +1018,7 @@ void main(void){
 			if( enc1 >= enc_mm( 10 ) ) {
 				enc1 = 0;
 				angle_mode = 0;
+				Int = 0;			// 積分リセット
 				pattern = 67;
 				break;
 			}
@@ -1013,7 +1028,7 @@ void main(void){
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_leftchange_escape * SPEED_CURRENT;
 			diff( motorPwm );
-			
+			/*
 			// クロスラインチェック
 			if( check_crossline() ) {
 				enc1 = 0;
@@ -1033,6 +1048,7 @@ void main(void){
 				pattern = 61;
 				break;
 			}
+			*/
 			// 坂道チェック
 			if( EncoderTotal >= 5609 ) {
 				if( check_slope() == 1 || check_slope() == -1 ) {
@@ -1365,6 +1381,7 @@ void Timer (void) {
 		if ( Timer10 % 5 == 0 ) {
 			IMUProcess();
 			getTurningAngleIMU();
+			getTurningAngleEnc();
 			getPichAngleIMU();
 			getRollAngleIMU();
 			if (cnt_gyro > 200) {
