@@ -51,8 +51,10 @@
 #define AD_3V3VOLTAGE		0.806	// 3V時の1AD値あたりの電圧[mV]
 #define AD_5VOLTAGE		1.22		// 5V時の1AD値あたりの電圧[mV]
 #define GYROVOLTAGE		0.67		// 電圧毎角加速度[mV/deg/s]
-#define SLOPEUPPERLINE		4		// 上り坂検出角度
-#define SLOPELOWERLINE		-4		// 下り坂検出角度
+#define SLOPEUPPERLINE_IMU		4		// 上り坂検出角度
+#define SLOPELOWERLINE_IMU		-4		// 下り坂検出角度
+#define SLOPEUPPERLINE_AD		17		// 上り坂検出角度
+#define SLOPELOWERLINE_AD		-14		// 下り坂検出角度
 #define INTEGRAL_LIMIT		200		// 角速度積算時間
 
 #define PI					3.141592	// 円周率
@@ -134,6 +136,7 @@ extern short		cnt_gyro;			// 角度計算用カウンタ
 
 // 角度関連
 extern double 		TurningAngleEnc;	// エンコーダから求めた旋回角度
+extern double		PichAngleAD;		// アナログジャイロから求めたピッチ角度
 
 // モーター関連
 extern signed char 	motorPwm;	// モーター制御PWM
@@ -163,6 +166,7 @@ signed char check_leftline( void );
 signed char check_slope( void );
 
 // 角度関連
+void getPichAngleAD( void );
 void getTurningAngleEnc(void);
 
 // エンコーダ関連

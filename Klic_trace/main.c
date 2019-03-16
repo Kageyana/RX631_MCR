@@ -1381,7 +1381,6 @@ void Timer (void) {
 		if ( Timer10 % 5 == 0 ) {
 			IMUProcess();
 			getTurningAngleIMU();
-			getTurningAngleEnc();
 			getPichAngleIMU();
 			getRollAngleIMU();
 			if (cnt_gyro > 200) {
@@ -1393,7 +1392,12 @@ void Timer (void) {
 	} else {
 		// UARTéÛêM
 		commandSCI1();
+		getPichAngleAD();
 		getTurningAngleEnc();
+		if (cnt_gyro > 200) {
+			PichAngleAD = 0;
+			cnt_gyro  = 0;
+		}
 	}
 
 	// 10ÇçÇ≤Ç∆Ç…é¿çs
