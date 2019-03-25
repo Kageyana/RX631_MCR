@@ -36,7 +36,7 @@
 * Description  : 
 * Limitations  : 
 ******************************************************************************
-* History : 11.08.2018 Version Description
+* History : 22.09.2018 Version Description
 *         :   
 ******************************************************************************/
 
@@ -85,8 +85,8 @@ bool R_PG_SCI_Set_C12(void)
 
 	return R_SCI_Create(
 		12,
-		PDL_SCI_SYNC | PDL_SCI_TX_CONNECTED | PDL_SCI_RX_CONNECTED | PDL_SCI_IIC_MODE | PDL_SCI_IIC_FILTER_CLOCK_DIV1 | PDL_SCI_IIC_DELAY_SDA_0_1,
-		BIT_31 | PDL_SCI_PCLK_DIV_1 | 9 | (256 & 0x00FFFF00ul),
+		PDL_SCI_SYNC | PDL_SCI_TX_CONNECTED | PDL_SCI_RX_CONNECTED | PDL_SCI_IIC_MODE | PDL_SCI_IIC_FILTER_DISABLED | PDL_SCI_IIC_DELAY_SDA_0_1,
+		BIT_31 | PDL_SCI_PCLK_DIV_1 | 3 | (375000 & 0x00FFFF00ul),
 		0,
 		0
 	);
@@ -98,13 +98,13 @@ bool R_PG_SCI_Set_C12(void)
 *
 * Include      : 
 *
-* Declaration  : bool R_PG_SCI_I2CMode_Send_C12(bool addr_10bit, uint16_t slave, uint8_t * data, uint16_t count)
+* Declaration  : bool R_PG_SCI_I2CMode_Send_C12(bool Addr_10bit, uint16_t slave, uint8_t * data, uint16_t count)
 *
 * Function Name: R_PG_SCI_I2CMode_Send_C12
 *
 * Description  : 簡易I2Cモードのデータ送信
 *
-* Arguments    : bool addr_10bit : スレーブアドレスフォーマット (1:10ビット  0:7ビット)
+* Arguments    : bool Addr_10bit : スレーブアドレスフォーマット (1:10ビット  0:7ビット)
 *              : uint16_t slave : スレーブアドレス
 *              : uint8_t * data : 送信するデータの格納先の先頭のアドレス
 *              : uint16_t count : 送信するデータ数
@@ -116,20 +116,20 @@ bool R_PG_SCI_Set_C12(void)
 *
 * Details      : 詳細についてはリファレンスマニュアルを参照してください。
 ******************************************************************************/
-bool R_PG_SCI_I2CMode_Send_C12(bool addr_10bit, uint16_t slave, uint8_t * data, uint16_t count)
+bool R_PG_SCI_I2CMode_Send_C12(bool Addr_10bit, uint16_t slave, uint8_t * data, uint16_t count)
 {
-	uint16_t addr_size = PDL_SCI_IIC_7_BIT_SLAVE_ADDRESS;
+	uint16_t Addr_size = PDL_SCI_IIC_7_BIT_SLAVE_AddrESS;
 
-	if( addr_10bit )
+	if( Addr_10bit )
 	{
-		addr_size = PDL_SCI_IIC_10_BIT_SLAVE_ADDRESS;
+		Addr_size = PDL_SCI_IIC_10_BIT_SLAVE_AddrESS;
 	}
 	
 	if( data == 0 ){ return false; }
 
 	return R_SCI_IIC_Write(
 		12,
-		PDL_SCI_IIC_DMAC_DTC_TRIGGER_DISABLE | addr_size,
+		PDL_SCI_IIC_DMAC_DTC_TRIGGER_DISABLE | Addr_size,
 		slave,
 		count,
 		data,
@@ -143,13 +143,13 @@ bool R_PG_SCI_I2CMode_Send_C12(bool addr_10bit, uint16_t slave, uint8_t * data, 
 *
 * Include      : 
 *
-* Declaration  : bool R_PG_SCI_I2CMode_SendWithoutStop_C12(bool addr_10bit, uint16_t slave, uint8_t * data, uint16_t count)
+* Declaration  : bool R_PG_SCI_I2CMode_SendWithoutStop_C12(bool Addr_10bit, uint16_t slave, uint8_t * data, uint16_t count)
 *
 * Function Name: R_PG_SCI_I2CMode_SendWithoutStop_C12
 *
 * Description  : 簡易I2Cモードのデータ送信(STOP条件無し)
 *
-* Arguments    : bool addr_10bit : スレーブアドレスフォーマット (1:10ビット  0:7ビット)
+* Arguments    : bool Addr_10bit : スレーブアドレスフォーマット (1:10ビット  0:7ビット)
 *              : uint16_t slave : スレーブアドレス
 *              : uint8_t * data : 送信するデータの格納先の先頭のアドレス
 *              : uint16_t count : 送信するデータ数
@@ -161,20 +161,20 @@ bool R_PG_SCI_I2CMode_Send_C12(bool addr_10bit, uint16_t slave, uint8_t * data, 
 *
 * Details      : 詳細についてはリファレンスマニュアルを参照してください。
 ******************************************************************************/
-bool R_PG_SCI_I2CMode_SendWithoutStop_C12(bool addr_10bit, uint16_t slave, uint8_t * data, uint16_t count)
+bool R_PG_SCI_I2CMode_SendWithoutStop_C12(bool Addr_10bit, uint16_t slave, uint8_t * data, uint16_t count)
 {
-	uint16_t addr_size = PDL_SCI_IIC_7_BIT_SLAVE_ADDRESS;
+	uint16_t Addr_size = PDL_SCI_IIC_7_BIT_SLAVE_AddrESS;
 
-	if( addr_10bit )
+	if( Addr_10bit )
 	{
-		addr_size = PDL_SCI_IIC_10_BIT_SLAVE_ADDRESS;
+		Addr_size = PDL_SCI_IIC_10_BIT_SLAVE_AddrESS;
 	}
 	
 	if( data == 0 ){ return false; }
 
 	return R_SCI_IIC_Write(
 		12,
-		PDL_SCI_IIC_DMAC_DTC_TRIGGER_DISABLE | addr_size | PDL_SCI_IIC_NOSTOP,
+		PDL_SCI_IIC_DMAC_DTC_TRIGGER_DISABLE | Addr_size | PDL_SCI_IIC_NOSTOP,
 		slave,
 		count,
 		data,
@@ -253,13 +253,13 @@ bool R_PG_SCI_GetSentDataCount_C12(uint16_t * count)
 *
 * Include      : 
 *
-* Declaration  : bool R_PG_SCI_I2CMode_Receive_C12(bool addr_10bit, uint16_t slave, uint8_t * data, uint16_t count)
+* Declaration  : bool R_PG_SCI_I2CMode_Receive_C12(bool Addr_10bit, uint16_t slave, uint8_t * data, uint16_t count)
 *
 * Function Name: R_PG_SCI_I2CMode_Receive_C12
 *
 * Description  : 簡易I2Cモードのデータ受信
 *
-* Arguments    : bool addr_10bit : スレーブアドレスフォーマット (1:10ビット  0:7ビット)
+* Arguments    : bool Addr_10bit : スレーブアドレスフォーマット (1:10ビット  0:7ビット)
 *              : uint16_t slave : スレーブアドレス
 *              : uint8_t * data : 受信したデータの格納先の先頭のアドレス
 *              : uint16_t count : 受信するデータ数
@@ -271,20 +271,20 @@ bool R_PG_SCI_GetSentDataCount_C12(uint16_t * count)
 *
 * Details      : 詳細についてはリファレンスマニュアルを参照してください。
 ******************************************************************************/
-bool R_PG_SCI_I2CMode_Receive_C12(bool addr_10bit, uint16_t slave, uint8_t * data, uint16_t count)
+bool R_PG_SCI_I2CMode_Receive_C12(bool Addr_10bit, uint16_t slave, uint8_t * data, uint16_t count)
 {
-	uint16_t addr_size = PDL_SCI_IIC_7_BIT_SLAVE_ADDRESS;
+	uint16_t Addr_size = PDL_SCI_IIC_7_BIT_SLAVE_AddrESS;
 
-	if( addr_10bit )
+	if( Addr_10bit )
 	{
-		addr_size = PDL_SCI_IIC_10_BIT_SLAVE_ADDRESS;
+		Addr_size = PDL_SCI_IIC_10_BIT_SLAVE_AddrESS;
 	}
 	
 	if( data == 0 ){ return false; }
 
 	return R_SCI_IIC_Read(
 		12,
-		PDL_SCI_IIC_DMAC_DTC_TRIGGER_DISABLE | addr_size,
+		PDL_SCI_IIC_DMAC_DTC_TRIGGER_DISABLE | Addr_size,
 		slave,
 		count,
 		data,
@@ -298,13 +298,13 @@ bool R_PG_SCI_I2CMode_Receive_C12(bool addr_10bit, uint16_t slave, uint8_t * dat
 *
 * Include      : 
 *
-* Declaration  : bool R_PG_SCI_I2CMode_RestartReceive_C12(bool addr_10bit, uint16_t slave, uint8_t * data, uint16_t count)
+* Declaration  : bool R_PG_SCI_I2CMode_RestartReceive_C12(bool Addr_10bit, uint16_t slave, uint8_t * data, uint16_t count)
 *
 * Function Name: R_PG_SCI_I2CMode_RestartReceive_C12
 *
 * Description  : 簡易I2Cモードのデータ受信(RE-START条件)
 *
-* Arguments    : bool addr_10bit : スレーブアドレスフォーマット (1:10ビット  0:7ビット)
+* Arguments    : bool Addr_10bit : スレーブアドレスフォーマット (1:10ビット  0:7ビット)
 *              : uint16_t slave : スレーブアドレス
 *              : uint8_t * data : 受信したデータの格納先の先頭のアドレス
 *              : uint16_t count : 受信するデータ数
@@ -316,20 +316,20 @@ bool R_PG_SCI_I2CMode_Receive_C12(bool addr_10bit, uint16_t slave, uint8_t * dat
 *
 * Details      : 詳細についてはリファレンスマニュアルを参照してください。
 ******************************************************************************/
-bool R_PG_SCI_I2CMode_RestartReceive_C12(bool addr_10bit, uint16_t slave, uint8_t * data, uint16_t count)
+bool R_PG_SCI_I2CMode_RestartReceive_C12(bool Addr_10bit, uint16_t slave, uint8_t * data, uint16_t count)
 {
-	uint16_t addr_size = PDL_SCI_IIC_7_BIT_SLAVE_ADDRESS;
+	uint16_t Addr_size = PDL_SCI_IIC_7_BIT_SLAVE_AddrESS;
 
-	if( addr_10bit )
+	if( Addr_10bit )
 	{
-		addr_size = PDL_SCI_IIC_10_BIT_SLAVE_ADDRESS;
+		Addr_size = PDL_SCI_IIC_10_BIT_SLAVE_AddrESS;
 	}
 	
 	if( data == 0 ){ return false; }
 
 	return R_SCI_IIC_Read(
 		12,
-		PDL_SCI_IIC_DMAC_DTC_TRIGGER_DISABLE | addr_size | PDL_SCI_IIC_RESTART,
+		PDL_SCI_IIC_DMAC_DTC_TRIGGER_DISABLE | Addr_size | PDL_SCI_IIC_RESTART,
 		slave,
 		count,
 		data,

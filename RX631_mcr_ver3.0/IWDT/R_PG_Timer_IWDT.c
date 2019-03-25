@@ -28,7 +28,7 @@
 * Copyright (C) 2010-2013 Renesas Electronics Corporation.
 * and Renesas Solutions Corporation. All rights reserved.
 ******************************************************************************
-* File Name    : R_PG_ADC_12_S12AD0.c
+* File Name    : R_PG_Timer_IWDT.c
 * Version      : 1.00
 * Device(s)    : 
 * Tool-Chain   : 
@@ -44,9 +44,8 @@
 /******************************************************************************
 Includes   <System Includes> , "Project Includes"
 ******************************************************************************/
-#include "r_pdl_adc_12.h"
+#include "r_pdl_iwdt.h"
 #include "r_pdl_definitions.h"
-#include "R_PG_IntFuncsExtern.h"
 
 
 /******************************************************************************
@@ -54,34 +53,24 @@ Includes   <System Includes> , "Project Includes"
 *
 * Include      : 
 *
-* Declaration  : bool R_PG_ADC_12_Set_S12AD0(void)
+* Declaration  : bool R_PG_Timer_Start_IWDT(void)
 *
-* Function Name: R_PG_ADC_12_Set_S12AD0
+* Function Name: R_PG_Timer_Start_IWDT
 *
-* Description  : A/D変換器の設定
+* Description  : IWDTの設定と開始
 *
 * Arguments    : なし
 *
 * Return Value : true  : 設定が正しく行われた場合
 *              : false : 設定に失敗した場合
 *
-* Calling Functions : R_ADC_12_Create
+* Calling Functions : R_IWDT_Set
 *
 * Details      : 詳細についてはリファレンスマニュアルを参照してください。
 ******************************************************************************/
-bool R_PG_ADC_12_Set_S12AD0(void)
+bool R_PG_Timer_Start_IWDT(void)
 {
-	return R_ADC_12_Create(
-		0,
-		PDL_ADC_12_CHANNEL_3 | PDL_ADC_12_CHANNEL_4 | PDL_ADC_12_CHANNEL_5 | PDL_ADC_12_CHANNEL_6 | PDL_ADC_12_CHANNEL_7 | PDL_ADC_12_CHANNEL_8 | PDL_ADC_12_CHANNEL_12 | PDL_ADC_12_CHANNEL_13,
-		PDL_ADC_12_SCAN_CONTINUOUS | PDL_ADC_12_DIV_8 | PDL_ADC_12_DATA_ALIGNMENT_RIGHT | PDL_ADC_12_CLEAR_RESULT | PDL_ADC_12_INPUT_AN | PDL_ADC_12_DMAC_DTC_TRIGGER_DISABLE | PDL_ADC_12_SAMPLING_TIME_SPECIFY,
-		PDL_ADC_12_TRIGGER_SOFTWARE,
-		PDL_NO_DATA,
-		75,
-		20,
-		ADconverter,
-		11
-	);
+	return R_IWDT_Set( PDL_IWDT_TIMEOUT_1024 | PDL_IWDT_CLOCK_OCO_16 | PDL_IWDT_TIMEOUT_RESET | PDL_IWDT_WIN_START_100 | PDL_IWDT_WIN_END_0 | PDL_IWDT_STOP_DISABLE );
 
 }
 
@@ -90,24 +79,24 @@ bool R_PG_ADC_12_Set_S12AD0(void)
 *
 * Include      : 
 *
-* Declaration  : bool R_PG_ADC_12_StartConversionSW_S12AD0(void)
+* Declaration  : bool R_PG_Timer_RefreshCounter_IWDT(void)
 *
-* Function Name: R_PG_ADC_12_StartConversionSW_S12AD0
+* Function Name: R_PG_Timer_RefreshCounter_IWDT
 *
-* Description  : A/D変換器の開始(ソフトウェアトリガ)
+* Description  : IWDTのカウンタをリフレッシュ
 *
 * Arguments    : なし
 *
-* Return Value : true  : 設定が正しく行われた場合
-*              : false : 設定に失敗した場合
+* Return Value : true  : リフレッシュに成功した場合
+*              : false : リフレッシュに失敗した場合
 *
-* Calling Functions : R_ADC_12_Control
+* Calling Functions : R_IWDT_Control
 *
 * Details      : 詳細についてはリファレンスマニュアルを参照してください。
 ******************************************************************************/
-bool R_PG_ADC_12_StartConversionSW_S12AD0(void)
+bool R_PG_Timer_RefreshCounter_IWDT(void)
 {
-	return R_ADC_12_Control( PDL_ADC_12_0_ON );
+	return R_IWDT_Control( PDL_IWDT_REFRESH );
 
 }
 
@@ -116,85 +105,33 @@ bool R_PG_ADC_12_StartConversionSW_S12AD0(void)
 *
 * Include      : 
 *
-* Declaration  : bool R_PG_ADC_12_StopConversion_S12AD0(void)
+* Declaration  : bool R_PG_Timer_GetStatus_IWDT(uint16_t* counter_val, bool * undf, bool * ref_err)
 *
-* Function Name: R_PG_ADC_12_StopConversion_S12AD0
+* Function Name: R_PG_Timer_GetStatus_IWDT
 *
-* Description  : A/D変換の中断
+* Description  : IWDTのステータスフラグとカウント値を取得
 *
-* Arguments    : なし
+* Arguments    : uint16_t* counter_val : カウンタ値の格納先
+*              : bool * undf : アンダフローフラグの格納先
+*              : bool * ref_err : リフレッシュエラーフラグの格納先
 *
-* Return Value : true  : 変換停止が正しく行われた場合
-*              : false : 変換停止に失敗した場合
+* Return Value : true  : フラグの取得が正しく行われた場合
+*              : false : フラグの取得に失敗した場合
 *
-* Calling Functions : R_ADC_12_Control
-*
-* Details      : 詳細についてはリファレンスマニュアルを参照してください。
-******************************************************************************/
-bool R_PG_ADC_12_StopConversion_S12AD0(void)
-{
-	return R_ADC_12_Control( PDL_ADC_12_0_OFF );
-
-}
-
-/******************************************************************************
-* ID           : 
-*
-* Include      : 
-*
-* Declaration  : bool R_PG_ADC_12_GetResult_S12AD0(uint16_t * result)
-*
-* Function Name: R_PG_ADC_12_GetResult_S12AD0
-*
-* Description  : A/D変換結果の取得
-*
-* Arguments    : uint16_t * result : A/D変換結果の格納先
-*
-* Return Value : true  : 結果の取得が正しく行われた場合
-*              : false : 結果の取得に失敗した場合
-*
-* Calling Functions : R_ADC_12_Read
+* Calling Functions : R_IWDT_Read
 *
 * Details      : 詳細についてはリファレンスマニュアルを参照してください。
 ******************************************************************************/
-bool R_PG_ADC_12_GetResult_S12AD0(uint16_t * result)
+bool R_PG_Timer_GetStatus_IWDT(uint16_t* counter_val, bool * undf, bool * ref_err)
 {
-	if( result == 0 )
-	{
-		return false;
-	}
+	uint16_t status;
+	bool res;
 
-	return R_ADC_12_Read(
-		0,
-		result
-	);
+	res = R_IWDT_Read( &status );
 
-}
+	if(counter_val){ *counter_val = status & 0x3fff; }
 
-/******************************************************************************
-* ID           : 
-*
-* Include      : 
-*
-* Declaration  : bool R_PG_ADC_12_StopModule_S12AD0(void)
-*
-* Function Name: R_PG_ADC_12_StopModule_S12AD0
-*
-* Description  : A/D変換器の停止
-*
-* Arguments    : なし
-*
-* Return Value : true  : 停止に成功した場合
-*              : false : 停止に失敗した場合
-*
-* Calling Functions : R_ADC_12_Destroy
-*
-* Details      : 詳細についてはリファレンスマニュアルを参照してください。
-******************************************************************************/
-bool R_PG_ADC_12_StopModule_S12AD0(void)
-{
-	return R_ADC_12_Destroy( 0 );
-
+	return res;
 }
 
 

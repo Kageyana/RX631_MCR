@@ -1,15 +1,16 @@
 #ifndef I2C_MPU9255_H_
 #define I2C_MPU9255_H_
-//======================================//
-// インクルード                         //
-//======================================//
-#include "R_PG_RX631_mcr_ver3.0.h"
-//======================================//
-// シンボル定義                         //
-//======================================//
-// Slave Address
-#define MPU9255_ADDRESS     	0x00d0	// 書き込み時のスレーブアドレス
-
+//====================================//
+// インクルード									//
+//====================================//
+#include <stdlib.h>
+#include "iodefine.h"
+#include "PeripheralFunctions.h"
+#include "SCI.h"
+#include "LineChase.h"
+//====================================//
+// シンボル定義									//
+//====================================//
 // MPU-9255 Register Map
 #define SELF_TEST_X_GYRO	0x00
 #define SELF_TEST_Y_GYRO	0x01
@@ -23,8 +24,8 @@
 #define YG_OFFSET_L		0x16
 #define ZG_OFFSET_H		0x17
 #define ZG_OFFSET_L		0x18
-#define SMPLRT_DIV		0x19
-#define CONFIG			0x1A
+#define SMPLRT_DIV			0x19
+#define CONFIG				0x1A
 #define GYRO_CONFIG		0x1B
 #define ACCEL_CONFIG		0x1C
 #define ACCEL_CONFIG2		0x1D
@@ -32,27 +33,27 @@
 #define WOM_THR			0x1F
 #define FIFO_EN			0x23
 #define I2C_MST_CTRL		0x24
-#define I2C_SLV0_ADDR		0x25
+#define I2C_SLV0_addr		0x25
 #define I2C_SLV0_REG		0x26
 #define I2C_SLV0_CTRL		0x27
-#define I2C_SLV1_ADDR		0x28
+#define I2C_SLV1_addr		0x28
 #define I2C_SLV1_REG		0x29
 #define I2C_SLV1_CTRL		0x2A
-#define I2C_SLV2_ADDR		0x2B
+#define I2C_SLV2_addr		0x2B
 #define I2C_SLV2_REG		0x2C
 #define I2C_SLV2_CTRL		0x2D
-#define I2C_SLV3_ADDR		0x2E
+#define I2C_SLV3_addr		0x2E
 #define I2C_SLV3_REG		0x2F
 #define I2C_SLV3_CTRL		0x30
-#define I2C_SLV4_ADDR		0x31
+#define I2C_SLV4_addr		0x31
 #define I2C_SLV4_REG		0x32
 #define I2C_SLV4_DO		0x33
 #define I2C_SLV4_CTRL		0x34
-#define I2C_SLV4_DI		0x35
+#define I2C_SLV4_DI			0x35
 #define I2C_MST_STATUS		0x36
-#define INT_PIN_CFG		0x37
-#define INT_ENABLE		0x38
-#define INT_STATUS		0x3A
+#define INT_PIN_CFG			0x37
+#define INT_ENABLE			0x38
+#define INT_STATUS			0x3A
 #define ACCEL_XOUT_H		0x3B
 #define ACCEL_XOUT_L		0x3C
 #define ACCEL_YOUT_H		0x3D
@@ -60,7 +61,7 @@
 #define ACCEL_ZOUT_H		0x3F
 #define ACCEL_ZOUT_L		0x40
 #define TEMP_OUT_H		0x41
-#define TEMP_OUT_L		0x42
+#define TEMP_OUT_L			0x42
 #define GYRO_XOUT_H		0x43
 #define GYRO_XOUT_L		0x44
 #define GYRO_YOUT_H		0x45
@@ -97,14 +98,14 @@
 #define I2C_SLV3_DO		0x66
 #define I2C_MST_DELAY_CTRL	0x67
 #define SIGNAL_PATH_RESET	0x68
-#define MOT_DETECT_CTRL		0x69
-#define USER_CTRL		0x6A
+#define MOT_DETECT_CTRL	0x69
+#define USER_CTRL			0x6A
 #define PWR_MGMT_1		0x6B
 #define PWR_MGMT_2		0x6C
 #define FIFO_COUNTH		0x72
 #define FIFO_COUNTL		0x73
-#define FIFO_R_W		0x74
-#define WHO_AM_I		0x75
+#define FIFO_R_W			0x74
+#define WHO_AM_I			0x75
 #define XA_OFFSET_H		0x77
 #define XA_OFFSET_L		0x78
 #define YA_OFFSET_H		0x7A
@@ -112,35 +113,64 @@
 #define ZA_OFFSET_H		0x7D
 #define ZA_OFFSET_L		0x7E
 
-#define ACCEL_RANGE		16	// 16[g]
-#define GYRO_RANGE		2000	// 2000[deg/s]
+#define MPU9255_ADDRESS     	0xd0		// 書き込み時のスレーブアドレス
+
+#define ACCELLSB			2048		// 16[g]
+#define GYROLSB			32.8		// 1000[deg/s]
+#define TEMP_LSB			333.87	// LSB/°C
+#define ROOMTEMPOFFSET	0		// 21°Cのとき0
+
+// データ処理関連
+#define CLOCK				96		// 動作周波数[MHz]
 
 #define MAXDATA_RANGE		32764	// 16bitデータの最大値
-#define G_ACCELERATION		9.80665	// 重力加速度
+#define G_ACCELERATION		9.81		// 重力加速度
+#define DELTATIMU			0.005	// 取得周期
 
-/******************************************** 自動生成関数 *****************************************/
-#define I2C_IMU_DATA		R_PG_SCI_I2CMode_Send_C1(0, slaveAddr, sendData, 1);
-#define I2C_IMU_COMMAND		R_PG_SCI_I2CMode_Send_C1(0, slaveAddr, sendData, 2);
-#define I2C_IMU_READ		R_PG_SCI_I2CMode_Receive_C1(0, slaveAddr, reciveData, 1);
-#define I2C_IMU_ARRY		R_PG_SCI_I2CMode_Receive_C1(0, slaveAddr, (uint8_t*)dataArry, num);
-/****************************************************************************************************/
-//======================================//
-// グローバル変数の宣言                 //
-//======================================//
+// キャリブレーション
+#define XGSLOPE			0.0048
+#define YGSLOPE			-0.0259
+#define ZGSLOPE			-0.0032
+#define SAMPLE				5000
+#define REC_NUM			8
+/*************************************** 自動生成関数 **********************************/
+#define I2C_IMU_COMMAND	send_SCI1_I2cWait( MPU9255_ADDRESS, sendData, num)
+#define I2C_IMU_RECIVE		receive_SCI1_I2c( MPU9255_ADDRESS, reciveData, num )
+#define I2C_IMU_ARRY		receive_data_SCI1_I2c(MPU9255_ADDRESS, sendData, reciveData, num)
+/************************************************************************************/
+//====================================//
+// グローバル変数の宣言							//
+//====================================//
 // IMUから取得したデータ
-extern volatile short 	xa, ya, za;	// 加速度(16bitデータ)
-extern volatile short 	xg, yg, zg;	// 角加速度(16bitデータ)
+extern volatile int 	rawXa, rawYa, rawZa;		// 加速度(16bitデータ)
+extern volatile int 	rawXg, rawYg, rawZg;	// 角加速度(16bitデータ)
+extern volatile short 	rawTemp;				// 温度(16bitデータ)
+
+extern short 	rawXa2, rawYa2, rawZa2;	// 加速度(16bitデータ)
+extern short 	rawXg2, rawYg2, rawZg2;	// 角加速度(16bitデータ)
+
+// データ処理
+extern double 		TurningAngleIMU;	// IMUから求めた旋回角度
+extern double		RollAngleIMU;		// IMUから求めたロール方向角度
+extern double 		PichAngleIMU;		// IMUから求めたピッチ方向角度
+extern double		TempIMU;			// IMUの温度
 
 // モード関連
-extern char	IMUset;			// 0:初期化失敗		1:初期化完了
+extern char	whoami;
+extern char	cnt_imu;
 
-//======================================//
-// プロトタイプ宣言                     //
-//======================================//
-void IMUWriteByte(short slaveAddr, char reg, char data );
-char IMUReadByte(short slaveAddr, char reg );
-void IMUReadArry(short slaveAddr, char reg, char num, char* dataArry );
+//====================================//
+// プロトタイプ宣言								//
+//====================================//
+void wait_IMU ( short waitTime );
+void IMUWriteByte( char reg, char data );
+char IMUReadByte( char reg , char* reciveData );
+bool IMUReadArry( char reg, char num, char* dataArry );
 char init_IMU (void);
 void IMUProcess (void);
+void caribrateIMU (void);
+void getTurningAngleIMU(void);
+void getRollAngleIMU(void);
+void getPichAngleIMU( void );
 
 #endif // I2C_MPU-9255_H_

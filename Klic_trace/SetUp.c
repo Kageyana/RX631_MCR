@@ -1,18 +1,18 @@
-//======================================//
-// インクルード                         //
-//======================================//
+//====================================//
+// インクルード									//
+//====================================//
 #include "SetUp.h"
-//======================================//
-// グローバル変数の宣言                 //
-//======================================//
+//====================================//
+// グローバル変数の宣言							//
+//====================================//
 char 	start;		// 0:セットアップ中	1:セットアップ完了
 
 // タイマ関連
-unsigned short 		cnt_setup;	// セットアップで使用
+unsigned short 		cnt_setup;		// セットアップで使用
 unsigned short 		cnt_setup2;	// セットアップで使用
 unsigned short 		cnt_setup3;	// セットアップで使用
-short			cnt_swR;	// スイッチ長押し判定用右
-short			cnt_swL;	// スイッチ長押し判定用左
+short				cnt_swR;		// スイッチ長押し判定用右
+short				cnt_swL;		// スイッチ長押し判定用左
 
 // スイッチ関連
 signed char pushL = 0;
@@ -39,9 +39,10 @@ char motor_test = 0;
 char servo_test = 0;
 char servo_test2 = 0;
 char fixSpeed = 0;
-//======================================//
-// プロトタイプ宣言                     //
-//======================================//
+
+//====================================//
+// プロトタイプ宣言								//
+//====================================//
 void data_select ( char *data , char button );
 void data_tuning ( void *data, char add , char direction );
 void wait2 ( int waittime );
@@ -56,16 +57,16 @@ char ble;
 void setup( void )
 {
 	char cnt_led;
-	short i;
+	short s;
 	
 	// LED点滅処理
 	
 	if ( cnt_setup2 >= 600 ) cnt_setup2 = 0;
 	if ( cnt_setup2 < 300 ) {
-		if ( EncoderTotal % 2 == 1 ) led_out( 0x12 );
+		if ( EncoderTotal % 12 == 1 ) led_out( 0x12 );
 		else led_out( 0x02 );
 	} else {
-		if ( EncoderTotal % 2 == 1 ) led_out( 0x11 );
+		if ( EncoderTotal % 12 == 1 ) led_out( 0x11 );
 		else led_out( 0x01 );
 	}
 	
@@ -78,7 +79,14 @@ void setup( void )
 			lcdPosition( 0, 0 );
 			lcdPrintf("START   ");
 			lcdPosition( 0, 1 );
-			lcdPrintf("   READY");
+			lcdPrintf("%d  READY", startbar_get());
+			
+			//0x8を押すと白線追従
+			angle_mode = 0;
+			data_select( &servo_test, 8 );
+			if ( servo_test == 1 ) servoPwmOut( ServoPwm );
+			else servoPwmOut( 0 );
+			
 			// プッシュスイッチ押下待ち
 			if ( tasw_get() == 0x1 ) start = 2;
 			else if ( tasw_get() == 0x2 ) start = 1;
@@ -103,7 +111,7 @@ void setup( void )
 			lcdPosition( 0, 0 );
 			lcdPrintf("STOP    ");
 			lcdPosition( 0, 1 );
-			lcdPrintf("     %2dm", stopping_meter );
+			lcdPrintf("   %4dm", stopping_meter );
 			data_tuning ( &stopping_meter, 1, RIGHT );
 			break;
 		//------------------------------------------------------------------
@@ -466,11 +474,8 @@ void setup( void )
 					//値を点滅
 					lcdPosition( 0, 1 );
 					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
-						lcdPrintf("   %2d %2d", ki2_buff, kd2_buff);
-					} else {
-						lcdPrintf("%2d %2d %2d", kp2_buff, ki2_buff, kd2_buff);
-					}
+					if ( cnt_setup < 250 ) lcdPrintf("   %2d %2d", ki2_buff, kd2_buff);
+					else				lcdPrintf("%2d %2d %2d", kp2_buff, ki2_buff, kd2_buff);
 					
 					data_tuning ( &kp2_buff, 1, RIGHT );
 					break;
@@ -479,11 +484,8 @@ void setup( void )
 					//値を点滅
 					lcdPosition( 0, 1 );
 					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
-						lcdPrintf("%2d    %2d", kp2_buff, kd2_buff);
-					} else {
-						lcdPrintf("%2d %2d %2d", kp2_buff, ki2_buff, kd2_buff);
-					}
+					if ( cnt_setup < 250 ) lcdPrintf("%2d    %2d", kp2_buff, kd2_buff);
+					else				lcdPrintf("%2d %2d %2d", kp2_buff, ki2_buff, kd2_buff);
 					
 					data_tuning ( &ki2_buff, 1, RIGHT );
 					break;
@@ -492,11 +494,8 @@ void setup( void )
 					//値を点滅
 					lcdPosition( 0, 1 );
 					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
-						lcdPrintf("%2d %2d   ", kp2_buff, ki2_buff);
-					} else {
-						lcdPrintf("%2d %2d %2d", kp2_buff, ki2_buff, kd2_buff);
-					}
+					if ( cnt_setup < 250 )	lcdPrintf("%2d %2d   ", kp2_buff, ki2_buff);
+					else				lcdPrintf("%2d %2d %2d", kp2_buff, ki2_buff, kd2_buff);
 					
 					data_tuning ( &kd2_buff, 1, RIGHT );
 					break;
@@ -524,11 +523,8 @@ void setup( void )
 					//値を点滅
 					lcdPosition( 0, 1 );
 					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
-						lcdPrintf("   %2d %2d", ki3_buff, kd3_buff );
-					} else {
-						lcdPrintf("%2d %2d %2d", kp3_buff, ki3_buff, kd3_buff );
-					}
+					if ( cnt_setup < 250 ) lcdPrintf("   %2d %2d", ki3_buff, kd3_buff );
+					else				lcdPrintf("%2d %2d %2d", kp3_buff, ki3_buff, kd3_buff );
 					
 					data_tuning ( &kp3_buff, 1, RIGHT );
 					break;
@@ -537,11 +533,8 @@ void setup( void )
 					//値を点滅
 					lcdPosition( 0, 1 );
 					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
-						lcdPrintf("%2d    %2d", kp3_buff, kd3_buff );
-					} else {
-						lcdPrintf("%2d %2d %2d", kp3_buff, ki3_buff, kd3_buff );
-					}
+					if ( cnt_setup < 250 ) lcdPrintf("%2d    %2d", kp3_buff, kd3_buff );
+					else				lcdPrintf("%2d %2d %2d", kp3_buff, ki3_buff, kd3_buff );
 					
 					data_tuning ( &ki3_buff, 1, RIGHT );
 					break;
@@ -551,11 +544,8 @@ void setup( void )
 					//値を点滅
 					lcdPosition( 0, 1 );
 					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
-						lcdPrintf("%2d %2d   ", kp3_buff, ki3_buff );
-					} else {
-						lcdPrintf("%2d %2d %2d", kp3_buff, ki3_buff, kd3_buff );
-					}
+					if ( cnt_setup < 250 ) lcdPrintf("%2d %2d   ", kp3_buff, ki3_buff );
+					else 				lcdPrintf("%2d %2d %2d", kp3_buff, ki3_buff, kd3_buff );
 					
 					data_tuning ( &kd3_buff, 1, RIGHT );
 					break;
@@ -632,8 +622,8 @@ void setup( void )
 			data_tuning ( &pattern_sensor, 1, LEFT );
 			angle_mode = 0;
 			
-			if ( pattern_sensor == 17 ) pattern_sensor = 1;
-			else if ( pattern_sensor == 0 ) pattern_sensor = 16;
+			if ( pattern_sensor == 16 ) pattern_sensor = 1;
+			else if ( pattern_sensor == 0 ) pattern_sensor = 15;
 			
 			switch( pattern_sensor ) {
 				case 1:
@@ -654,13 +644,21 @@ void setup( void )
 					
 				case 2:
 					// ジャイロ
-					lcdPosition( 0, 0 );
-					lcdPrintf("Gyro    ");
+					if ( tasw_get() == 0x1 ) PichAngleIMU = 0;
+					if ( tasw_get() == 0x2 ) RollAngleIMU = 0;
 					if ( cnt_setup >= 100 ) {
 						cnt_setup = 0;
-						lcdPosition( 0, 1 );
-						//lcdPrintf("   %5d",getGyro());
-						lcdPrintf("   %5d",Degrees);
+						if ( IMUSet ) {
+							lcdPosition( 0, 0 );
+							lcdPrintf("Roll%4d", (short)RollAngleIMU);
+							lcdPosition( 0, 1 );
+							lcdPrintf("Pich%4d",(short)PichAngleIMU);
+						} else {
+							lcdPosition( 0, 0 );
+							lcdPrintf("        ");
+							lcdPosition( 0, 1 );
+							lcdPrintf("Pich%4d",(short)PichAngleAD);
+						}
 					}
 					break;
 					
@@ -671,7 +669,7 @@ void setup( void )
 					if ( cnt_setup >= 100 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 1 );
-						lcdPrintf("  %6d",EncoderTotal);
+						lcdPrintf("   %4.1f",(double)EncoderTotal/PALSE_MILLIMETER);
 					}
 					break;
 							
@@ -719,6 +717,8 @@ void setup( void )
 					demo = 0;
 					if ( motor_test == 1 ) {
 						diff( 30 );
+						//motor_f( 30, 30 );
+						//motor_r( 30, 30 );
 					} else {
 						motor_f( 0, 0 );
 						motor_r( 0, 0 );
@@ -732,11 +732,9 @@ void setup( void )
 					lcdPrintf("Servo   ");
 					lcdPosition( 0, 1 );
 					lcdPrintf("        ");
-					if ( motor_test == 1 ) 	{
-						servoPwmOut( 20 );
-					} else {
-						servoPwmOut( 0 );
-					}
+					if ( motor_test == 1 ) servoPwmOut( 20 );
+					else				servoPwmOut( 0 );
+					
 					data_select( &motor_test, 1 );
 					break;
 				case 9:
@@ -753,73 +751,70 @@ void setup( void )
 					break;
 					
 				case 10:
-					// Bluetooth;
+					// Bluetooth
 					lcdPosition( 0, 0 );
-					lcdPrintf("Text   %d", reverr);
+					lcdPrintf("Text   %d", revErr);
 					lcdPosition( 0, 1 );
 					lcdPrintf("%s",txt_data);
 					break;
 					
 				case 11:
-					// 旋回角度;
+					// 旋回角度
 					lcdPosition( 0, 0 );
-					lcdPrintf("IMU%4d", (short)TurningAngleIMU);
+					lcdPrintf("IMU %4d", (short)TurningAngleIMU);
 					lcdPosition( 0, 1 );
-					lcdPrintf("Enc%4d", (short)TurningAngleEnc);
+					lcdPrintf("Enc %4d", (short)TurningAngleEnc);
 					if ( tasw_get() == 0x1 ) TurningAngleEnc = 0;
 					if ( tasw_get() == 0x2 ) TurningAngleIMU = 0;
 					break;
 					
 				case 12:
-					// ロール角度;
-					lcdPosition( 0, 0 );
-					lcdPrintf("Roll%3d", (short)RollAngleIMU);
-					lcdPosition( 0, 1 );
-					lcdPrintf("        ");
-					if ( tasw_get() == 0x1 ) RollAngleIMU = 0;
-					break;
-					
-				case 13:
-					// IMU;
+					// IMU
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 0 );
-						lcdPrintf("xa%2.3f",(double)xa*ACCEL_RANGE/MAXDATA_RANGE);
+						lcdPrintf("xa%2.3f",(double)rawXa / ACCELLSB);
 						lcdPosition( 0, 1 );
-						lcdPrintf("ya%2.3f",(double)ya*ACCEL_RANGE/MAXDATA_RANGE);
+						lcdPrintf("ya%2.3f",(double)rawYa / ACCELLSB);
+					}
+					break;
+					
+				case 13:
+					// IMU
+					if ( cnt_setup >= 500 ) {
+						cnt_setup = 0;
+						lcdPosition( 0, 0 );
+						lcdPrintf("za%2.3f",(double)rawZa / ACCELLSB);
+						lcdPosition( 0, 1 );
+						lcdPrintf("xg%2.3f",(double)rawXg/GYROLSB);
 					}
 					break;
 					
 				case 14:
-					// IMU;
+					// IMU
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 0 );
-						lcdPrintf("za%2.3f",(double)za*ACCEL_RANGE/MAXDATA_RANGE);
+						lcdPrintf("yg%2.3f",(double)rawYg/GYROLSB);
 						lcdPosition( 0, 1 );
-						lcdPrintf("xg%2.3f",(double)xg*GYRO_RANGE/MAXDATA_RANGE);
+						lcdPrintf("zg%2.3f",(double)rawZg/GYROLSB);
 					}
 					break;
 					
 				case 15:
-					// IMU;
+					// who am i
 					if ( cnt_setup >= 500 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 0 );
-						lcdPrintf("yg%2.3f",(double)yg*GYRO_RANGE/MAXDATA_RANGE);
+						lcdPrintf("wai 0x%x", whoami);
 						lcdPosition( 0, 1 );
-						lcdPrintf("zg%2.3f",(double)zg*GYRO_RANGE/MAXDATA_RANGE);
-					}
-					break;
-					
-				case 16:
-					// who am i;
-					if ( cnt_setup >= 500 ) {
-						cnt_setup = 0;
-						lcdPosition( 0, 0 );
-						lcdPrintf("who am i");
-						lcdPosition( 0, 1 );
-						lcdPrintf("%d     %x",IMUSet, IMUReadByte(MPU9255_ADDRESS, WHO_AM_I));
+						lcdPrintf("Temp%2.1f", (double)TempIMU);
+						if ( tasw_get() == 0x1 ) {
+							wait_lcd(1000);
+							IMUSet = 0;
+							caribrateIMU();
+							IMUSet = 1;
+						}
 					}
 					break;
 			}
@@ -848,19 +843,19 @@ void setup( void )
 		//------------------------------------------------------------------
 		case 0xd:
 			lcdPosition( 0, 0 );
-			lcdPrintf("MicroSD ");
+			lcdPrintf("MicroSD%d", msdset);
 			
 			servo_test = 0;
 			angle_mode = 0;
 			data_tuning ( &pattern_msd, 1, LEFT );
-			if ( pattern_msd == 11 ) pattern_msd = 1;
-			else if ( pattern_msd == 0 ) pattern_msd = 10;
+			if ( pattern_msd == 13 ) pattern_msd = 1;
+			else if ( pattern_msd == 0 ) pattern_msd = 12;
 			
 			switch ( pattern_msd ) {
 				case 1:
-					msdWorkAddress = msdAddrBuff[1];
-					msdWorkAddress2 = msdAddrBuff[0];
-					if ( msdWorkAddress == 0 && msdWorkAddress2 == 0 ) {
+					msdWorkaddress = msdaddrBuff[1];
+					msdWorkaddress2 = msdaddrBuff[0];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
 						lcdPrintf("No data");
 					} else {
@@ -875,9 +870,9 @@ void setup( void )
 					}
 					break;
 				case 2:
-					msdWorkAddress = msdAddrBuff[3];
-					msdWorkAddress2 = msdAddrBuff[2];
-					if ( msdWorkAddress == 0 && msdWorkAddress2 == 0 ) {
+					msdWorkaddress = msdaddrBuff[3];
+					msdWorkaddress2 = msdaddrBuff[2];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
 						lcdPrintf("No data");
 					} else {
@@ -892,9 +887,9 @@ void setup( void )
 					}
 					break;
 				case 3:
-					msdWorkAddress = msdAddrBuff[5];
-					msdWorkAddress2 = msdAddrBuff[4];
-					if ( msdWorkAddress == 0 && msdWorkAddress2 == 0 ) {
+					msdWorkaddress = msdaddrBuff[5];
+					msdWorkaddress2 = msdaddrBuff[4];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
 						lcdPrintf("No data");
 					} else {
@@ -909,9 +904,9 @@ void setup( void )
 					}
 					break;
 				case 4:
-					msdWorkAddress = msdAddrBuff[7];
-					msdWorkAddress2 = msdAddrBuff[6];
-					if ( msdWorkAddress == 0 && msdWorkAddress2 == 0 ) {
+					msdWorkaddress = msdaddrBuff[7];
+					msdWorkaddress2 = msdaddrBuff[6];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
 						lcdPrintf("No data");
 					} else {
@@ -926,9 +921,9 @@ void setup( void )
 					}
 					break;
 				case 5:
-					msdWorkAddress = msdAddrBuff[9];
-					msdWorkAddress2 = msdAddrBuff[8];
-					if ( msdWorkAddress == 0 && msdWorkAddress2 == 0 ) {
+					msdWorkaddress = msdaddrBuff[9];
+					msdWorkaddress2 = msdaddrBuff[8];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
 						lcdPrintf("No data");
 					} else {
@@ -943,9 +938,9 @@ void setup( void )
 					}
 					break;
 				case 6:
-					msdWorkAddress = msdAddrBuff[11];
-					msdWorkAddress2 = msdAddrBuff[10];
-					if ( msdWorkAddress == 0 && msdWorkAddress2 == 0 ) {
+					msdWorkaddress = msdaddrBuff[11];
+					msdWorkaddress2 = msdaddrBuff[10];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
 						lcdPrintf("No data");
 					} else {
@@ -960,9 +955,9 @@ void setup( void )
 					}
 					break;
 				case 7:
-					msdWorkAddress = msdAddrBuff[13];
-					msdWorkAddress2 = msdAddrBuff[12];
-					if ( msdWorkAddress == 0 && msdWorkAddress2 == 0 ) {
+					msdWorkaddress = msdaddrBuff[13];
+					msdWorkaddress2 = msdaddrBuff[12];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
 						lcdPrintf("No data");
 					} else {
@@ -977,9 +972,9 @@ void setup( void )
 					}
 					break;
 				case 8:
-					msdWorkAddress = msdAddrBuff[15];
-					msdWorkAddress2 = msdAddrBuff[14];
-					if ( msdWorkAddress == 0 && msdWorkAddress2 == 0 ) {
+					msdWorkaddress = msdaddrBuff[15];
+					msdWorkaddress2 = msdaddrBuff[14];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
 						lcdPrintf("No data");
 					} else {
@@ -994,9 +989,9 @@ void setup( void )
 					}
 					break;
 				case 9:
-					msdWorkAddress = msdAddrBuff[17];
-					msdWorkAddress2 = msdAddrBuff[16];
-					if ( msdWorkAddress == 0 && msdWorkAddress2 == 0 ) {
+					msdWorkaddress = msdaddrBuff[17];
+					msdWorkaddress2 = msdaddrBuff[16];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
 						lcdPrintf("No data");
 					} else {
@@ -1011,9 +1006,9 @@ void setup( void )
 					}
 					break;
 				case 10:
-					msdWorkAddress = msdAddrBuff[19];
-					msdWorkAddress2 = msdAddrBuff[18];
-					if ( msdWorkAddress == 0 && msdWorkAddress2 == 0 ) {
+					msdWorkaddress = msdaddrBuff[19];
+					msdWorkaddress2 = msdaddrBuff[18];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
 						lcdPrintf("No data");
 					} else {
@@ -1024,6 +1019,42 @@ void setup( void )
 						push1 = 1;
 						msd_sendToPC();
 					}else if ( tasw_get() == 0x0 ) {
+						push1 = 0;
+					}
+					break;
+					
+				case 11:
+				// ログ記録
+					if ( msdFlag == 0 ) { 
+						lcdPosition( 0, 1 );
+						lcdPrintf("LogWrite");
+					}
+					if ( tasw_get() == 0x1 && push1 == 0 && msdFlag == 0) {
+						push1 = 1;
+						readFlashSetup( 0, 0, 1 ,0 ,0 ,0 ,0);
+						init_log();	// ログ記録準備
+						msdFlag = 1;		// データ記録開始
+						lcdPosition( 0, 1 );
+						lcdPrintf("Logging ");
+					} else if ( tasw_get() == 0x2 && push1 == 0 && msdFlag == 1) {
+						push1 = 1;
+						msdEndLog();		// MicroSDの終了処理
+					} else if ( tasw_get() == 0x0 ) {
+						push1 = 0;
+					}
+					break;
+					
+				case 12:
+				// コース解析
+					if ( msdFlag == 0 ) { 
+						lcdPosition( 0, 1 );
+						lcdPrintf("LogRead ");
+					}
+					if ( tasw_get() == 0x1 && push1 == 0 && msdFlag == 0) {
+						//ログ解析
+						msdgetData () ;
+						setBeepPatternS( 0xc000 );
+					} else if ( tasw_get() == 0x0 ) {
 						push1 = 0;
 					}
 					break;
@@ -1050,7 +1081,7 @@ void setup( void )
 			}
 			if ( tasw_get() == 0x4 && push1 == 0 ) {
 				push1 = 1;
-				writeFlashData( ANGLE0_AREA, ANGLE0_AREA, ANGLE0_DATA, 1 );
+				writeFlashData( ANGLE0_STARTAREA, ANGLE0_ENDAREA, ANGLE0_DATA, 1 );
 			} else if ( tasw_get() == 0x0 ) {
 				push1 = 0;
 			}
@@ -1098,11 +1129,10 @@ void setup( void )
 					lcdPrintf("AllErase");
 					lcdPosition( 0, 1 );
 					lcdPrintf("     Now");
-					i = 0;
-					while ( i <= 1023 ) {
-						eraseE2DataFlash(i);
-						i++;
-						//printf("i = %d\n", i);
+					s = 0;
+					while ( s <= 1023 ) {
+						eraseE2DataFlash( s );
+						s++;
 					}
 					cnt_setup = 0;
 					pattern_flash = 4;
@@ -1127,12 +1157,12 @@ void setup( void )
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////
-// モジュール名 data_select								//
+///////////////////////////////////////////////////////////////////////////////////////
+// モジュール名 data_select										//
 // 処理概要     タクトスイッチで0,1に変化させる						//
-// 引数         data: 変化させる変数 button: どのスイッチで変化させるか			//
-// 戻り値       なし									//
-//////////////////////////////////////////////////////////////////////////////////////////
+// 引数         data: 変化させる変数 button: どのスイッチで変化させるか		//
+// 戻り値       なし											//
+///////////////////////////////////////////////////////////////////////////////////////
 void data_select ( char *data , char button )
 {
 	if ( tasw_get() == button ) {
@@ -1142,17 +1172,18 @@ void data_select ( char *data , char button )
 		} else if ( *data == 0 && push == 0) {
 			push = 1;
 			*data = 1;
+			Int = 0;
 		}
 	} else {
 		push = 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////
-// モジュール名 data_tuning								//
+///////////////////////////////////////////////////////////////////////////////////////
+// モジュール名 data_tuning										//
 // 処理概要     タクトスイッチでdataを加減する						//
 // 引数         data: 加減させる変数 add: 0: 変化量 lr: 0:右列 1:左列			//
-// 戻り値       なし									//
-//////////////////////////////////////////////////////////////////////////////////////////
+// 戻り値       なし											//
+///////////////////////////////////////////////////////////////////////////////////////
 void data_tuning ( void *data, char add , char lr )
 {
 	short *data2 = (short*)data;	// short型ポインタにキャスト
@@ -1167,20 +1198,8 @@ void data_tuning ( void *data, char add , char lr )
 				*data2 -= add;
 			} else if ( pushL != 0 ) {
 				// 長押しモード
-				if ( cnt_swL >= 400 && cnt_swL < 2000) {
-					if ( ( cnt_setup3 % 400 ) == 0 ) {
-						cnt_setup3 = 0;
-						if ( pushL == 1) *data2 += add;
-						else *data2 -= add;
-					}
-				} else if ( cnt_swL >= 2000 && cnt_swL < 4000 ) {
+				if ( cnt_swL >= 500 ) {
 					if ( ( cnt_setup3 % 200 ) == 0 ) {
-						cnt_setup3 = 0;
-						if ( pushL == 1) *data2 += add;
-						else *data2 -= add;
-					}
-				} else if ( cnt_swL >= 4000 ) {
-					if ( ( cnt_setup3 % 100 ) == 0 ) {
 						cnt_setup3 = 0;
 						if ( pushL == 1) *data2 += add;
 						else *data2 -= add;
@@ -1201,21 +1220,8 @@ void data_tuning ( void *data, char add , char lr )
 				*data2 -= add;
 			} else if ( pushR != 0 ) {
 				// 長押しモード
-				if ( cnt_swR >= 400 && cnt_swR < 2000 ) {
-					
-					if ( ( cnt_setup3 % 400 ) == 0 ) {
-						cnt_setup3 = 0;
-						if ( pushR == 1) *data2 += add;
-						else *data2 -= add;
-					}
-				} else if ( cnt_swR >= 2000 && cnt_swR < 4000 ) {
+				if ( cnt_swR >= 500 ) {
 					if ( ( cnt_setup3 % 200 ) == 0 ) {
-						cnt_setup3 = 0;
-						if ( pushR == 1) *data2 += add;
-						else *data2 -= add;
-					}
-				} else if ( cnt_swR >= 4000 ) {
-					if ( ( cnt_setup3 % 100 ) == 0 ) {
 						cnt_setup3 = 0;
 						if ( pushR == 1) *data2 += add;
 						else *data2 -= add;
@@ -1228,12 +1234,12 @@ void data_tuning ( void *data, char add , char lr )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////
-// モジュール名 fix_speedsetting							//
+/////////////////////////////////////////////////////////////////////////////////
+// モジュール名 fix_speedsetting								//
 // 処理概要     速度パラメータを固定値にする						//
-// 引数         なし									//
-// 戻り値       0: 速度一定にしない　1: 速度一定にする					//
-//////////////////////////////////////////////////////////////////////////////////////////
+// 引数         なし										//
+// 戻り値       0: 速度一定にしない　1: 速度一定にする				//
+/////////////////////////////////////////////////////////////////////////////////
 char fix_speedsetting ( void )
 {
 	char ret = 0;
@@ -1300,7 +1306,7 @@ char fix_speedsetting ( void )
 		speed_curve_straight	= 30;
 		
 		speed_crossline		= 30;
-		speed_ckank_trace	= 26;
+		speed_ckank_trace	= 30;
 		speed_rightclank_curve	= 22;
 		speed_rightclank_escape	= 30;
 		speed_leftclank_curve	= 22;

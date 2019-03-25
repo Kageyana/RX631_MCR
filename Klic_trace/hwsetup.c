@@ -49,13 +49,13 @@ void HardwareSetup(void)
 	SET_CMT_C0		// コンペアマッチタイマを設定(ch0)
 	SET_CMT_C2		// コンペアマッチタイマを設定(ch2)
 	
-	init_IO();		// IOポートの初期化
+	init_IO();			// IOポートの初期化
 	
 	SET_ADC			// 12ビットA/Dコンバータ(S12AD0)を設定
 	
-	START_MTU		// MTU0,2,3,4のカウント開始
+	START_MTU		// MTU0,1,2,3のカウント開始
 	
 	START_ADC		// A/D変換開始
-	START_CMT_C0 		// カウントスタート(ch0)
-	START_CMT_C2 		// カウントスタート(ch2)
+	START_CMT_C0 	// カウントスタート(ch0)
+	START_CMT_C2 	// カウントスタート(ch2)
 }
