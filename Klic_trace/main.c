@@ -619,7 +619,7 @@ void main(void){
 			targetSpeed = speed_rightclank_escape * SPEED_CURRENT;
 			diff( motorPwm );
 			led_out(0x06);
-			
+			/*
 			// クロスラインチェック
 			if( check_crossline() ) {
 				enc1 = 0;
@@ -638,7 +638,7 @@ void main(void){
 				enc1 = 0;
 				pattern = 61;
 				break;
-			}
+			}*/
 			if( enc1 >= enc_mm( 600 ) ) {		// 安定するまで待つ(600mm)
 				enc1 = 0;
 				led_out( 0x0 );
@@ -754,7 +754,7 @@ void main(void){
 			targetSpeed = speed_leftclank_escape * SPEED_CURRENT;
 			diff( motorPwm );
 			led_out(0x06);
-			
+			/*
 			// クロスラインチェック
 			if( check_crossline() ) {
 				enc1 = 0;
@@ -773,7 +773,7 @@ void main(void){
 				enc1 = 0;
 				pattern = 61;
 				break;
-			}
+			}*/
 			if( enc1 >= enc_mm( 600 ) ) {		// 安定するまで待つ(600mm)
 				enc1 = 0;
 				led_out( 0x0 );
@@ -1050,7 +1050,7 @@ void main(void){
 			}
 			*/
 			// 坂道チェック
-			if( EncoderTotal >= 5609 ) {
+			if( EncoderTotal >= enc_mm( 1000 ) ) {
 				if( check_slope() == 1 || check_slope() == -1 ) {
 					pattern = 71;
 					break;

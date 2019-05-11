@@ -36,7 +36,7 @@
 * Description  : 
 * Limitations  : 
 ******************************************************************************
-* History : 27.04.2019 Version Description
+* History : 10.05.2019 Version Description
 *         :   
 ******************************************************************************/
 
@@ -86,7 +86,7 @@ bool R_PG_SCI_Set_C5(void)
 	return R_SCI_Create(
 		5,
 		PDL_SCI_SYNC | PDL_SCI_TX_CONNECTED | PDL_SCI_RX_CONNECTED | PDL_SCI_SPI_MODE | PDL_SCI_MSB_FIRST | PDL_SCI_INVERSION_OFF | PDL_SCI_CLK_INT_OUT | PDL_SCI_SPI_SS_DISABLE,
-		BIT_31 | PDL_SCI_PCLK_DIV_1 | 0 | (256 & 0x00FFFF00ul),
+		BIT_31 | PDL_SCI_PCLK_DIV_1 | 11 | (1000000 & 0x00FFFF00ul),
 		0,
 		0
 	);
