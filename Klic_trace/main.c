@@ -522,6 +522,7 @@ void main(void){
 			diff( motorPwm );
 			
 			if ( IMUSet ) {
+				/*
 				if( -TurningAngleIMU <= 30 ) {
 					if( sensor_inp() == 0x2 ) {
 						enc1 = 0;
@@ -530,7 +531,7 @@ void main(void){
 						pattern = 36;
 						break;
 					}
-				} else if ( -TurningAngleIMU >= 20 ) {
+				} else*/ if ( -TurningAngleIMU >= 20 ) {
 					if( j <= -1800 ) {
 						enc1 = 0;
 						i = (short)-TurningAngleIMU;
@@ -1237,7 +1238,7 @@ void main(void){
 			motor_f( motorPwm, motorPwm );
 			motor_r( motorPwm, motorPwm );
 			
-			if( Encoder <= 1 && Encoder >= -1 ) {
+			if( Encoder < 0 && Encoder >= -1 ) {
 				enc1 = 0;
 				pattern = 103;
 				break;
@@ -1245,7 +1246,7 @@ void main(void){
 			break;
 			
 		case 103:
-			servoPwmOut( 0 );
+			servoPwmOut( ServoPwm );
 			motor_f( 0, 0 );
 			motor_r( 0, 0 );
 			
@@ -1261,6 +1262,7 @@ void main(void){
 			break;
 			
 		case 104:
+			servoPwmOut( ServoPwm );
 			// 最後のデータが書き込まれるまで待つ
 			if ( cnt1 <= 1000 ) {	// 500ms待つ
 				if( checkMicroSDProcess() == 11 ) {
@@ -1277,6 +1279,7 @@ void main(void){
 			break;
 			
 		case 105:
+			servoPwmOut( ServoPwm );
 			// 終了処理が終わるまで待つ
 			if( checkMicroSDProcess() == 0 ) {
 				// MicroSD最終書き込みアドレス保存
@@ -1290,6 +1293,7 @@ void main(void){
 			break;
 			
 		case 106:
+			servoPwmOut( 0 );
 			// LED点滅処理
 			if( cnt1 >= 200 ) cnt1 = 0;
 			if( cnt1 < 100 ) {
@@ -1300,6 +1304,7 @@ void main(void){
 			break;
 			
 		case 107:
+			servoPwmOut( 0 );
 			// LED点滅処理
 			if( cnt1 >= 200 ) cnt1 = 0;
 			if( cnt1 < 100 ) {

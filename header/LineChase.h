@@ -80,7 +80,7 @@
 // 緊急停止関連
 #define STOP_SENSOR1		60		// センサ全灯
 #define STOP_SENSOR2		800		// センサ全消灯
-#define STOP_ENCODER		10		// エンコーダ停止(ひっくり返った？)
+#define STOP_ENCODER		100		// エンコーダ停止(ひっくり返った？)
 #define STOP_GYRO			100		// マイナスの加速度検知(コースから落ちた？)
 #define STOP_COUNT		10000	// 時間停止
 //====================================//

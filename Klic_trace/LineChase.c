@@ -218,8 +218,8 @@ void servoControl( void )
 	iRet = iRet >> 10;
 
 	// PWMの上限の設定(安定したら70程度に)
-	if ( iRet >  70 ) iRet =  70;		// マイコンカーが安定したら
-	if ( iRet <  -70 ) iRet = -70;	// 上限を90くらいにしてください
+	if ( iRet >  70 ) iRet =  90;		// マイコンカーが安定したら
+	if ( iRet <  -70 ) iRet = -90;	// 上限を90くらいにしてください
 	//if ( sensor_inp() == 0x1 ) iRet = -50;
 	//else if ( sensor_inp() == 0x4 ) iRet = 50;
 	
@@ -570,9 +570,9 @@ void diff ( signed char pwm )
 				motor_r( R4, R2 );
 			}
 		} else {
-			r1 = rev_difference_B[ pa_number ];
-			r2 = rev_difference_B[ pa_number + 1 ];
-			r3 = rev_difference_B[ pa_number + 2 ];
+			r1 = rev_difference_D[ pa_number ];
+			r2 = rev_difference_D[ pa_number + 1 ];
+			r3 = rev_difference_D[ pa_number + 2 ];
 			
 			R1 = r1 * pwm / 100;
 			R2 = r2 * pwm / 100;
