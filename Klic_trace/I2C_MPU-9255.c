@@ -152,7 +152,7 @@ void IMUProcess (void)
 	} else {
 		setBeepPatternS( 0x8000 );
 		init_SCI1( UART, RATE_230400 );
-		SCIset = 0;
+		IMUSet = 0;
 	}
 	
 }

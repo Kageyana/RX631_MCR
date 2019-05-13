@@ -811,9 +811,9 @@ void setup( void )
 						lcdPrintf("Temp%2.1f", (double)TempIMU);
 						if ( tasw_get() == 0x1 ) {
 							wait_lcd(1000);
-							SCIset = 0;
+							IMUSet = 0;
 							caribrateIMU();
-							SCIset = 1;
+							IMUSet = 1;
 						}
 					}
 					break;

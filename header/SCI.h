@@ -52,11 +52,12 @@
 #define	RW_BIT		1
 
 #define	SET_SCI_C1	init_SCI1( I2C, 0);
+#define	PRINT_ON		1
+#define	PRINT_OFF	0
 //====================================//
 // グローバル変数の宣言							//
 //====================================//
 extern char 	revErr;
-extern char	SCIset;			// 0:初期化失敗		1:初期化完了
 
 // SCI1関連
 extern char	SCI1_mode;		// 通信方式
