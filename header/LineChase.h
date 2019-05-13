@@ -51,8 +51,10 @@
 #define AD_3V3VOLTAGE		0.806	// 3V時の1AD値あたりの電圧[mV]
 #define AD_5VOLTAGE		1.22		// 5V時の1AD値あたりの電圧[mV]
 #define GYROVOLTAGE		0.67		// 電圧毎角加速度[mV/deg/s]
-#define SLOPEUPPERLINE		4		// 上り坂検出角度
-#define SLOPELOWERLINE		-4		// 下り坂検出角度
+#define SLOPEUPPERLINE_IMU		4		// 上り坂検出角度
+#define SLOPELOWERLINE_IMU		-4		// 下り坂検出角度
+#define SLOPEUPPERLINE_AD		17		// 上り坂検出角度
+#define SLOPELOWERLINE_AD		-14		// 下り坂検出角度
 #define INTEGRAL_LIMIT		200		// 角速度積算時間
 
 #define PI					3.141592	// 円周率
@@ -61,9 +63,9 @@
 
 // PIDゲイン関連
 //白線トレース
-#define KP			20
-#define KI			2
-#define KD		58
+#define KP			28
+#define KI			16
+#define KD		99
 
 // 角度制御
 #define KP2		9
@@ -78,7 +80,7 @@
 // 緊急停止関連
 #define STOP_SENSOR1		60		// センサ全灯
 #define STOP_SENSOR2		800		// センサ全消灯
-#define STOP_ENCODER		10		// エンコーダ停止(ひっくり返った？)
+#define STOP_ENCODER		100		// エンコーダ停止(ひっくり返った？)
 #define STOP_GYRO			100		// マイナスの加速度検知(コースから落ちた？)
 #define STOP_COUNT		10000	// 時間停止
 //====================================//
@@ -132,6 +134,7 @@ extern short		cnt_gyro;			// 角度計算用カウンタ
 
 // 角度関連
 extern double 		TurningAngleEnc;	// エンコーダから求めた旋回角度
+extern double		PichAngleAD;		// アナログジャイロから求めたピッチ角度
 
 // モーター関連
 extern signed char 	motorPwm;	// モーター制御PWM
@@ -146,7 +149,8 @@ extern char 	kp3_buff, ki3_buff, kd3_buff;
 extern char demo;
 
 // サーボ関連
-extern short 		SetAngle;	// 目標角度
+extern double		Int;			// I成分積算値(白線トレース)
+extern short 		SetAngle;		// 目標角度
 extern signed char 	ServoPwm;	// 白線トレースサーボPWM
 extern signed char 	ServoPwm2;	// 角度サーボPWM
 
@@ -160,6 +164,7 @@ signed char check_leftline( void );
 signed char check_slope( void );
 
 // 角度関連
+void getPichAngleAD( void );
 void getTurningAngleEnc(void);
 
 // エンコーダ関連

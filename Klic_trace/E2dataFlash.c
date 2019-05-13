@@ -92,12 +92,12 @@ bool checkFRDY ( unsigned short waittime )
 	cnt_flash = 0;
 	
 	while( cnt_flash <= ( waittime + 10 ) ) {
-		////printf("FRDY = %d cnt_flash = %d\n", FLASH.FSTATR0.BIT.FRDY, cnt_flash);
+		//printf("FRDY = %d cnt_flash = %d\n", FLASH.FSTATR0.BIT.FRDY, cnt_flash);
 		if ( FLASH.FSTATR0.BIT.FRDY == 0 ) {
 			if ( cnt_flash >= waittime ) {
 				cnt_flash = 0;
 				timeout = true;
-				////printf("FCU初期化\n");
+				printf("FCU初期化\n");
 				break;
 			} else {
 				continue;
@@ -116,12 +116,12 @@ bool checkFRDY ( unsigned short waittime )
 			if ( cnt_flash >= 5 ) {
 				FLASH.FRESETR.BIT.FRESET = 0;
 				FirmWareCopy();
-				////printf("FCU初期化完了\n");
+				printf("FCU初期化完了\n");
 				break;
 			}
 		}
 	} else if ( !timeout ){
-		////printf("タイムアウトなし\n");
+		//printf("タイムアウトなし\n");
 	}
 	return timeout;
 }
@@ -136,26 +136,26 @@ bool checkErrorFlash ( void )
 	volatile char error;
 	
 	if ( FLASH.FSTATR0.BIT.ILGLERR == 1 || FLASH.FSTATR0.BIT.ERSERR == 1 || FLASH.FSTATR0.BIT.PRGERR == 1 ) {
-		////printf("エラー確認 ILGLERR = %d ERSERR = %d PRGERR = %d\n", FLASH.FSTATR0.BIT.ILGLERR, FLASH.FSTATR0.BIT.ERSERR, FLASH.FSTATR0.BIT.PRGERR);
+		printf("エラー確認 ILGLERR = %d ERSERR = %d PRGERR = %d\n", FLASH.FSTATR0.BIT.ILGLERR, FLASH.FSTATR0.BIT.ERSERR, FLASH.FSTATR0.BIT.PRGERR);
 		error = true;
 		
 		if ( FLASH.FSTATR0.BIT.ILGLERR == 1 ) {
-			////printf("不正コマンド検出\n");
-			////printf("ROMAE = %d DFLAE = %d DFLRPE = %d DFLWPE = %d\n", FLASH.FASTAT.BIT.ROMAE, FLASH.FASTAT.BIT.DFLAE, FLASH.FASTAT.BIT.DFLRPE, FLASH.FASTAT.BIT.DFLWPE);
+			printf("不正コマンド検出\n");
+			printf("ROMAE = %d DFLAE = %d DFLRPE = %d DFLWPE = %d\n", FLASH.FASTAT.BIT.ROMAE, FLASH.FASTAT.BIT.DFLAE, FLASH.FASTAT.BIT.DFLRPE, FLASH.FASTAT.BIT.DFLWPE);
 			
 			if ( FLASH.FASTAT.BYTE == 0x10 ) {
-				////printf("FCUコマンドは受け付けてない\n");
+				printf("FCUコマンドは受け付けてない\n");
 			} else {
 				FLASH.FASTAT.BYTE = 0x10;
-				////printf("FCUコマンドを受け付けてる\n");
+				printf("FCUコマンドを受け付けてる\n");
 			}
 			fcuCommandByte( FLASHSTARTADDR, 0x50 );
 		} else {
-			////printf("ステータスクリアコマンド発行(ILGLERR = 0)\n");
+			printf("ステータスクリアコマンド発行(ILGLERR = 0)\n");
 		}
 		fcuCommandByte( FLASHSTARTADDR, 0x50 );
 	} else {
-		////printf("エラーなし\n");
+		//printf("エラーなし\n");
 		error = false;
 	}
 	
@@ -200,11 +200,11 @@ bool initFlash ( void )
 			// E2データフラッシュ領域のP/Eをを許可
 			FLASH.DFLWE0.WORD = 0x1e00;
 		} else {
-			////printf("E2データフラッシュ初期化エラー\n");
+			printf("E2データフラッシュ初期化エラー\n");
 			ret = true;
 		}
 	} else {
-		////printf("E2データフラッシュ初期化エラー\n");
+		printf("E2データフラッシュ初期化エラー\n");
 		ret = true;
 	}
 	
@@ -233,9 +233,9 @@ void changeFlashPE ( void )
 		// エラー確認
 		if ( checkErrorFlash() == 0 ) {
 			if ( checkErrorFlash() == 0 ) {
-				////printf("P/E モード移行完了\n");
+				//printf("P/E モード移行完了\n");
 			} else {
-				////printf("P/E モード移行エラー\n");
+				printf("P/E モード移行エラー\n");
 			}
 		}
 	}
@@ -258,7 +258,7 @@ void changeFlashRead ( void )
 			if ( ( FLASH.FENTRYR.WORD & 0x00ff ) != 0x0000 ) FLASH.FENTRYR.WORD = 0xaa00;
 			// ブランクチェック禁止
 			FLASH.FWEPROR.BYTE = 0x02;
-			////printf("リードモード移行完了\n");
+			//printf("リードモード移行完了\n");
 		}
 	}
 }
@@ -389,14 +389,14 @@ void checkWriteAddr ( unsigned int Addr, short endblock, short width_data, short
 
 	cheakAddr = Addr;
 	limitAddr = ( endblock * 32 ) + FLASHSTARTADDR + 30;
-	////printf("width_data = %x\n", width_data);
+	//printf("width_data = %x\n", width_data);
 	// 指定したデータ量の領域が見つかるまでブランクチェックする
 	while ( cheakAddr <= limitAddr ) {
 		if ( checkBlank( cheakAddr ) > 0 ) {
 			width = 0;
 		} else {
 			width++;
-			////printf("width = %x\n", width);
+			//printf("width = %x\n", width);
 			if ( width == 1 ) {
 				// 書き込み開始アドレス
 				leadAddr = cheakAddr;
@@ -409,10 +409,10 @@ void checkWriteAddr ( unsigned int Addr, short endblock, short width_data, short
 	
 	// 書き込み領域がなければイレーズする
 	if ( cheakAddr > limitAddr || width < width_data ) {
-		////printf("startBlock = %d\n", startBlock);
+		//printf("startBlock = %d\n", startBlock);
 		i = startBlock;
 		while ( i <= endblock ) {
-			////printf("i = %d\n", i);
+			//printf("i = %d\n", i);
 			eraseE2DataFlash( i );
 			i++;
 		}
@@ -466,17 +466,17 @@ bool writeFlash ( short* write_data, short width_data )
 					i++;			// 書き込み回数
 				} else {
 					ret = true;
-					//printf("Write Error\n");
+					printf("Write Error\n");
 					break;
 				}
 			} else {
 				ret = true;
-				//printf("Write TimeOut\n");
+				printf("Write TimeOut\n");
 				break;
 			}
 		} else {
 			ret = true;
-			//printf("Addr Error\n");
+			printf("Addr Error\n");
 			break;
 		}
 	}
@@ -638,7 +638,7 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 {
 	short s, s2;
 	// フラッシュ読み込み開始
-	//printf("前回パラメータ読み込み開始\n");
+	printf("前回パラメータ読み込み開始\n");
 	
 	// パラメータ読み込み
 	if ( speed ) {
@@ -711,7 +711,7 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 			angle_rightchange	= ANGLE_RIGHTCHANGE;
 			angle_leftchange	= ANGLE_LEFTCHANGE;
 			
-			//printf("Parameter Initialize\n");
+			printf("Parameter Initialize\n");
 		}
 	}
 		
@@ -749,7 +749,7 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 							
 				if ( ( msdaddrBuff[s-2] - 1 ) == msdaddrBuff[s-1] ) {
 					msdaddrBuff[s-1] = msdaddrBuff[s-2];		// 開始アドレス
-					msdaddrBuff[s-2] += 240000;			// 15秒分のアドレス
+					msdaddrBuff[s-2] += MSD_ENDADDRESS;			// 15秒分のアドレス
 					s2 += 2;
 				} else {
 					s2 += 4;

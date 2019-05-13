@@ -2,12 +2,11 @@
 // インクルード									//
 //====================================//
 #include "SCI.h"
+
 //====================================//
 // グローバル変数の宣言							//
 //====================================//
 char		revErr = 0;		// 通信エラー番号
-char		SCIset;			// 0:初期化失敗		1:初期化完了
-
 // SCI1関連
 char		SCI1_mode;		// 通信方式
 char		txt_command[128];	// コマンド格納
@@ -221,7 +220,7 @@ void init_SCI1( char mode, char rate )
 ///////////////////////////////////////////////////////////////////////////
 void charput( uint8_t data )
 {
-	if ( !SCIset ) {
+	if ( !IMUSet ) {
 		while(SCI1.SSR.BIT.TEND == 0);
 		SCI1.TDR = data;
 		SCI1.SSR.BIT.TEND = 0;

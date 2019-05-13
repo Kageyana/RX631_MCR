@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 //#include "vect.h"
+#include "I2C_MPU-9255.h"
 #include "PeripheralFunctions.h"
 //======================================//
 // ƒVƒ“ƒ{ƒ‹’è‹`                         //

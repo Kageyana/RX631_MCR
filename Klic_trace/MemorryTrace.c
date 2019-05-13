@@ -59,12 +59,12 @@ void msdgetData ()
 				
 				if( ret != 0x00 ) {
 					// 読み込みエラー
-					//printf( "\nmicroSD Read Error!!\n" );
+					printf( "\nmicroSD Read Error!!\n" );
 					pattern_send = 4;
 					break;
 				} else {
 					// エラーなし
-					msdWorkaddress += 512;		// microSDのアドレスを+512する
+					msdWorkaddress += 512;	// microSDのアドレスを+512する
 					msdBuffaddress = 0;		// 配列からの読み込み位置を0に
 					pattern_send = 2;
 					break;
@@ -86,7 +86,7 @@ void msdgetData ()
 						if ( serchPattern( RLC, 51 ) ) mpattern = 51;
 						if ( serchPattern( LLC, 61 ) ) mpattern = 61;
 						break;
-						
+						/*
 					case 13:
 						if ( serchPattern( STRAIGHT, 14 ) ) mpattern = 14;
 						if ( serchPattern( CROSSLINE, 21 ) ) mpattern = 21;
@@ -107,16 +107,16 @@ void msdgetData ()
 						if ( serchPattern( RLC, 51 ) ) mpattern = 51;
 						if ( serchPattern( LLC, 61 ) ) mpattern = 61;
 						break;
-						
+						*/
 					case 21:
 						if ( serchPattern( CROSSLINE, 22 ) ) mpattern = 22;
 						break;
-						
+						/*
 					case 22:
 						if ( serchPattern( RC, 31 ) ) mpattern = 31;
 						if ( serchPattern( LC, 41 ) ) mpattern = 41;
 						break;
-						
+						/*
 					case 31:
 						if ( serchPattern( STRAIGHT, 11 ) ) mpattern = 11;
 						if ( serchPattern( CROSSLINE, 21 ) ) mpattern = 21;
@@ -130,12 +130,12 @@ void msdgetData ()
 						if ( serchPattern( RLC, 51 ) ) mpattern = 51;
 						if ( serchPattern( LLC, 61 ) ) mpattern = 61;
 						break;
-						
+						*/
 					case 51:
 						if ( serchPattern( RLC, 52 ) ) mpattern = 52;
 						if ( serchPattern( CROSSLINE, 21 ) ) mpattern = 21;
 						break;
-						
+						/*
 					case 52:
 						if ( serchPattern( RLC, 53 ) ) mpattern = 53;
 						break;
@@ -146,7 +146,7 @@ void msdgetData ()
 						if ( serchPattern( RLC, 51 ) ) mpattern = 51;
 						if ( serchPattern( LLC, 61 ) ) mpattern = 61;
 						break;
-						
+						*/
 					case 61:
 						if ( serchPattern( LLC, 62 ) ) mpattern = 62;
 						if ( serchPattern( CROSSLINE, 21 ) ) mpattern = 21;
@@ -155,14 +155,14 @@ void msdgetData ()
 					case 62:
 						if ( serchPattern( LLC, 63 ) ) mpattern = 63;
 						break;
-						
+						/*
 					case 63:
 						if ( serchPattern( STRAIGHT, 11 ) ) mpattern = 11;
 						if ( serchPattern( CROSSLINE, 21 ) ) mpattern = 21;
 						if ( serchPattern( RLC, 51 ) ) mpattern = 51;
 						if ( serchPattern( LLC, 61 ) ) mpattern = 61;
 						break;
-						
+						*/
 					case 71:
 						if ( serchPattern( STRAIGHT, 11 ) ) mpattern = 11;
 						if ( serchPattern( CROSSLINE, 21 ) ) mpattern = 21;
@@ -203,11 +203,11 @@ bool serchPattern ( char process, char spattern )
 	// 3つ以上あればカーブを脱出したと判断する
 	if ( flag[ process ][ spattern ] >= 3 ) {
 		cntmpattern[ cntmpattern2 ] = spattern;	// patternを記録 
-		comp_uint[ process ][ cntmpattern2++ ] = CharTouInt (40);		// 距離取得
+		comp_uint[ process ][ cntmpattern2++ ] = CharTouInt (22);		// 距離取得
 		flag[ process ][ spattern ] = 0;	// 繰り返しカウントをリセット
-		//printf("cntmpattern[ %d ] = %d\n", cntmpattern2 - 1, cntmpattern[ cntmpattern2 - 1 ]);	
-		//printf("comp_uint[%d][%d] = %d\n", process, cntmpattern2 - 1, comp_uint[ process ][ cntmpattern2 - 1 ] );
-		//printf("logpattern = %d\n",cntmpattern[ cntmpattern2-1 ] / 10);
+		printf("cntmpattern[ %d ] = %d\n", cntmpattern2 - 1, cntmpattern[ cntmpattern2 - 1 ]);	
+		printf("comp_uint[%d][%d] = %d\n", process, cntmpattern2 - 1, comp_uint[ process ][ cntmpattern2 - 1 ] );
+		printf("logpattern = %d\n",cntmpattern[ cntmpattern2-1 ] / 10);
 		return true;
 	} else {
 		return false;

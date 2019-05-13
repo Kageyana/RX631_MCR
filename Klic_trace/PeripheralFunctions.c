@@ -290,7 +290,7 @@ unsigned char startbar_get(void)
 {
 	char ret;
 	
-	if ( sensorG <= 1000 )	ret = 1;
+	if ( sensorG <= 3960 )	ret = 1;
 	else			ret = 0;
 	
 	return ret;
