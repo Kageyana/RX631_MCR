@@ -126,6 +126,10 @@ void IMUProcess (void)
 		rawYg = (short)((axisData[2] << 8 & 0xff00 ) | axisData[3]);
 		rawZg = (short)((axisData[4] << 8 & 0xff00 ) | axisData[5]);
 		
+		//rawXg &= 0xff80;
+		//rawYg &= 0xff80;
+		//rawZg &= 0xff80;
+		
 		if ( rawXg < 0 ) rawXg += offset[0];
 		else			rawXg -= offset[0];
 		if ( rawYg < 0 ) rawYg += offset[1];
@@ -166,37 +170,28 @@ void caribrateIMU (void)
 {
 	char data1[14];
 	short i, j, axisData[8];
-	int atemp = 0, axg = 0, ayg = 0, azg = 0;
-	double	xy, yy, zy;		// 角速度平均値
-	double	xb, yb, zb;		// 近似直線の切片
+	int axg = 0, ayg = 0, azg = 0;
 	
+	IMUSet = 0;
 	for ( i = 0; i < SAMPLE; i++ ) {
-		IMUReadArry( TEMP_OUT_H, 8, data1);
-		for ( j = 0; j < 4; j++ ) axisData[j] = (short)((data1[j * 2] << 8 & 0xff00 ) | data1[j * 2 + 1]);
-		atemp += axisData[0];
-		axg += axisData[1];
-		ayg += axisData[2];
-		azg += axisData[3];
+		IMUReadArry( GYRO_XOUT_H, 6, data1);
+		for ( j = 0; j < 4; j++ ) {
+			axisData[j] = (short)((data1[j * 2] << 8 & 0xff00 ) | data1[j * 2 + 1]);
+			axisData[j] = axisData[j] & 0xfff8;		// 下位3bitを切り捨て
+		}
+		
+		axg += axisData[0];
+		ayg += axisData[1];
+		azg += axisData[2];
 	}
-	atemp /= SAMPLE;
+	//　平均値を算出
 	axg /= SAMPLE;
 	ayg /= SAMPLE;
 	azg /= SAMPLE;
 	
-	TempIMU = (double)(atemp / TEMP_LSB) + 21.0;
-	
-	xy = (double)axg/GYROLSB;
-	xb = (double)xy - ( XGSLOPE * TempIMU );
-	
-	yy = (double)ayg/GYROLSB;
-	yb = (double)yy - ( YGSLOPE * TempIMU );
-	
-	zy = (double)azg/GYROLSB;
-	zb = (double)zy - ( ZGSLOPE * TempIMU );
-	
-	offset[0] = (((double)XGSLOPE * TempIMU ) + xb ) * GYROLSB;
-	offset[1] = (((double)YGSLOPE * TempIMU ) + yb ) * GYROLSB;
-	offset[2] = (((double)ZGSLOPE * TempIMU ) + zb ) * GYROLSB;
+	offset[0] = axg / SAMPLE;
+	offset[1] = ayg / SAMPLE;
+	offset[2] = azg / SAMPLE;
 	
 	if ( offset[0] < 0 ) offset[0] = -offset[0];
 	if ( offset[1] < 0 ) offset[1] = -offset[1];
@@ -205,6 +200,8 @@ void caribrateIMU (void)
 	TurningAngleIMU = 0;
 	RollAngleIMU = 0;
 	PichAngleIMU = 0;
+	
+	IMUSet = 1;
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 getTurningAngleIMU						//

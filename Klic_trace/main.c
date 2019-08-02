@@ -170,6 +170,8 @@ void main(void){
 				if ( !fixSpeed ) writeFlashBeforeStart(1, 0, 1, 1, 1, 1);	// 速度パラメータをデータフラッシュに保存
 				else writeFlashBeforeStart(0, 0, 1, 1, 1, 1);		// 速度パラメータ以外を保存
 				
+				if (IMUSet) caribrateIMU();
+				
 				wait_lcd(500);		// 500ms待つ
 				cnt1 = 0;
 				pattern = 1;
