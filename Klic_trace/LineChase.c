@@ -694,19 +694,7 @@ void getTurningAngleEnc(void)
 void motorControl( void )
 {
 	int i, j, iRet, Dif, iP, iI, iD, Dev;
-	char kp3, ki3, kd3, v;
-	const char rev_voltage[] = {       // 目標速度でのモーターの電圧テーブル	
-		0, 2, 3, 5, 6, 8, 9, 11, 
-		12, 14, 15, 17, 18, 19, 21, 22, 
-		24, 25, 27, 28, 30, 31, 33, 34, 
-		36, 37, 38, 40, 41, 43, 44, 46, 
-		47, 49, 50, 52, 53, 54, 56, 57, 
-		59, 60, 62, 63, 65, 66, 68, 69, 
-		70, 72, 73, 75, 76, 78, 79, 81, 
-		82, 84, 85, 87, 88, 89, 91, 92, 
-		94, 95, 97, 98, 100, 101, 103, 104, 
-		105, 107, 108, 110, 111, 113, 114, 116
-		};
+	char kp3, ki3, kd3;
 	
 	i = targetSpeed;		// 目標値
 	j = Encoder * 10;		// 現在値
@@ -724,37 +712,23 @@ void motorControl( void )
 	
 	// 駆動モーター用PWM値計算
 	Dev = i - j;	// 偏差
+	// 目標値を変更したらI成分リセット
+	if ( i != targetSpeedBefore ) Int3 = 0;
 	
-	if ( Dev > 50 || Dev < -50) {
-		// 目標値を超えたらI成分リセット
-		if ( Dev >= 0 && AccelefBefore == 1 ) Int3 = 0;
-		else if ( Dev < 0 && AccelefBefore == 0 ) Int3 = 0;
-		
-		// 目標値を変更したらI成分リセット
-		if ( i != targetSpeedBefore ) Int3 = 0;
-		
-		Int3 += (double)Dev * 0.001;		// 積分
-		Dif = Dev - EncoderBefore;		// 微分　dゲイン1/1000倍
-		
-		iP = (int)kp3 * Dev;			// 比例
-		iI = (double)ki3 * Int3;		// 積分
-		iD = (int)kd3 * Dif;			// 微分
-		iRet = iP + iI + iD;
-		iRet = iRet >> 4;
-		
-		// PWMの上限の設定
-		if ( iRet >  100 )	iRet =  100;
-		if ( iRet <  -100 )	iRet = -100;
-	} else {
-		v = rev_voltage[targetSpeed / SPEED_CURRENT];
-		if ( Dev < 0 ) v = -v;
-		iRet = v;
-	}
-	if ( Dev > 0 )	AccelefBefore = 0;
-	else		AccelefBefore = 1;
+	Int3 += (double)Dev * 0.001;	// 積分
+	Dif = Dev - EncoderBefore;		// 微分　dゲイン1/1000倍
+	
+	iP = (int)kp3 * Dev;			// 比例
+	iI = (double)ki3 * Int3;		// 積分
+	iD = (int)kd3 * Dif;			// 微分
+	iRet = iP + iI + iD;
+	iRet = iRet >> 4;
+	
+	// PWMの上限の設定
+	if ( iRet >  100 )	iRet =  100;
+	if ( iRet <  -100 )	iRet = -100;
 	
 	motorPwm = iRet;
-	
 	EncoderBefore = Dev;
 	targetSpeedBefore = i;
 }
