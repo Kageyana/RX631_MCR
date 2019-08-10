@@ -519,21 +519,12 @@ void main(void){
 			SetAngle = angle_rightclank;
 			servoPwmOut( ServoPwm2 );
 			targetSpeed = speed_rightclank_curve * SPEED_CURRENT;
-			i = (Encoder * 10) - targetSpeed;	// 目標値との偏差
+			i = -TurningAngleIMU;
 			j = getAnalogSensor();
 			diff( motorPwm );
 			
 			if ( IMUSet ) {
-				/*
-				if( -TurningAngleIMU <= 30 ) {
-					if( sensor_inp() == 0x2 ) {
-						enc1 = 0;
-						angle_mode = 0;
-						Int = 0;			// 積分リセット
-						pattern = 36;
-						break;
-					}
-				} else*/ if ( -TurningAngleIMU >= 20 ) {
+				if ( i >= 20 ) {
 					if( j <= -1800 ) {
 						enc1 = 0;
 						i = (short)-TurningAngleIMU;
@@ -656,7 +647,6 @@ void main(void){
 			SetAngle = angle_leftclank;
 			servoPwmOut( ServoPwm2 );
 			targetSpeed = speed_leftclank_curve * SPEED_CURRENT;
-			i = (Encoder * 10) - targetSpeed;	// 目標値との偏差
 			j = getAnalogSensor();
 			diff( motorPwm );
 			
