@@ -18,7 +18,7 @@
 #include "MicroSD.h"
 #include "I2C_MPU-9255.h"
 #include "MemorryTrace.h"
-#include <stdio.h>
+//#include <stdio.h>
 
 //====================================//
 // グローバル変数の宣言							//
@@ -1397,10 +1397,8 @@ void Timer (void) {
 	} else {
 		// UART受信
 		commandSCI1();
-		getPichAngleAD();
 		getTurningAngleEnc();
 		if (cnt_gyro > 200) {
-			PichAngleAD = 0;
 			cnt_gyro  = 0;
 		}
 	}

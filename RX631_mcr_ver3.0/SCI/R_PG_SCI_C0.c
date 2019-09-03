@@ -28,7 +28,7 @@
 * Copyright (C) 2010-2013 Renesas Electronics Corporation.
 * and Renesas Solutions Corporation. All rights reserved.
 ******************************************************************************
-* File Name    : R_PG_SCI_C5.c
+* File Name    : R_PG_SCI_C0.c
 * Version      : 1.00
 * Device(s)    : 
 * Tool-Chain   : 
@@ -36,7 +36,7 @@
 * Description  : 
 * Limitations  : 
 ******************************************************************************
-* History : 03.09.2019 Version Description
+* History : 12.05.2019 Version Description
 *         :   
 ******************************************************************************/
 
@@ -54,9 +54,9 @@ Includes   <System Includes> , "Project Includes"
 *
 * Include      : 
 *
-* Declaration  : bool R_PG_SCI_Set_C5(void)
+* Declaration  : bool R_PG_SCI_Set_C0(void)
 *
-* Function Name: R_PG_SCI_Set_C5
+* Function Name: R_PG_SCI_Set_C0
 *
 * Description  : シリアルI/Oチャネルの設定
 *
@@ -70,13 +70,13 @@ Includes   <System Includes> , "Project Includes"
 *
 * Details      : 詳細についてはリファレンスマニュアルを参照してください。
 ******************************************************************************/
-bool R_PG_SCI_Set_C5(void)
+bool R_PG_SCI_Set_C0(void)
 {
 	bool res;
 
 	res = R_SCI_Set(
-		5,
-		PDL_SCI_PIN_SCI5_SCK5_PA1 | PDL_SCI_PIN_SCI5_SMISO5_PA2 | PDL_SCI_PIN_SCI5_SMOSI5_PA4
+		0,
+		PDL_SCI_PIN_SCI0_RXD0_P21 | PDL_SCI_PIN_SCI0_SCK0_P22 | PDL_SCI_PIN_SCI0_TXD0_P20
 	);
 
 	if( !res ){
@@ -84,9 +84,9 @@ bool R_PG_SCI_Set_C5(void)
 	}
 
 	return R_SCI_Create(
-		5,
-		PDL_SCI_SYNC | PDL_SCI_TX_CONNECTED | PDL_SCI_RX_CONNECTED | PDL_SCI_SPI_MODE | PDL_SCI_MSB_FIRST | PDL_SCI_INVERSION_OFF | PDL_SCI_CLK_INT_OUT | PDL_SCI_SPI_SS_DISABLE,
-		BIT_31 | PDL_SCI_PCLK_DIV_1 | 11 | (256 & 0x00FFFF00ul),
+		0,
+		PDL_SCI_ASYNC | PDL_SCI_TX_CONNECTED | PDL_SCI_RX_CONNECTED | PDL_SCI_RX_FILTER_DISABLE | PDL_SCI_HW_FLOW_NONE | PDL_SCI_LSB_FIRST | PDL_SCI_CLK_INT_OUT | PDL_SCI_8_BIT_LENGTH | PDL_SCI_PARITY_NONE | PDL_SCI_STOP_1,
+		BIT_31 | PDL_SCI_PCLK_DIV_1 | PDL_SCI_CYCLE_BIT_16 | 155 | (9615 & 0x00FFFF00ul),
 		0,
 		0
 	);
@@ -98,39 +98,32 @@ bool R_PG_SCI_Set_C5(void)
 *
 * Include      : 
 *
-* Declaration  : bool R_PG_SCI_SPIMode_Transfer_C5(uint8_t * tx_start, uint8_t * rx_start, uint16_t count)
+* Declaration  : bool R_PG_SCI_SendAllData_C0(uint8_t * data, uint16_t count)
 *
-* Function Name: R_PG_SCI_SPIMode_Transfer_C5
+* Function Name: R_PG_SCI_SendAllData_C0
 *
-* Description  : 簡易SPIモードのデータ転送
+* Description  : シリアルデータを全て送信
 *
-* Arguments    : uint8_t * tx_start : 送信するデータの先頭のアドレス
-*              : uint8_t * rx_start : 受信したデータの格納先の先頭のアドレス
-*              : uint16_t count : 転送するデータ数
+* Arguments    : uint8_t * data : 送信するデータの格納先の先頭のアドレス
+*              : uint16_t count : 送信するデータ数
+*              :                : 0を指定した場合はNULLのデータまで送信します
 *
 * Return Value : true  : 設定が正しく行われた場合
 *              : false : 設定に失敗した場合
 *
-* Calling Functions : R_SCI_SPI_Transfer
+* Calling Functions : R_SCI_Send
 *
 * Details      : 詳細についてはリファレンスマニュアルを参照してください。
 ******************************************************************************/
-bool R_PG_SCI_SPIMode_Transfer_C5(uint8_t * tx_start, uint8_t * rx_start, uint16_t count)
+bool R_PG_SCI_SendAllData_C0(uint8_t * data, uint16_t count)
 {
-	if( (tx_start == 0) || \
-		(rx_start == 0) )
-	{
-		return false;
-	}
+	if( data == 0 ){ return false; }
 
-	return R_SCI_SPI_Transfer(
-		5,
-		PDL_SCI_SPI_TX_DMAC_DTC_TRIGGER_DISABLE | PDL_SCI_SPI_RX_DMAC_DTC_TRIGGER_DISABLE,
+	return R_SCI_Send(
+		0,
+		PDL_SCI_DMAC_DTC_TRIGGER_DISABLE,
+		data,
 		count,
-		tx_start,
-		PDL_NO_FUNC,
-		rx_start,
-		PDL_NO_FUNC,
 		PDL_NO_FUNC
 	);
 
@@ -141,9 +134,9 @@ bool R_PG_SCI_SPIMode_Transfer_C5(uint8_t * tx_start, uint8_t * rx_start, uint16
 *
 * Include      : 
 *
-* Declaration  : bool R_PG_SCI_GetSentDataCount_C5(uint16_t * count)
+* Declaration  : bool R_PG_SCI_GetSentDataCount_C0(uint16_t * count)
 *
-* Function Name: R_PG_SCI_GetSentDataCount_C5
+* Function Name: R_PG_SCI_GetSentDataCount_C0
 *
 * Description  : シリアルデータの送信数取得
 *
@@ -156,14 +149,14 @@ bool R_PG_SCI_SPIMode_Transfer_C5(uint8_t * tx_start, uint8_t * rx_start, uint16
 *
 * Details      : 詳細についてはリファレンスマニュアルを参照してください。
 ******************************************************************************/
-bool R_PG_SCI_GetSentDataCount_C5(uint16_t * count)
+bool R_PG_SCI_GetSentDataCount_C0(uint16_t * count)
 {
 	uint8_t status;
 
 	if( count == 0 ){ return false; }
 
 	return R_SCI_GetStatus(
-		5,
+		0,
 		&status,
 		PDL_NO_PTR,
 		count,
@@ -177,9 +170,45 @@ bool R_PG_SCI_GetSentDataCount_C5(uint16_t * count)
 *
 * Include      : 
 *
-* Declaration  : bool R_PG_SCI_StopCommunication_C5(void)
+* Declaration  : bool R_PG_SCI_ReceiveAllData_C0(uint8_t * data, uint16_t count)
 *
-* Function Name: R_PG_SCI_StopCommunication_C5
+* Function Name: R_PG_SCI_ReceiveAllData_C0
+*
+* Description  : シリアルデータを全て受信
+*
+* Arguments    : uint8_t * data : 受信したデータの格納先の先頭のアドレス
+*              : uint16_t count : 受信するデータ数
+*
+* Return Value : true  : 設定が正しく行われた場合
+*              : false : 設定に失敗した場合
+*
+* Calling Functions : R_SCI_Receive
+*
+* Details      : 詳細についてはリファレンスマニュアルを参照してください。
+******************************************************************************/
+bool R_PG_SCI_ReceiveAllData_C0(uint8_t * data, uint16_t count)
+{
+	if( data == 0 ){ return false; }
+
+	return R_SCI_Receive(
+		0,
+		PDL_SCI_DMAC_DTC_TRIGGER_DISABLE,
+		data,
+		count,
+		PDL_NO_FUNC,
+		PDL_NO_FUNC
+	);
+
+}
+
+/******************************************************************************
+* ID           : 
+*
+* Include      : 
+*
+* Declaration  : bool R_PG_SCI_StopCommunication_C0(void)
+*
+* Function Name: R_PG_SCI_StopCommunication_C0
 *
 * Description  : シリアルデータの送受信停止
 *
@@ -192,10 +221,10 @@ bool R_PG_SCI_GetSentDataCount_C5(uint16_t * count)
 *
 * Details      : 詳細についてはリファレンスマニュアルを参照してください。
 ******************************************************************************/
-bool R_PG_SCI_StopCommunication_C5(void)
+bool R_PG_SCI_StopCommunication_C0(void)
 {
 	return R_SCI_Control(
-		5,
+		0,
 		PDL_SCI_STOP_TX_AND_RX
 	);
 
@@ -206,9 +235,9 @@ bool R_PG_SCI_StopCommunication_C5(void)
 *
 * Include      : 
 *
-* Declaration  : bool R_PG_SCI_GetReceivedDataCount_C5(uint16_t * count)
+* Declaration  : bool R_PG_SCI_GetReceivedDataCount_C0(uint16_t * count)
 *
-* Function Name: R_PG_SCI_GetReceivedDataCount_C5
+* Function Name: R_PG_SCI_GetReceivedDataCount_C0
 *
 * Description  : シリアルデータの受信数取得
 *
@@ -221,14 +250,14 @@ bool R_PG_SCI_StopCommunication_C5(void)
 *
 * Details      : 詳細についてはリファレンスマニュアルを参照してください。
 ******************************************************************************/
-bool R_PG_SCI_GetReceivedDataCount_C5(uint16_t * count)
+bool R_PG_SCI_GetReceivedDataCount_C0(uint16_t * count)
 {
 	uint8_t status;
 
 	if( count == 0 ){ return false; }
 
 	return R_SCI_GetStatus(
-		5,
+		0,
 		&status,
 		PDL_NO_PTR,
 		PDL_NO_PTR,
@@ -242,13 +271,15 @@ bool R_PG_SCI_GetReceivedDataCount_C5(uint16_t * count)
 *
 * Include      : 
 *
-* Declaration  : bool R_PG_SCI_SPIMode_GetErrorFlag_C5(bool * overrun)
+* Declaration  : bool R_PG_SCI_GetReceptionErrorFlag_C0(bool * parity, bool * framing, bool * overrun)
 *
-* Function Name: R_PG_SCI_SPIMode_GetErrorFlag_C5
+* Function Name: R_PG_SCI_GetReceptionErrorFlag_C0
 *
-* Description  : 簡易SPIモードのシリアル受信エラーフラグの取得
+* Description  : シリアル受信エラーフラグの取得
 *
-* Arguments    : bool * overrun : オーバランエラーフラグの格納先
+* Arguments    : bool * parity : パリティエラーフラグの格納先
+*              : bool * framing : フレーミングエラーフラグ格納先
+*              : bool * overrun : オーバランエラーフラグの格納先
 *
 * Return Value : true  : 取得に成功した場合
 *              : false : 取得に失敗した場合
@@ -257,19 +288,25 @@ bool R_PG_SCI_GetReceivedDataCount_C5(uint16_t * count)
 *
 * Details      : 詳細についてはリファレンスマニュアルを参照してください。
 ******************************************************************************/
-bool R_PG_SCI_SPIMode_GetErrorFlag_C5(bool * overrun)
+bool R_PG_SCI_GetReceptionErrorFlag_C0(bool * parity, bool * framing, bool * overrun)
 {
 	uint8_t status;
 	bool res;
 
 	res = R_SCI_GetStatus(
-		5,
+		0,
 		&status,
 		PDL_NO_PTR,
 		PDL_NO_PTR,
 		PDL_NO_PTR
 	);
 
+	if( parity ){
+		*parity = (status >> 3) & 0x01;
+	}
+	if( framing ){
+		*framing = (status >> 4) & 0x01;
+	}
 	if( overrun ){
 		*overrun = (status >> 5) & 0x01;
 	}
@@ -282,9 +319,9 @@ bool R_PG_SCI_SPIMode_GetErrorFlag_C5(bool * overrun)
 *
 * Include      : 
 *
-* Declaration  : bool R_PG_SCI_ClearReceptionErrorFlag_C5(void)
+* Declaration  : bool R_PG_SCI_ClearReceptionErrorFlag_C0(void)
 *
-* Function Name: R_PG_SCI_ClearReceptionErrorFlag_C5
+* Function Name: R_PG_SCI_ClearReceptionErrorFlag_C0
 *
 * Description  : シリアル受信エラーフラグのクリア
 *
@@ -297,10 +334,10 @@ bool R_PG_SCI_SPIMode_GetErrorFlag_C5(bool * overrun)
 *
 * Details      : 詳細についてはリファレンスマニュアルを参照してください。
 ******************************************************************************/
-bool R_PG_SCI_ClearReceptionErrorFlag_C5(void)
+bool R_PG_SCI_ClearReceptionErrorFlag_C0(void)
 {
 	return R_SCI_Control(
-		5,
+		0,
 		PDL_SCI_CLEAR_RECEIVE_ERROR_FLAGS
 	);
 
@@ -311,9 +348,9 @@ bool R_PG_SCI_ClearReceptionErrorFlag_C5(void)
 *
 * Include      : 
 *
-* Declaration  : bool R_PG_SCI_GetTransmitStatus_C5(bool * complete)
+* Declaration  : bool R_PG_SCI_GetTransmitStatus_C0(bool * complete)
 *
-* Function Name: R_PG_SCI_GetTransmitStatus_C5
+* Function Name: R_PG_SCI_GetTransmitStatus_C0
 *
 * Description  : シリアルデータ送信状態の取得
 *
@@ -326,13 +363,13 @@ bool R_PG_SCI_ClearReceptionErrorFlag_C5(void)
 *
 * Details      : 詳細についてはリファレンスマニュアルを参照してください。
 ******************************************************************************/
-bool R_PG_SCI_GetTransmitStatus_C5(bool * complete)
+bool R_PG_SCI_GetTransmitStatus_C0(bool * complete)
 {
 	uint8_t status;
 	bool res;
 
 	res = R_SCI_GetStatus(
-		5,
+		0,
 		&status,
 		PDL_NO_PTR,
 		PDL_NO_PTR,
@@ -349,9 +386,9 @@ bool R_PG_SCI_GetTransmitStatus_C5(bool * complete)
 *
 * Include      : 
 *
-* Declaration  : bool R_PG_SCI_StopModule_C5(void)
+* Declaration  : bool R_PG_SCI_StopModule_C0(void)
 *
-* Function Name: R_PG_SCI_StopModule_C5
+* Function Name: R_PG_SCI_StopModule_C0
 *
 * Description  : シリアルI/Oチャネルの停止
 *
@@ -364,9 +401,9 @@ bool R_PG_SCI_GetTransmitStatus_C5(bool * complete)
 *
 * Details      : 詳細についてはリファレンスマニュアルを参照してください。
 ******************************************************************************/
-bool R_PG_SCI_StopModule_C5(void)
+bool R_PG_SCI_StopModule_C0(void)
 {
-	return R_SCI_Destroy( 5 );
+	return R_SCI_Destroy( 0 );
 
 }
 

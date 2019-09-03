@@ -122,7 +122,6 @@ void init_IO(void)
 	R_PG_IO_PORT_Set_PA();
 	R_PG_IO_PORT_Set_PB();
 	R_PG_IO_PORT_Set_PC();
-	R_PG_IO_PORT_Set_PD();
 	
 	// Ç∑Ç◊ÇƒÇÃIOÉ|Å[ÉgÇLOWÇ…Ç∑ÇÈ
 	R_PG_IO_PORT_Write_P1(0);
@@ -369,39 +368,35 @@ void motor_f( signed char accelefL, signed char accelefR )
 	if( accelefL >= 0) {					
 		// ê≥ì]
 		DIR_FL_FOR
-		PWM_FL_OUT
 	} else if ( accelefL == 100 || accelefL == -100 ) {	
 		// 100%
 		if ( accelefL > 0 ) DIR_FL_FOR
 		else DIR_FL_REV
 		
 		pwmfl = TGR_MOTOR + 2;
-		PWM_FL_OUT
 	} else {						
 		// ãtì]
 		pwmfl = -pwmfl;
 		DIR_FL_REV
-		PWM_FL_OUT
 	}
+	PWM_FL_OUT
 	
 	// âEëOó÷
 	if( accelefR >= 0) {					
 		// ê≥ì]
 		DIR_FR_FOR
-		PWM_FR_OUT
 	} else if ( accelefR == 100 || accelefR == -100 ) {	
 		// 100%
 		if ( accelefR > 0 ) DIR_FR_FOR
 		else DIR_FR_REV
 		
 		pwmfr = TGR_MOTOR + 2;
-		PWM_FR_OUT
 	} else {						
 		// ãtì]
 		pwmfr = -pwmfr;
 		DIR_FR_REV
-		PWM_FR_OUT
 	}
+	PWM_FR_OUT
 }
 ///////////////////////////////////////////////////////////////////////////
 // ÉÇÉWÉÖÅ[Éãñº motor_r								//
@@ -428,39 +423,35 @@ void motor_r( signed char accelerL, signed char accelerR )
 	if( accelerL >= 0 ) {					
 		// ê≥ì]
 		DIR_RL_FOR
-		PWM_RL_OUT
 	} else if ( accelerL == 100 || accelerL == -100 ) {	
 		// 100%
 		if (accelerL > 0) DIR_RL_FOR
 		else DIR_RL_REV
 		
 		pwmrl = TGR_MOTOR + 2;
-		PWM_RL_OUT
 	} else {						
 		// ãtì]
 		pwmrl = -pwmrl;
 		DIR_RL_REV
-		PWM_RL_OUT
 	}
+	PWM_RL_OUT
 	
 	// âEå„ó÷
 	if( accelerR >= 0 ) {					
 		// ê≥ì]
 		DIR_RR_FOR
-		PWM_RR_OUT
 	} else if ( accelerR == 100 || accelerR == -100 ) {	
 		// 100%
 		if ( accelerR > 0 ) DIR_RR_FOR
 		else DIR_RR_REV
 		
 		pwmrr = TGR_MOTOR + 2;
-		PWM_RR_OUT
 	} else {						
 		// ãtì]
 		pwmrr = -pwmrr;
 		DIR_RR_REV
-		PWM_RR_OUT
 	}
+	PWM_RR_OUT
 }
 ///////////////////////////////////////////////////////////////////////////
 // ÉÇÉWÉÖÅ[Éãñº servoPwmOut							//
@@ -492,13 +483,12 @@ void servoPwmOut( signed char servopwm )
 	if( servopwm > 0) {				
 		// ê≥ì]
 		DIR_SERVO_FOR
-		PWM_SERVO_OUT
 	} else {				
 		// ãtì]
 		pwm = -pwm;
 		DIR_SERVO_REV
-		PWM_SERVO_OUT
 	}
+	PWM_SERVO_OUT
 }
 ///////////////////////////////////////////////////////////////////////////
 // ÉÇÉWÉÖÅ[Éãñº short_sort								//

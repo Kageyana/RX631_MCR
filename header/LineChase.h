@@ -48,13 +48,8 @@
 #define CURVE_R450_START	140		// R450開始AD値
 
 // ジャイロ関連
-#define AD_3V3VOLTAGE		0.806	// 3V時の1AD値あたりの電圧[mV]
-#define AD_5VOLTAGE		1.22		// 5V時の1AD値あたりの電圧[mV]
-#define GYROVOLTAGE		0.67		// 電圧毎角加速度[mV/deg/s]
 #define SLOPEUPPERLINE_IMU		4		// 上り坂検出角度
 #define SLOPELOWERLINE_IMU		-4		// 下り坂検出角度
-#define SLOPEUPPERLINE_AD		17		// 上り坂検出角度
-#define SLOPELOWERLINE_AD		-14		// 下り坂検出角度
 #define INTEGRAL_LIMIT		200		// 角速度積算時間
 
 #define PI					3.141592	// 円周率
@@ -74,7 +69,7 @@
 
 // 速度制御
 #define KP3		6
-#define KI3		20
+#define KI3		10
 #define KD3		0
 
 // 緊急停止関連
@@ -94,7 +89,6 @@ extern char	angle_mode;		// サーボPWM変更	0:白線トレース	1:角度制御
 extern char	pushcart_mode;		// 手押しモード可否	0:自動走行	1:手押し
 extern char	msdset;			// MicroSDが初期化されたか	0:初期化失敗	1:初期化成功
 extern char	IMUSet;			// IMUが初期化されたか	0: 初期化失敗	1:初期化成功
-
 
 // パラメータ関連
 // 距離
@@ -166,7 +160,6 @@ signed char check_leftline( void );
 signed char check_slope( void );
 
 // 角度関連
-void getPichAngleAD( void );
 void getTurningAngleEnc(void);
 
 // エンコーダ関連
