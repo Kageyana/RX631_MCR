@@ -131,7 +131,7 @@ void setup( void )
 					lcdPosition( 0, 1 );
 					lcdPrintf("  %3gm/s", (double)speed_straight / 10 );
 					
-					data_tuning ( &speed_straight, 2, RIGHT );
+					data_tuning ( &speed_straight, 1, RIGHT );
 					break;
 				case 2:
 					// カーブブレーキ
@@ -140,7 +140,7 @@ void setup( void )
 					lcdPosition( 0, 1 );
 					lcdPrintf("  %3gm/s", (double)speed_curve_brake / 10 );
 					
-					data_tuning ( &speed_curve_brake, 2, RIGHT );
+					data_tuning ( &speed_curve_brake, 1, RIGHT );
 					break;
 				case 3:
 					// R600カーブ走行速度
@@ -149,7 +149,7 @@ void setup( void )
 					lcdPosition( 0, 1 );
 					lcdPrintf("  %3gm/s", (double)speed_curve_r600 / 10  );
 					
-					data_tuning ( &speed_curve_r600, 2, RIGHT );
+					data_tuning ( &speed_curve_r600, 1, RIGHT );
 					break;
 				case 4:
 					// R450カーブ走行速度
@@ -158,7 +158,7 @@ void setup( void )
 					lcdPosition( 0, 1 );
 					lcdPrintf("  %3gm/s", (double)speed_curve_r450 / 10 );
 					
-					data_tuning ( &speed_curve_r450, 2, RIGHT );
+					data_tuning ( &speed_curve_r450, 1, RIGHT );
 					break;
 				case 5:
 					// S字カーブ直線速度
@@ -167,7 +167,7 @@ void setup( void )
 					lcdPosition( 0, 1 );
 					lcdPrintf("  %3gm/s", (double)speed_curve_straight / 10 );
 					
-					data_tuning ( &speed_curve_straight, 2, RIGHT );
+					data_tuning ( &speed_curve_straight, 1, RIGHT );
 					break;
 			}
 			break;
@@ -189,7 +189,7 @@ void setup( void )
 					lcdPosition( 0, 1 );
 					lcdPrintf("  %3gm/s", (double)speed_crossline / 10 );
 					
-					data_tuning ( &speed_crossline, 2, RIGHT );
+					data_tuning ( &speed_crossline, 1, RIGHT );
 					break;
 				case 2:
 					// クランク前トレース
@@ -198,7 +198,7 @@ void setup( void )
 					lcdPosition( 0, 1 );
 					lcdPrintf("  %3gm/s", (double)speed_ckank_trace / 10 );
 					
-					data_tuning ( &speed_ckank_trace, 2, RIGHT );
+					data_tuning ( &speed_ckank_trace, 1, RIGHT );
 					break;
 				case 3:
 					// 右クランク旋回速度
@@ -207,7 +207,7 @@ void setup( void )
 					lcdPosition( 0, 1 );
 					lcdPrintf("  %3gm/s", (double)speed_rightclank_curve / 10 );
 					
-					data_tuning ( &speed_rightclank_curve, 2, RIGHT );
+					data_tuning ( &speed_rightclank_curve, 1, RIGHT );
 					break;
 				case 4:
 					// 右クランク復帰速度
@@ -216,7 +216,7 @@ void setup( void )
 					lcdPosition( 0, 1 );
 					lcdPrintf("  %3gm/s", (double)speed_rightclank_escape / 10 );
 					
-					data_tuning ( &speed_rightclank_escape, 2, RIGHT );
+					data_tuning ( &speed_rightclank_escape, 1, RIGHT );
 					break;
 					
 				case 5:
@@ -226,7 +226,7 @@ void setup( void )
 					lcdPosition( 0, 1 );
 					lcdPrintf("  %3gm/s", (double)speed_leftclank_curve / 10 );
 					
-					data_tuning ( &speed_leftclank_curve, 2, RIGHT );
+					data_tuning ( &speed_leftclank_curve, 1, RIGHT );
 					break;
 					
 				case 6:
@@ -236,7 +236,7 @@ void setup( void )
 					lcdPosition( 0, 1 );
 					lcdPrintf("  %3gm/s", (double)speed_leftclank_escape / 10 );
 					
-					data_tuning ( &speed_leftclank_escape, 2, RIGHT );
+					data_tuning ( &speed_leftclank_escape, 1, RIGHT );
 					break;
 			}
 			break;
@@ -257,7 +257,7 @@ void setup( void )
 					lcdPosition( 0, 1 );
 					lcdPrintf("  %3gm/s", (double)speed_halfine / 10 );
 					
-					data_tuning ( &speed_halfine, 2, RIGHT );
+					data_tuning ( &speed_halfine, 1, RIGHT );
 					break;
 				case 2:
 					// 右レーンチェンジ進入速度
@@ -266,7 +266,7 @@ void setup( void )
 					lcdPosition( 0, 1 );
 					lcdPrintf("  %3gm/s", (double)speed_rightchange_trace / 10 );
 					
-					data_tuning ( &speed_rightchange_trace, 2, RIGHT );
+					data_tuning ( &speed_rightchange_trace, 1, RIGHT );
 					break;
 				case 3:
 					// 右レーンチェンジ旋回速度
@@ -275,7 +275,7 @@ void setup( void )
 					lcdPosition( 0, 1 );
 					lcdPrintf("  %3gm/s", (double)speed_rightchange_curve / 10 );
 					
-					data_tuning ( &speed_rightchange_curve, 2, RIGHT );
+					data_tuning ( &speed_rightchange_curve, 1, RIGHT );
 					break;
 				case 4:
 					// 右レーンチェンジ復帰速度
@@ -284,7 +284,7 @@ void setup( void )
 					lcdPosition( 0, 1 );
 					lcdPrintf("  %3gm/s", (double)speed_rightchange_escape / 10 );
 					
-					data_tuning ( &speed_rightchange_escape, 2, RIGHT );
+					data_tuning ( &speed_rightchange_escape, 1, RIGHT );
 					break;
 				case 5:
 					// 左レーンチェンジ進入速度
@@ -293,7 +293,7 @@ void setup( void )
 					lcdPosition( 0, 1 );
 					lcdPrintf("  %3gm/s", (double)speed_leftchange_trace / 10 );
 					
-					data_tuning ( &speed_leftchange_trace, 2, RIGHT );
+					data_tuning ( &speed_leftchange_trace, 1, RIGHT );
 					break;
 				case 6:
 					// 左レーンチェンジ旋回速度
@@ -302,7 +302,7 @@ void setup( void )
 					lcdPosition( 0, 1 );
 					lcdPrintf("  %3gm/s", (double)speed_leftchange_curve / 10 );
 					
-					data_tuning ( &speed_leftchange_curve, 2, RIGHT );
+					data_tuning ( &speed_leftchange_curve, 1, RIGHT );
 					break;
 				case 7:
 					// 左レーンチェンジ旋回速度
@@ -311,7 +311,7 @@ void setup( void )
 					lcdPosition( 0, 1 );
 					lcdPrintf("  %3gm/s", (double)speed_leftchange_escape / 10 );
 					
-					data_tuning ( &speed_leftchange_escape, 2, RIGHT );
+					data_tuning ( &speed_leftchange_escape, 1, RIGHT );
 					break;
 			}
 			break;
@@ -333,7 +333,7 @@ void setup( void )
 					lcdPosition( 0, 1 );
 					lcdPrintf("  %3gm/s", (double)speed_slope_brake / 10 );
 					
-					data_tuning ( &speed_slope_brake, 2, RIGHT );
+					data_tuning ( &speed_slope_brake, 1, RIGHT );
 					break;
 				case 2:
 					// 坂読み飛ばし速度
@@ -342,7 +342,7 @@ void setup( void )
 					lcdPosition( 0, 1 );
 					lcdPrintf("  %3gm/s", (double)speed_slope_trace / 10 );
 					
-					data_tuning ( &speed_slope_trace, 2, RIGHT );
+					data_tuning ( &speed_slope_trace, 1, RIGHT );
 					break;
 				case 3:
 					// 右クランク旋回角度
@@ -811,9 +811,7 @@ void setup( void )
 						lcdPrintf("Temp%2.1f", (double)TempIMU);
 						if ( tasw_get() == 0x1 ) {
 							wait_lcd(1000);
-							IMUSet = 0;
 							caribrateIMU();
-							IMUSet = 1;
 						}
 					}
 					break;
@@ -1305,8 +1303,8 @@ char fix_speedsetting ( void )
 		speed_curve_r450	= 30;
 		speed_curve_straight	= 30;
 		
-		speed_crossline		= 30;
-		speed_ckank_trace	= 30;
+		speed_crossline		= 25;
+		speed_ckank_trace	= 27;
 		speed_rightclank_curve	= 22;
 		speed_rightclank_escape	= 30;
 		speed_leftclank_curve	= 22;

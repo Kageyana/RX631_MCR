@@ -170,6 +170,8 @@ void main(void){
 				if ( !fixSpeed ) writeFlashBeforeStart(1, 0, 1, 1, 1, 1);	// 速度パラメータをデータフラッシュに保存
 				else writeFlashBeforeStart(0, 0, 1, 1, 1, 1);		// 速度パラメータ以外を保存
 				
+				if (IMUSet) caribrateIMU();
+				
 				wait_lcd(500);		// 500ms待つ
 				cnt1 = 0;
 				pattern = 1;
@@ -517,21 +519,12 @@ void main(void){
 			SetAngle = angle_rightclank;
 			servoPwmOut( ServoPwm2 );
 			targetSpeed = speed_rightclank_curve * SPEED_CURRENT;
-			i = (Encoder * 10) - targetSpeed;	// 目標値との偏差
+			i = -TurningAngleIMU;
 			j = getAnalogSensor();
 			diff( motorPwm );
 			
 			if ( IMUSet ) {
-				/*
-				if( -TurningAngleIMU <= 30 ) {
-					if( sensor_inp() == 0x2 ) {
-						enc1 = 0;
-						angle_mode = 0;
-						Int = 0;			// 積分リセット
-						pattern = 36;
-						break;
-					}
-				} else*/ if ( -TurningAngleIMU >= 20 ) {
+				if ( i >= 20 ) {
 					if( j <= -1800 ) {
 						enc1 = 0;
 						i = (short)-TurningAngleIMU;
@@ -654,7 +647,6 @@ void main(void){
 			SetAngle = angle_leftclank;
 			servoPwmOut( ServoPwm2 );
 			targetSpeed = speed_leftclank_curve * SPEED_CURRENT;
-			i = (Encoder * 10) - targetSpeed;	// 目標値との偏差
 			j = getAnalogSensor();
 			diff( motorPwm );
 			
