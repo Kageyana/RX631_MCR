@@ -648,17 +648,10 @@ void setup( void )
 					if ( tasw_get() == 0x2 ) RollAngleIMU = 0;
 					if ( cnt_setup >= 100 ) {
 						cnt_setup = 0;
-						if ( IMUSet ) {
-							lcdPosition( 0, 0 );
-							lcdPrintf("Roll%4d", (short)RollAngleIMU);
-							lcdPosition( 0, 1 );
-							lcdPrintf("Pich%4d",(short)PichAngleIMU);
-						} else {
-							lcdPosition( 0, 0 );
-							lcdPrintf("        ");
-							lcdPosition( 0, 1 );
-							lcdPrintf("Pich%4d",(short)PichAngleAD);
-						}
+						lcdPosition( 0, 0 );
+						lcdPrintf("Roll%4d", (short)RollAngleIMU);
+						lcdPosition( 0, 1 );
+						lcdPrintf("Pich%4d",(short)PichAngleIMU);
 					}
 					break;
 					

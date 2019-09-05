@@ -145,15 +145,9 @@ signed char check_slope( void )
 	short deg, upperline, lowerline;
 	signed char ret = 0;
 
-	if ( IMUSet ) {
-		deg = PichAngleIMU;
-		upperline = SLOPEUPPERLINE_IMU;
-		lowerline = SLOPELOWERLINE_IMU;
-	} else {
-		deg = PichAngleAD;
-		upperline = SLOPEUPPERLINE_AD;
-		lowerline = SLOPELOWERLINE_AD;
-	}
+	deg = PichAngleIMU;
+	upperline = SLOPEUPPERLINE_IMU;
+	lowerline = SLOPELOWERLINE_IMU;
 	if ( deg >= upperline ) ret = 1;
 	if ( deg <= lowerline ) ret = -1;
 	
@@ -168,25 +162,6 @@ signed char check_slope( void )
 unsigned int enc_mm( short mm )
 {
 	return PALSE_MILLIMETER * mm;
-}
-//////////////////////////////////////////////////////////////////////////
-// モジュール名 get_degrees							//
-// 処理概要     ジャイロセンサの値から角度算出				//
-// 引数         なし									//
-// 戻り値       なし									//
-//////////////////////////////////////////////////////////////////////////
-void getPichAngleAD( void ) {
-	short s;
-	double gy_voltage, gyro;
-	
-	s = getGyro();
-	gy_voltage = (double)s * AD_3V3VOLTAGE;	// ジャイロセンサから出力された電圧[mV]
-	gyro = gy_voltage * GYROVOLTAGE;	// 角加速度算出
-	
-	PichAngleAD += (double)( gyro + gyVoltageBefore ) * 0.001 / 2;	// 角加速度を積算
-	if( cnt_gyro == INTEGRAL_LIMIT ) PichAngleAD = 0;	// 4msごとに積算値リセット
-	
-	gyVoltageBefore = gyro;
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 servoControl							//

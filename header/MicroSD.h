@@ -4,12 +4,9 @@
 // インクルード                         //
 //======================================//
 #include "PeripheralFunctions.h"
-#include "LineChase.h"
 #include "E2dataFlash.h"
-#include "I2C_LCD.h"
-#include "SCI.h"
-#include "I2C_MPU-9255.h"
 #include <string.h>
+#include <stdarg.h>
 //========================================//
 // シンボル定義										//
 //=======================================//
@@ -75,7 +72,7 @@ char microSDProcessStart( unsigned int address );
 char microSDProcessEnd( void );
 void microSDProcess( void );
 char checkMicroSDProcess( void );
-void sendLog (void);
+void sendLog (char c, char s, char i, ...);
 char msdEndLog ( void );
 void msd_send_data (void);
 void msdgetData ( void ) ;

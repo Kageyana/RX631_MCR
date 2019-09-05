@@ -133,7 +133,6 @@ unsigned char tasw_get ( void );
 unsigned char dipsw_get( void );
 
 // ƒZƒ“ƒTŠÖ˜A
-short getGyro( void );
 short getServoAngle(void);
 short getAnalogSensor( void );
 unsigned char sensor_inp( void );

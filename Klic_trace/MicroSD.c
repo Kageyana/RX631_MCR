@@ -961,20 +961,29 @@ char msdEndLog ( void )
 	}
 	}
 	
-	return pattern - 2;
+	return pattern_msdend - 2;
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 sendLog								//
-// 処理概要     PCへデータ転送							//
-// 引数         なし									//
-// 戻り値       なし									//
+// モジュール名 sendLog									//
+// 処理概要     PCへデータ転送								//
+// 引数         c:char型変数の個数 s:short型変数の個数 i:int型変数の個数//
+// 戻り値       なし										//
 ///////////////////////////////////////////////////////////////////////////
-void sendLog (void) {
+void sendLog (char c, char s, char i, ...) {
+	va_list args;
+	int count;
+	
 	msdTimer++;
 	if( msdTimer == WRITINGTIME ) {
 		msdTimer = 0;
 		msdBuffPointa = msdBuff + msdBuffaddress;
 		// ここから記録
+		va_start( args, i );
+		for ( count = 0; count < c; count++ ) send_Char( va_arg( args, char )	);
+		for ( count = 0; count < s; count++ ) send_ShortToChar( va_arg( args, short ) );
+		for ( count = 0; count < i; count++ ) send_uIntToChar( va_arg( args, unsigned int ) );
+		va_end(args);
+		/*
 		send_Char			(	pattern		);
 		send_Char			(	motorPwm 	);
 		send_Char			(	sensor_inp() 	);
@@ -995,6 +1004,7 @@ void sendLog (void) {
 		send_uIntToChar 	(	EncoderTotal	);
 		send_uIntToChar 	(	enc1			);
 		send_ShortToChar 	(	cnt_log		);
+		*/
 		// ここまで
 		cnt_log += WRITINGTIME;
 		msdBuffaddress += DATA_BYTE;       // RAMの記録アドレスを次へ

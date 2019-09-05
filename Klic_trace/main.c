@@ -1368,7 +1368,29 @@ void Timer (void) {
 	
 	// MicroSDèëÇ´çûÇ›
 	microSDProcess();
-	if ( msdFlag ) sendLog();
+	if ( msdFlag ) sendLog( 8, 7, 3
+					// char
+					, pattern
+					, motorPwm
+					, sensor_inp()
+					, slope_mode
+					, (char)Encoder
+					, sPwm
+					, (char)PichAngleIMU*10
+					, (char)RollAngleIMU*10
+					//short
+					, (short)TurningAngleIMU*10
+					, rawXg
+					, rawYg
+					, rawZg
+					, getServoAngle()
+					, SetAngle
+					, getAnalogSensor()
+					// unsigned int
+					, EncoderTotal
+					, enc1
+					, cnt_log
+					);
 	
 	Timer10++;
 	

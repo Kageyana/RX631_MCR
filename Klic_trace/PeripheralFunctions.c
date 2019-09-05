@@ -30,8 +30,6 @@ static int			senG;	// ゲートセンサ積算AD値
 static int			senC;	// 中心アナログセンサ積算AD値
 static int			senLL;	// 最左端アナログセンサ積算AD値
 static int			senRR;	// 最右端アナログセンサ積算AD値
-static int			gy;		// ジャイロセンサ積算AD値
-short 			gyro;		// ジャイロセンサ平均AD値
 static int			pot;		// ポテンションメーター積算AD値
 short 			Angle;	// ポテンションメーター平均AD値
 short				sensorR;	// 右アナログセンサ平均AD値
@@ -77,7 +75,6 @@ void ADconverter ( void )
 	if ( ADTimer10 == 10 ) {
 		ADTimer10 = 0;
 		
-		gyro = gy / 10;
 		Angle = pot / 10;
 		sensorR = senR / 10;
 		sensorL = senL / 10;
@@ -92,7 +89,6 @@ void ADconverter ( void )
 		senC = 0;
 		senR = 0;
 		senRR = 0;
-		gy = 0;
 		pot = 0;
 	}
 	
@@ -103,7 +99,6 @@ void ADconverter ( void )
 	senC += result[6];
 	senR += result[7];
 	senRR += result[8];
-	gy += result[12];
 	pot += result[13];
 	
 }
@@ -229,16 +224,6 @@ unsigned char tasw_get(void)
 	else			tasw[3] = 0x0;
 
 	return ( tasw[0] + tasw[1] + tasw[2] + tasw[3] );
-}
-///////////////////////////////////////////////////////////////////////////
-// モジュール名 getGyro								//
-// 処理概要     ジャイロセンサのアナログ値で取得				//
-// 引数         なし									//
-// 戻り値       センサ値									//
-///////////////////////////////////////////////////////////////////////////
-short getGyro(void) 
-{
-	return ( gyro - 1796 );
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 getServoAngle							//
