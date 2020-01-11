@@ -7,6 +7,42 @@
   </Placeholders>
   <Project Name="RX631_MCR_ver1.0" Type="Application">
     <Files>
+      <Category Name="Klic_trace">
+        <Path>Klic_trace\E2dataFlash.c</Path>
+        <Path>Klic_trace\hwsetup.c</Path>
+        <Path>Klic_trace\I2C_LCD.c</Path>
+        <Path>Klic_trace\I2C_MPU-9255.c</Path>
+        <Path>Klic_trace\main.c</Path>
+        <Path>Klic_trace\LineChase.c</Path>
+        <Path>Klic_trace\MicroSD.c</Path>
+        <Path>Klic_trace\PeripheralFunctions.c</Path>
+        <Path>Klic_trace\SCI.c</Path>
+        <Path>Klic_trace\SetUp.c</Path>
+        <Path>Klic_trace\MemorryTrace.c</Path>
+      </Category>
+      <Category Name="mcu">
+        <Path>mcu\dbsct.c</Path>
+        <Path>mcu\resetprg.c</Path>
+        <Path>mcu\iodefine.h</Path>
+        <Path>mcu\lowsrc.c</Path>
+        <Path>mcu\lowsrc.h</Path>
+        <Path>mcu\sbrk.c</Path>
+        <Path>mcu\sbrk.h</Path>
+        <Path>mcu\stacksct.h</Path>
+        <Path>mcu\vect.h</Path>
+        <Path>mcu\typedefine.h</Path>
+      </Category>
+      <Category Name="header">
+        <Path>header\E2dataFlash.h</Path>
+        <Path>header\I2C_LCD.h</Path>
+        <Path>header\I2C_MPU-9255.h</Path>
+        <Path>header\LineChase.h</Path>
+        <Path>header\MicroSD.h</Path>
+        <Path>header\PeripheralFunctions.h</Path>
+        <Path>header\SCI.h</Path>
+        <Path>header\SetUp.h</Path>
+        <Path>header\MemorryTrace.h</Path>
+      </Category>
       <Category Name="AddFromPDG">
         <Category Name="SYSTEM">
           <Path>RX631_mcr_ver3.0\SYSTEM\R_PG_Clock.c</Path>
@@ -92,44 +128,6 @@
           <Path>RX631_mcr_ver3.0\IWDT\R_PG_Timer_IWDT.h</Path>
         </Category>
       </Category>
-      <Category Name="src">
-        <Path>src\E2dataFlash.c</Path>
-        <Path>src\hwsetup.c</Path>
-        <Path>src\I2C_LCD.c</Path>
-        <Path>src\I2C_MPU-9255.c</Path>
-        <Path>src\LineChase.c</Path>
-        <Path>src\main.c</Path>
-        <Category Name="mcu">
-          <Path>src\mcu\dbsct.c</Path>
-          <Path>src\mcu\intprg.c</Path>
-          <Path>src\mcu\iodefine.h</Path>
-          <Path>src\mcu\lowsrc.c</Path>
-          <Path>src\mcu\lowsrc.h</Path>
-          <Path>src\mcu\resetprg.c</Path>
-          <Path>src\mcu\sbrk.c</Path>
-          <Path>src\mcu\sbrk.h</Path>
-          <Path>src\mcu\stacksct.h</Path>
-          <Path>src\mcu\typedefine.h</Path>
-          <Path>src\mcu\vect.h</Path>
-          <Path>src\mcu\vecttbl.c</Path>
-        </Category>
-        <Path>src\MemorryTrace.c</Path>
-        <Path>src\MicroSD.c</Path>
-        <Path>src\PeripheralFunctions.c</Path>
-        <Path>src\SCI.c</Path>
-        <Path>src\SetUp.c</Path>
-      </Category>
-      <Category Name="Inc">
-        <Path>Inc\E2dataFlash.h</Path>
-        <Path>Inc\I2C_LCD.h</Path>
-        <Path>Inc\I2C_MPU-9255.h</Path>
-        <Path>Inc\LineChase.h</Path>
-        <Path>Inc\MemorryTrace.h</Path>
-        <Path>Inc\MicroSD.h</Path>
-        <Path>Inc\PeripheralFunctions.h</Path>
-        <Path>Inc\SCI.h</Path>
-        <Path>Inc\SetUp.h</Path>
-      </Category>
     </Files>
     <DebugOptions>
       <DebugTool>Simulator</DebugTool>
@@ -147,8 +145,6 @@
           <Option>-fpu</Option>
           <Option>-dbl_size=8</Option>
           <Option>-lang=c</Option>
-          <Option>-include=Inc</Option>
-          <Option>-include=src\mcu</Option>
           <Option>-include=RX631_mcr_ver3.0\IWDT</Option>
           <Option>-include=RX631_mcr_ver3.0</Option>
           <Option>-include=RX631_mcr_ver3.0\i_src</Option>
@@ -226,6 +222,21 @@
           <GenerateMode>BuildOptionChanged</GenerateMode>
         </LibraryGenerateOptions>
         <LinkOrder>
+          <Path>DefaultBuild\E2dataFlash.obj</Path>
+          <Path>DefaultBuild\hwsetup.obj</Path>
+          <Path>DefaultBuild\I2C_LCD.obj</Path>
+          <Path>DefaultBuild\main.obj</Path>
+          <Path>DefaultBuild\LineChase.obj</Path>
+          <Path>DefaultBuild\MicroSD.obj</Path>
+          <Path>DefaultBuild\PeripheralFunctions.obj</Path>
+          <Path>DefaultBuild\SCI.obj</Path>
+          <Path>DefaultBuild\SetUp.obj</Path>
+          <Path>DefaultBuild\dbsct.obj</Path>
+          <Path>DefaultBuild\lowsrc.obj</Path>
+          <Path>DefaultBuild\resetprg.obj</Path>
+          <Path>DefaultBuild\sbrk.obj</Path>
+          <Path>DefaultBuild\I2C_MPU-9255.obj</Path>
+          <Path>DefaultBuild\MemorryTrace.obj</Path>
           <Path>DefaultBuild\R_PG_Clock.obj</Path>
           <Path>DefaultBuild\R_PG_IO_PORT.obj</Path>
           <Path>DefaultBuild\R_PG_IO_PORT_P1.obj</Path>
@@ -248,27 +259,8 @@
           <Path>DefaultBuild\Interrupt_CMT.obj</Path>
           <Path>DefaultBuild\Interrupt_ADC_12.obj</Path>
           <Path>DefaultBuild\R_PG_Timer_IWDT.obj</Path>
-          <Path>DefaultBuild\E2dataFlash.obj</Path>
-          <Path>DefaultBuild\hwsetup.obj</Path>
-          <Path>DefaultBuild\I2C_LCD.obj</Path>
-          <Path>DefaultBuild\I2C_MPU-9255.obj</Path>
-          <Path>DefaultBuild\LineChase.obj</Path>
-          <Path>DefaultBuild\main.obj</Path>
-          <Path>DefaultBuild\MemorryTrace.obj</Path>
-          <Path>DefaultBuild\MicroSD.obj</Path>
-          <Path>DefaultBuild\PeripheralFunctions.obj</Path>
-          <Path>DefaultBuild\SCI.obj</Path>
-          <Path>DefaultBuild\SetUp.obj</Path>
-          <Path>DefaultBuild\dbsct.obj</Path>
-          <Path>DefaultBuild\intprg.obj</Path>
-          <Path>DefaultBuild\lowsrc.obj</Path>
-          <Path>DefaultBuild\resetprg.obj</Path>
-          <Path>DefaultBuild\sbrk.obj</Path>
-          <Path>DefaultBuild\vecttbl.obj</Path>
         </LinkOrder>
         <CommonOptions>
-          <IncludePathForC>Inc</IncludePathForC>
-          <IncludePathForC>src\mcu</IncludePathForC>
           <IncludePathForC>RX631_mcr_ver3.0\IWDT</IncludePathForC>
           <IncludePathForC>RX631_mcr_ver3.0</IncludePathForC>
           <IncludePathForC>RX631_mcr_ver3.0\i_src</IncludePathForC>
