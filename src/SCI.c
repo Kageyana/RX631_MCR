@@ -220,11 +220,9 @@ void init_SCI1( char mode, char rate )
 ///////////////////////////////////////////////////////////////////////////
 void charput( uint8_t data )
 {
-	if ( !IMUSet ) {
-		while(SCI1.SSR.BIT.TEND == 0);
-		SCI1.TDR = data;
-		SCI1.SSR.BIT.TEND = 0;
-	}
+	while(SCI1.SSR.BIT.TEND == 0);
+	SCI1.TDR = data;
+	SCI1.SSR.BIT.TEND = 0;
 }
 ///////////////////////////////////////////////////////////////////////////
 // ÉÇÉWÉÖÅ[Éãñº charget								//

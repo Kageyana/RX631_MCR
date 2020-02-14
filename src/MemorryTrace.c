@@ -50,7 +50,6 @@ void msdgetData ()
 				if( msdWorkaddress >= msdEndaddress ) {
 					// 書き込み終了アドレスになったら、終わり
 					cntmpattern2 = 0;
-					setBeepPatternS( 0xa8a8 );
 					memory_mode = 1;
 					pattern_send = 4;
 					break;

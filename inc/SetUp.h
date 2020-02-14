@@ -9,14 +9,17 @@
 #include "I2C_LCD.h"
 #include "MicroSD.h"
 #include "SCI.h"
-#include "I2C_MPU-9255.h"
+#include "SPI_ICM20648.h"
 #include "MemorryTrace.h"
 #include <stdio.h>
 //======================================//
 // シンボル定義                         //
 //======================================//
-#define RIGHT	0
-#define LEFT	1
+#define UD	0
+#define LR		1
+
+#define START_COUNT	1
+#define START_GATE		2
 
 //======================================//
 // グローバル変数の宣言                 //

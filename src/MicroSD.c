@@ -893,7 +893,6 @@ void init_log ( void )
 				// microSDクリア
 				ret = eraseMicroSD( msdStartaddress, msdEndaddress - 1 );
 				if( ret != 0x00 ) {
-					setBeepPatternS( 0xaa00 );
 					printf( "\nmicroSD Erase Error!!\n" );  // エラー
 					break;
 				}
@@ -904,7 +903,6 @@ void init_log ( void )
 				// microSDProcess開始処理
 				ret = microSDProcessStart( msdStartaddress );
 			        if( ret != 0x00 ) {
-					setBeepPatternS( 0xaa00 );
 					printf( "\nmicroSD microSDProcess Error!!\n" );  // エラー
 					break;
 				}
@@ -940,7 +938,6 @@ char msdEndLog ( void )
 					pattern_msdend = 1;
 					break;
 				} else if ( checkMicroSDProcess() == 0 ) {
-					setBeepPatternS( 0xf0f0 );
 					pattern_msdend = 3;
 					break;
 				}
@@ -954,7 +951,6 @@ char msdEndLog ( void )
 					flashDataBuff[ 1 ] = msdWorkaddress & 0xffff;	// 終了アドレス
 					writeFlashData( MSD_STARTAREA, MSD_ENDAREA, MSD_DATA, 2 );
 					pattern_msdend = 2;
-					setBeepPatternS( 0xa8a8 );
 					break;
 				}
 				break;
@@ -1073,7 +1069,6 @@ void msd_sendToPC ( void )
 				if( msdWorkaddress >= msdEndaddress ) {
 					// 書き込み終了アドレスになったら、終わり
 					printf( "End.\n" );
-					setBeepPatternS( 0xa8a8 );
 					pattern_send = 4;
 					break;
 				}

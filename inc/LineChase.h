@@ -5,7 +5,7 @@
 //====================================//
 #include "PeripheralFunctions.h"
 #include "LineChase.h"
-#include "I2C_MPU-9255.h"
+#include "SPI_ICM20648.h"
 #include <math.h>
 //====================================//
 // シンボル定義									//
@@ -44,17 +44,13 @@
 #define ANGLE_LEFTCHANGE		160	// 右レーンチェンジ旋回角度
 
 // カーブ関連
-#define CURVE_R600_START	20		// R600開始AD値
-#define CURVE_R450_START	140		// R450開始AD値
+#define CURVE_R600_START		20		// R600開始AD値
+#define CURVE_R450_START		140		// R450開始AD値
 
 // ジャイロ関連
-#define SLOPEUPPERLINE_IMU		4		// 上り坂検出角度
-#define SLOPELOWERLINE_IMU		-4		// 下り坂検出角度
-#define INTEGRAL_LIMIT		200		// 角速度積算時間
-
-#define PI					3.141592	// 円周率
-#define RIGHTCURVE_ENCODER	78.5		// 右輪中心からエンコーダーの中心までの距離
-#define LEFTCURVE_ENCODER	74.5		// 左輪中心からエンコーダーの中心までの距離
+#define SLOPE_UPPERLINE_IMU		4		// 上り坂検出角度
+#define SLOPE_LOWERLINE_IMU	-4		// 下り坂検出角度
+#define INTEGRAL_LIMIT			200		// 角速度積算時間
 
 // PIDゲイン関連
 //白線トレース
@@ -126,11 +122,11 @@ extern short	angle_rightchange;		// 右レーンチェンジ旋回角度
 extern short	angle_leftchange;		// 右レーンチェンジ旋回角度
 
 // タイマ関連
-extern short		cnt_gyro;			// 角度計算用カウンタ
+extern short	cnt_gyro;			// 角度計算用カウンタ
 
 // 角度関連
-extern double 		TurningAngleEnc;	// エンコーダから求めた旋回角度
-extern double		PichAngleAD;		// アナログジャイロから求めたピッチ角度
+extern double 	TurningAngleEnc;	// エンコーダから求めた旋回角度
+extern double	PichAngleAD;		// アナログジャイロから求めたピッチ角度
 
 // モーター関連
 extern signed char 	motorPwm;	// モーター制御PWM
@@ -158,9 +154,6 @@ signed char check_crossline( void );
 signed char check_rightline( void );
 signed char check_leftline( void );
 signed char check_slope( void );
-
-// 角度関連
-void getTurningAngleEnc(void);
 
 // エンコーダ関連
 unsigned int enc_mm( short mm );

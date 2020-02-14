@@ -23,7 +23,7 @@
         <Path>src\E2dataFlash.c</Path>
         <Path>src\hwsetup.c</Path>
         <Path>src\I2C_LCD.c</Path>
-        <Path>src\I2C_MPU-9255.c</Path>
+        <Path>src\SPI_ICM20648.c</Path>
         <Path>src\LineChase.c</Path>
         <Path>src\main.c</Path>
         <Path>src\MemorryTrace.c</Path>
@@ -35,7 +35,7 @@
       <Category Name="inc">
         <Path>inc\E2dataFlash.h</Path>
         <Path>inc\I2C_LCD.h</Path>
-        <Path>inc\I2C_MPU-9255.h</Path>
+        <Path>inc\SPI_ICM20648.h</Path>
         <Path>inc\LineChase.h</Path>
         <Path>inc\MemorryTrace.h</Path>
         <Path>inc\MicroSD.h</Path>
@@ -45,88 +45,97 @@
       </Category>
       <Category Name="AddFromPDG">
         <Category Name="SYSTEM">
-          <Path>RX631_mcr_ver3.0\SYSTEM\R_PG_Clock.c</Path>
-          <Path>RX631_mcr_ver3.0\SYSTEM\R_PG_Clock.h</Path>
+          <Path>IGC-P8080_v1\SYSTEM\R_PG_Clock.c</Path>
+          <Path>IGC-P8080_v1\SYSTEM\R_PG_Clock.h</Path>
         </Category>
         <Category Name="IO">
-          <Path>RX631_mcr_ver3.0\IO\R_PG_IO_PORT.c</Path>
-          <Path>RX631_mcr_ver3.0\IO\R_PG_IO_PORT.h</Path>
-          <Path>RX631_mcr_ver3.0\IO\R_PG_IO_PORT_P1.c</Path>
-          <Path>RX631_mcr_ver3.0\IO\R_PG_IO_PORT_P1.h</Path>
-          <Path>RX631_mcr_ver3.0\IO\R_PG_IO_PORT_P2.c</Path>
-          <Path>RX631_mcr_ver3.0\IO\R_PG_IO_PORT_P2.h</Path>
-          <Path>RX631_mcr_ver3.0\IO\R_PG_IO_PORT_P5.c</Path>
-          <Path>RX631_mcr_ver3.0\IO\R_PG_IO_PORT_P5.h</Path>
-          <Path>RX631_mcr_ver3.0\IO\R_PG_IO_PORT_PA.c</Path>
-          <Path>RX631_mcr_ver3.0\IO\R_PG_IO_PORT_PA.h</Path>
-          <Path>RX631_mcr_ver3.0\IO\R_PG_IO_PORT_PB.c</Path>
-          <Path>RX631_mcr_ver3.0\IO\R_PG_IO_PORT_PB.h</Path>
-          <Path>RX631_mcr_ver3.0\IO\R_PG_IO_PORT_PC.c</Path>
-          <Path>RX631_mcr_ver3.0\IO\R_PG_IO_PORT_PC.h</Path>
-          <Path>RX631_mcr_ver3.0\IO\R_PG_IO_PORT_PD.c</Path>
-          <Path>RX631_mcr_ver3.0\IO\R_PG_IO_PORT_PD.h</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT.c</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT.h</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_P0.c</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_P0.h</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_P1.c</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_P1.h</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_P2.c</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_P2.h</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_P3.c</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_P3.h</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_P4.c</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_P4.h</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_P5.c</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_P5.h</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_PA.c</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_PA.h</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_PB.c</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_PB.h</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_PC.c</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_PC.h</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_PE.c</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_PE.h</Path>
         </Category>
         <Category Name="MTU">
-          <Path>RX631_mcr_ver3.0\MTU\R_PG_Timer_MTU_U0_C0.c</Path>
-          <Path>RX631_mcr_ver3.0\MTU\R_PG_Timer_MTU_U0_C0.h</Path>
-          <Path>RX631_mcr_ver3.0\MTU\R_PG_Timer_MTU_U0_C1.c</Path>
-          <Path>RX631_mcr_ver3.0\MTU\R_PG_Timer_MTU_U0_C1.h</Path>
-          <Path>RX631_mcr_ver3.0\MTU\R_PG_Timer_MTU_U0_C2.c</Path>
-          <Path>RX631_mcr_ver3.0\MTU\R_PG_Timer_MTU_U0_C2.h</Path>
-          <Path>RX631_mcr_ver3.0\MTU\R_PG_Timer_MTU_U0_C3.c</Path>
-          <Path>RX631_mcr_ver3.0\MTU\R_PG_Timer_MTU_U0_C3.h</Path>
-          <Path>RX631_mcr_ver3.0\MTU\R_PG_Timer_MTU_U0.c</Path>
-          <Path>RX631_mcr_ver3.0\MTU\R_PG_Timer_MTU_U0.h</Path>
+          <Path>IGC-P8080_v1\MTU\R_PG_Timer_MTU_U0_C0.c</Path>
+          <Path>IGC-P8080_v1\MTU\R_PG_Timer_MTU_U0_C0.h</Path>
+          <Path>IGC-P8080_v1\MTU\R_PG_Timer_MTU_U0_C1.c</Path>
+          <Path>IGC-P8080_v1\MTU\R_PG_Timer_MTU_U0_C1.h</Path>
+          <Path>IGC-P8080_v1\MTU\R_PG_Timer_MTU_U0_C2.c</Path>
+          <Path>IGC-P8080_v1\MTU\R_PG_Timer_MTU_U0_C2.h</Path>
+          <Path>IGC-P8080_v1\MTU\R_PG_Timer_MTU_U0_C3.c</Path>
+          <Path>IGC-P8080_v1\MTU\R_PG_Timer_MTU_U0_C3.h</Path>
+          <Path>IGC-P8080_v1\MTU\R_PG_Timer_MTU_U0_C4.c</Path>
+          <Path>IGC-P8080_v1\MTU\R_PG_Timer_MTU_U0_C4.h</Path>
+          <Path>IGC-P8080_v1\MTU\R_PG_Timer_MTU_U0.c</Path>
+          <Path>IGC-P8080_v1\MTU\R_PG_Timer_MTU_U0.h</Path>
         </Category>
         <Category Name="CMT">
-          <Path>RX631_mcr_ver3.0\CMT\R_PG_Timer_CMT_U0.c</Path>
-          <Path>RX631_mcr_ver3.0\CMT\R_PG_Timer_CMT_U0.h</Path>
-          <Path>RX631_mcr_ver3.0\CMT\R_PG_Timer_CMT_U1.c</Path>
-          <Path>RX631_mcr_ver3.0\CMT\R_PG_Timer_CMT_U1.h</Path>
+          <Path>IGC-P8080_v1\CMT\R_PG_Timer_CMT_U0.c</Path>
+          <Path>IGC-P8080_v1\CMT\R_PG_Timer_CMT_U0.h</Path>
+          <Path>IGC-P8080_v1\CMT\R_PG_Timer_CMT_U1.c</Path>
+          <Path>IGC-P8080_v1\CMT\R_PG_Timer_CMT_U1.h</Path>
         </Category>
         <Category Name="SCI">
-          <Path>RX631_mcr_ver3.0\SCI\R_PG_SCI_C5.c</Path>
-          <Path>RX631_mcr_ver3.0\SCI\R_PG_SCI_C5.h</Path>
+          <Path>IGC-P8080_v1\SCI\R_PG_SCI_C1.c</Path>
+          <Path>IGC-P8080_v1\SCI\R_PG_SCI_C1.h</Path>
+          <Path>IGC-P8080_v1\SCI\R_PG_SCI_C2.c</Path>
+          <Path>IGC-P8080_v1\SCI\R_PG_SCI_C2.h</Path>
+          <Path>IGC-P8080_v1\SCI\R_PG_SCI_C5.c</Path>
+          <Path>IGC-P8080_v1\SCI\R_PG_SCI_C5.h</Path>
+          <Path>IGC-P8080_v1\SCI\R_PG_SCI_C6.c</Path>
+          <Path>IGC-P8080_v1\SCI\R_PG_SCI_C6.h</Path>
+          <Path>IGC-P8080_v1\SCI\R_PG_SCI_C9.c</Path>
+          <Path>IGC-P8080_v1\SCI\R_PG_SCI_C9.h</Path>
         </Category>
         <Category Name="AD_12">
-          <Path>RX631_mcr_ver3.0\AD_12\R_PG_ADC_12_S12AD0.c</Path>
-          <Path>RX631_mcr_ver3.0\AD_12\R_PG_ADC_12_S12AD0.h</Path>
+          <Path>IGC-P8080_v1\AD_12\R_PG_ADC_12_S12AD0.c</Path>
+          <Path>IGC-P8080_v1\AD_12\R_PG_ADC_12_S12AD0.h</Path>
         </Category>
         <Category Name="i_src">
-          <Path>RX631_mcr_ver3.0\i_src\r_pdl_user_definitions.h</Path>
-          <Path>RX631_mcr_ver3.0\i_src\Interrupt_INTC.c</Path>
-          <Path>RX631_mcr_ver3.0\i_src\Interrupt_CMT.c</Path>
-          <Path>RX631_mcr_ver3.0\i_src\Interrupt_ADC_12.c</Path>
-          <Path>RX631_mcr_ver3.0\i_src\iodefine_RPDL.h</Path>
-          <Path>RX631_mcr_ver3.0\i_src\r_pdl_common_defs_RX63Nxx.h</Path>
-          <Path>RX631_mcr_ver3.0\i_src\r_pdl_definitions.h</Path>
-          <Path>RX631_mcr_ver3.0\i_src\r_pdl_intc.h</Path>
-          <Path>RX631_mcr_ver3.0\i_src\r_pdl_intc_RX63Nxx.h</Path>
-          <Path>RX631_mcr_ver3.0\i_src\r_pdl_cgc.h</Path>
-          <Path>RX631_mcr_ver3.0\i_src\r_pdl_cgc_RX63Nxx.h</Path>
-          <Path>RX631_mcr_ver3.0\i_src\r_pdl_rwp.h</Path>
-          <Path>RX631_mcr_ver3.0\i_src\r_pdl_rwp_RX63Nxx.h</Path>
-          <Path>RX631_mcr_ver3.0\i_src\r_pdl_io_port.h</Path>
-          <Path>RX631_mcr_ver3.0\i_src\r_pdl_io_port_RX63Nxx.h</Path>
-          <Path>RX631_mcr_ver3.0\i_src\r_pdl_mtu2.h</Path>
-          <Path>RX631_mcr_ver3.0\i_src\r_pdl_mtu2_RX63Nxx.h</Path>
-          <Path>RX631_mcr_ver3.0\i_src\r_pdl_cmt.h</Path>
-          <Path>RX631_mcr_ver3.0\i_src\r_pdl_cmt_RX63Nxx.h</Path>
-          <Path>RX631_mcr_ver3.0\i_src\r_pdl_sci.h</Path>
-          <Path>RX631_mcr_ver3.0\i_src\r_pdl_sci_RX63Nxx.h</Path>
-          <Path>RX631_mcr_ver3.0\i_src\r_pdl_adc_12.h</Path>
-          <Path>RX631_mcr_ver3.0\i_src\r_pdl_adc_12_RX63Nxx.h</Path>
-          <Path>RX631_mcr_ver3.0\i_src\r_pdl_mcu_ofs.h</Path>
-          <Path>RX631_mcr_ver3.0\i_src\r_pdl_iwdt.h</Path>
-          <Path>RX631_mcr_ver3.0\i_src\r_pdl_iwdt_RX63Nxx.h</Path>
+          <Path>IGC-P8080_v1\i_src\r_pdl_user_definitions.h</Path>
+          <Path>IGC-P8080_v1\i_src\Interrupt_INTC.c</Path>
+          <Path>IGC-P8080_v1\i_src\Interrupt_CMT.c</Path>
+          <Path>IGC-P8080_v1\i_src\Interrupt_ADC_12.c</Path>
+          <Path>IGC-P8080_v1\i_src\iodefine_RPDL.h</Path>
+          <Path>IGC-P8080_v1\i_src\r_pdl_common_defs_RX63Nxx.h</Path>
+          <Path>IGC-P8080_v1\i_src\r_pdl_definitions.h</Path>
+          <Path>IGC-P8080_v1\i_src\r_pdl_intc.h</Path>
+          <Path>IGC-P8080_v1\i_src\r_pdl_intc_RX63Nxx.h</Path>
+          <Path>IGC-P8080_v1\i_src\r_pdl_cgc.h</Path>
+          <Path>IGC-P8080_v1\i_src\r_pdl_cgc_RX63Nxx.h</Path>
+          <Path>IGC-P8080_v1\i_src\r_pdl_rwp.h</Path>
+          <Path>IGC-P8080_v1\i_src\r_pdl_rwp_RX63Nxx.h</Path>
+          <Path>IGC-P8080_v1\i_src\r_pdl_io_port.h</Path>
+          <Path>IGC-P8080_v1\i_src\r_pdl_io_port_RX63Nxx.h</Path>
+          <Path>IGC-P8080_v1\i_src\r_pdl_mtu2.h</Path>
+          <Path>IGC-P8080_v1\i_src\r_pdl_mtu2_RX63Nxx.h</Path>
+          <Path>IGC-P8080_v1\i_src\r_pdl_cmt.h</Path>
+          <Path>IGC-P8080_v1\i_src\r_pdl_cmt_RX63Nxx.h</Path>
+          <Path>IGC-P8080_v1\i_src\r_pdl_sci.h</Path>
+          <Path>IGC-P8080_v1\i_src\r_pdl_sci_RX63Nxx.h</Path>
+          <Path>IGC-P8080_v1\i_src\r_pdl_adc_12.h</Path>
+          <Path>IGC-P8080_v1\i_src\r_pdl_adc_12_RX63Nxx.h</Path>
         </Category>
-        <Path>RX631_mcr_ver3.0\R_PG_RX631_mcr_ver3.0.h</Path>
-        <Path>RX631_mcr_ver3.0\R_PG_IntFuncsExtern.h</Path>
-        <Path>RX631_mcr_ver3.0\R_PG_RPDL_headers.h</Path>
-        <Category Name="IWDT">
-          <Path>RX631_mcr_ver3.0\IWDT\R_PG_Timer_IWDT.c</Path>
-          <Path>RX631_mcr_ver3.0\IWDT\R_PG_Timer_IWDT.h</Path>
-        </Category>
+        <Path>IGC-P8080_v1\R_PG_IGC-P8080_v1.h</Path>
+        <Path>IGC-P8080_v1\R_PG_IntFuncsExtern.h</Path>
+        <Path>IGC-P8080_v1\R_PG_RPDL_headers.h</Path>
       </Category>
     </Files>
     <DebugOptions>
@@ -145,6 +154,14 @@
           <Option>-fpu</Option>
           <Option>-dbl_size=8</Option>
           <Option>-lang=c</Option>
+          <Option>-include=IGC-P8080_v1</Option>
+          <Option>-include=IGC-P8080_v1\i_src</Option>
+          <Option>-include=IGC-P8080_v1\AD_12</Option>
+          <Option>-include=IGC-P8080_v1\SCI</Option>
+          <Option>-include=IGC-P8080_v1\CMT</Option>
+          <Option>-include=IGC-P8080_v1\MTU</Option>
+          <Option>-include=IGC-P8080_v1\IO</Option>
+          <Option>-include=IGC-P8080_v1\SYSTEM</Option>
           <Option>-include=inc</Option>
           <Option>-include=RX631_mcr_ver3.0\IWDT</Option>
           <Option>-include=RX631_mcr_ver3.0</Option>
@@ -228,32 +245,9 @@
           <Path>DefaultBuild\lowsrc.obj</Path>
           <Path>DefaultBuild\resetprg.obj</Path>
           <Path>DefaultBuild\sbrk.obj</Path>
-          <Path>DefaultBuild\R_PG_Clock.obj</Path>
-          <Path>DefaultBuild\R_PG_IO_PORT.obj</Path>
-          <Path>DefaultBuild\R_PG_IO_PORT_P1.obj</Path>
-          <Path>DefaultBuild\R_PG_IO_PORT_P2.obj</Path>
-          <Path>DefaultBuild\R_PG_IO_PORT_P5.obj</Path>
-          <Path>DefaultBuild\R_PG_IO_PORT_PA.obj</Path>
-          <Path>DefaultBuild\R_PG_IO_PORT_PB.obj</Path>
-          <Path>DefaultBuild\R_PG_IO_PORT_PC.obj</Path>
-          <Path>DefaultBuild\R_PG_IO_PORT_PD.obj</Path>
-          <Path>DefaultBuild\R_PG_Timer_MTU_U0_C0.obj</Path>
-          <Path>DefaultBuild\R_PG_Timer_MTU_U0_C1.obj</Path>
-          <Path>DefaultBuild\R_PG_Timer_MTU_U0_C2.obj</Path>
-          <Path>DefaultBuild\R_PG_Timer_MTU_U0_C3.obj</Path>
-          <Path>DefaultBuild\R_PG_Timer_MTU_U0.obj</Path>
-          <Path>DefaultBuild\R_PG_Timer_CMT_U0.obj</Path>
-          <Path>DefaultBuild\R_PG_Timer_CMT_U1.obj</Path>
-          <Path>DefaultBuild\R_PG_SCI_C5.obj</Path>
-          <Path>DefaultBuild\R_PG_ADC_12_S12AD0.obj</Path>
-          <Path>DefaultBuild\Interrupt_INTC.obj</Path>
-          <Path>DefaultBuild\Interrupt_CMT.obj</Path>
-          <Path>DefaultBuild\Interrupt_ADC_12.obj</Path>
-          <Path>DefaultBuild\R_PG_Timer_IWDT.obj</Path>
           <Path>DefaultBuild\E2dataFlash.obj</Path>
           <Path>DefaultBuild\hwsetup.obj</Path>
           <Path>DefaultBuild\I2C_LCD.obj</Path>
-          <Path>DefaultBuild\I2C_MPU-9255.obj</Path>
           <Path>DefaultBuild\LineChase.obj</Path>
           <Path>DefaultBuild\main.obj</Path>
           <Path>DefaultBuild\MemorryTrace.obj</Path>
@@ -261,8 +255,46 @@
           <Path>DefaultBuild\PeripheralFunctions.obj</Path>
           <Path>DefaultBuild\SCI.obj</Path>
           <Path>DefaultBuild\SetUp.obj</Path>
+          <Path>DefaultBuild\SPI_ICM20648.obj</Path>
+          <Path>DefaultBuild\R_PG_Clock.obj</Path>
+          <Path>DefaultBuild\R_PG_IO_PORT.obj</Path>
+          <Path>DefaultBuild\R_PG_IO_PORT_P0.obj</Path>
+          <Path>DefaultBuild\R_PG_IO_PORT_P1.obj</Path>
+          <Path>DefaultBuild\R_PG_IO_PORT_P2.obj</Path>
+          <Path>DefaultBuild\R_PG_IO_PORT_P3.obj</Path>
+          <Path>DefaultBuild\R_PG_IO_PORT_P4.obj</Path>
+          <Path>DefaultBuild\R_PG_IO_PORT_P5.obj</Path>
+          <Path>DefaultBuild\R_PG_IO_PORT_PA.obj</Path>
+          <Path>DefaultBuild\R_PG_IO_PORT_PB.obj</Path>
+          <Path>DefaultBuild\R_PG_IO_PORT_PC.obj</Path>
+          <Path>DefaultBuild\R_PG_IO_PORT_PE.obj</Path>
+          <Path>DefaultBuild\R_PG_Timer_MTU_U0_C0.obj</Path>
+          <Path>DefaultBuild\R_PG_Timer_MTU_U0_C1.obj</Path>
+          <Path>DefaultBuild\R_PG_Timer_MTU_U0_C2.obj</Path>
+          <Path>DefaultBuild\R_PG_Timer_MTU_U0_C3.obj</Path>
+          <Path>DefaultBuild\R_PG_Timer_MTU_U0_C4.obj</Path>
+          <Path>DefaultBuild\R_PG_Timer_MTU_U0.obj</Path>
+          <Path>DefaultBuild\R_PG_Timer_CMT_U0.obj</Path>
+          <Path>DefaultBuild\R_PG_Timer_CMT_U1.obj</Path>
+          <Path>DefaultBuild\R_PG_SCI_C1.obj</Path>
+          <Path>DefaultBuild\R_PG_SCI_C2.obj</Path>
+          <Path>DefaultBuild\R_PG_SCI_C5.obj</Path>
+          <Path>DefaultBuild\R_PG_SCI_C6.obj</Path>
+          <Path>DefaultBuild\R_PG_SCI_C9.obj</Path>
+          <Path>DefaultBuild\R_PG_ADC_12_S12AD0.obj</Path>
+          <Path>DefaultBuild\Interrupt_INTC.obj</Path>
+          <Path>DefaultBuild\Interrupt_CMT.obj</Path>
+          <Path>DefaultBuild\Interrupt_ADC_12.obj</Path>
         </LinkOrder>
         <CommonOptions>
+          <IncludePathForC>IGC-P8080_v1</IncludePathForC>
+          <IncludePathForC>IGC-P8080_v1\i_src</IncludePathForC>
+          <IncludePathForC>IGC-P8080_v1\AD_12</IncludePathForC>
+          <IncludePathForC>IGC-P8080_v1\SCI</IncludePathForC>
+          <IncludePathForC>IGC-P8080_v1\CMT</IncludePathForC>
+          <IncludePathForC>IGC-P8080_v1\MTU</IncludePathForC>
+          <IncludePathForC>IGC-P8080_v1\IO</IncludePathForC>
+          <IncludePathForC>IGC-P8080_v1\SYSTEM</IncludePathForC>
           <IncludePathForC>inc</IncludePathForC>
           <IncludePathForC>RX631_mcr_ver3.0\IWDT</IncludePathForC>
           <IncludePathForC>RX631_mcr_ver3.0</IncludePathForC>

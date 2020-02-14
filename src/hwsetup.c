@@ -19,6 +19,7 @@
 #include "PeripheralFunctions.h"
 #include "MicroSD.h"
 #include "I2C_LCD.h"
+#include "SPI_ICM20648.h"
 #include "SCI.h"
 
 extern void HardwareSetup(void);
@@ -41,10 +42,13 @@ void HardwareSetup(void)
 	SET_MTU_C1
 	SET_MTU_C2
 	SET_MTU_C3
+	SET_MTU_C4
 	
 	//SET_SCI_C1
-	SET_SCI_C5 		// シリアルI/Oチャネルを設定(SPI)
-	SET_SCI_C12 		// シリアルI/Oチャネルを設定(I2C)
+	SET_SCI_C2
+	SET_SCI_C5		// シリアルI/Oチャネルを設定(SPI microSd)
+	//SET_SCI_C6		// シリアルI/Oチャネルを設定(I2C)
+	SET_SCI_C9 		// シリアルI/Oチャネルを設定(I2C)
 	
 	SET_CMT_C0		// コンペアマッチタイマを設定(ch0)
 	SET_CMT_C2		// コンペアマッチタイマを設定(ch2)
@@ -58,4 +62,12 @@ void HardwareSetup(void)
 	START_ADC		// A/D変換開始
 	START_CMT_C0 	// カウントスタート(ch0)
 	START_CMT_C2 	// カウントスタート(ch2)
+	
+	/*----------0:brake　1:stop----------*/	
+	R_PG_IO_PORT_Write_PA0( 0 );	//右前モータ
+	R_PG_IO_PORT_Write_PE4( 0 );	//左前モータ
+	R_PG_IO_PORT_Write_PB4( 0 );	//右後モータ
+	R_PG_IO_PORT_Write_PC5( 0 );	//左後モータ
+	R_PG_IO_PORT_Write_PE6( 1 );	//サーボモータ
+	R_PG_IO_PORT_Write_PC3( 0 );	//ランサーモータ
 }

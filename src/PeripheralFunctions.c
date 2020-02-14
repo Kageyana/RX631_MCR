@@ -3,24 +3,19 @@
 //====================================//
 #include "PeripheralFunctions.h"
 #include "LineChase.h"
-#include "I2C_LCD.h"
-#include "MicroSD.h"
-#include "iodefine.h"
-#include "SCI.h"
-#include "I2C_MPU-9255.h"
 #include <stdio.h>
 #include <string.h>
 
 //====================================//
-// グローバル変数の宣言							//
+// グローバル変数の宣言								//
 //====================================//
 // タイマ関連
 volatile unsigned short	cnt0;		// 関数用タイマ
-static char			ADTimer10;	// AD変換カウント用
+static char				ADTimer10;	// AD変換カウント用
 
 // スイッチ関連
 static unsigned char 	dpsw_d[4];	// ディップスイッチの格納先
-static unsigned char	tasw_d[4];	// スイッチ値の格納先
+static unsigned char	tasw_d[5];	// スイッチ値の格納先
 
 // センサ関連
 static unsigned short 	result[14]; 	// 12bitA/D変換結果の格納先
@@ -30,6 +25,7 @@ static int			senG;	// ゲートセンサ積算AD値
 static int			senC;	// 中心アナログセンサ積算AD値
 static int			senLL;	// 最左端アナログセンサ積算AD値
 static int			senRR;	// 最右端アナログセンサ積算AD値
+static int			VolC;		// 電圧チェッカーAD値
 static int			pot;		// ポテンションメーター積算AD値
 short 			Angle;	// ポテンションメーター平均AD値
 short				sensorR;	// 右アナログセンサ平均AD値
@@ -38,12 +34,10 @@ short				sensorG;	// ゲートセンサ平均AD値
 short				sensorC;	// 中心アナログセンサ平均AD値
 short				sensorLL;	// 最左端アナログセンサ平均AD値
 short				sensorRR;	// 最右端アナログセンサ平均AD値
+short				VoltageC;	// 電圧チェッカーAD値平均値
 short				Angle0;	// サーボセンター値
 
-// ブザー関連
-unsigned short 		BeepPattern;	// ビープ音の出力パターン
-unsigned short 		BeepTimer;	// 50msごとのタイマ
-static char			BeepMode;	// swich用変数
+double		Voltage;
 
 // エンコーダ関連
 static unsigned short 	cnt_Encoder;	// エンコーダ値の格納先
@@ -61,10 +55,10 @@ signed char		accele_rL;		// 左後モーターPWM値
 signed char		sPwm;		// サーボモーターPWM値
 
 /////////////////////////////////////////////////////////////////////
-// モジュール名 ADconverter						//
+// モジュール名 ADconverter							//
 // 処理概要     AD変換割り込み						//
-// 引数         なし								//
-// 戻り値       なし								//
+// 引数         なし									//
+// 戻り値       なし									//
 /////////////////////////////////////////////////////////////////////
 void ADconverter ( void )
 {
@@ -78,34 +72,38 @@ void ADconverter ( void )
 		Angle = pot / 10;
 		sensorR = senR / 10;
 		sensorL = senL / 10;
+		sensorG = senG / 10;
 		sensorC = senC / 10;
 		sensorLL = senLL / 10;
 		sensorRR = senRR / 10;
-		sensorG = senG / 10;
+		VoltageC = VolC /10;
 		
-		senLL = 0;
+		senR = 0;
 		senL = 0;
 		senG = 0;
 		senC = 0;
-		senR = 0;
+		senLL = 0;
 		senRR = 0;
+		
+		VolC = 0;
 		pot = 0;
 	}
 	
 	// AD変換値をバッファに格納
-	senLL += result[3];
-	senL += result[4];
-	senG += result[5];
-	senC += result[6];
-	senR += result[7];
+	pot += result[3];
+	senG += result[4];
+	senLL += result[5];
+	senL += result[6];
+	senC += result[7];
 	senRR += result[8];
-	pot += result[13];
+	senR += result[9];
+	VolC += result[11];
 	
 }
 /////////////////////////////////////////////////////////////////////
 // モジュール名 init_IO								//
 // 処理概要     IOポートの初期化						//
-// 引数         なし								//
+// 引数         なし									//
 // 戻り値       なし                                                   		//
 /////////////////////////////////////////////////////////////////////
 void init_IO(void)
@@ -113,37 +111,55 @@ void init_IO(void)
 	// I/Oポートを設定
 	R_PG_IO_PORT_Set_P1();
 	R_PG_IO_PORT_Set_P2();
+	R_PG_IO_PORT_Set_P3();
 	R_PG_IO_PORT_Set_P5();
 	R_PG_IO_PORT_Set_PA();
 	R_PG_IO_PORT_Set_PB();
 	R_PG_IO_PORT_Set_PC();
+	R_PG_IO_PORT_Set_PE();
 	
 	// すべてのIOポートをLOWにする
 	R_PG_IO_PORT_Write_P1(0);
 	R_PG_IO_PORT_Write_P2(0);
+	R_PG_IO_PORT_Write_P3(0);
 	R_PG_IO_PORT_Write_P5(0);
 	R_PG_IO_PORT_Write_PA(0);
 	R_PG_IO_PORT_Write_PB(0);
 	R_PG_IO_PORT_Write_PC(0);
+	R_PG_IO_PORT_Write_PE(0);
 }
 /////////////////////////////////////////////////////////////////////
-// モジュール名 led_out							//
+// モジュール名 led_out								//
 // 処理概要     LEDの点灯							//
-// 引数         led(対応するLED番号)					//
-// 戻り値       なし								//
+// 引数         rgb 	0x1:青 0x2緑 0x4赤				//
+// 戻り値       なし									//
 /////////////////////////////////////////////////////////////////////
-void led_out ( unsigned char led )
+void led_out ( char rgb )
 {
-	unsigned char led2;
-
-	led2 = led << 1;
-	LED_OUT
+	if ( rgb >> 1 ) LEDB_ON
+	else LEDR_OFF
+	
+	if ( rgb >> 2 ) LEDG_ON
+	else LEDG_OFF
+	
+	if ( rgb >> 3 ) LEDR_ON
+	else LEDB_OFF
+}
+/////////////////////////////////////////////////////////////////////
+// モジュール名 get_voltage							//
+// 処理概要     電圧の取得							//
+// 引数         なし									//
+// 戻り値       なし									//
+/////////////////////////////////////////////////////////////////////
+void get_voltage ( void )
+{
+	Voltage = VoltageC * 5.05 * 3.94 / 4096;
 }
 /////////////////////////////////////////////////////////////////////////////////
 // モジュール名 getEncoder									//
-// 処理概要     エンコーダのカウントを取得し積算する(1msごとに実行)	//
-// 引数         なし										//
-// 戻り値       なし										//
+// 処理概要     エンコーダのカウントを取得し積算する(1msごとに実行)			//
+// 引数         なし											//
+// 戻り値       なし											//
 /////////////////////////////////////////////////////////////////////////////////
 void getEncoder (void)
 {
@@ -157,12 +173,12 @@ void getEncoder (void)
 	
 	encbuff = cnt_Encoder;	// 次回はこの値が1ms前の値となる
 }
-///////////////////////////////////////////////////////////////////////////
-// モジュール名 getSwitch								//
+/////////////////////////////////////////////////////////////////////
+// モジュール名 getSwitch							//
 // 処理概要     スイッチの読み込み(10msごとに実行)			//
 // 引数         なし									//
 // 戻り値       なし									//
-///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
 void getSwitch(void)
 {
 	// タクトスイッチ読み込み
@@ -177,27 +193,27 @@ void getSwitch(void)
 	DIPSWITCH3
 	DIPSWITCH4
 }
-///////////////////////////////////////////////////////////////////////////
-// モジュール名 dipsw_get								//
+/////////////////////////////////////////////////////////////////////
+// モジュール名 dipsw_get							//
 // 処理概要     ディップスイッチ値を16進数で取得				//
 // 引数         なし									//
 // 戻り値       スイッチ値 0～15							//
-///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
 unsigned char dipsw_get(void) 
 {
 	char	dpsw[4];
 	
-	if ( dpsw_d[0] == 0 )	dpsw[0] = 0x1;
-	else			dpsw[0] = 0x0;
+	if ( dpsw_d[0] == 0 )	dpsw[0] = 0x0;
+	else			dpsw[0] = 0x1;
 	
-	if ( dpsw_d[1] == 0 )	dpsw[1] = 0x2;
-	else			dpsw[1] = 0x0;
+	if ( dpsw_d[1] == 0 )	dpsw[1] = 0x0;
+	else			dpsw[1] = 0x2;
 	
-	if ( dpsw_d[2] == 0 )	dpsw[2] = 0x4;
-	else			dpsw[2] = 0x0;
-	
-	if ( dpsw_d[3] == 0 )	dpsw[3] = 0x8;
-	else			dpsw[3] = 0x0;
+	if ( dpsw_d[2] == 0 )	dpsw[2] = 0x0;
+	else			dpsw[2] = 0x4;
+
+	if ( dpsw_d[3] == 0 )	dpsw[3] = 0x0;
+	else			dpsw[3] = 0x8;
 
 	return ( dpsw[0] + dpsw[1] + dpsw[2] + dpsw[3] );
 }
@@ -209,21 +225,24 @@ unsigned char dipsw_get(void)
 ///////////////////////////////////////////////////////////////////////////
 unsigned char tasw_get(void) 
 {
-	char	tasw[4];
+	char	tasw[5];
 	
-	if ( tasw_d[0] == 0 )	tasw[0] = 0x1;
+	if ( tasw_d[0] == 0 )	tasw[0] = SW_LEFT;
 	else			tasw[0] = 0x0;
 	
-	if ( tasw_d[1] == 0 )	tasw[1] = 0x2;	
+	if ( tasw_d[1] == 0 )	tasw[1] = SW_TOP;	
 	else			tasw[1] = 0x0;
 	
-	if ( tasw_d[2] == 0 )	tasw[2] = 0x4;	
+	if ( tasw_d[2] == 0 )	tasw[2] = SW_RIGHT;	
 	else			tasw[2] = 0x0;
 	
-	if ( tasw_d[3] == 0 )	tasw[3] = 0x8;	
+	if ( tasw_d[3] == 0 )	tasw[3] = SW_DOWN;	
 	else			tasw[3] = 0x0;
+	
+	if ( tasw_d[4] == 0 )	tasw[4] = SW_PUSH;
+	else			tasw[4] = 0x0;
 
-	return ( tasw[0] + tasw[1] + tasw[2] + tasw[3] );
+	return ( tasw[0] + tasw[1] + tasw[2] + tasw[3] + tasw[4] );
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 getServoAngle							//
@@ -233,7 +252,7 @@ unsigned char tasw_get(void)
 ///////////////////////////////////////////////////////////////////////////
 short getServoAngle(void) 
 {	
-	return  ( Angle - Angle0 );
+	return  ( Angle0 - Angle );
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 getAnalogSensor							//
@@ -255,11 +274,11 @@ unsigned char sensor_inp(void)
 {
 	char l, c, r;
 	
-	if (sensorRR < 3000 ) r = 0x1;
+	if (sensorRR < 500 ) r = 0x1;
 	else r = 0;
-	if (sensorC < 3000 ) c = 0x2;
+	if (sensorC < 500 ) c = 0x2;
 	else c = 0;
-	if (sensorLL < 3000 ) l = 0x4;
+	if (sensorLL < 500 ) l = 0x4;
 	else l = 0;
 	
 	return l+c+r;
@@ -278,55 +297,6 @@ unsigned char startbar_get(void)
 	else			ret = 0;
 	
 	return ret;
-}
-///////////////////////////////////////////////////////////////////////////
-// モジュール名 init_BeepS								//
-// 処理概要     ブザー関連初期化							//
-// 引数         なし									//
-// 戻り値       なし									//
-///////////////////////////////////////////////////////////////////////////
-void init_BeepS( void )
-{
-    BeepPattern = 0x0000;
-    BeepTimer   = 0;
-    BeepMode    = 0;
-}
-///////////////////////////////////////////////////////////////////////////
-// モジュール名 setBeepPatternS							//
-// 処理概要     ブザー出力パターンセット						//
-// 引数         Beep:鳴動パターン							//
-// 戻り値       なし									//
-///////////////////////////////////////////////////////////////////////////
-void setBeepPatternS( unsigned short Beep )
-{
-    BeepPattern = Beep;
-    BeepTimer   = 0;
-    BeepMode    = 1;
-}
-///////////////////////////////////////////////////////////////////////////
-// モジュール名 beepProcessS							//
-// 処理概要     ブザー処理								//
-// 引数         なし									//
-// 戻り値       なし									//
-// メモ		この関数を1ms毎に実行してください			//
-///////////////////////////////////////////////////////////////////////////
-void beepProcessS( void )
-{
-	if ( BeepMode ) {
-		if ( BeepTimer % 5 == 0 ) {
-			if ( BeepPattern & 0x8000 ) {
-				BEEP_ON
-			} else {
-				BEEP_OFF
-			}
-			BeepPattern <<= 1;
-		}
-		BeepTimer++;
-		if ( BeepTimer == 17 * 5 ) {
-			BeepMode = 0;
-			BEEP_OFF
-		}
-	}
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 motor_f								//
