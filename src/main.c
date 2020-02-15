@@ -242,9 +242,9 @@ void main(void){
 			// LED点滅処理
 			if ( cnt1 >= 2000 ) cnt1 = 0;
 			if ( cnt1 < 1000 ) {
-				led_out( 0x04 );
+				led_out( LED_R );
 			} else {
-				led_out( 0x08 );
+				led_out( LED_B  );
 			}
 			break;
 		//-------------------------------------------------------------------
@@ -295,7 +295,7 @@ void main(void){
 			// カーブブレーキ
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_curve_brake * SPEED_CURRENT;
-			led_out( 0x1e );
+			led_out( LED_R );
 			diff( motorPwm );
 			i = getServoAngle();
 			
@@ -484,7 +484,7 @@ void main(void){
 			servoPwmOut( 0 );
 			targetSpeed = speed_crossline* SPEED_CURRENT;
 			diff( motorPwm );
-			led_out( 0x03 );
+			led_out( LED_G );
 			
 			if( enc1 > enc_mm( 90 ) ) {		// 60mm進む
 				enc1 = 0;
@@ -497,12 +497,11 @@ void main(void){
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_ckank_trace * SPEED_CURRENT;
 			diff( motorPwm );
-			led_out( 0x06 );
 			
 			// 右クランクチェック
 			if( sensor_inp() ==  0x3 ) {
 				enc1 = 0;
-				led_out( 0x01 );
+				led_out( LED_R | LED_G);
 				SetAngle = angle_rightclank;
 				angle_mode = 1;
 				TurningAngleEnc = 0;
@@ -513,7 +512,7 @@ void main(void){
 			// 左クランクチェック
 			if( sensor_inp() ==  0x6 ) {
 				enc1 = 0;
-				led_out( 0x02 );
+				led_out( LED_G | LED_B );
 				SetAngle = angle_leftclank;
 				angle_mode = 1;
 				TurningAngleEnc = 0;
@@ -586,7 +585,6 @@ void main(void){
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_rightclank_escape * SPEED_CURRENT;
 			diff( motorPwm );
-			led_out(0x06);
 			/*
 			// クロスラインチェック
 			if( check_crossline() ) {
@@ -682,7 +680,6 @@ void main(void){
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_leftclank_escape * SPEED_CURRENT;
 			diff( motorPwm );
-			led_out(0x06);
 			/*
 			// クロスラインチェック
 			if( check_crossline() ) {
@@ -742,7 +739,7 @@ void main(void){
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_rightchange_trace * SPEED_CURRENT;
 			diff( motorPwm );
-			led_out( 0x04 );
+			led_out( LED_R );
 			
 			if( sensor_inp() == 0x0 ) {
 				enc1 = 0;
@@ -880,7 +877,7 @@ void main(void){
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_leftchange_trace * SPEED_CURRENT;
 			diff( motorPwm );
-			led_out( 0x08 );
+			led_out( LED_B );
 			
 			if( sensor_inp() == 0x0 ) {
 				enc1 = 0;
@@ -998,14 +995,14 @@ void main(void){
 					// 上り始め
 					slope_mode = 1;
 					enc1 = 0;
-					led_out( 0x18 );
+					led_out( LED_R | LED_B );
 					pattern = 72;
 					break;
 				} else if ( slope_mode == 2 && enc_slope >= enc_mm( 600 ) ) {
 					// 下り終わり
 					slope_mode = 3;
 					enc1 = 0;
-					led_out( 0x05 );
+					led_out( LED_R | LED_G | LED_B);
 					pattern = 74;
 					break;
 				} else {
@@ -1018,7 +1015,6 @@ void main(void){
 					// 上り終わり、下り始め
 					slope_mode = 2;
 					enc1 = 0;
-					led_out( 0x05 );
 					pattern = 75;
 					break;
 				} else {
@@ -1042,7 +1038,6 @@ void main(void){
 			
 			if( enc1 >= enc_mm( 1200 ) ) {
 				enc1 = 0;
-				led_out( 0x03 );
 				pattern = 73;
 				break;
 			}
@@ -1056,7 +1051,6 @@ void main(void){
 			
 			if( enc1 >= enc_mm( 50 ) ) {
 				enc1 = 0;
-				led_out( 0x10 );
 				pattern = 75;
 				break;
 			}
@@ -1069,7 +1063,6 @@ void main(void){
 			diff( motorPwm );
 			if( enc1 >= enc_mm( 40 ) ) {
 				enc1 = 0;
-				led_out( 0x0f );
 				pattern = 75;
 				break;
 			}
@@ -1101,7 +1094,6 @@ void main(void){
 			// クロスラインチェック
 			if( check_crossline() ) {
 				enc1 = 0;
-				led_out( 0x03 );
 				pattern = 21;
 				break;
       			}
@@ -1211,7 +1203,7 @@ void main(void){
 			// LED点滅処理
 			if( cnt1 >= 200 ) cnt1 = 0;
 			if( cnt1 < 100 ) {
-				led_out( 0x1f );
+				led_out( LED_R  | LED_G  | LED_B );
 			}else{
 				led_out( 0x00 );
 			}
@@ -1222,7 +1214,7 @@ void main(void){
 			// LED点滅処理
 			if( cnt1 >= 200 ) cnt1 = 0;
 			if( cnt1 < 100 ) {
-				led_out( 0x15 );
+				led_out( LED_R  | LED_B );
 			}else{
 				led_out( 0x00 );
 			}
