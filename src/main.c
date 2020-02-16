@@ -243,12 +243,12 @@ void main(void){
 				break;
 			}
 			// 坂道チェック
-			if ( EncoderTotal >= 5609 ) {
+			/*if ( EncoderTotal >= 5609 ) {
 				if( check_slope() == 1 || check_slope() == -1 ) {
 					pattern = 71;
 					break;
 				}
-			}
+			}*/
 			// カーブチェック
 			if ( i >=  CURVE_R600_START || i <= -CURVE_R600_START ) {
 				enc1 = 0;
@@ -293,12 +293,12 @@ void main(void){
 				break;
 			}
 			// 坂道チェック
-			if ( EncoderTotal >= 5609 ) {
+			/*if ( EncoderTotal >= 5609 ) {
 				if ( check_slope() == 1 || check_slope() == -1 ) {
 					pattern = 71;
 					break;
 				}
-			}
+			}*/
 			if ( memory_mode ) {
 				enc1 = 0;
 				pattern = 16;
@@ -338,12 +338,12 @@ void main(void){
 				break;
 			}
 			// 坂道チェック
-			if ( EncoderTotal >= 5609 ) {
+			/*if ( EncoderTotal >= 5609 ) {
 				if ( check_slope() == 1 || check_slope() == -1 ) {
 					pattern = 71;
 					break;
 				}
-			}
+			}*/
 			// R450チェック
 			if ( i >= CURVE_R450_START || i <= -CURVE_R450_START ) {
 				enc1 = 0;
@@ -424,12 +424,12 @@ void main(void){
 				break;
 			}
 			// 坂道チェック
-			if ( EncoderTotal >= 5609 ) {
+			/*if ( EncoderTotal >= 5609 ) {
 				if ( check_slope() == 1 || check_slope() == -1 ) {
 					pattern = 71;
 					break;
 				}
-			}
+			}*/
 			// カーブチェック
 			if( i >=  CURVE_R600_START || i <= - CURVE_R600_START ) {
 				enc1 = 0;
@@ -501,7 +501,7 @@ void main(void){
 			diff( motorPwm );
 			
 			if ( i >= 20 ) {
-				if( j <= -1800 ) {
+				if( j <= -1800 && sensor_inp() == 0x2 ) {
 					enc1 = 0;
 					i = (short)-TurningAngleIMU;
 					pattern = 34;
@@ -519,11 +519,12 @@ void main(void){
 			diff( motorPwm );
 			
 			if( -TurningAngleIMU <= 90 && -TurningAngleIMU >= 40) {
-				if( j <= -1800 ) {
+				if( j <= -1800 && sensor_inp() == 0x2 ) {
 					enc1 = 0;
 					i = (short)TurningAngleIMU;
 					i = -i;
-					pattern = 34;
+					j = getServoAngle();
+					pattern = 36;
 					break;
 				}
 			}
@@ -533,7 +534,7 @@ void main(void){
 			// 角度維持
 			// sensor_inp() == 2を読んだあとに実行
 			SetAngle = -( 90 - 10 - i ) * (435/35);	// ラインからの角度10°
-			//SetAngle = j + 160
+			//SetAngle = angle_rightclank + 160;
 			targetSpeed = speed_rightclank_escape * SPEED_CURRENT;
 			servoPwmOut( ServoPwm2 );
 			j = getAnalogSensor();
@@ -568,30 +569,15 @@ void main(void){
 			SetAngle = angle_leftclank;
 			servoPwmOut( ServoPwm2 );
 			targetSpeed = speed_leftclank_curve * SPEED_CURRENT;
+			i = -TurningAngleIMU;
 			j = getAnalogSensor();
 			diff( motorPwm );
 			
-			if( TurningAngleIMU <= 30 ) {
-				if( sensor_inp() == 0x2 ) {
-					enc1 = 0;
-					angle_mode = 0;
-					Int = 0;			// 積分リセット
-					pattern = 46;
-					break;
-				}
-			} else if ( TurningAngleIMU >= 20 ) {
-				if( j >= 1800 ) {
+			if ( i >= 20 ) {
+				if( j >= 1800 && sensor_inp() == 0x2 ) {
 					enc1 = 0;
 					i = TurningAngleIMU;
 					pattern = 44;
-					break;
-				}
-			}
-			if ( i >= 20 ) {
-				if( j <= -1800 ) {
-					enc1 = 0;
-					i = (short)-TurningAngleIMU;
-					pattern = 34;
 					break;
 				}
 			}
@@ -606,10 +592,10 @@ void main(void){
 			diff( motorPwm );
 			
 			if( TurningAngleIMU <= 90 && TurningAngleIMU >= 40) {
-				if( j >= 1800 ) {
+				if( j >= 1800 && sensor_inp() == 0x2 ) {
 					enc1 = 0;
 					i = TurningAngleIMU;
-					pattern = 44;
+					pattern = 46;
 					break;
 				}
 			}
@@ -619,6 +605,7 @@ void main(void){
 			// 角度維持
 			// sensor_inp() == 2を読んだあとに実行
 			SetAngle = ( 90 - 10 - i ) * (435/35);	// ラインからの角度10°
+			//SetAngle = angle_leftclank - 160;
 			targetSpeed = speed_leftclank_escape * SPEED_CURRENT;
 			servoPwmOut( ServoPwm2 );
 			j = getAnalogSensor();
@@ -747,12 +734,12 @@ void main(void){
 			diff( motorPwm );
 
 			// 坂道チェック
-			if( EncoderTotal >= 5609 ) {
+			/*if( EncoderTotal >= 5609 ) {
 				if( check_slope() == 1 || check_slope() == -1 ) {
 					pattern = 71;
 					break;
 				}
-			}
+			}*/
 			if( enc1 >= enc_mm( 600 ) ) {
 				enc1 = 0;
 				led_out( 0x0 );
@@ -859,12 +846,12 @@ void main(void){
 			diff( motorPwm );
 
 			// 坂道チェック
-			if( EncoderTotal >= enc_mm( 1000 ) ) {
+			/*if( EncoderTotal >= enc_mm( 1000 ) ) {
 				if( check_slope() == 1 || check_slope() == -1 ) {
 					pattern = 71;
 					break;
 				}
-			}
+			}*/
 			if( enc1 >= enc_mm( 600 ) ) {
 				enc1 = 0;
 				led_out( 0x0 );
@@ -1160,6 +1147,8 @@ void Timer (void) {
 	}
 	cnt0++;
 	cnt1++;
+	
+	
 	cnt_gyro++;
 			
 	// LCD表示
@@ -1203,16 +1192,7 @@ void Timer (void) {
 	
 	// 通信
 	// 加速度及び角速度を取得
-	read_gyro_data();
-	read_accel_data();
-	getTurningAngleIMU();
-	getPichAngleIMU();
-	getRollAngleIMU();
-	if (cnt_gyro > 200) {
-		RollAngleIMU = 0;
-		PichAngleIMU = 0;
-		cnt_gyro  = 0;
-	}
+	
 		
 	// 10ｍごとに実行
 	switch ( Timer10 ) {	
@@ -1221,6 +1201,16 @@ void Timer (void) {
 		get_voltage();		// 電源電圧取得
 		break;
 	case 2:
+		read_gyro_data();
+		read_accel_data();
+		getTurningAngleIMU();
+		getPichAngleIMU();
+		getRollAngleIMU();
+		if (cnt_gyro > 200) {
+			RollAngleIMU = 0;
+			PichAngleIMU = 0;
+			cnt_gyro  = 0;
+		}
 		break;
 	case 3:
 		break;

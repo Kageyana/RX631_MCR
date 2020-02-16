@@ -137,16 +137,16 @@ void read_gyro_data() {
 	char val[6];
 	read_arry(GYRO_XOUT_H, val);
 	
-	xg = ((int16_t)val[0] << 8) | ((int16_t)val[1]);
-	yg = ((int16_t)val[2] << 8) | ((int16_t)val[3]);
-	zg = ((int16_t)val[4] << 8) | ((int16_t)val[5]);
-	
+	xg = (int16_t)((val[0] << 8 & 0xff00 ) | val[1]);
+	yg = (int16_t)((val[2] << 8 & 0xff00 ) | val[3]);
+	zg = (int16_t)((val[4] << 8 & 0xff00 ) | val[5]);
+	/*
 	if ( xg < 0 ) xg += offset[0];
 	else		xg -= offset[0];
 	if ( yg < 0 ) yg += offset[1];
 	else		yg -= offset[1];
 	if ( zg < 0 ) zg += offset[2];
-	else		zg -= offset[2];
+	else		zg -= offset[2];*/
 }
 /////////////////////////////////////////////////////////////////////
 // モジュール名 check_crossline						//
@@ -174,10 +174,8 @@ void getTurningAngleIMU(void)
 	int intzg;
 	
 	angularVelocity_zg = (double)(zg) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
-	intzg = (int)(angularVelocity_zg*1);
-	angularVelocity_zg = (double)intzg / 1;
 	
-	TurningAngleIMU += (double)( angularVelocity_zg) * DELTATIMU;
+	TurningAngleIMU += angularVelocity_zg * DELTATIMU;
 	
 }
 /////////////////////////////////////////////////////////////////////
@@ -192,10 +190,8 @@ void getRollAngleIMU(void)
 	int intyg;
 	
 	angularVelocity_yg = (double)(yg) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
-	intyg = (int)(angularVelocity_yg*1);
-	angularVelocity_yg = (double)intyg / 1;
 	
-	RollAngleIMU -= (double)( angularVelocity_yg) * DELTATIMU;
+	RollAngleIMU -= angularVelocity_yg * DELTATIMU;
 	
 }
 /////////////////////////////////////////////////////////////////////
@@ -210,9 +206,7 @@ void getPichAngleIMU( void )
 	int intxg;
 	
 	angularVelocity_xg = (double)(xg) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
-	intxg = (int)(angularVelocity_xg*1);
-	angularVelocity_xg = (double)intxg / 1;
 	
-	PichAngleIMU -= (double)( angularVelocity_xg) * DELTATIMU;
+	PichAngleIMU -= angularVelocity_xg * DELTATIMU;
 	
 }

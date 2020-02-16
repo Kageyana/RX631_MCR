@@ -9,7 +9,7 @@
 * Version      : 
 * Description  : 
 ******************************************************************************
-* History : 15.02.2020 Version Description
+* History : 16.02.2020 Version Description
 *         :   
 ******************************************************************************/
 
@@ -39,7 +39,6 @@ Includes   <System Includes> , "Project Includes"
 #include ".\CMT\R_PG_Timer_CMT_U1.h"
 #include ".\SCI\R_PG_SCI_C2.h"
 #include ".\SCI\R_PG_SCI_C5.h"
-#include ".\SCI\R_PG_SCI_C6.h"
 #include ".\SCI\R_PG_SCI_C9.h"
 #include ".\AD_12\R_PG_ADC_12_S12AD0.h"
 

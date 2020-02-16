@@ -606,11 +606,14 @@ void setup( void )
 					lcdPrintf("        ");
 					cnt_led = 0x00;
 					if ( tasw_get() == SW_PUSH) {
+						while(1){
 						while( cnt_led <= 0x7 ) {
 							led_out( cnt_led );
 							cnt_led++;
 							wait_lcd(200);
  						}
+						cnt_led = 0x00;
+						}
 					}
 					break;
 					
@@ -1246,7 +1249,7 @@ char fix_speedsetting ( void )
 		speed_curve_straight	= 30;
 		
 		speed_crossline		= 25;
-		speed_ckank_trace	= 22;
+		speed_ckank_trace	= 20;
 		speed_rightclank_curve	= 18;
 		speed_rightclank_escape	= 30;
 		speed_leftclank_curve	= 18;

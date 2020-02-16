@@ -14,7 +14,7 @@
 #define PALSE_METER		24750	// 1mのパルス
 #define PALSE_MILLIMETER	24.75F	// 1mmのパルス
 #define SPEED_CURRENT		25		// 1m/sの時　1msのパルス
-#define GATE_VAL			260		// ゲートセンサしきい値
+#define GATE_VAL			190		// ゲートセンサしきい値
 
 #define SW_LEFT			0x1
 #define SW_TOP			0x2

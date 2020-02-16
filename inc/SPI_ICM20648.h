@@ -114,7 +114,7 @@
 
 #define MAXDATA_RANGE		32764	// 16bitデータの最大値
 #define G_ACCELERATION		9.81		// 重力加速度
-#define DELTATIMU			0.001F	// 取得周期
+#define DELTATIMU			0.01F	// 取得周期
 #define SAMPLE				5000		// キャリブレーション回数
 //==========================//
 // グローバル変数の宣言					//
