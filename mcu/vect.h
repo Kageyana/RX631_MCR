@@ -799,6 +799,7 @@ void Excep_SCI5_TXI5(void);
 #pragma interrupt (Excep_SCI5_TEI5(vect=231))
 void Excep_SCI5_TEI5(void);
 */
+/*
 // SCI6 RXI6
 #pragma interrupt (Excep_SCI6_RXI6(vect=232))
 void Excep_SCI6_RXI6(void);
@@ -810,7 +811,7 @@ void Excep_SCI6_TXI6(void);
 // SCI6 TEI6
 #pragma interrupt (Excep_SCI6_TEI6(vect=234))
 void Excep_SCI6_TEI6(void);
-
+*/
 // SCI7 RXI7
 #pragma interrupt (Excep_SCI7_RXI7(vect=235))
 void Excep_SCI7_RXI7(void);

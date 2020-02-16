@@ -18,8 +18,6 @@
 #include "MicroSD.h"
 #include "SPI_ICM20648.h"
 #include "MemorryTrace.h"
-//#include <stdio.h>
-
 //====================================//
 // グローバル変数の宣言								//
 //====================================//
@@ -66,9 +64,6 @@ void main(void){
 	angle_mode = 0;		// 白線トレース
 	start = 0;				// ゲートスタート
 	
-	// SCI1初期化
-	SET_SCI_C1
-	init_SCI1( UART, RATE_230400 );
 	//IMU初期化
 	IMU_init();
 	// フラッシュ初期化
@@ -80,42 +75,14 @@ void main(void){
 	// 電源電圧確認
 	cnt1=0;
 	
-	LEDR_OFF;
-	LEDG_OFF;
-	LEDB_OFF;
-	
-	while(Voltage > 11.0 && cnt1 < 2000){
+	while(msdset == 1 && cnt1 < 2000){
 		lcdPosition( 0, 0 );
 		lcdPrintf(" SYSTEM ");
 		lcdPosition( 0, 1 );
 		lcdPrintf("ALLGREEN");
-		LEDR_OFF;
-		LEDG_ON;
-		LEDB_OFF;
+		led_out(0x2);
 	}
-	
-	while(Voltage > 10.5 && cnt1 < 2000){
-		lcdPosition( 0, 0 );
-		lcdPrintf(" SYSTEM ");
-		lcdPosition( 0, 1 );
-		lcdPrintf("CAUTION!");
-		LEDR_ON;
-		LEDG_ON;
-		LEDB_OFF;
-	}
-	
-	while(Voltage < 10.5 && cnt1 < 2000){
-		lcdPosition( 0, 0 );
-		lcdPrintf(" SYSTEM ");
-		lcdPosition( 0, 1 );
-		lcdPrintf("WARNING!");
-		LEDR_ON;
-		LEDG_OFF;
-		LEDB_OFF;
-	}
-	
-	LEDR_OFF;
-	LEDG_OFF;
+	led_out(0);
 	
 	while(1){
 		__setpsw_i();
@@ -161,7 +128,7 @@ void main(void){
 				lcdPrintf("log %3d", logmeter());
 			}
 			// スイッチで停止
-			if ( tasw_get() == 0x4 ) {
+			if ( cnt1 >= 1000 && tasw_get() == SW_PUSH ) {
 				error_mode = 6;
 				pattern = 101;
 			}
@@ -481,7 +448,7 @@ void main(void){
 		//【020】クランク検出処理
 		//-------------------------------------------------------------------
 		case 21:
-			servoPwmOut( 0 );
+			servoPwmOut( ServoPwm );
 			targetSpeed = speed_crossline* SPEED_CURRENT;
 			diff( motorPwm );
 			led_out( LED_G );
@@ -566,12 +533,13 @@ void main(void){
 			// 角度維持
 			// sensor_inp() == 2を読んだあとに実行
 			SetAngle = -( 90 - 10 - i ) * (435/35);	// ラインからの角度10°
+			//SetAngle = j + 160
 			targetSpeed = speed_rightclank_escape * SPEED_CURRENT;
 			servoPwmOut( ServoPwm2 );
 			j = getAnalogSensor();
 			diff( motorPwm );
 			
-			if( sensor_inp() == 0x2 && j >= -1800) {
+			if( sensor_inp() == 0x2 && j >= -1800 ) {
 				enc1 = 0;
 				angle_mode = 0;
 				Int = 0;			// 積分リセット
@@ -585,25 +553,7 @@ void main(void){
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_rightclank_escape * SPEED_CURRENT;
 			diff( motorPwm );
-			/*
-			// クロスラインチェック
-			if( check_crossline() ) {
-				enc1 = 0;
-				pattern = 21;
-				break;
-      			}
-			// 右ハーフラインチェック
-   			if( check_rightline() ) {
-				enc1 = 0;
-				pattern = 51;
-				break;
-			}
-			// 左ハーフラインチェック
-   			if( check_leftline() ) {
-				enc1 = 0;
-				pattern = 61;
-				break;
-			}*/
+
 			if( enc1 >= enc_mm( 600 ) ) {		// 安定するまで待つ(600mm)
 				enc1 = 0;
 				led_out( 0x0 );
@@ -634,6 +584,14 @@ void main(void){
 					enc1 = 0;
 					i = TurningAngleIMU;
 					pattern = 44;
+					break;
+				}
+			}
+			if ( i >= 20 ) {
+				if( j <= -1800 ) {
+					enc1 = 0;
+					i = (short)-TurningAngleIMU;
+					pattern = 34;
 					break;
 				}
 			}
@@ -680,25 +638,7 @@ void main(void){
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_leftclank_escape * SPEED_CURRENT;
 			diff( motorPwm );
-			/*
-			// クロスラインチェック
-			if( check_crossline() ) {
-				enc1 = 0;
-				pattern = 21;
-				break;
-      			}
-			// 右ハーフラインチェック
-   			if( check_rightline() ) {
-				enc1 = 0;
-				pattern = 51;
-				break;
-			}
-			// 左ハーフラインチェック
-   			if( check_leftline() ) {
-				enc1 = 0;
-				pattern = 61;
-				break;
-			}*/
+			
 			if( enc1 >= enc_mm( 600 ) ) {		// 安定するまで待つ(600mm)
 				enc1 = 0;
 				led_out( 0x0 );
@@ -721,13 +661,7 @@ void main(void){
 				pattern = 52;
 				break;
 			}
-			/*if( enc1 <=  enc_mm( 20 ) ) {
-				if( sensor_inp() == 0x2 ) {
-					enc1 = 0;
-					pattern = 11;
-					break;
-				}
-			}*/
+			
 			if( check_crossline() ) {		// クロスラインチェック
 				enc1 = 0;
 				pattern = 21;
@@ -811,25 +745,7 @@ void main(void){
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_rightchange_escape * SPEED_CURRENT;
 			diff( motorPwm );
-			/*
-			// クロスラインチェック
-			if( check_crossline() ) {
-				enc1 = 0;
-				pattern = 21;
-				break;
-      			}
-			// 右ハーフラインチェック
-   			if( check_rightline() ) {
-				enc1 = 0;
-				pattern = 51;
-				break;
-			}
-			// 左ハーフラインチェック
-   			if( check_leftline() ) {
-				enc1 = 0;
-				pattern = 61;
-				break;
-			}*/
+
 			// 坂道チェック
 			if( EncoderTotal >= 5609 ) {
 				if( check_slope() == 1 || check_slope() == -1 ) {
@@ -859,13 +775,6 @@ void main(void){
 				pattern = 62;
 				break;
 			}
-			/*if( enc1 <=  enc_mm( 20 ) ) {
-				if( sensor_inp() == 0x2 ) {
-					enc1 = 0;
-					pattern = 11;
-					break;
-				}
-			}*/
 			if( check_crossline() ) {		// クロスラインチェック
 				enc1 = 0;
 				pattern = 21;
@@ -948,26 +857,7 @@ void main(void){
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_leftchange_escape * SPEED_CURRENT;
 			diff( motorPwm );
-			/*
-			// クロスラインチェック
-			if( check_crossline() ) {
-				enc1 = 0;
-				pattern = 21;
-				break;
-      			}
-			// 右ハーフラインチェック
-   			if( check_rightline() ) {
-				enc1 = 0;
-				pattern = 51;
-				break;
-			}
-			// 左ハーフラインチェック
-   			if( check_leftline() ) {
-				enc1 = 0;
-				pattern = 61;
-				break;
-			}
-			*/
+
 			// 坂道チェック
 			if( EncoderTotal >= enc_mm( 1000 ) ) {
 				if( check_slope() == 1 || check_slope() == -1 ) {
@@ -1138,6 +1028,11 @@ void main(void){
 		case 101:
 			enc1 = 0;	
 			ui = cnt1;	// 走行時間取得
+			
+			LEDR_OFF;
+			LEDG_OFF;
+			LEDB_OFF;
+	
 			pattern = 102;
 			break;
 			
@@ -1147,7 +1042,7 @@ void main(void){
 			motor_f( motorPwm, motorPwm );
 			motor_r( motorPwm, motorPwm );
 			
-			if( Encoder < 0 && Encoder >= -1 ) {
+			if( Encoder <= 0 && Encoder >= -1 ) {
 				enc1 = 0;
 				pattern = 103;
 				break;
@@ -1203,9 +1098,9 @@ void main(void){
 			// LED点滅処理
 			if( cnt1 >= 200 ) cnt1 = 0;
 			if( cnt1 < 100 ) {
-				led_out( LED_R  | LED_G  | LED_B );
+				LEDB_ON;
 			}else{
-				led_out( 0x00 );
+				LEDB_OFF;
 			}
 			break;
 			
@@ -1214,9 +1109,9 @@ void main(void){
 			// LED点滅処理
 			if( cnt1 >= 200 ) cnt1 = 0;
 			if( cnt1 < 100 ) {
-				led_out( LED_R  | LED_B );
+				LEDR_ON;
 			}else{
-				led_out( 0x00 );
+				LEDR_OFF;
 			}
 			break;
 			
@@ -1230,8 +1125,8 @@ void main(void){
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 Timer									//
 // 処理概要     1msごとにタイマ割り込み						//
-// 引数         なし									//
-// 戻り値       なし									//
+// 引数         なし										//
+// 戻り値       なし										//
 ///////////////////////////////////////////////////////////////////////////
 void Timer (void) {
 	short s;
@@ -1345,7 +1240,6 @@ void Timer (void) {
 	default:
 		break;
 	}
-
 }
 
 ///////////////////////////////////////////////////////////////////////////

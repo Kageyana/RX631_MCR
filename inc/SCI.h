@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <string.h>
 //#include "vect.h"
-#include "SPI_ICM20648.h"
 #include "PeripheralFunctions.h"
 //======================================//
 // シンボル定義                         //
@@ -51,7 +50,6 @@
 #define	SPI			3
 #define	RW_BIT		1
 
-#define	SET_SCI_C1	init_SCI1( I2C, 0);
 #define	PRINT_ON		1
 #define	PRINT_OFF	0
 //====================================//
@@ -89,21 +87,8 @@ extern char	ascii_num[];
 //====================================//
 // プロトタイプ宣言								//
 //====================================//
-void init_SCI1( char mode, char rate );
-void Excep_SCI1_RXI1( void );
-void Excep_SCI1_TXI1( void );
-void Excep_SCI1_TEI1( void );
-void commandSCI1 (void);
-void send_SCI1_I2c( char slaveaddr, char* data, char num );
-char send_SCI1_I2cWait( char slaveaddr, char* data, char num );
-void receive_SCI1_I2c( char slaveaddr, char* data, char num );
-bool receive_data_SCI1_I2c( char slaveaddr, char* sendData, char* receiveData, char num );
+void init_SCI1( char rate );
+void init_SCI6( char rate );
 
-void init_SCI12( void );
-void send_SCI12_I2c( char slaveaddr, char* data, char num );
-void Excep_SCI12_TXI12( void );
-void Excep_SCI12_TEI12( void );
-
-void chaek_SCI_Error( void );
 
 #endif /* SCI_H_ */

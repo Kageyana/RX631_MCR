@@ -8,12 +8,14 @@
 volatile int16_t	xa, ya, za; // 加速度(16bitデータ)
 volatile int16_t	xg, yg, zg;	// 角加速度(16bitデータ)
 volatile uint8_t	who_am_i,ret,imuflag;
+volatile int16_t	offset[3] = { 0,0,0 };	// オフセット値
+volatile char 	caribration;
 
 double 		TurningAngleIMU;	// yaw軸角度
 double		RollAngleIMU;		// Roll角度
 double 		PichAngleIMU;		// Pich角度
 /////////////////////////////////////////////////////////////////////
-// モジュール名 check_crossline						//
+// モジュール名 read_byte							//
 // 処理概要     クロスライン検知							//
 // 引数         なし									//
 // 戻り値       0:クロスラインなし 1:あり						//
@@ -30,7 +32,7 @@ uint8_t read_byte( uint8_t reg ) {
 	return val[0];
 }
 /////////////////////////////////////////////////////////////////////
-// モジュール名 check_crossline						//
+// モジュール名 write_byte							//
 // 処理概要     クロスライン検知							//
 // 引数         なし									//
 // 戻り値       0:クロスラインなし 1:あり						//
@@ -46,6 +48,22 @@ void write_byte( uint8_t reg, uint8_t val )  {
 	CS_SET;
 }
 /////////////////////////////////////////////////////////////////////
+// モジュール名 read_arry							//
+// 処理概要     クロスライン検知							//
+// 引数         なし									//
+// 戻り値       0:クロスラインなし 1:あり						//
+////////////////////////////////////////////////////////////////////
+void read_arry( uint8_t reg, char *val ) {
+	uint8_t ret[1],dummy[1];
+	
+	ret[0] = reg | 0x80;
+	CS_RESET;
+	R_PG_SCI_SPIMode_Transfer_C2( ret, dummy, 1);
+	R_PG_SCI_SPIMode_Transfer_C2( dummy, val, 6);
+	CS_SET;
+	
+}
+/////////////////////////////////////////////////////////////////////
 // モジュール名 check_crossline						//
 // 処理概要     クロスライン検知							//
 // 引数         なし									//
@@ -57,14 +75,14 @@ uint8_t IMU_init() {
 	who_am_i = read_byte(0x00);	//IMU動作確認　0xE0が送られてくればおｋ
 	if ( who_am_i == 0xE0 ) {
 		ret = 1;
-		write_byte(0x06,0x01);	//PWR_MGMT_1	スリープﾓｰﾄﾞ解除
-		write_byte(0x03,0x10);	//USER_CTRL	諸々機能無効　SPIonly
-		write_byte(0x7F,0x20);	//USER_BANK2
-		write_byte(0x01,0x06);	//レンジ±2000dps
+		write_byte(PWR_MGMT_1,0x01);	//PWR_MGMT_1	スリープﾓｰﾄﾞ解除
+		write_byte(USER_CTRL,0x10);		//USER_CTRL	諸々機能無効　SPIonly
+		write_byte(REG_BANK_SEL,0x20);	//USER_BANK2
+		write_byte(GYRO_CONFIG_1,0x04);	//レンジ±1000dps
 		//2:1 GYRO_FS_SEL[1:0] 00:±250	01:±500 10:±1000 11:±2000
-		write_byte(0x14,0x06);	//レンジ±16g
+		write_byte(ACCEL_CONFIG,0x04);	//レンジ±8g
 		//2:1 ACCEL_FS_SEL[1:0] 00:±2	01:±4 10:±8 11:±16
-		write_byte(0x7F,0x00);	//USER_BANK0
+		write_byte(REG_BANK_SEL,0x00);	//USER_BANK0
 	}
 	return ret;
 }
@@ -74,10 +92,61 @@ uint8_t IMU_init() {
 // 引数         なし									//
 // 戻り値       0:クロスラインなし 1:あり						//
 ////////////////////////////////////////////////////////////////////
+void caribrateIMU(void)
+{
+	char val[14];
+	short i, j, axisData[8];
+	int axg = 0, ayg = 0, azg = 0;
+	
+	STOP_CMT_C0
+	for ( i = 0; i < SAMPLE; i++ ) {
+		read_arry(GYRO_XOUT_H, val);
+		for ( j = 0; j < 3; j++ ) {
+			axisData[j] = (short)((val[j * 2] << 8 & 0xff00 ) | val[j * 2 + 1]);
+			axisData[j] = axisData[j] & 0xfff8;
+		}
+		axg += axisData[0];
+		ayg += axisData[1];
+		azg += axisData[2];
+	}
+	axg /= SAMPLE;
+	ayg /= SAMPLE;
+	azg /= SAMPLE;
+	
+	offset[0] = axg / SAMPLE;
+	offset[1] = ayg / SAMPLE;
+	offset[2] = azg / SAMPLE;
+	
+	if ( offset[0] < 0 ) offset[0] = -offset[0];
+	if ( offset[1] < 0 ) offset[1] = -offset[1];
+	if ( offset[2] < 0 ) offset[2] = -offset[2];
+	
+	TurningAngleIMU = 0;
+	RollAngleIMU = 0;
+	PichAngleIMU = 0;
+	
+	START_CMT_C0
+}
+/////////////////////////////////////////////////////////////////////
+// モジュール名 check_crossline						//
+// 処理概要     クロスライン検知							//
+// 引数         なし									//
+// 戻り値       0:クロスラインなし 1:あり						//
+////////////////////////////////////////////////////////////////////
 void read_gyro_data() {
-	xg = ((int16_t)read_byte(0x33) << 8) | ((int16_t)read_byte(0x34));
-	yg = ((int16_t)read_byte(0x35) << 8) | ((int16_t)read_byte(0x36));
-	zg = ((int16_t)read_byte(0x37) << 8) | ((int16_t)read_byte(0x38));
+	char val[6];
+	read_arry(GYRO_XOUT_H, val);
+	
+	xg = ((int16_t)val[0] << 8) | ((int16_t)val[1]);
+	yg = ((int16_t)val[2] << 8) | ((int16_t)val[3]);
+	zg = ((int16_t)val[4] << 8) | ((int16_t)val[5]);
+	
+	if ( xg < 0 ) xg += offset[0];
+	else		xg -= offset[0];
+	if ( yg < 0 ) yg += offset[1];
+	else		yg -= offset[1];
+	if ( zg < 0 ) zg += offset[2];
+	else		zg -= offset[2];
 }
 /////////////////////////////////////////////////////////////////////
 // モジュール名 check_crossline						//
@@ -86,9 +155,12 @@ void read_gyro_data() {
 // 戻り値       0:クロスラインなし 1:あり						//
 ////////////////////////////////////////////////////////////////////
 void read_accel_data() {
-	xa = ((int16_t)read_byte(0x2D) << 8) | ((int16_t)read_byte(0x2E));
-	ya = ((int16_t)read_byte(0x2F) << 8) | ((int16_t)read_byte(0x30));
-	za = ((int16_t)read_byte(0x31) << 8) | ((int16_t)read_byte(0x32));
+	char val[6];
+	read_arry(ACCEL_XOUT_H, val);
+	
+	xa = ((int16_t)val[0] << 8) | ((int16_t)val[1]);
+	ya = ((int16_t)val[2] << 8) | ((int16_t)val[3]);
+	za = ((int16_t)val[4] << 8) | ((int16_t)val[5]);
 }
 /////////////////////////////////////////////////////////////////////
 // モジュール名 getTurningAngleIMU					//
@@ -99,8 +171,11 @@ void read_accel_data() {
 void getTurningAngleIMU(void)
 {
 	double angularVelocity_zg;
+	int intzg;
 	
 	angularVelocity_zg = (double)(zg) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
+	intzg = (int)(angularVelocity_zg*1);
+	angularVelocity_zg = (double)intzg / 1;
 	
 	TurningAngleIMU += (double)( angularVelocity_zg) * DELTATIMU;
 	
@@ -114,8 +189,11 @@ void getTurningAngleIMU(void)
 void getRollAngleIMU(void)
 {
 	double angularVelocity_yg;
+	int intyg;
 	
-	angularVelocity_yg = (double)(xg) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
+	angularVelocity_yg = (double)(yg) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
+	intyg = (int)(angularVelocity_yg*1);
+	angularVelocity_yg = (double)intyg / 1;
 	
 	RollAngleIMU -= (double)( angularVelocity_yg) * DELTATIMU;
 	
@@ -129,8 +207,11 @@ void getRollAngleIMU(void)
 void getPichAngleIMU( void )
 {
 	double angularVelocity_xg;
+	int intxg;
 	
-	angularVelocity_xg = (double)(yg) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
+	angularVelocity_xg = (double)(xg) / GYROLSB;	// IMUのデータを角速度[deg/s]に変換
+	intxg = (int)(angularVelocity_xg*1);
+	angularVelocity_xg = (double)intxg / 1;
 	
 	PichAngleIMU -= (double)( angularVelocity_xg) * DELTATIMU;
 	

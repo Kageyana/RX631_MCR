@@ -31,6 +31,7 @@ short 			Angle;	// ポテンションメーター平均AD値
 short				sensorR;	// 右アナログセンサ平均AD値
 short				sensorL;	// 左アナログセンサ平均AD値
 short				sensorG;	// ゲートセンサ平均AD値
+short				sensorG_th = GATE_VAL;	// ゲート開放しきい値
 short				sensorC;	// 中心アナログセンサ平均AD値
 short				sensorLL;	// 最左端アナログセンサ平均AD値
 short				sensorRR;	// 最右端アナログセンサ平均AD値
@@ -136,13 +137,13 @@ void init_IO(void)
 /////////////////////////////////////////////////////////////////////
 void led_out ( char rgb )
 {
-	if ( rgb >> 1 ) LEDB_ON
+	if ( (rgb & 0x4) == 0x4 ) LEDR_ON
 	else LEDR_OFF
 	
-	if ( rgb >> 2 ) LEDG_ON
+	if ( (rgb & 0x2) == 0x2 ) LEDG_ON
 	else LEDG_OFF
 	
-	if ( rgb >> 3 ) LEDR_ON
+	if ( (rgb & 0x1) == 1 ) LEDB_ON
 	else LEDB_OFF
 }
 /////////////////////////////////////////////////////////////////////
@@ -182,10 +183,11 @@ void getEncoder (void)
 void getSwitch(void)
 {
 	// タクトスイッチ読み込み
-	TACTSWITCH1	// タクトスイッチ右上
-	TACTSWITCH2	// タクトスイッチ右下
-	TACTSWITCH3	// タクトスイッチ左上
-	TACTSWITCH4	// タクトスイッチ左下
+	TACTSWITCH1	// タクトスイッチ上
+	TACTSWITCH2	// タクトスイッチ左
+	TACTSWITCH3	// タクトスイッチ右
+	TACTSWITCH4	// タクトスイッチ下
+	TACTSWITCH5	// タクトスイッチ押し込み
 	
 	// ディップスイッチ読み込み
 	DIPSWITCH1
@@ -227,19 +229,19 @@ unsigned char tasw_get(void)
 {
 	char	tasw[5];
 	
-	if ( tasw_d[0] == 0 )	tasw[0] = SW_LEFT;
+	if ( tasw_d[0] == 0 )	tasw[0] = 0x1;
 	else			tasw[0] = 0x0;
 	
-	if ( tasw_d[1] == 0 )	tasw[1] = SW_TOP;	
+	if ( tasw_d[1] == 0 )	tasw[1] = 0x2;	
 	else			tasw[1] = 0x0;
 	
-	if ( tasw_d[2] == 0 )	tasw[2] = SW_RIGHT;	
+	if ( tasw_d[2] == 0 )	tasw[2] = 0x4;	
 	else			tasw[2] = 0x0;
 	
-	if ( tasw_d[3] == 0 )	tasw[3] = SW_DOWN;	
+	if ( tasw_d[3] == 0 )	tasw[3] = 0x8;	
 	else			tasw[3] = 0x0;
 	
-	if ( tasw_d[4] == 0 )	tasw[4] = SW_PUSH;
+	if ( tasw_d[4] == 0 )	tasw[4] = 0xf;
 	else			tasw[4] = 0x0;
 
 	return ( tasw[0] + tasw[1] + tasw[2] + tasw[3] + tasw[4] );
@@ -293,7 +295,7 @@ unsigned char startbar_get(void)
 {
 	char ret;
 	
-	if ( sensorG <= 3960 )	ret = 1;
+	if ( sensorG <= sensorG_th )	ret = 1;
 	else			ret = 0;
 	
 	return ret;

@@ -44,10 +44,9 @@ void HardwareSetup(void)
 	SET_MTU_C3
 	SET_MTU_C4
 	
-	//SET_SCI_C1
 	SET_SCI_C2
 	SET_SCI_C5		// シリアルI/Oチャネルを設定(SPI microSd)
-	//SET_SCI_C6		// シリアルI/Oチャネルを設定(I2C)
+	init_SCI6( RATE_230400 );		// シリアルI/Oチャネルを設定(UART)
 	SET_SCI_C9 		// シリアルI/Oチャネルを設定(I2C)
 	
 	SET_CMT_C0		// コンペアマッチタイマを設定(ch0)

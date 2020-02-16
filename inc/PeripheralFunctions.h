@@ -7,13 +7,14 @@
 //====================================//
 // シンボル定義									//
 //====================================//
-#define SERVO_CENTER		2010		// サーボセンターのAD値
-#define SERVO_LIMIT		430		// サーボリミットAD値±
-#define TGR_MOTOR			4798		// ジェネラルレジスタ初期値(駆動モータ)
-#define TGR_SERVO			1918		// ジェネラルレジスタ初期値(サーボ)
+#define SERVO_CENTER		2077		// サーボセンターのAD値
+#define SERVO_LIMIT		420		// サーボリミットAD値±
+#define TGR_MOTOR			1582		// ジェネラルレジスタ初期値(駆動モータ)
+#define TGR_SERVO			1582		// ジェネラルレジスタ初期値(サーボ)
 #define PALSE_METER		24750	// 1mのパルス
 #define PALSE_MILLIMETER	24.75F	// 1mmのパルス
 #define SPEED_CURRENT		25		// 1m/sの時　1msのパルス
+#define GATE_VAL			260		// ゲートセンサしきい値
 
 #define SW_LEFT			0x1
 #define SW_TOP			0x2
@@ -29,6 +30,7 @@
 // タイマ割り込み
 #define SET_CMT_C0		R_PG_Timer_Set_CMT_U0_C0();			// コンペアマッチタイマ初期化(ch0)
 #define START_CMT_C0	R_PG_Timer_StartCount_CMT_U0_C0();	// カウントスタート(ch0)
+#define STOP_CMT_C0	R_PG_Timer_HaltCount_CMT_U0_C0();	// カウント一時停止(ch0)
 
 // エンコーダ
 #define ENCODER_COUNT	R_PG_Timer_GetCounterValue_MTU_U0_C1( &cnt_Encoder );	// カウント取得
@@ -116,6 +118,7 @@ extern volatile unsigned short		cnt0;		// 関数用タイマ
 extern short		sensorR;		// 右アナログセンサ
 extern short		sensorL;		// 左アナログセンサ
 extern short		sensorG;		// ゲートセンサ
+extern short		sensorG_th;	// ゲートセンサ
 extern short		sensorC;		// 中心アナログセンサ
 extern short		sensorLL;		// 最左端アナログセンサ
 extern short		sensorRR;		// 最右端アナログセンサ

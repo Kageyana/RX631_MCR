@@ -1068,7 +1068,7 @@ void msd_sendToPC ( void )
 				// microSDよりデータ読み込み
 				if( msdWorkaddress >= msdEndaddress ) {
 					// 書き込み終了アドレスになったら、終わり
-					printf( "End.\n" );
+					//printf( "End.\n" );
 					pattern_send = 4;
 					break;
 				}

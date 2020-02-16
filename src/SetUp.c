@@ -75,15 +75,21 @@ void setup( void )
 			else 	led_out(LED_R);
 			// 停止距離入力
 			data_tuning ( &stopping_meter, 1, UD );
-			//0x8を押すと白線追従
+			
 			angle_mode = 0;
 			data_select( &servo_test, SW_RIGHT );
 			if ( servo_test == 1 ) servoPwmOut( ServoPwm );
 			else servoPwmOut( 0 );
 			
 			// プッシュスイッチ押下待ち
-			if ( tasw_get() == SW_PUSH ) start = START_COUNT;
-			else if ( tasw_get() == SW_LEFT ) start = START_GATE;
+			if ( tasw_get() == SW_PUSH ) {
+				start = START_COUNT;
+			} else if ( tasw_get() == SW_LEFT ) {
+				start = START_GATE;
+			} else if ( tasw_get() == SW_RIGHT ) {
+				pushcart_mode = 1;
+				start = START_COUNT;
+			}
 			
 			break;
 		//------------------------------------------------------------------
@@ -91,12 +97,9 @@ void setup( void )
 		//------------------------------------------------------------------
 		case 0x1:
 			lcdPosition( 0, 0 );
-			lcdPrintf("PUSHCART");
+			lcdPrintf("Voltage ");
 			lcdPosition( 0, 1 );
-			if ( pushcart_mode == 1 ) lcdPrintf("      ON");
-			else lcdPrintf("     OFF");
-			
-			data_select ( &pushcart_mode, SW_PUSH );
+			lcdPrintf("  %05.2fV",Voltage);
 			break;
 		//------------------------------------------------------------------
 		// 【0x3】パラメータ調整(通常トレース)
@@ -373,7 +376,7 @@ void setup( void )
 			lcdPosition( 0, 0 );
 			lcdPrintf("kp ki kd");
 			
-			data_select( &servo_test, 8 );
+			data_select( &servo_test, SW_PUSH );
 			angle_mode = 0;
 			if ( servo_test == 1 ) servoPwmOut( ServoPwm );
 			else servoPwmOut( 0 );
@@ -431,7 +434,7 @@ void setup( void )
 			lcdPosition( 0, 0 );
 			lcdPrintf("kp ki kd");
 			
-			data_select( &servo_test2, 8 );
+			data_select( &servo_test2, SW_PUSH );
 			angle_mode = 1;
 			if ( servo_test == 1 ) servoPwmOut( ServoPwm2 );
 			else servoPwmOut( 0 );
@@ -651,20 +654,21 @@ void setup( void )
 					if ( cnt_setup >= 100 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 0 );
-						lcdPrintf("R  %4d ",sensorR);
+						lcdPrintf("R   %4d",sensorR);
 						lcdPosition( 0,1 );
-						lcdPrintf("L  %4d ",sensorL);
+						lcdPrintf("L   %4d",sensorL);
 					}
 					break;
 					
 				case 6:
-					// デジタルセンサ
+					// デジタル風センサ, ゲートセンサ
 					motor_test = 0;
+					data_tuning ( &sensorG_th, 1, UD );
 					if ( cnt_setup >= 100 ) {
 						cnt_setup = 0;
 						startbar_get();
 						lcdPosition( 0, 0 );
-						lcdPrintf("G  %4d", sensorG);
+						lcdPrintf("G%3d%4d", sensorG_th, sensorG);
 						lcdPosition( 0, 1 );
 						lcdPrintf("D    0x%x", sensor_inp());
 					}
@@ -719,6 +723,7 @@ void setup( void )
 					lcdPosition( 0, 1 );
 					lcdPrintf("        ");
 					if ( tasw_get() == SW_PUSH ) TurningAngleIMU = 0;
+					if ( tasw_get() == SW_TOP ) caribrateIMU();
 					break;
 					
 				case 11:
@@ -779,7 +784,7 @@ void setup( void )
 		//------------------------------------------------------------------
 		case 0xc:
 			lcdPosition( 0, 0 );
-			lcdPrintf("MicroSD%d", msdset);
+			lcdPrintf("MicroSD ");
 			
 			servo_test = 0;
 			angle_mode = 0;
@@ -793,15 +798,15 @@ void setup( void )
 					msdWorkaddress2 = msdaddrBuff[0];
 					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
-						lcdPrintf("No data");
+						lcdPrintf("No data1");
 					} else {
 						lcdPosition( 0, 1 );
-						lcdPrintf("1       ");
+						lcdPrintf("data1   ");
 					}
-					if ( tasw_get() == 0x1 && push1 == 0 ) {
+					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
 						push1 = 1;
 						msd_sendToPC();
-					}else if ( tasw_get() == 0x0 ) {
+					} else if ( tasw_get() == 0x0 ) {
 						push1 = 0;
 					}
 					break;
@@ -810,12 +815,12 @@ void setup( void )
 					msdWorkaddress2 = msdaddrBuff[2];
 					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
-						lcdPrintf("No data");
+						lcdPrintf("No data2");
 					} else {
 						lcdPosition( 0, 1 );
-						lcdPrintf("2       ");
+						lcdPrintf("data2   ");
 					}
-					if ( tasw_get() == 0x1 && push1 == 0 ) {
+					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
 						push1 = 1;
 						msd_sendToPC();
 					}else if ( tasw_get() == 0x0 ) {
@@ -827,12 +832,12 @@ void setup( void )
 					msdWorkaddress2 = msdaddrBuff[4];
 					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
-						lcdPrintf("No data");
+						lcdPrintf("No data3");
 					} else {
 						lcdPosition( 0, 1 );
-						lcdPrintf("3       ");
+						lcdPrintf("data3   ");
 					}
-					if ( tasw_get() == 0x1 && push1 == 0 ) {
+					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
 						push1 = 1;
 						msd_sendToPC();
 					}else if ( tasw_get() == 0x0 ) {
@@ -844,12 +849,12 @@ void setup( void )
 					msdWorkaddress2 = msdaddrBuff[6];
 					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
-						lcdPrintf("No data");
+						lcdPrintf("No data4");
 					} else {
 						lcdPosition( 0, 1 );
-						lcdPrintf("4       ");
+						lcdPrintf("data4   ");
 					}
-					if ( tasw_get() == 0x1 && push1 == 0 ) {
+					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
 						push1 = 1;
 						msd_sendToPC();
 					}else if ( tasw_get() == 0x0 ) {
@@ -861,12 +866,12 @@ void setup( void )
 					msdWorkaddress2 = msdaddrBuff[8];
 					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
-						lcdPrintf("No data");
+						lcdPrintf("No data5");
 					} else {
 						lcdPosition( 0, 1 );
-						lcdPrintf("5       ");
+						lcdPrintf("data5   ");
 					}
-					if ( tasw_get() == 0x1 && push1 == 0 ) {
+					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
 						push1 = 1;
 						msd_sendToPC();
 					}else if ( tasw_get() == 0x0 ) {
@@ -878,12 +883,12 @@ void setup( void )
 					msdWorkaddress2 = msdaddrBuff[10];
 					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
-						lcdPrintf("No data");
+						lcdPrintf("No data6");
 					} else {
 						lcdPosition( 0, 1 );
-						lcdPrintf("6       ");
+						lcdPrintf("data6   ");
 					}
-					if ( tasw_get() == 0x1 && push1 == 0 ) {
+					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
 						push1 = 1;
 						msd_sendToPC();
 					}else if ( tasw_get() == 0x0 ) {
@@ -895,12 +900,12 @@ void setup( void )
 					msdWorkaddress2 = msdaddrBuff[12];
 					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
-						lcdPrintf("No data");
+						lcdPrintf("No data7");
 					} else {
 						lcdPosition( 0, 1 );
-						lcdPrintf("7       ");
+						lcdPrintf("data7   ");
 					}
-					if ( tasw_get() == 0x1 && push1 == 0 ) {
+					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
 						push1 = 1;
 						msd_sendToPC();
 					}else if ( tasw_get() == 0x0 ) {
@@ -912,12 +917,12 @@ void setup( void )
 					msdWorkaddress2 = msdaddrBuff[14];
 					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
-						lcdPrintf("No data");
+						lcdPrintf("No data8");
 					} else {
 						lcdPosition( 0, 1 );
-						lcdPrintf("8       ");
+						lcdPrintf("data8   ");
 					}
-					if ( tasw_get() == 0x1 && push1 == 0 ) {
+					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
 						push1 = 1;
 						msd_sendToPC();
 					}else if ( tasw_get() == 0x0 ) {
@@ -929,12 +934,12 @@ void setup( void )
 					msdWorkaddress2 = msdaddrBuff[16];
 					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
-						lcdPrintf("No data");
+						lcdPrintf("No data9");
 					} else {
 						lcdPosition( 0, 1 );
-						lcdPrintf("9       ");
+						lcdPrintf("data9   ");
 					}
-					if ( tasw_get() == 0x1 && push1 == 0 ) {
+					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
 						push1 = 1;
 						msd_sendToPC();
 					}else if ( tasw_get() == 0x0 ) {
@@ -946,12 +951,12 @@ void setup( void )
 					msdWorkaddress2 = msdaddrBuff[18];
 					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
 						lcdPosition( 0, 1 );
-						lcdPrintf("No data");
+						lcdPrintf("Nodata10");
 					} else {
 						lcdPosition( 0, 1 );
-						lcdPrintf("10      ");
+						lcdPrintf("data10  ");
 					}
-					if ( tasw_get() == 0x1 && push1 == 0 ) {
+					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
 						push1 = 1;
 						msd_sendToPC();
 					}else if ( tasw_get() == 0x0 ) {
@@ -965,14 +970,14 @@ void setup( void )
 						lcdPosition( 0, 1 );
 						lcdPrintf("LogWrite");
 					}
-					if ( tasw_get() == 0x1 && push1 == 0 && msdFlag == 0) {
+					if ( tasw_get() == SW_TOP && push1 == 0 && msdFlag == 0) {
 						push1 = 1;
 						readFlashSetup( 0, 0, 1 ,0 ,0 ,0 ,0);
 						init_log();	// ログ記録準備
 						msdFlag = 1;		// データ記録開始
 						lcdPosition( 0, 1 );
 						lcdPrintf("Logging ");
-					} else if ( tasw_get() == 0x2 && push1 == 0 && msdFlag == 1) {
+					} else if ( tasw_get() == SW_DOWN && push1 == 0 && msdFlag == 1) {
 						push1 = 1;
 						msdEndLog();		// MicroSDの終了処理
 					} else if ( tasw_get() == 0x0 ) {
@@ -986,7 +991,7 @@ void setup( void )
 						lcdPosition( 0, 1 );
 						lcdPrintf("LogRead ");
 					}
-					if ( tasw_get() == 0x1 && push1 == 0 && msdFlag == 0) {
+					if ( tasw_get() == SW_PUSH && push1 == 0 && msdFlag == 0) {
 						//ログ解析
 						msdgetData () ;
 					} else if ( tasw_get() == 0x0 ) {
@@ -1241,10 +1246,10 @@ char fix_speedsetting ( void )
 		speed_curve_straight	= 30;
 		
 		speed_crossline		= 25;
-		speed_ckank_trace	= 27;
-		speed_rightclank_curve	= 22;
+		speed_ckank_trace	= 22;
+		speed_rightclank_curve	= 18;
 		speed_rightclank_escape	= 30;
-		speed_leftclank_curve	= 22;
+		speed_leftclank_curve	= 18;
 		speed_leftclank_escape	= 30;
 		
 		speed_halfine		= 30;
