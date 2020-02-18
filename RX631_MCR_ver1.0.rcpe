@@ -20,25 +20,18 @@
         <Path>mcu\typedefine.h</Path>
       </Category>
       <Category Name="src">
-        <Path>src\E2dataFlash.c</Path>
         <Path>src\hwsetup.c</Path>
         <Path>src\I2C_LCD.c</Path>
-        <Path>src\SPI_ICM20648.c</Path>
         <Path>src\LineChase.c</Path>
         <Path>src\main.c</Path>
-        <Path>src\MemorryTrace.c</Path>
-        <Path>src\MicroSD.c</Path>
         <Path>src\PeripheralFunctions.c</Path>
         <Path>src\SCI.c</Path>
         <Path>src\SetUp.c</Path>
       </Category>
       <Category Name="inc">
-        <Path>inc\E2dataFlash.h</Path>
         <Path>inc\I2C_LCD.h</Path>
-        <Path>inc\SPI_ICM20648.h</Path>
         <Path>inc\LineChase.h</Path>
         <Path>inc\MemorryTrace.h</Path>
-        <Path>inc\MicroSD.h</Path>
         <Path>inc\PeripheralFunctions.h</Path>
         <Path>inc\SCI.h</Path>
         <Path>inc\SetUp.h</Path>
@@ -245,17 +238,13 @@
           <Path>DefaultBuild\lowsrc.obj</Path>
           <Path>DefaultBuild\resetprg.obj</Path>
           <Path>DefaultBuild\sbrk.obj</Path>
-          <Path>DefaultBuild\E2dataFlash.obj</Path>
           <Path>DefaultBuild\hwsetup.obj</Path>
           <Path>DefaultBuild\I2C_LCD.obj</Path>
           <Path>DefaultBuild\LineChase.obj</Path>
           <Path>DefaultBuild\main.obj</Path>
-          <Path>DefaultBuild\MemorryTrace.obj</Path>
-          <Path>DefaultBuild\MicroSD.obj</Path>
           <Path>DefaultBuild\PeripheralFunctions.obj</Path>
           <Path>DefaultBuild\SCI.obj</Path>
           <Path>DefaultBuild\SetUp.obj</Path>
-          <Path>DefaultBuild\SPI_ICM20648.obj</Path>
           <Path>DefaultBuild\R_PG_Clock.obj</Path>
           <Path>DefaultBuild\R_PG_IO_PORT.obj</Path>
           <Path>DefaultBuild\R_PG_IO_PORT_P0.obj</Path>

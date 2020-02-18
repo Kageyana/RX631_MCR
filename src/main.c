@@ -60,86 +60,13 @@ void main(void){
 	servoPwmOut( 0 );
 	
 	pushcart_mode = 0;		// 手押しモードoff
-	slope_mode = 0;		// 上り坂チェック
 	angle_mode = 0;		// 白線トレース
 	start = 0;				// ゲートスタート
 	
-	//IMU初期化
-	IMU_init();
-	// フラッシュ初期化
-	if( !initFlash() ) readFlashSetup( 1, 1, 1 ,1 ,1 ,1 ,1);	// データフラッシュから前回パラメータを読み込む
-	// MicroSDカード初期化
-	if( !init_msd() ) msdset = 1;
-	else msdset = 0;
-	
-	// 電源電圧確認
-	cnt1=0;
-	
-	while(msdset == 1 && cnt1 < 2000){
-		lcdPosition( 0, 0 );
-		lcdPrintf(" SYSTEM ");
-		lcdPosition( 0, 1 );
-		lcdPrintf("ALLGREEN");
-		led_out(0x2);
-	}
 	led_out(0);
 	
 	while(1){
-		__setpsw_i();
-		if( pattern >= 11 && pattern <= 99 ) {
-			if( !pushcart_mode ) {		
-				// 手押しモードOFF
-				if( cnt1 >= 100 ) {		// 動き出してから
-					if ( EncoderTotal >= ( PALSE_METER * stopping_meter ) ) { // 距離超過の場合
-						error_mode = 0;
-						pattern = 101;
-					} else if ( cnt_out >= STOP_SENSOR1 ) {	// センサ全灯
-						error_mode = 1;
-						pattern = 101;
-					} else if ( cnt_out2 >= STOP_SENSOR2 ) {	// センサ全消灯
-						error_mode = 2;
-						pattern = 101;
-					} else if ( cnt_out3 >= STOP_ENCODER ) {	// エンコーダ停止(ひっくり返った？)
-						error_mode = 3;
-						pattern = 101;
-					} else if( cnt_out4 >= STOP_GYRO ) {	// マイナスの加速度検知(コースから落ちた？)
-						error_mode = 4;	
-						pattern = 101;
-					}
-					/*
-					// Buletoothで外部から停止
-					if ( stopWord == 1 ) {
-						error_mode = 5;
-						pattern = 101;
-					}
-					*/
-					/*
-					// 一定時間で停止
-					if( cnt1 >= STOP_COUNT ) {
-						pattern = 101;
-					}
-					*/
-				}
-			} else {			
-				// 手押しモードON
-				lcdPosition( 0, 0 );
-				lcdPrintf("now %3d", pattern);
-				lcdPosition( 0, 1 );
-				lcdPrintf("log %3d", logmeter());
-			}
-			// スイッチで停止
-			if ( cnt1 >= 1000 && tasw_get() == SW_PUSH ) {
-				error_mode = 6;
-				pattern = 101;
-			}
-		} else if ( pattern >= 100 ) {
-			lcd_mode = 1;
-			lcdPosition( 0, 0 );
-			lcdPrintf("TIME  %d", error_mode);
-			lcdPosition( 0, 1 );
-			lcdPrintf(" %5dms", ui);
-		}
-		
+	__setpsw_i();	// 多重割り込み許可
 	switch( pattern ) {
 		//-------------------------------------------------------------------
 		// 【000】スタート処理
@@ -148,57 +75,19 @@ void main(void){
 			// スタート前設定
 			setup();
 			if ( start && !pushcart_mode ) {
-				demo = 0;		// デモモード解除
-				angle_mode = 0;	// 白線トレース
-				Int = 0;			// 積分リセット
-				txt= txt_data;		// 受信配列リセット
-				cnt_byte = 0;		// 受信カウントリセット
-				
-				if ( msdset ) init_log();	// ログ記録準備
-				
-				if ( !fixSpeed ) writeFlashBeforeStart(1, 0, 1, 1, 1, 1);	// 速度パラメータをデータフラッシュに保存
-				else writeFlashBeforeStart(0, 0, 1, 1, 1, 1);		// 速度パラメータ以外を保存
-				
-				//if (IMUSet) caribrateIMU();
-				
-				wait_lcd(500);		// 500ms待つ
 				cnt1 = 0;
 				pattern = 1;
 				break;
 			} else if ( start && pushcart_mode ) {
 				// 手押しモードの場合すぐに通常トレース
-				if ( msdset ) init_log();	// ログ記録準備
-				
-				// 白線トレース用PIDゲイン保存
-				// 角度制御用PIDゲイン保存
-				writeFlashBeforeStart(0, 0, 1, 1, 0, 0);
 				// 変数初期化
 				init_Parameter( 1 );
+				pattern = 11;		// 通常走行
 				break;
 			}
 			break;
 			
 		case 1:
-			servoPwmOut( ServoPwm );
-			if ( start == START_COUNT ) {
-				// カウントダウンスタート
-				if ( cnt1 >= 3000 ) {	
-					// 変数初期化
-					init_Parameter( 0 );
-					break;
-				} else if ( !(cnt1 % 1000) ) {
-					led_out( countdown );
-					countdown = countdown << 1;
-					break;
-				}
-			} else if ( start == START_GATE ) {
-				// スタートゲート開放スタート
-				pattern = 2;
-				break;
-			}
-			break;
-			
-		case 2:
 			servoPwmOut( ServoPwm );
 			// スタートバー開閉待ち
 			if ( !startbar_get() ) {
@@ -242,207 +131,6 @@ void main(void){
 				pattern = 61;
 				break;
 			}
-			// 坂道チェック
-			/*if ( EncoderTotal >= 5609 ) {
-				if( check_slope() == 1 || check_slope() == -1 ) {
-					pattern = 71;
-					break;
-				}
-			}*/
-			// カーブチェック
-			if ( i >=  CURVE_R600_START || i <= -CURVE_R600_START ) {
-				enc1 = 0;
-				curve_moed = 1;
-				pattern = 12;
-				break;
-			}
-			break;
-			
-		case 12:
-			// カーブブレーキ
-			servoPwmOut( ServoPwm );
-			targetSpeed = speed_curve_brake * SPEED_CURRENT;
-			led_out( LED_R );
-			diff( motorPwm );
-			i = getServoAngle();
-			
-			if ( enc1 > enc_mm( 60 ) ) {		// 60mm進む
-				enc1 = 0;
-				TurningAngleEnc = 0;
-				TurningAngleIMU = 0;
-				pattern = 13;
-				break;
-			}
-			
-			// クロスラインチェック
-			if ( check_crossline() ) {
-				enc1 = 0;
-				pattern = 21;
-				break;
-			}
-			// 右ハーフラインチェック
-	   		if ( check_rightline() ) {
-				enc1 = 0;
-				pattern = 51;
-				break;
-			}
-			// 左ハーフラインチェック
-	   		if ( check_leftline() ) {
-				enc1 = 0;
-				pattern = 61;
-				break;
-			}
-			// 坂道チェック
-			/*if ( EncoderTotal >= 5609 ) {
-				if ( check_slope() == 1 || check_slope() == -1 ) {
-					pattern = 71;
-					break;
-				}
-			}*/
-			if ( memory_mode ) {
-				enc1 = 0;
-				pattern = 16;
-				break;
-			}
-			// 直線チェック
-			if ( i <  CURVE_R600_START && i > -CURVE_R600_START ) {
-				enc1 = 0;
-				pattern = 11;
-				break;
-			}
-			break;
-			
-		case 13:
-			// R600カーブ走行
-			servoPwmOut( ServoPwm );
-			targetSpeed = speed_curve_r600 * SPEED_CURRENT;
-			diff( motorPwm );
-			i = getServoAngle();
-			
-			// クロスラインチェック
-			if ( check_crossline() ) {
-				enc1 = 0;
-				pattern = 21;
-				break;
-      			}
-			// 右ハーフラインチェック
-	   		if ( check_rightline() ) {
-				enc1 = 0;
-				pattern = 51;
-				break;
-			}
-			// 左ハーフラインチェック
-	   		if ( check_leftline() ) {
-				enc1 = 0;
-				pattern = 61;
-				break;
-			}
-			// 坂道チェック
-			/*if ( EncoderTotal >= 5609 ) {
-				if ( check_slope() == 1 || check_slope() == -1 ) {
-					pattern = 71;
-					break;
-				}
-			}*/
-			// R450チェック
-			if ( i >= CURVE_R450_START || i <= -CURVE_R450_START ) {
-				enc1 = 0;
-				pattern = 14;
-				break;
-			}
-			// カーブ継ぎ目チェック
-			if ( i <  CURVE_R600_START && i > -CURVE_R600_START ) {
-				enc1 = 0;
-				pattern = 15;
-				break;
-			}
-			break;
-			
-		case 14:
-			// R450カーブ走行
-			servoPwmOut( ServoPwm );
-			targetSpeed = speed_curve_r450 * SPEED_CURRENT;
-			diff( motorPwm );
-			i = getServoAngle();
-			
-			// クロスラインチェック
-			if ( check_crossline() ) {
-				enc1 = 0;
-				pattern = 21;
-				break;
-      			}
-			// 右ハーフラインチェック
-	   		if ( check_rightline() ) {
-				enc1 = 0;
-				pattern = 51;
-				break;
-			}
-			// 左ハーフラインチェック
-	   		if ( check_leftline() ) {
-				enc1 = 0;
-				pattern = 61;
-				break;
-			}
-			// R600チェック
-			if ( i < CURVE_R450_START && i > -CURVE_R450_START ) {
-				enc1 = 0;
-				pattern = 13;
-				break;
-			}
-			break;
-		
-		case 15:
-			// カーブ継ぎ目走行
-			servoPwmOut( ServoPwm );
-			targetSpeed = speed_curve_straight * SPEED_CURRENT;
-			diff( motorPwm );
-			i = getServoAngle();
-			
-			if ( enc1 >= enc_mm( 300 ) ) {		// 300mm進む
-				enc1 = 0;
-				curve_moed = 0;
-				pattern = 11;
-				break;
-			}
-			
-			// クロスラインチェック
-			if ( check_crossline() ) {
-				enc1 = 0;
-				pattern = 21;
-				break;
-      			}
-			// 右ハーフラインチェック
-   			if ( check_rightline() ) {
-				enc1 = 0;
-				pattern = 51;
-				break;
-			}
-			// 左ハーフラインチェック
-   			if ( check_leftline() ) {
-				enc1 = 0;
-				pattern = 61;
-				break;
-			}
-			// 坂道チェック
-			/*if ( EncoderTotal >= 5609 ) {
-				if ( check_slope() == 1 || check_slope() == -1 ) {
-					pattern = 71;
-					break;
-				}
-			}*/
-			// カーブチェック
-			if( i >=  CURVE_R600_START || i <= - CURVE_R600_START ) {
-				enc1 = 0;
-				pattern = 13;
-				break;
-			}
-			break;
-			
-		case 16:
-			servoPwmOut( ServoPwm );
-			targetSpeed = speed_straight * SPEED_CURRENT;
-			diff( motorPwm );
-			
 			break;
 		//-------------------------------------------------------------------
 		//【020】クランク検出処理
@@ -471,8 +159,6 @@ void main(void){
 				led_out( LED_R | LED_G);
 				SetAngle = angle_rightclank;
 				angle_mode = 1;
-				TurningAngleEnc = 0;
-				TurningAngleIMU = 0;
 				pattern = 31;
 				break;
 			}
@@ -482,8 +168,6 @@ void main(void){
 				led_out( LED_G | LED_B );
 				SetAngle = angle_leftclank;
 				angle_mode = 1;
-				TurningAngleEnc = 0;
-				TurningAngleIMU = 0;
 				pattern = 41;
 				break;
 			}
@@ -1121,35 +805,16 @@ void Timer (void) {
 	__setpsw_i();
 	//　タイマカウント
 	if ( pattern >= 11 ) {
-		if ( pattern <= 99 ) {
-			if ( pattern != 21 ) {				// クロスライン通過時は無視
-				if ( sensor_inp() == 0x7 || sensor_inp() == 0x5 ) {	// センサ全灯
-					cnt_out++;	
-				} else {
-					cnt_out = 0;
-				}
-			}
-			if ( sensor_inp() == 0x0 && pattern != 53 && pattern != 63 ) cnt_out2++;	// センサ全消灯
-			else cnt_out2 = 0;
-			if ( Encoder <= 1 && Encoder >= -1 ) cnt_out3++;		// エンコーダ停止(ひっくり返った？)
-			else cnt_out3 = 0;
-			s = (short)RollAngleIMU;
-			if ( s >= 5 || s <= -5 ) cnt_out4++;
-			else	cnt_out4 = 0;
-		}
+		
 	} else if ( pattern < 11 ) {
 		cnt_setup++;
 		cnt_setup2++;
 		cnt_setup3++;
 		cnt_swR++;
 		cnt_swL++;
-		cnt_flash++;
 	}
 	cnt0++;
 	cnt1++;
-	
-	
-	cnt_gyro++;
 			
 	// LCD表示
 	if ( lcd_mode ) lcdShowProcess();
@@ -1162,38 +827,8 @@ void Timer (void) {
 	else 			servoControl();		// 白線
 	motorControl();		// モータ
 	
-	// MicroSD書き込み
-	microSDProcess();
-	if ( msdFlag ) sendLog( 8, 7, 3
-					// char
-					, pattern
-					, motorPwm
-					, sensor_inp()
-					, slope_mode
-					, (char)Encoder
-					, sPwm
-					, (char)PichAngleIMU*10
-					, (char)RollAngleIMU*10
-					//short
-					, (short)TurningAngleIMU*10
-					, xg
-					, yg
-					, zg
-					, getServoAngle()
-					, SetAngle
-					, getAnalogSensor()
-					// unsigned int
-					, EncoderTotal
-					, enc1
-					, cnt_log
-					);
 	
 	Timer10++;
-	
-	// 通信
-	// 加速度及び角速度を取得
-	
-		
 	// 10ｍごとに実行
 	switch ( Timer10 ) {	
 	case 1:
@@ -1201,16 +836,6 @@ void Timer (void) {
 		get_voltage();		// 電源電圧取得
 		break;
 	case 2:
-		read_gyro_data();
-		read_accel_data();
-		getTurningAngleIMU();
-		getPichAngleIMU();
-		getRollAngleIMU();
-		if (cnt_gyro > 200) {
-			RollAngleIMU = 0;
-			PichAngleIMU = 0;
-			cnt_gyro  = 0;
-		}
 		break;
 	case 3:
 		break;
@@ -1239,17 +864,10 @@ void Timer (void) {
 // 戻り値       なし									//
 ///////////////////////////////////////////////////////////////////////////
 void init_Parameter ( bool lcd ) {
-	cntmpattern2 = 0;	// 記録走行カウントリセット
 	EncoderTotal = 10;	// 総走行距離
 	cnt1 = 0;			// タイマリセット
 	enc1 = 0;			// 区間距離リセット
 	lcd_mode = lcd;		// LCD表示OFF
-	msdFlag = 1;		// データ記録開始
+	angle_mode = 0;	// 白線トレース
 	targetSpeed = speed_straight * SPEED_CURRENT; // 目標速度設定
-	
-	// 角度積算値リセット
-	TurningAngleIMU = 0;
-	RollAngleIMU = 0;
-	PichAngleIMU = 0;
-	pattern = 11;		// 通常走行
 }
