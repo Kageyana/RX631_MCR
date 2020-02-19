@@ -113,7 +113,7 @@ signed char check_leftline( void )
 ///////////////////////////////////////////////////////////////////////////
 unsigned int enc_mm( short mm )
 {
-	return PALSE_MILLIMETER * mm;
+	return SPEED_CURRENT * mm;
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 servoControl							//
@@ -204,8 +204,8 @@ void motorControl( void )
 	int i, j, iRet, Dif, iP, iI, iD, Dev;
 	char kp3, ki3, kd3;
 	
-	i = targetSpeed;		// 目標値
-	j = Encoder * 10;		// 現在値
+	i = targetSpeed;		// 目標値 x[m/s]*10
+	j = Encoder * 10;	// 現在値 目標値に合わせて10倍する
 	
 	// 駆動モーター用PWM値計算
 	Dev = i - j;	// 偏差

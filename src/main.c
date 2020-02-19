@@ -13,11 +13,7 @@
 #include "LineChase.h"
 #include "SetUp.h"
 #include "SCI.h"
-#include "E2dataFlash.h"
 #include "I2C_LCD.h"
-#include "MicroSD.h"
-#include "SPI_ICM20648.h"
-#include "MemorryTrace.h"
 //====================================//
 // グローバル変数の宣言								//
 //====================================//
@@ -46,7 +42,6 @@ void init_Parameter ( bool lcd );
 // メインプログラム									//
 //====================================//
 void main(void){
-	short i, j;
 	unsigned int ui;
 	
 	//=================================//
@@ -107,11 +102,11 @@ void main(void){
 		// 【010】トレース処理
 		//-------------------------------------------------------------------
 		case 11:
-			servoPwmOut( ServoPwm );
-			targetSpeed = speed_straight * SPEED_CURRENT;
-			diff( motorPwm );
-			i = getServoAngle();
-			led_out( 0x00 );
+			servoPwmOut( ServoPwm );		// サーボ制御
+			targetSpeed = speed_straight * SPEED_CURRENT;	// 目標速度
+			motor_f(motorPwm, motorPwm);	// 駆動モータ制御
+			motor_r(motorPwm, motorPwm);			
+			led_out( 0x00 );					// LED消灯
 			
 			// クロスラインチェック
 			if ( check_crossline() ) {
@@ -138,10 +133,11 @@ void main(void){
 		case 21:
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_crossline* SPEED_CURRENT;
-			diff( motorPwm );
+			motor_f(motorPwm, motorPwm);
+			motor_r(motorPwm, motorPwm);
 			led_out( LED_G );
 			
-			if( enc1 > enc_mm( 90 ) ) {		// 60mm進む
+			if( enc1 > enc_mm( 90 ) ) {		// 90mm進む
 				enc1 = 0;
 				pattern = 22;
 				break;
@@ -151,7 +147,8 @@ void main(void){
 		case 22:
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_ckank_trace * SPEED_CURRENT;
-			diff( motorPwm );
+			motor_f(motorPwm, motorPwm);
+			motor_r(motorPwm, motorPwm);
 			
 			// 右クランクチェック
 			if( sensor_inp() ==  0x3 ) {
@@ -177,67 +174,25 @@ void main(void){
 		//【030】右クランク処理
 		//-------------------------------------------------------------------
 		case 31:
-			SetAngle = angle_rightclank;
+			SetAngle = angle_rightclank;		// 目標角度
 			servoPwmOut( ServoPwm2 );
 			targetSpeed = speed_rightclank_curve * SPEED_CURRENT;
-			i = -TurningAngleIMU;
-			j = getAnalogSensor();
-			diff( motorPwm );
+			motor_f(motorPwm, motorPwm);
+			motor_r(motorPwm, motorPwm);
 			
-			if ( i >= 20 ) {
-				if( j <= -1800 && sensor_inp() == 0x2 ) {
-					enc1 = 0;
-					i = (short)-TurningAngleIMU;
-					pattern = 34;
-					break;
-				}
-			}
-			break;
-			
-		case 32:
-			// 外線読み飛ばし
-			SetAngle = angle_rightclank;
-			targetSpeed = speed_rightclank_curve * SPEED_CURRENT;
-			servoPwmOut( ServoPwm2 );
-			j = getAnalogSensor();
-			diff( motorPwm );
-			
-			if( -TurningAngleIMU <= 90 && -TurningAngleIMU >= 40) {
-				if( j <= -1800 && sensor_inp() == 0x2 ) {
-					enc1 = 0;
-					i = (short)TurningAngleIMU;
-					i = -i;
-					j = getServoAngle();
-					pattern = 36;
-					break;
-				}
-			}
-			break;
-			
-		case 34:
-			// 角度維持
-			// sensor_inp() == 2を読んだあとに実行
-			SetAngle = -( 90 - 10 - i ) * (435/35);	// ラインからの角度10°
-			//SetAngle = angle_rightclank + 160;
-			targetSpeed = speed_rightclank_escape * SPEED_CURRENT;
-			servoPwmOut( ServoPwm2 );
-			j = getAnalogSensor();
-			diff( motorPwm );
-			
-			if( sensor_inp() == 0x2 && j >= -1800 ) {
+			if ( enc1 >= enc_mm(60) && sensor_inp() == 0x2 ) {
 				enc1 = 0;
-				angle_mode = 0;
-				Int = 0;			// 積分リセット
-				pattern = 36;
+				pattern = 32;
 				break;
 			}
 			break;
 			
-		case 36:
+		case 32:
 			// 復帰
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_rightclank_escape * SPEED_CURRENT;
-			diff( motorPwm );
+			motor_f(motorPwm, motorPwm);
+			motor_r(motorPwm, motorPwm);
 
 			if( enc1 >= enc_mm( 600 ) ) {		// 安定するまで待つ(600mm)
 				enc1 = 0;
@@ -250,66 +205,26 @@ void main(void){
 		//【040】左クランク処理
 		//-------------------------------------------------------------------
 		case 41:
-			SetAngle = angle_leftclank;
+			SetAngle = angle_leftclank;		// 目標角度
 			servoPwmOut( ServoPwm2 );
 			targetSpeed = speed_leftclank_curve * SPEED_CURRENT;
-			i = -TurningAngleIMU;
-			j = getAnalogSensor();
-			diff( motorPwm );
+			motor_f(motorPwm, motorPwm);
+			motor_r(motorPwm, motorPwm);
 			
-			if ( i >= 20 ) {
-				if( j >= 1800 && sensor_inp() == 0x2 ) {
-					enc1 = 0;
-					i = TurningAngleIMU;
-					pattern = 44;
-					break;
-				}
-			}
-			break;
-			
-		case 42:
-			// 外線読み飛ばし
-			SetAngle = angle_leftclank;
-			targetSpeed = speed_leftclank_curve * SPEED_CURRENT;
-			servoPwmOut( ServoPwm2 );
-			j = getAnalogSensor();
-			diff( motorPwm );
-			
-			if( TurningAngleIMU <= 90 && TurningAngleIMU >= 40) {
-				if( j >= 1800 && sensor_inp() == 0x2 ) {
-					enc1 = 0;
-					i = TurningAngleIMU;
-					pattern = 46;
-					break;
-				}
-			}
-			break;
-			
-		case 44:
-			// 角度維持
-			// sensor_inp() == 2を読んだあとに実行
-			SetAngle = ( 90 - 10 - i ) * (435/35);	// ラインからの角度10°
-			//SetAngle = angle_leftclank - 160;
-			targetSpeed = speed_leftclank_escape * SPEED_CURRENT;
-			servoPwmOut( ServoPwm2 );
-			j = getAnalogSensor();
-			diff( motorPwm );
-			
-			if( sensor_inp() == 0x2 && j <= 1800) {
+			if ( enc1 >= enc_mm(60) && sensor_inp() == 0x2 ) {
 				enc1 = 0;
-				angle_mode = 0;
-				Int = 0;			// 積分リセット
-				pattern = 46;
+				pattern = 42;
 				break;
 			}
 			break;
 			
-		case 46:
+		case 42:
 			// 復帰
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_leftclank_escape * SPEED_CURRENT;
-			diff( motorPwm );
-			
+			motor_f(motorPwm, motorPwm);
+			motor_r(motorPwm, motorPwm);
+
 			if( enc1 >= enc_mm( 600 ) ) {		// 安定するまで待つ(600mm)
 				enc1 = 0;
 				led_out( 0x0 );
@@ -321,18 +236,17 @@ void main(void){
 		//【050】右レーンチェンジ処理
 		//-------------------------------------------------------------------
 		case 51:
-			servoPwmOut( 0 );
+			servoPwmOut( ServoPwm );
 			targetSpeed = speed_halfine * SPEED_CURRENT;
-			diff( motorPwm );
+			motor_f(motorPwm, motorPwm);
+			motor_r(motorPwm, motorPwm);
 			
 			if( enc1 > enc_mm( 60 ) ) {
 				enc1 = 0;
 				angle_mode = 0;
-				Int = 0;			// 積分リセット
 				pattern = 52;
 				break;
 			}
-			
 			if( check_crossline() ) {		// クロスラインチェック
 				enc1 = 0;
 				pattern = 21;
@@ -343,7 +257,8 @@ void main(void){
 		case 52:
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_rightchange_trace * SPEED_CURRENT;
-			diff( motorPwm );
+			motor_f(motorPwm, motorPwm);
+			motor_r(motorPwm, motorPwm);
 			led_out( LED_R );
 			
 			if( sensor_inp() == 0x0 ) {
@@ -358,7 +273,8 @@ void main(void){
 			SetAngle = angle_rightchange;
 			servoPwmOut( ServoPwm2 );
 			targetSpeed = speed_rightchange_curve * SPEED_CURRENT;
-			diff( motorPwm );
+			motor_f(motorPwm, motorPwm);
+			motor_r(motorPwm, motorPwm);
 			
 			if( sensor_inp() == 0x1 ) {
 				enc1 = 0;
@@ -386,7 +302,8 @@ void main(void){
 		case 55:
 			servoPwmOut( 90 );
 			targetSpeed = speed_rightchange_curve * SPEED_CURRENT;
-			diff( motorPwm );
+			motor_f(motorPwm, motorPwm);
+			motor_r(motorPwm, motorPwm);
 			
 			if( sensor_inp() == 0x2 ) {
 				angle_center = getServoAngle();
@@ -400,7 +317,8 @@ void main(void){
 			SetAngle = angle_center;
 			servoPwmOut( ServoPwm2 );
 			targetSpeed = speed_rightchange_escape * SPEED_CURRENT;
-			diff( motorPwm );
+			motor_f(motorPwm, motorPwm);
+			motor_r(motorPwm, motorPwm);
 			
 			if( enc1 >= enc_mm( 10 ) ) {
 				angle_center = getServoAngle();
@@ -415,15 +333,9 @@ void main(void){
 		case 57:
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_rightchange_escape * SPEED_CURRENT;
-			diff( motorPwm );
+			motor_f(motorPwm, motorPwm);
+			motor_r(motorPwm, motorPwm);
 
-			// 坂道チェック
-			/*if( EncoderTotal >= 5609 ) {
-				if( check_slope() == 1 || check_slope() == -1 ) {
-					pattern = 71;
-					break;
-				}
-			}*/
 			if( enc1 >= enc_mm( 600 ) ) {
 				enc1 = 0;
 				led_out( 0x0 );
@@ -437,12 +349,12 @@ void main(void){
 		case 61:
 			servoPwmOut( 0 );
 			targetSpeed = speed_halfine * SPEED_CURRENT;
-			diff( motorPwm );
+			motor_f(motorPwm, motorPwm);
+			motor_r(motorPwm, motorPwm);
 			
 			if( enc1 > enc_mm( 60 ) ) {
 				enc1 = 0;
 				angle_mode = 0;
-				Int = 0;			// 積分リセット
 				pattern = 62;
 				break;
 			}
@@ -456,7 +368,8 @@ void main(void){
 		case 62:
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_leftchange_trace * SPEED_CURRENT;
-			diff( motorPwm );
+			motor_f(motorPwm, motorPwm);
+			motor_r(motorPwm, motorPwm);
 			led_out( LED_B );
 			
 			if( sensor_inp() == 0x0 ) {
@@ -471,7 +384,8 @@ void main(void){
 			SetAngle = angle_leftchange;
 			servoPwmOut( ServoPwm2 );
 			targetSpeed = speed_leftchange_curve * SPEED_CURRENT;
-			diff( motorPwm );
+			motor_f(motorPwm, motorPwm);
+			motor_r(motorPwm, motorPwm);
 			
 			if( sensor_inp() == 0x4 ) {
 				enc1 = 0;
@@ -499,7 +413,8 @@ void main(void){
 		case 65:
 			servoPwmOut( -90 );
 			targetSpeed = speed_leftchange_curve * SPEED_CURRENT;
-			diff( motorPwm );
+			motor_f(motorPwm, motorPwm);
+			motor_r(motorPwm, motorPwm);
 			
 			if( sensor_inp() == 0x2 ) {
 				angle_center = getServoAngle();
@@ -513,7 +428,8 @@ void main(void){
 			SetAngle = angle_center;
 			servoPwmOut( ServoPwm2 );
 			targetSpeed = speed_leftchange_escape * SPEED_CURRENT;
-			diff( motorPwm );
+			motor_f(motorPwm, motorPwm);
+			motor_r(motorPwm, motorPwm);
 			
 			if( enc1 >= enc_mm( 10 ) ) {
 				enc1 = 0;
@@ -527,170 +443,14 @@ void main(void){
 		case 67:
 			servoPwmOut( ServoPwm );
 			targetSpeed = speed_leftchange_escape * SPEED_CURRENT;
-			diff( motorPwm );
+			motor_f(motorPwm, motorPwm);
+			motor_r(motorPwm, motorPwm);
 
-			// 坂道チェック
-			/*if( EncoderTotal >= enc_mm( 1000 ) ) {
-				if( check_slope() == 1 || check_slope() == -1 ) {
-					pattern = 71;
-					break;
-				}
-			}*/
 			if( enc1 >= enc_mm( 600 ) ) {
 				enc1 = 0;
 				led_out( 0x0 );
 				pattern = 11;
 				break;
-			}
-			break;
-		//-------------------------------------------------------------------
-		//【070】坂道処理
-		//-------------------------------------------------------------------
-		case 71:
-			// 誤検知判断
-			servoPwmOut( ServoPwm );
-			// 目標速度変えない
-			diff( motorPwm );
-			if( check_slope() == 1 ) {
-				if( slope_mode == 0 ) {
-					// 上り始め
-					slope_mode = 1;
-					enc1 = 0;
-					led_out( LED_R | LED_B );
-					pattern = 72;
-					break;
-				} else if ( slope_mode == 2 && enc_slope >= enc_mm( 600 ) ) {
-					// 下り終わり
-					slope_mode = 3;
-					enc1 = 0;
-					led_out( LED_R | LED_G | LED_B);
-					pattern = 74;
-					break;
-				} else {
-					enc1 = 0;
-					pattern = 11;
-					break;
-				}
-			} else if ( check_slope() == -1 ) {
-				if( slope_mode == 1 && enc_slope >= enc_mm( 1000 ) ) {
-					// 上り終わり、下り始め
-					slope_mode = 2;
-					enc1 = 0;
-					pattern = 75;
-					break;
-				} else {
-					enc1 = 0;
-					pattern = 11;
-					break;
-				}
-				break;
-			} else {
-				enc1 = 0;
-				pattern = 11;
-				break;
-			}
-			break;
-			
-		case 72:
-			// 坂頂点まで走行
-			servoPwmOut( ServoPwm );
-			targetSpeed = speed_slope_trace * SPEED_CURRENT;
-			diff( motorPwm );
-			
-			if( enc1 >= enc_mm( 1200 ) ) {
-				enc1 = 0;
-				pattern = 73;
-				break;
-			}
-			break;
-			
-		case 73:
-			// 上り坂終点ブレーキ
-			servoPwmOut( ServoPwm );
-			motor_f( -100, -100 );
-			motor_r( -100, -100 );
-			
-			if( enc1 >= enc_mm( 50 ) ) {
-				enc1 = 0;
-				pattern = 75;
-				break;
-			}
-			break;
-			
-		case 74:
-			// 下り坂終点ブレーキ
-			servoPwmOut( ServoPwm );
-			targetSpeed = speed_slope_brake * SPEED_CURRENT;
-			diff( motorPwm );
-			if( enc1 >= enc_mm( 40 ) ) {
-				enc1 = 0;
-				pattern = 75;
-				break;
-			}
-			break;
-			
-		case 75:
-			// ジャイロセンサが安定するまで読み飛ばし
-			servoPwmOut( ServoPwm );
-			targetSpeed = speed_slope_trace * SPEED_CURRENT;
-			diff( motorPwm );
-			
-			if( enc1 >= enc_mm( 150 ) ) {
-				enc1 = 0;
-				pattern = 76;
-				break;
-			}
-			break;
-			
-		case 76:
-			// ジャイロセンサが安定するまで読み飛ばし
-			servoPwmOut( ServoPwm );
-			if ( slope_mode == 3 ) {
-				targetSpeed = speed_straight * SPEED_CURRENT;
-			} else {
-				targetSpeed = speed_slope_trace * SPEED_CURRENT;
-			}
-			diff( motorPwm );
-			
-			// クロスラインチェック
-			if( check_crossline() ) {
-				enc1 = 0;
-				pattern = 21;
-				break;
-      			}
-			// 右ハーフラインチェック
-   			if( check_rightline() ) {
-				enc1 = 0;
-				pattern = 51;
-				break;
-			}
-			// 左ハーフラインチェック
-   			if( check_leftline() ) {
-				enc1 = 0;
-				pattern = 61;
-				break;
-			}
-			if( slope_mode  == 0 ) {
-				if( enc1 >= enc_mm( 1000 ) ) {
-					enc1 = 0;
-					enc_slope = 0;
-					pattern = 11;
-					break;
-				}
-			} else if ( slope_mode == 3 ) {
-				if( enc1 >= enc_mm( 500 ) ) {
-					enc1 = 0;
-					enc_slope = 0;
-					pattern = 11;
-					break;
-				}
-			} else {
-				if( enc1 >= enc_mm( 400 ) ) {
-					enc1 = 0;
-					enc_slope = 0;
-					pattern = 11;
-					break;
-				}
 			}
 			break;
 		//-------------------------------------------------------------------
@@ -725,43 +485,7 @@ void main(void){
 			motor_f( 0, 0 );
 			motor_r( 0, 0 );
 			
-			if( msdset == 1 ) {
-				pattern = 104;
-				cnt1 = 0;
-				break;
-			}else{
-				pattern = 106;
-				break;
-			}
-			break;
-			
-		case 104:
-			servoPwmOut( ServoPwm );
-			// 最後のデータが書き込まれるまで待つ
-			if ( cnt1 <= 1000 ) {	// 500ms待つ
-				if( checkMicroSDProcess() == 11 ) {
-					msdFlag = 0;			// ログ記録終了
-					microSDProcessEnd();        // microSDProcess終了処理
-					pattern = 105;
-					break;
-				}
-			} else {			// 500ms以上経過したら終了
-				pattern = 107;
-				break;
-			}
-			break;
-			
-		case 105:
-			servoPwmOut( ServoPwm );
-			// 終了処理が終わるまで待つ
-			if( checkMicroSDProcess() == 0 ) {
-				// MicroSD最終書き込みアドレス保存
-				flashDataBuff[ 0 ] = msdWorkaddress >> 16;
-				flashDataBuff[ 1 ] = msdWorkaddress & 0xffff;	// 終了アドレス
-				writeFlashData( MSD_STARTAREA, MSD_ENDAREA, MSD_DATA, 2 );
-				pattern = 106;
-				break;
-			}
+			pattern = 106;
 			break;
 			
 		case 106:
@@ -772,17 +496,6 @@ void main(void){
 				LEDB_ON;
 			}else{
 				LEDB_OFF;
-			}
-			break;
-			
-		case 107:
-			servoPwmOut( 0 );
-			// LED点滅処理
-			if( cnt1 >= 200 ) cnt1 = 0;
-			if( cnt1 < 100 ) {
-				LEDR_ON;
-			}else{
-				LEDR_OFF;
 			}
 			break;
 			
@@ -800,8 +513,6 @@ void main(void){
 // 戻り値       なし										//
 ///////////////////////////////////////////////////////////////////////////
 void Timer (void) {
-	short s;
-	
 	__setpsw_i();
 	//　タイマカウント
 	if ( pattern >= 11 ) {

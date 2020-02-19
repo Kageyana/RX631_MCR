@@ -9,14 +9,13 @@
 * Version      : 
 * Description  : 
 ******************************************************************************
-* History : 16.02.2020 Version Description
+* History : 19.02.2020 Version Description
 *         :   
 ******************************************************************************/
 
 
 
 extern void Timer(void);
-extern void msd_send_data(void);
 extern void ADconverter(void);
 
 

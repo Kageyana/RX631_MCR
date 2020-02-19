@@ -4,7 +4,7 @@
 // インクルード                 							//
 //====================================//
 #include "iodefine.h"
-#include <machine.h>
+#include "machine.h"
 #include <stdio.h>
 //====================================//
 // シンボル定義									//

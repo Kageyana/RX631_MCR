@@ -11,9 +11,7 @@
 #define SERVO_LIMIT		420		// サーボリミットAD値±
 #define TGR_MOTOR			1582		// ジェネラルレジスタ初期値(駆動モータ)
 #define TGR_SERVO			1582		// ジェネラルレジスタ初期値(サーボ)
-#define PALSE_METER		24750	// 1mのパルス
-#define PALSE_MILLIMETER	24.75F	// 1mmのパルス
-#define SPEED_CURRENT		25		// 1m/sの時　1msのパルス
+#define SPEED_CURRENT		25		// 1m/sの時　1msのパルス	1000*1回転あたりのパスル数/プーリ外径/pi
 #define GATE_VAL			190		// ゲートセンサしきい値
 
 #define SW_LEFT			0x1
