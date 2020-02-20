@@ -12,12 +12,12 @@ signed char		accele_rR;		// 右後モーターPWM値
 signed char		accele_rL;		// 左後モーターPWM値
 signed char		sPwm;		// サーボモーターPWM値
 
-///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
 // モジュール名 motor_f								//
 // 処理概要     モーターのPWMの変更						//
-// 引数         accelefL, accelefR(PWMを1～100%で指定)			//
+// 引数         accelefL, accelefR(PWMを1～100%で指定)		//
 // 戻り値       なし									//
-///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
 void motor_f( signed char accelefL, signed char accelefR )
 {
 	uint16_t pwmfl, pwmfr;
@@ -68,10 +68,10 @@ void motor_f( signed char accelefL, signed char accelefR )
 	PWM_FR_OUT
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 motor_r								//
-// 処理概要     モーターのPWMの変更						//
+// モジュール名 motor_r									//
+// 処理概要     モーターのPWMの変更							//
 // 引数         acelerL, accelerR(PWMを1～100%で指定)			//
-// 戻り値       なし									//
+// 戻り値       なし										//
 ///////////////////////////////////////////////////////////////////////////
 void motor_r( signed char accelerL, signed char accelerR )
 {
@@ -123,10 +123,10 @@ void motor_r( signed char accelerL, signed char accelerR )
 	PWM_RR_OUT
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 servoPwmOut							//
-// 処理概要     白線トレース時サーボのPWMの変更				//
+// モジュール名 servoPwmOut								//
+// 処理概要     白線トレース時サーボのPWMの変更					//
 // 引数         spwm									//
-// 戻り値       なし									//
+// 戻り値       なし										//
 ///////////////////////////////////////////////////////////////////////////
 void servoPwmOut( signed char servopwm )
 {
