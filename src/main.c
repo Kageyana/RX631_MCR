@@ -9,7 +9,11 @@
 //====================================//
 // インクルード									//
 //====================================//
-#include "PeripheralFunctions.h"
+#include "ADC.h"
+#include "IO.h"
+#include "MOTOR.h"
+#include "Rotaryencoder.h"
+#include "Timer.h"
 #include "LineChase.h"
 #include "SetUp.h"
 #include "SCI.h"
@@ -25,15 +29,6 @@ short 	angle_center;
 // モード関連
 char		curve_moed;	// カーブ判定	0:カーブ以外	1:カーブ走行中
 char		error_mode;	// 0:距離停止 1:センサ全灯 2:センサ全消灯 3:エンコーダ停止 4:ジャイロ反応
-
-// タイマ関連
-// 1msタイマ
-unsigned int 		cnt1;		// 走行用タイマカウント
-unsigned short	 	cnt_out;	// コースアウト判定用タイマ
-unsigned short	 	cnt_out2;	// コースアウト判定用タイマ2
-unsigned short	 	cnt_out3;	// コースアウト判定用タイマ3
-unsigned short	 	cnt_out4;	// コースアウト判定用タイマ4
-static char			Timer10;	// 1msカウント用
 //====================================//
 // プロトタイプ宣言									//
 //====================================//
@@ -42,8 +37,6 @@ void init_Parameter ( bool lcd );
 // メインプログラム									//
 //====================================//
 void main(void){
-	unsigned int ui;
-	
 	//=================================//
 	// 初期化									//
 	//=================================//
@@ -458,7 +451,6 @@ void main(void){
 		//-------------------------------------------------------------------
 		case 101:
 			enc1 = 0;	
-			ui = cnt1;	// 走行時間取得
 			
 			LEDR_OFF;
 			LEDG_OFF;
@@ -507,72 +499,10 @@ void main(void){
 	} // end of "while ( 1 )"
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 Timer									//
-// 処理概要     1msごとにタイマ割り込み						//
-// 引数         なし										//
-// 戻り値       なし										//
-///////////////////////////////////////////////////////////////////////////
-void Timer (void) {
-	__setpsw_i();
-	//　タイマカウント
-	if ( pattern >= 11 ) {
-		
-	} else if ( pattern < 11 ) {
-		cnt_setup++;
-		cnt_setup2++;
-		cnt_setup3++;
-		cnt_swR++;
-		cnt_swL++;
-	}
-	cnt0++;
-	cnt1++;
-			
-	// LCD表示
-	if ( lcd_mode ) lcdShowProcess();
-
-	// エンコーダカウント
-	getEncoder();
-
-	// PID制御値算出
-	if ( angle_mode ) servoControl2();	// 角度
-	else 			servoControl();		// 白線
-	motorControl();		// モータ
-	
-	
-	Timer10++;
-	// 10ｍごとに実行
-	switch ( Timer10 ) {	
-	case 1:
-		getSwitch();		// スイッチ読み込み
-		get_voltage();		// 電源電圧取得
-		break;
-	case 2:
-		break;
-	case 3:
-		break;
-	case 5:
-		break;
-	case 6:
-		break;
-	case 7:
-		break;
-	case 8:
-		break;
-	case 9:
-		break;
-	case 10:
-		Timer10 = 0;
-		break;
-	default:
-		break;
-	}
-}
-
-///////////////////////////////////////////////////////////////////////////
 // モジュール名 init_Parameter							//
 // 処理概要     変数の初期化								//
 // 引数         lcd: 1 lcd表示  0 lcd非表示						//
-// 戻り値       なし									//
+// 戻り値       なし										//
 ///////////////////////////////////////////////////////////////////////////
 void init_Parameter ( bool lcd ) {
 	EncoderTotal = 10;	// 総走行距離

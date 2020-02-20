@@ -16,7 +16,11 @@
 ************************************************************************/
 
 #include "iodefine.h"
-#include "PeripheralFunctions.h"
+#include "ADC.h"
+#include "IO.h"
+#include "MOTOR.h"
+#include "Rotaryencoder.h"
+#include "Timer.h"
 #include "I2C_LCD.h"
 #include "SCI.h"
 
@@ -34,7 +38,7 @@ const unsigned long id_code[4] = {
 void HardwareSetup(void)
 {
 	R_PG_IO_PORT_SetPortNotAvailable();	// 存在しないポートを設定
-	R_PG_Clock_WaitSet(0.01); 		// クロックを設定し0.01秒後にクロックソース切り替え
+	R_PG_Clock_WaitSet(0.01); 			// クロックを設定し0.01秒後にクロックソース切り替え
 	
 	SET_MTU_C0		// マルチファンクションタイマを設定
 	SET_MTU_C1
