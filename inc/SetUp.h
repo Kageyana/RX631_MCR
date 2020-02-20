@@ -3,15 +3,14 @@
 //======================================//
 // インクルード                         //
 //======================================//
-#include "PeripheralFunctions.h"
+#include "ADC.h"
+#include "IO.h"
+#include "MOTOR.h"
+#include "Rotaryencoder.h"
+#include "Timer.h"
 #include "LineChase.h"
-#include "E2dataFlash.h"
 #include "I2C_LCD.h"
-#include "MicroSD.h"
 #include "SCI.h"
-#include "SPI_ICM20648.h"
-#include "MemorryTrace.h"
-#include <stdio.h>
 //======================================//
 // シンボル定義                         //
 //======================================//

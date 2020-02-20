@@ -2,48 +2,22 @@
 // インクルード									//
 //====================================//
 #include "SCI.h"
-
 //====================================//
-// グローバル変数の宣言							//
+// グローバル変数の宣言								//
 //====================================//
-char		revErr = 0;		// 通信エラー番号
-// SCI1関連
-char		SCI1_mode;		// 通信方式
-char		txt_command[128];	// コマンド格納
-char		txt_data[128];		// データ格納
-char*	txt;				// 受信データ格納
-char		cmmandMode = 0;	// コマンド選択
-char		stopWord = 0;		// 0: 停止ワード未受信 1:停止ワード受信
-short 	cnt_byte = 0;		// 受信したバイト数
-char 		command = 0;		// 0:コマンド受信待ち 1:コマンド入力中 2:コマンド判定中
 
-char		SCI1_Req_mode;	// 0:スタート 1:ストップ 2:データ送受信中
-char		SCI1_RW_mode;	// 0:送信 1:受信
-char		SCI1_Slaveaddr;	// スレーブアドレス
-char		SCI1_NumData;		// 送信データ数
-char*	SCI1_DataArry;		// 送信データ配列
-char		SCI1_DataBuff[255];	// 送信データバッファ
-
-// SCI12関連
-char		SCI12_Req_mode = 0;	// 0:スタート 1:ストップ
-char		SCI12_Slaveaddr;		// 送信データ数
-char		SCI12_NumData;		// データ数
-char		SCI1_NumData2;		// 送信データ数2
-char*	SCI12_DataArry;		// データ配列
-char*	SCI1_DataArry2;		// 送信データ配列2
-char		SCI12_DataBuff[255];	// 送信データバッファ
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 init_SCI1								//
 // 処理概要     SCI1の初期化								//
-// 引数         mode: 通信方式 rate:ボーレートをbpsで入力		//
-// 戻り値       なし									//
+// 引数         mode: 通信方式 rate:ボーレートをbpsで入力			//
+// 戻り値       なし										//
 ///////////////////////////////////////////////////////////////////////////
 void init_SCI1( char rate )
 {
 	unsigned char brr,abcs;
 	
 		// ボーレート選択
-		if ( rate == RATE_9600 ) {
+	if ( rate == RATE_9600 ) {
 		abcs = 0;
 		brr = 155;
 	} else if ( rate == RATE_14400 ) {
@@ -221,26 +195,28 @@ void init_SCI6( char rate )
 	SCI6.SCR.BIT.RE = 1;			// Enable RX
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 charput								//
+// モジュール名 charput									//
 // 処理概要     printfの出力(printfで使用する)					//
 // 引数         data:出力する一文字							//
-// 戻り値       なし									//
+// 戻り値       なし										//
 ///////////////////////////////////////////////////////////////////////////
-void charput( uint8_t data )
+void charput( char data )
 {
 	while(SCI6.SSR.BIT.TEND == 0);
-	LEDR_ON
 	SCI6.TDR = data;
 	SCI6.SSR.BIT.TEND = 0;
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 charget								//
-// 処理概要     scanfの入力(scanfで使用する)					//
-// 引数         なし									//
-// 戻り値       data:入力した一文字							//
+// モジュール名 charget									//
+// 処理概要   scanfの入力(scanfで使用する)					//
+// 引数         data:なし									//
+// 戻り値       入力した文字								//
 ///////////////////////////////////////////////////////////////////////////
-char charget(void)
-{
-	uint8_t data;
+char charget(void){
+	char data;
+
+	data = SCI6.RDR;
+	ICU.IR[VECT_SCI6_RXI6].BIT.IR = 0;
+
 	return data;
 }
