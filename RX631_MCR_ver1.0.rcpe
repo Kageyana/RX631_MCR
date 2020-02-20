@@ -22,19 +22,26 @@
       <Category Name="src">
         <Path>src\hwsetup.c</Path>
         <Path>src\I2C_LCD.c</Path>
-        <Path>src\LineChase.c</Path>
         <Path>src\main.c</Path>
-        <Path>src\PeripheralFunctions.c</Path>
         <Path>src\SCI.c</Path>
         <Path>src\SetUp.c</Path>
+        <Path>src\ADC.c</Path>
+        <Path>src\IO.c</Path>
+        <Path>src\Motor.c</Path>
+        <Path>src\Rotaryencoder.c</Path>
+        <Path>src\Timer.c</Path>
+        <Path>src\Control.c</Path>
       </Category>
       <Category Name="inc">
         <Path>inc\I2C_LCD.h</Path>
-        <Path>inc\LineChase.h</Path>
-        <Path>inc\MemorryTrace.h</Path>
-        <Path>inc\PeripheralFunctions.h</Path>
         <Path>inc\SCI.h</Path>
         <Path>inc\SetUp.h</Path>
+        <Path>inc\ADC.h</Path>
+        <Path>inc\IO.h</Path>
+        <Path>inc\Motor.h</Path>
+        <Path>inc\Rotaryencoder.h</Path>
+        <Path>inc\Timer.h</Path>
+        <Path>inc\Control.h</Path>
       </Category>
       <Category Name="AddFromPDG">
         <Category Name="SYSTEM">
@@ -82,18 +89,8 @@
         <Category Name="CMT">
           <Path>IGC-P8080_v1\CMT\R_PG_Timer_CMT_U0.c</Path>
           <Path>IGC-P8080_v1\CMT\R_PG_Timer_CMT_U0.h</Path>
-          <Path>IGC-P8080_v1\CMT\R_PG_Timer_CMT_U1.c</Path>
-          <Path>IGC-P8080_v1\CMT\R_PG_Timer_CMT_U1.h</Path>
         </Category>
         <Category Name="SCI">
-          <Path>IGC-P8080_v1\SCI\R_PG_SCI_C1.c</Path>
-          <Path>IGC-P8080_v1\SCI\R_PG_SCI_C1.h</Path>
-          <Path>IGC-P8080_v1\SCI\R_PG_SCI_C2.c</Path>
-          <Path>IGC-P8080_v1\SCI\R_PG_SCI_C2.h</Path>
-          <Path>IGC-P8080_v1\SCI\R_PG_SCI_C5.c</Path>
-          <Path>IGC-P8080_v1\SCI\R_PG_SCI_C5.h</Path>
-          <Path>IGC-P8080_v1\SCI\R_PG_SCI_C6.c</Path>
-          <Path>IGC-P8080_v1\SCI\R_PG_SCI_C6.h</Path>
           <Path>IGC-P8080_v1\SCI\R_PG_SCI_C9.c</Path>
           <Path>IGC-P8080_v1\SCI\R_PG_SCI_C9.h</Path>
         </Category>
@@ -240,11 +237,14 @@
           <Path>DefaultBuild\sbrk.obj</Path>
           <Path>DefaultBuild\hwsetup.obj</Path>
           <Path>DefaultBuild\I2C_LCD.obj</Path>
-          <Path>DefaultBuild\LineChase.obj</Path>
           <Path>DefaultBuild\main.obj</Path>
-          <Path>DefaultBuild\PeripheralFunctions.obj</Path>
           <Path>DefaultBuild\SCI.obj</Path>
           <Path>DefaultBuild\SetUp.obj</Path>
+          <Path>DefaultBuild\ADC.obj</Path>
+          <Path>DefaultBuild\IO.obj</Path>
+          <Path>DefaultBuild\Motor.obj</Path>
+          <Path>DefaultBuild\Rotaryencoder.obj</Path>
+          <Path>DefaultBuild\Timer.obj</Path>
           <Path>DefaultBuild\R_PG_Clock.obj</Path>
           <Path>DefaultBuild\R_PG_IO_PORT.obj</Path>
           <Path>DefaultBuild\R_PG_IO_PORT_P0.obj</Path>
@@ -264,16 +264,12 @@
           <Path>DefaultBuild\R_PG_Timer_MTU_U0_C4.obj</Path>
           <Path>DefaultBuild\R_PG_Timer_MTU_U0.obj</Path>
           <Path>DefaultBuild\R_PG_Timer_CMT_U0.obj</Path>
-          <Path>DefaultBuild\R_PG_Timer_CMT_U1.obj</Path>
-          <Path>DefaultBuild\R_PG_SCI_C1.obj</Path>
-          <Path>DefaultBuild\R_PG_SCI_C2.obj</Path>
-          <Path>DefaultBuild\R_PG_SCI_C5.obj</Path>
-          <Path>DefaultBuild\R_PG_SCI_C6.obj</Path>
           <Path>DefaultBuild\R_PG_SCI_C9.obj</Path>
           <Path>DefaultBuild\R_PG_ADC_12_S12AD0.obj</Path>
           <Path>DefaultBuild\Interrupt_INTC.obj</Path>
           <Path>DefaultBuild\Interrupt_CMT.obj</Path>
           <Path>DefaultBuild\Interrupt_ADC_12.obj</Path>
+          <Path>DefaultBuild\Control.obj</Path>
         </LinkOrder>
         <CommonOptions>
           <IncludePathForC>IGC-P8080_v1</IncludePathForC>

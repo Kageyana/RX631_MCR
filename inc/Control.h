@@ -1,11 +1,9 @@
-#ifndef LINECHASE_H_
-#define LINECHASE_H_
+#ifndef CONTROL_H_
+#define CONTROL_H_
 //====================================//
 // インクルード									//
 //====================================//
-#include "LineChase.h"
 #include "Rotaryencoder.h"
-#include <math.h>
 //====================================//
 // シンボル定義									//
 //====================================//
@@ -129,4 +127,4 @@ void motorControl( void );
 void servoControl( void );
 void servoControl2( void );
 
-#endif // LINECHASE_H_
+#endif // CONTROL_H_

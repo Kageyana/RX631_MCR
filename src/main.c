@@ -14,7 +14,7 @@
 #include "MOTOR.h"
 #include "Rotaryencoder.h"
 #include "Timer.h"
-#include "LineChase.h"
+#include "Control.h"
 #include "SetUp.h"
 #include "SCI.h"
 #include "I2C_LCD.h"
@@ -26,9 +26,6 @@ char		pattern = 0;	// パターン番号
 char		countdown = 0x0;
 short 	angle_center;
 
-// モード関連
-char		curve_moed;	// カーブ判定	0:カーブ以外	1:カーブ走行中
-char		error_mode;	// 0:距離停止 1:センサ全灯 2:センサ全消灯 3:エンコーダ停止 4:ジャイロ反応
 //====================================//
 // プロトタイプ宣言									//
 //====================================//

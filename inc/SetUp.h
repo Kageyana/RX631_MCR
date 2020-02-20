@@ -8,7 +8,7 @@
 #include "MOTOR.h"
 #include "Rotaryencoder.h"
 #include "Timer.h"
-#include "LineChase.h"
+#include "Control.h"
 #include "I2C_LCD.h"
 #include "SCI.h"
 //====================================//

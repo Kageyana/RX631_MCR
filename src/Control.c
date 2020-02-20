@@ -1,7 +1,7 @@
 //====================================//
 // インクルード									//
 //====================================//
-#include "LineChase.h"
+#include "Control.h"
 //====================================//
 // グローバル変数の宣言								//
 //====================================//
@@ -15,10 +15,6 @@ char	pushcart_mode;		// 手押しモード可否	0:自動走行	1:手押し
 short	stopping_meter;			// 停止距離
 // 速度
 short	speed_straight;			// 通常トレース
-short	speed_curve_brake;		// カーブブレーキ
-short	speed_curve_r600;		// R600カーブ速度
-short	speed_curve_r450;		// R450カーブ速度
-short	speed_curve_straight;	// S字カーブ直線速度
 
 short	speed_crossline;			// クロスライン進入速度
 short	speed_ckank_trace;		// クランク進入速度
@@ -36,9 +32,6 @@ short	speed_leftchange_trace;	// 左レーンチェンジ進入速度
 short	speed_leftchange_curve;	// 左レーンチェンジ旋回速度
 short	speed_leftchange_escape;	// 左レーンチェンジ旋回速度
 
-short	speed_slope_brake;		// 下り坂終点速度
-short	speed_slope_trace;		// 坂読み飛ばし速度
-
 // サーボ角度
 short	angle_rightclank;		// 右クランク旋回角度
 short	angle_leftclank;			// 左クランク旋回角度
@@ -49,22 +42,22 @@ short	angle_leftchange;		// 右レーンチェンジ旋回角度
 // 白線トレース
 signed char	ServoPwm;	// 白線トレースサーボPWM
 short 		SensorBefore;	// 1ms前のセンサ値
-char			DevBefore;		// I成分リセット用
+char			DevBefore;	// I成分リセット用
 double		Int;			// I成分積算値(白線トレース)
 // 角度制御
-signed char	ServoPwm2;		// 角度サーボPWM
+signed char	ServoPwm2;	// 角度サーボPWM
 short 		SetAngle;		// 目標角度
-short			SetAngleBefore;		// 1ms前の目標角度
+short			SetAngleBefore;	// 1ms前の目標角度
 short 		AngleBefore2;	// 1ms前の角度
-char			AngleBefore3;		// I成分リセット用
+char			AngleBefore3;	// I成分リセット用
 double		Int2;			// I成分積算値(角度制御)
 
 // モーター関連
-signed char 	motorPwm;	// モーター制御PWM
+signed char 	motorPwm;		// モーター制御PWM
 char 			AccelefBefore;		// I成分リセット用
 short			EncoderBefore;		// 1ms前の速度
 int 			targetSpeedBefore;	// 1ms前の目標速度	
-double 		Int3;			// I成分積算値(速度制御)
+double 		Int3;				// I成分積算値(速度制御)
 short			targetSpeed;		// 目標速度
 
 // ゲイン関連
@@ -152,7 +145,8 @@ void servoControl2( void )
 	
 	// 目標値、現在値取得
 	i = SetAngle;
-	j = getServoAngle();
+
+	pushcart_mode = 0;		// 手押しモードoff	j = getServoAngle();
 	
 	//サーボモータ用PWM値計算
 	Dev = i - j;
