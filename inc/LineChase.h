@@ -3,8 +3,9 @@
 //====================================//
 // インクルード									//
 //====================================//
+#include "PeripheralFunctions.h"
 #include "LineChase.h"
-#include "Rotaryencoder.h"
+#include "SPI_ICM20648.h"
 #include <math.h>
 //====================================//
 // シンボル定義									//

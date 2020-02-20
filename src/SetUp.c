@@ -57,6 +57,7 @@ char ble;
 void setup( void )
 {
 	char cnt_led;
+	short s;
 	
 	// ディップスイッチで項目選択
 	switch ( dipsw_get() ) {
@@ -118,6 +119,42 @@ void setup( void )
 					lcdPrintf("  %3gm/s", (double)speed_straight / 10 );
 					
 					data_tuning ( &speed_straight, 1, UD );
+					break;
+				case 2:
+					// カーブブレーキ
+					lcdPosition( 0, 0 );
+					lcdPrintf("BRAKE   ");
+					lcdPosition( 0, 1 );
+					lcdPrintf("  %3gm/s", (double)speed_curve_brake / 10 );
+					
+					data_tuning ( &speed_curve_brake, 1, UD );
+					break;
+				case 3:
+					// R600カーブ走行速度
+					lcdPosition( 0, 0 );
+					lcdPrintf("R600    ");
+					lcdPosition( 0, 1 );
+					lcdPrintf("  %3gm/s", (double)speed_curve_r600 / 10  );
+					
+					data_tuning ( &speed_curve_r600, 1, UD );
+					break;
+				case 4:
+					// R450カーブ走行速度
+					lcdPosition( 0, 0 );
+					lcdPrintf("R450    ");
+					lcdPosition( 0, 1 );
+					lcdPrintf("  %3gm/s", (double)speed_curve_r450 / 10 );
+					
+					data_tuning ( &speed_curve_r450, 1, UD );
+					break;
+				case 5:
+					// S字カーブ直線速度
+					lcdPosition( 0, 0 );
+					lcdPrintf("CURVE_ST");
+					lcdPosition( 0, 1 );
+					lcdPrintf("  %3gm/s", (double)speed_curve_straight / 10 );
+					
+					data_tuning ( &speed_curve_straight, 1, UD );
 					break;
 			}
 			break;
@@ -276,6 +313,24 @@ void setup( void )
 			else if ( pattern_parameter4 == 0 ) pattern_parameter4 = 6;
 			
 			switch( pattern_parameter4 ) {
+				case 1:
+					// 坂道ブレーキ
+					lcdPosition( 0, 0 );
+					lcdPrintf("SL_BRAKE");
+					lcdPosition( 0, 1 );
+					lcdPrintf("  %3gm/s", (double)speed_slope_brake / 10 );
+					
+					data_tuning ( &speed_slope_brake, 1, UD );
+					break;
+				case 2:
+					// 坂読み飛ばし速度
+					lcdPosition( 0, 0 );
+					lcdPrintf("SL_TRACE");
+					lcdPosition( 0, 1 );
+					lcdPrintf("  %3gm/s", (double)speed_slope_trace / 10 );
+					
+					data_tuning ( &speed_slope_trace, 1, UD );
+					break;
 				case 3:
 					// 右クランク旋回角度
 					lcdPosition( 0, 0 );
@@ -539,8 +594,8 @@ void setup( void )
 			data_tuning ( &pattern_sensor, 1, LR );
 			angle_mode = 0;
 			
-			if ( pattern_sensor == 9 ) pattern_sensor = 1;
-			else if ( pattern_sensor == 0 ) pattern_sensor = 8;
+			if ( pattern_sensor == 14 ) pattern_sensor = 1;
+			else if ( pattern_sensor == 0 ) pattern_sensor = 13;
 			
 			switch( pattern_sensor ) {
 				case 1:
@@ -563,17 +618,30 @@ void setup( void )
 					break;
 					
 				case 2:
+					// ジャイロ
+					if ( tasw_get() == SW_TOP ) PichAngleIMU = 0;
+					if ( tasw_get() == SW_DOWN ) RollAngleIMU = 0;
+					if ( cnt_setup >= 100 ) {
+						cnt_setup = 0;
+						lcdPosition( 0, 0 );
+						lcdPrintf("Roll%4d", (short)RollAngleIMU);
+						lcdPosition( 0, 1 );
+						lcdPrintf("Pich%4d",(short)PichAngleIMU);
+					}
+					break;
+					
+				case 3:
 					// エンコーダ
 					lcdPosition( 0, 0 );
 					lcdPrintf("Encoder ");
 					if ( cnt_setup >= 100 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 1 );
-						lcdPrintf("   %4.1f",(double)EncoderTotal/SPEED_CURRENT);
+						lcdPrintf("   %4.1f",(double)EncoderTotal/PALSE_MILLIMETER);
 					}
 					break;
 							
-				case 3:
+				case 4:
 					// ポテンションメーター
 					lcdPosition( 0, 0 );
 					lcdPrintf("Angle   ");
@@ -584,7 +652,7 @@ void setup( void )
 					}
 					break;
 					
-				case 4:
+				case 5:
 					// アナログセンサ
 					if ( cnt_setup >= 100 ) {
 						cnt_setup = 0;
@@ -595,7 +663,7 @@ void setup( void )
 					}
 					break;
 					
-				case 5:
+				case 6:
 					// デジタル風センサ, ゲートセンサ
 					motor_test = 0;
 					data_tuning ( &sensorG_th, 1, UD );
@@ -609,15 +677,17 @@ void setup( void )
 					}
 					break;
 					
-				case 6:
+				case 7:
 					// モーターテスト
 					lcdPosition( 0, 0 );
 					lcdPrintf("Motortes");
 					lcdPosition( 0, 1 );
 					lcdPrintf("     30%%");
+					demo = 0;
 					if ( motor_test == 1 ) {
-						motor_f( 30, 30 );
-						motor_r( 30, 30 );
+						diff( 30 );
+						//motor_f( 30, 30 );
+						//motor_r( 30, 30 );
 					} else {
 						motor_f( 0, 0 );
 						motor_r( 0, 0 );
@@ -625,7 +695,7 @@ void setup( void )
 					
 					data_select( &motor_test, SW_PUSH );
 					break;
-				case 7:
+				case 8:
 					// サーボテスト
 					lcdPosition( 0, 0 );
 					lcdPrintf("Servo   ");
@@ -636,7 +706,7 @@ void setup( void )
 					
 					data_select( &motor_test, SW_PUSH );
 					break;
-				case 8:
+				case 9:
 					// 関数テスト
 					lcdPosition( 0, 0 );
 					lcdPrintf("gASensor");
@@ -646,6 +716,376 @@ void setup( void )
 						cnt_setup = 0;
 						lcdPosition( 0, 1 );
 						lcdPrintf("   %5d", getAnalogSensor());
+					}
+					break;
+					
+				case 10:
+					// 旋回角度
+					lcdPosition( 0, 0 );
+					lcdPrintf("IMU %4d", (short)TurningAngleIMU);
+					lcdPosition( 0, 1 );
+					lcdPrintf("        ");
+					if ( tasw_get() == SW_PUSH ) TurningAngleIMU = 0;
+					if ( tasw_get() == SW_TOP ) caribrateIMU();
+					break;
+					
+				case 11:
+					// IMU
+					if ( cnt_setup >= 500 ) {
+						cnt_setup = 0;
+						lcdPosition( 0, 0 );
+						lcdPrintf("xa%2.3f",(double)xa / ACCELLSB);
+						lcdPosition( 0, 1 );
+						lcdPrintf("ya%2.3f",(double)ya / ACCELLSB);
+					}
+					break;
+					
+				case 12:
+					// IMU
+					if ( cnt_setup >= 500 ) {
+						cnt_setup = 0;
+						lcdPosition( 0, 0 );
+						lcdPrintf("za%2.3f",(double)za / ACCELLSB);
+						lcdPosition( 0, 1 );
+						lcdPrintf("xg%2.3f",(double)xg/GYROLSB);
+					}
+					break;
+					
+				case 13:
+					// IMU
+					if ( cnt_setup >= 500 ) {
+						cnt_setup = 0;
+						lcdPosition( 0, 0 );
+						lcdPrintf("yg%2.3f",(double)yg/GYROLSB);
+						lcdPosition( 0, 1 );
+						lcdPrintf("zg%2.3f",(double)zg/GYROLSB);
+					}
+					break;
+			}
+			break;
+		//------------------------------------------------------------------
+		// 【0xc】位置固定デモ
+		//------------------------------------------------------------------
+		case 0xb:
+			lcdPosition( 0, 0 );
+			lcdPrintf("DEMO%4d",motorPwm);
+			targetSpeed  = 0;
+			
+			data_select ( &demo, 1 );
+			if ( demo == 1 ) {
+				motor_f( motorPwm, motorPwm );
+				motor_r( motorPwm, motorPwm );
+				lcdPosition( 0, 1 );
+				lcdPrintf("   Start");
+			} else {
+				lcdPosition( 0, 1 );
+				lcdPrintf("    Stop");
+			}
+			break;
+		//------------------------------------------------------------------
+		// 【0xd】MicroSD
+		//------------------------------------------------------------------
+		case 0xc:
+			lcdPosition( 0, 0 );
+			lcdPrintf("MicroSD ");
+			
+			servo_test = 0;
+			angle_mode = 0;
+			data_tuning ( &pattern_msd, 1, LR );
+			if ( pattern_msd == 13 ) pattern_msd = 1;
+			else if ( pattern_msd == 0 ) pattern_msd = 12;
+			
+			switch ( pattern_msd ) {
+				case 1:
+					msdWorkaddress = msdaddrBuff[1];
+					msdWorkaddress2 = msdaddrBuff[0];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
+						lcdPosition( 0, 1 );
+						lcdPrintf("No data1");
+					} else {
+						lcdPosition( 0, 1 );
+						lcdPrintf("data1   ");
+					}
+					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
+						push1 = 1;
+						msd_sendToPC();
+					} else if ( tasw_get() == 0x0 ) {
+						push1 = 0;
+					}
+					break;
+				case 2:
+					msdWorkaddress = msdaddrBuff[3];
+					msdWorkaddress2 = msdaddrBuff[2];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
+						lcdPosition( 0, 1 );
+						lcdPrintf("No data2");
+					} else {
+						lcdPosition( 0, 1 );
+						lcdPrintf("data2   ");
+					}
+					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
+						push1 = 1;
+						msd_sendToPC();
+					}else if ( tasw_get() == 0x0 ) {
+						push1 = 0;
+					}
+					break;
+				case 3:
+					msdWorkaddress = msdaddrBuff[5];
+					msdWorkaddress2 = msdaddrBuff[4];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
+						lcdPosition( 0, 1 );
+						lcdPrintf("No data3");
+					} else {
+						lcdPosition( 0, 1 );
+						lcdPrintf("data3   ");
+					}
+					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
+						push1 = 1;
+						msd_sendToPC();
+					}else if ( tasw_get() == 0x0 ) {
+						push1 = 0;
+					}
+					break;
+				case 4:
+					msdWorkaddress = msdaddrBuff[7];
+					msdWorkaddress2 = msdaddrBuff[6];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
+						lcdPosition( 0, 1 );
+						lcdPrintf("No data4");
+					} else {
+						lcdPosition( 0, 1 );
+						lcdPrintf("data4   ");
+					}
+					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
+						push1 = 1;
+						msd_sendToPC();
+					}else if ( tasw_get() == 0x0 ) {
+						push1 = 0;
+					}
+					break;
+				case 5:
+					msdWorkaddress = msdaddrBuff[9];
+					msdWorkaddress2 = msdaddrBuff[8];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
+						lcdPosition( 0, 1 );
+						lcdPrintf("No data5");
+					} else {
+						lcdPosition( 0, 1 );
+						lcdPrintf("data5   ");
+					}
+					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
+						push1 = 1;
+						msd_sendToPC();
+					}else if ( tasw_get() == 0x0 ) {
+						push1 = 0;
+					}
+					break;
+				case 6:
+					msdWorkaddress = msdaddrBuff[11];
+					msdWorkaddress2 = msdaddrBuff[10];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
+						lcdPosition( 0, 1 );
+						lcdPrintf("No data6");
+					} else {
+						lcdPosition( 0, 1 );
+						lcdPrintf("data6   ");
+					}
+					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
+						push1 = 1;
+						msd_sendToPC();
+					}else if ( tasw_get() == 0x0 ) {
+						push1 = 0;
+					}
+					break;
+				case 7:
+					msdWorkaddress = msdaddrBuff[13];
+					msdWorkaddress2 = msdaddrBuff[12];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
+						lcdPosition( 0, 1 );
+						lcdPrintf("No data7");
+					} else {
+						lcdPosition( 0, 1 );
+						lcdPrintf("data7   ");
+					}
+					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
+						push1 = 1;
+						msd_sendToPC();
+					}else if ( tasw_get() == 0x0 ) {
+						push1 = 0;
+					}
+					break;
+				case 8:
+					msdWorkaddress = msdaddrBuff[15];
+					msdWorkaddress2 = msdaddrBuff[14];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
+						lcdPosition( 0, 1 );
+						lcdPrintf("No data8");
+					} else {
+						lcdPosition( 0, 1 );
+						lcdPrintf("data8   ");
+					}
+					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
+						push1 = 1;
+						msd_sendToPC();
+					}else if ( tasw_get() == 0x0 ) {
+						push1 = 0;
+					}
+					break;
+				case 9:
+					msdWorkaddress = msdaddrBuff[17];
+					msdWorkaddress2 = msdaddrBuff[16];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
+						lcdPosition( 0, 1 );
+						lcdPrintf("No data9");
+					} else {
+						lcdPosition( 0, 1 );
+						lcdPrintf("data9   ");
+					}
+					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
+						push1 = 1;
+						msd_sendToPC();
+					}else if ( tasw_get() == 0x0 ) {
+						push1 = 0;
+					}
+					break;
+				case 10:
+					msdWorkaddress = msdaddrBuff[19];
+					msdWorkaddress2 = msdaddrBuff[18];
+					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
+						lcdPosition( 0, 1 );
+						lcdPrintf("Nodata10");
+					} else {
+						lcdPosition( 0, 1 );
+						lcdPrintf("data10  ");
+					}
+					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
+						push1 = 1;
+						msd_sendToPC();
+					}else if ( tasw_get() == 0x0 ) {
+						push1 = 0;
+					}
+					break;
+					
+				case 11:
+				// ログ記録
+					if ( msdFlag == 0 ) { 
+						lcdPosition( 0, 1 );
+						lcdPrintf("LogWrite");
+					}
+					if ( tasw_get() == SW_TOP && push1 == 0 && msdFlag == 0) {
+						push1 = 1;
+						readFlashSetup( 0, 0, 1 ,0 ,0 ,0 ,0);
+						init_log();	// ログ記録準備
+						msdFlag = 1;		// データ記録開始
+						lcdPosition( 0, 1 );
+						lcdPrintf("Logging ");
+					} else if ( tasw_get() == SW_DOWN && push1 == 0 && msdFlag == 1) {
+						push1 = 1;
+						msdEndLog();		// MicroSDの終了処理
+					} else if ( tasw_get() == 0x0 ) {
+						push1 = 0;
+					}
+					break;
+					
+				case 12:
+				// コース解析
+					if ( msdFlag == 0 ) { 
+						lcdPosition( 0, 1 );
+						lcdPrintf("LogRead ");
+					}
+					if ( tasw_get() == SW_PUSH && push1 == 0 && msdFlag == 0) {
+						//ログ解析
+						msdgetData () ;
+					} else if ( tasw_get() == 0x0 ) {
+						push1 = 0;
+					}
+					break;
+			}
+			break;
+		//------------------------------------------------------------------
+		// 【0xe】キャリブレーション
+		//------------------------------------------------------------------
+		case 0xd:
+			lcdPosition( 0, 0 );
+			lcdPrintf("Angle0  ");
+			lcdPosition( 0, 1 );
+			lcdPrintf("    %4d", Angle0);
+			
+			flashDataBuff[0] = Angle0;
+			data_tuning ( &Angle0, 1, UD );
+			data_select( &servo_test, SW_PUSH );
+			angle_mode = 1;
+			if ( servo_test == 1 ) {
+				SetAngle = 0;
+				servoPwmOut( ServoPwm2 );
+			} else {
+				servoPwmOut( 0 );
+			}
+			if ( tasw_get() == 0x4 && push1 == 0 ) {
+				push1 = 1;
+				writeFlashData( ANGLE0_STARTAREA, ANGLE0_ENDAREA, ANGLE0_DATA, 1 );
+			} else if ( tasw_get() == 0x0 ) {
+				push1 = 0;
+			}
+			break;
+		//------------------------------------------------------------------
+		// 【0xf】フラッシュ
+		//------------------------------------------------------------------
+		case 0xe:
+			switch( pattern_flash ) {
+				case 1:
+					lcdPosition( 0, 0 );
+					lcdPrintf("Flash   ");
+					lcdPosition( 0, 1 );
+					lcdPrintf("AllErase");
+					
+					if ( tasw_get() == 1 && push1 == 0 ) {
+						push1 = 1;
+						pattern_flash = 2;
+						break;
+					} else if ( tasw_get() == 8 && push1 == 0 ) {
+						push1 = 1;
+						ble = 1;
+						break;
+					} else {
+						push1 = 0;
+					}
+					break;
+				case 2:
+					lcdPosition( 0, 0 );
+					lcdPrintf("Really? ");
+					lcdPosition( 0, 1 );
+					lcdPrintf("c:Y 2:N ");
+					
+					if ( tasw_get() == 2 ) {
+						pattern_flash = 1;
+						break;
+					}
+					if ( tasw_get() == 0xc ) {
+						pattern_flash = 3;
+						break;
+					}
+					break;
+				case 3:
+					lcdPosition( 0, 0 );
+					lcdPrintf("AllErase");
+					lcdPosition( 0, 1 );
+					lcdPrintf("     Now");
+					s = 0;
+					while ( s <= 1023 ) {
+						eraseE2DataFlash( s );
+						s++;
+					}
+					cnt_setup = 0;
+					pattern_flash = 4;
+					break;
+				case 4:
+					lcdPosition( 0, 1 );
+					lcdPrintf("complete");
+					if ( cnt_setup >= 1500 ) {
+						pattern_flash = 1;
+						break;
 					}
 					break;
 			}
@@ -675,6 +1115,7 @@ void data_select ( char *data , char button )
 		} else if ( *data == 0 && push == 0) {
 			push = 1;
 			*data = 1;
+			Int = 0;
 		}
 	} else {
 		push = 0;
@@ -698,6 +1139,15 @@ void data_tuning ( void *data, char add , char dir )
 			} else if ( tasw_get() == SW_LEFT && pushL == 0 ) {
 				pushL = -1;
 				*data2 -= add;
+			} else if ( pushL != 0 ) {
+				// 長押しモード
+				if ( cnt_swL >= 500 ) {
+					if ( ( cnt_setup3 % 200 ) == 0 ) {
+						cnt_setup3 = 0;
+						if ( pushL == 1) *data2 += add;
+						else *data2 -= add;
+					}
+				}
 			}
 		} else {
 			pushL = 0;
@@ -711,6 +1161,15 @@ void data_tuning ( void *data, char add , char dir )
 			} else if ( tasw_get() == SW_DOWN && pushR == 0 ) {
 				pushR = -1;
 				*data2 -= add;
+			} else if ( pushR != 0 ) {
+				// 長押しモード
+				if ( cnt_swR >= 500 ) {
+					if ( ( cnt_setup3 % 200 ) == 0 ) {
+						cnt_setup3 = 0;
+						if ( pushR == 1) *data2 += add;
+						else *data2 -= add;
+					}
+				}
 			}
 		} else {
 			pushR = 0;
