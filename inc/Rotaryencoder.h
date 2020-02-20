@@ -25,6 +25,4 @@ extern unsigned int	enc_slope;		// 坂上距離カウント
 //====================================//
 // エンコーダ関連
 void getEncoder (void);
-// エンコーダ関連
-unsigned int enc_mm( short mm );
 #endif // ROTARYENCODER_H_

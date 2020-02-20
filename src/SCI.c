@@ -60,10 +60,12 @@ void init_SCI1( char rate )
 	MSTP(SCI1) = 0;				// Wake up SCI1
 	SYSTEM.PRCR.WORD = 0xA500;		// Protect
 	
-	SCI1.SCR.BYTE = 0;				//Set PFC of external pin used
+	SCI1.SCR.BYTE = 0;			//Set PFC of external pin used
+	
+	//__set_fintv((unsigned int*)FastInterupt);
 	 
-	ICU.IER[IER_SCI1_RXI1].BIT.IEN_SCI1_RXI1 = 1;	// RXI割り込み開始
-	ICU.IPR[VECT_SCI1_RXI1].BIT.IPR = 15;			// RXI割り込み許可
+	ICU.IER[IER_SCI1_RXI1].BIT.IEN_SCI1_RXI1 = 1;	// RXI??????J?n
+	ICU.IPR[VECT_SCI1_RXI1].BIT.IPR = 15;		// RXI?????????
 	
 	// Set MPC
 	PORT3.PMR.BIT.B0 = 1;			// Disable PB1: peripheral
@@ -87,16 +89,16 @@ void init_SCI1( char rate )
 	SCI1.SPMR.BIT.CKPOL = 0;
 	SCI1.SCMR.BIT.SMIF = 0;
 	SCI1.SEMR.BIT.ACS0 = 0;
-	SCI1.SEMR.BIT.ABCS = abcs;		// 1ビット転送期間中のクロックサイクル数　0: 16 1: 8
+	SCI1.SEMR.BIT.ABCS = abcs;		// 1?r?b?g?]?????????N???b?N?T?C?N?????@0: 16 1: 8
 	
 	SCI1.SMR.BIT.STOP = 0;			// 1 stop bit
 	SCI1.SMR.BIT.PM = 0;			// none parity
 	SCI1.SMR.BIT.CHR = 0;			// 8bit data length
-	SCI1.SMR.BIT.CM = 0;			// 調歩同期式
-	SCI1.BRR = brr;					// 12: 115200bps 1:750000bps 0:1500000bps
-	SCI1.SCR.BIT.RIE = 1;			// RXI割り込み要求
-	SCI1.SCR.BIT.TE = 1;				// Enable TX
-	SCI1.SCR.BIT.RE = 1;				// Enable RX
+	SCI1.SMR.BIT.CM = 0;			// ??????????
+	SCI1.BRR = brr;				// 12: 115200bps 1:750000bps 0:1500000bps
+	SCI1.SCR.BIT.RIE = 1;			// RXI??????v??
+	SCI1.SCR.BIT.TE = 1;			// Enable TX
+	SCI1.SCR.BIT.RE = 1;			// Enable RX
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 init_SCI6								//
@@ -152,7 +154,12 @@ void init_SCI6( char rate )
 	MSTP(SCI6) = 0;				// Wake up SCI6
 	SYSTEM.PRCR.WORD = 0xA500;		// Protect
 	
-	SCI6.SCR.BYTE = 0;				//Set PFC of external pin used
+	SCI6.SCR.BYTE = 0;			//Set PFC of external pin used
+	
+	//__set_fintv((unsigned int*)FastInterupt);
+	 
+	//ICU.IER[IER_SCI6_RXI1].BIT.IEN_SCI6_RXI1 = 1;	// RXI??????J?n
+	//ICU.IPR[VECT_SCI6_RXI1].BIT.IPR = 15;		// RXI?????????
 	
 	// Set MPC
 	PORT3.PMR.BIT.B3 = 1;			// Disable P33: peripheral
@@ -176,16 +183,16 @@ void init_SCI6( char rate )
 	SCI6.SPMR.BIT.CKPOL = 0;
 	SCI6.SCMR.BIT.SMIF = 0;
 	SCI6.SEMR.BIT.ACS0 = 0;
-	SCI6.SEMR.BIT.ABCS = abcs;		// 1ビット転送期間中のクロックサイクル数　0: 16 1: 8
+	SCI6.SEMR.BIT.ABCS = abcs;		// 1?r?b?g?]?????????N???b?N?T?C?N?????@0: 16 1: 8
 	
 	SCI6.SMR.BIT.STOP = 0;			// 1 stop bit
 	SCI6.SMR.BIT.PM = 0;			// none parity
 	SCI6.SMR.BIT.CHR = 0;			// 8bit data length
-	SCI6.SMR.BIT.CM = 0;			// 調歩同期式
-	SCI6.BRR = brr;					// 12: 115200bps 1:750000bps 0:1500000bps
-	SCI6.SCR.BIT.RIE = 1;			// RXI割り込み要求
-	SCI6.SCR.BIT.TE = 1;				// Enable TX
-	SCI6.SCR.BIT.RE = 1;				// Enable RX
+	SCI6.SMR.BIT.CM = 0;			// ??????????
+	SCI6.BRR = brr;				// 12: 115200bps 1:750000bps 0:1500000bps
+	SCI6.SCR.BIT.RIE = 1;			// RXI??????v??
+	SCI6.SCR.BIT.TE = 1;			// Enable TX
+	SCI6.SCR.BIT.RE = 1;			// Enable RX
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 charput									//

@@ -10,10 +10,14 @@
 // シンボル定義									//
 //====================================//
 // 緊急停止
-#define	STOPPING_METER			40		// 停止距離
+#define	STOPPING_METER		40		// 停止距離
 
 // 各セクションでの目標速度　x/10[m/s]
-#define SPEED_STRAIGHT				54	// 通常トレース
+#define SPEED_STRAIGHT			54	// 通常トレース
+#define SPEED_CURVE_BRAKE		30	// カーブブレーキ
+#define SPEED_CURVE_R600		46	// R600カーブ速度
+#define SPEED_CURVE_R450		40	// R450カーブ速度
+#define SPEED_CURVE_STRAIGHT	42	// S字カーブ直線速度
 
 #define SPEED_CROSSLINE			28	// クロスライン進入速度
 #define SPEED_CLANK_TRACE			32	// クランク進入速度
@@ -29,11 +33,23 @@
 #define SPEED_LEFTCHANGE_TRACE		46	// 左レーンチェンジ進入速度
 #define SPEED_LEFTCHANGE_CURVE		46	// 左レーンチェンジ旋回速度
 #define SPEED_LEFTCHANGE_ESCAPE		46	// 左レーンチェンジ復帰速度
+
+#define SPEED_SLOPE_BRAKE		26	// 下り坂終点速度
+#define SPEED_SLOPE_TRACE		36	// 坂読み飛ばし速度
 // 角度
-#define ANGLE_RIGHTCLANK			-400	// 右クランク旋回角度
-#define ANGLE_LEFTCLANK			400	// 左クランク旋回角度
-#define ANGLE_RIGHTCHANGE			-160	// 右レーンチェンジ旋回角度
-#define ANGLE_LEFTCHANGE			160	// 右レーンチェンジ旋回角度
+#define ANGLE_RIGHTCLANK		-400	// 右クランク旋回角度
+#define ANGLE_LEFTCLANK		400	// 左クランク旋回角度
+#define ANGLE_RIGHTCHANGE		-160	// 右レーンチェンジ旋回角度
+#define ANGLE_LEFTCHANGE		160	// 右レーンチェンジ旋回角度
+
+// カーブ関連
+#define CURVE_R600_START		20		// R600開始AD値
+#define CURVE_R450_START		140		// R450開始AD値
+
+// ジャイロ関連
+#define SLOPE_UPPERLINE_IMU		4		// 上り坂検出角度
+#define SLOPE_LOWERLINE_IMU	-4		// 下り坂検出角度
+#define INTEGRAL_LIMIT			200		// 角速度積算時間
 
 // PIDゲイン関連
 //白線トレース
@@ -55,9 +71,10 @@
 #define STOP_SENSOR1		60		// センサ全灯
 #define STOP_SENSOR2		800		// センサ全消灯
 #define STOP_ENCODER		100		// エンコーダ停止(ひっくり返った？)
+#define STOP_GYRO			100		// マイナスの加速度検知(コースから落ちた？)
 #define STOP_COUNT		10000	// 時間停止
 //====================================//
-// グローバル変数の宣言								//
+// グローバル変数の宣言							//
 //====================================//
 // パターン、モード関連
 extern char 	pattern;			// パターン番号
@@ -73,6 +90,10 @@ extern char	IMUSet;			// IMUが初期化されたか	0: 初期化失敗	1:初期化成功
 extern short	stopping_meter;			// 停止距離
 // 速度
 extern short	speed_straight;			// 通常トレース
+extern short	speed_curve_brake;		// カーブブレーキ
+extern short	speed_curve_r600;		// R600カーブ速度
+extern short	speed_curve_r450;		// R450カーブ速度
+extern short	speed_curve_straight;	// S字カーブ直線速度
 
 extern short	speed_crossline;			// クロスライン進入速度
 extern short	speed_ckank_trace;		// クランク進入速度
@@ -90,11 +111,21 @@ extern short	speed_leftchange_trace;	// 左レーンチェンジ進入速度
 extern short	speed_leftchange_curve;	// 左レーンチェンジ旋回速度
 extern short	speed_leftchange_escape;	// 左レーンチェンジ旋回速度
 
+extern short	speed_slope_brake;		// 下り坂終点速度
+extern short	speed_slope_trace;		// 坂読み飛ばし速度
+
 // サーボ角度
 extern short	angle_rightclank;		// 右クランク旋回角度
 extern short	angle_leftclank;			// 左クランク旋回角度
 extern short	angle_rightchange;		// 右レーンチェンジ旋回角度
 extern short	angle_leftchange;		// 右レーンチェンジ旋回角度
+
+// タイマ関連
+extern short	cnt_gyro;			// 角度計算用カウンタ
+
+// 角度関連
+extern double 	TurningAngleEnc;	// エンコーダから求めた旋回角度
+extern double	PichAngleAD;		// アナログジャイロから求めたピッチ角度
 
 // モーター関連
 extern signed char 	motorPwm;	// モーター制御PWM
@@ -115,15 +146,22 @@ extern signed char 	ServoPwm;	// 白線トレースサーボPWM
 extern signed char 	ServoPwm2;	// 角度サーボPWM
 
 //====================================//
-// プロトタイプ宣言									//
+// プロトタイプ宣言								//
 //====================================//
 // マーカー関連
 signed char check_crossline( void );
 signed char check_rightline( void );
 signed char check_leftline( void );
+signed char check_slope( void );
+
+// エンコーダ関連
+unsigned int enc_mm( short mm );
 
 // モーター関連
 void motorControl( void );
+
+// 内輪差関連
+void diff ( signed char pwm );
 
 // サーボ関連
 void servoControl( void );

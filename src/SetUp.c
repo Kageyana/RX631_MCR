@@ -539,8 +539,8 @@ void setup( void )
 			data_tuning ( &pattern_sensor, 1, LR );
 			angle_mode = 0;
 			
-			if ( pattern_sensor == 8 ) pattern_sensor = 1;
-			else if ( pattern_sensor == 0 ) pattern_sensor = 7;
+			if ( pattern_sensor == 9 ) pattern_sensor = 1;
+			else if ( pattern_sensor == 0 ) pattern_sensor = 8;
 			
 			switch( pattern_sensor ) {
 				case 1:
@@ -636,6 +636,18 @@ void setup( void )
 					
 					data_select( &motor_test, SW_PUSH );
 					break;
+				case 8:
+					// 関数テスト
+					lcdPosition( 0, 0 );
+					lcdPrintf("gASensor");
+					
+					motor_test = 0;
+					if ( cnt_setup >= 100 ) {
+						cnt_setup = 0;
+						lcdPosition( 0, 1 );
+						lcdPrintf("   %5d", getAnalogSensor());
+					}
+					break;
 			}
 			break;
 	default:
@@ -650,9 +662,9 @@ void setup( void )
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 // モジュール名 data_select										//
-// 処理概要     タクトスイッチで0,1に変化させる							//
-// 引数         data: 変化させる変数 button: どのスイッチで変化させるか			//
-// 戻り値       なし												//
+// 処理概要     タクトスイッチで0,1に変化させる						//
+// 引数         data: 変化させる変数 button: どのスイッチで変化させるか		//
+// 戻り値       なし											//
 ///////////////////////////////////////////////////////////////////////////////////////
 void data_select ( char *data , char button )
 {
@@ -708,9 +720,9 @@ void data_tuning ( void *data, char add , char dir )
 }
 /////////////////////////////////////////////////////////////////////////////////
 // モジュール名 fix_speedsetting								//
-// 処理概要     速度パラメータを固定値にする							//
-// 引数         なし											//
-// 戻り値       0: 速度一定にしない　1: 速度一定にする					//
+// 処理概要     速度パラメータを固定値にする						//
+// 引数         なし										//
+// 戻り値       0: 速度一定にしない　1: 速度一定にする				//
 /////////////////////////////////////////////////////////////////////////////////
 char fix_speedsetting ( void )
 {
@@ -718,6 +730,10 @@ char fix_speedsetting ( void )
 	
 	if ( setting_1meter == 1 ) {
 		speed_straight		= 10;
+		speed_curve_brake	= 10;
+		speed_curve_r600	= 10;
+		speed_curve_r450	= 10;
+		speed_curve_straight	= 10;
 		
 		speed_crossline		= 10;
 		speed_ckank_trace	= 10;
@@ -734,10 +750,17 @@ char fix_speedsetting ( void )
 		speed_leftchange_curve	= 10;
 		speed_leftchange_escape	= 10;
 		
+		speed_slope_brake	= 10;
+		speed_slope_trace	= 10;
+		
 		fixSpeed = 1;
 		ret = 1;
 	} else if ( setting_2meter == 1 ) {
 		speed_straight		= 20;
+		speed_curve_brake	= 20;
+		speed_curve_r600	= 20;
+		speed_curve_r450	= 20;
+		speed_curve_straight	= 20;
 		
 		speed_crossline		= 20;
 		speed_ckank_trace	= 20;
@@ -754,10 +777,17 @@ char fix_speedsetting ( void )
 		speed_leftchange_curve	= 20;
 		speed_leftchange_escape	= 20;
 		
+		speed_slope_brake	= 20;
+		speed_slope_trace	= 20;
+		
 		fixSpeed = 1;
 		ret = 1;
 	} else if ( setting_3meter == 1 ) {
 		speed_straight		= 30;
+		speed_curve_brake	= 30;
+		speed_curve_r600	= 30;
+		speed_curve_r450	= 30;
+		speed_curve_straight	= 30;
 		
 		speed_crossline		= 25;
 		speed_ckank_trace	= 20;
@@ -773,6 +803,9 @@ char fix_speedsetting ( void )
 		speed_leftchange_trace 	= 30;
 		speed_leftchange_curve	= 30;
 		speed_leftchange_escape	= 30;
+		
+		speed_slope_brake	= 20;
+		speed_slope_trace	= 30;
 		
 		fixSpeed = 1;
 		ret = 1;
