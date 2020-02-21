@@ -16,7 +16,6 @@
         <Path>mcu\sbrk.c</Path>
         <Path>mcu\sbrk.h</Path>
         <Path>mcu\stacksct.h</Path>
-        <Path>mcu\vect.h</Path>
         <Path>mcu\typedefine.h</Path>
       </Category>
       <Category Name="src">

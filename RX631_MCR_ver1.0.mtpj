@@ -87,13 +87,6 @@
       <TreeImageGuid>03cad1e8-2eb3-4cde-a8a3-982423631122</TreeImageGuid>
       <ParentItem>07118988-799c-4bd7-814c-28a6fccae01d</ParentItem>
     </Instance>
-    <Instance Guid="c2642e8b-24d3-4f48-8682-a6f97ea0a073">
-      <Name>vect.h</Name>
-      <Type>File</Type>
-      <RelativePath>mcu\vect.h</RelativePath>
-      <TreeImageGuid>03cad1e8-2eb3-4cde-a8a3-982423631122</TreeImageGuid>
-      <ParentItem>07118988-799c-4bd7-814c-28a6fccae01d</ParentItem>
-    </Instance>
     <Instance Guid="e460d9f6-6542-41f3-b2a4-671e6e1e9619">
       <Name>typedefine.h</Name>
       <Type>File</Type>
@@ -2209,10 +2202,6 @@ D_2=R_2
     <Instance Guid="5c413605-ba33-4c94-a8b5-418d045315a9">
       <ItemAddTime>637178531090416352</ItemAddTime>
       <ItemAddTimeCount>0</ItemAddTimeCount>
-    </Instance>
-    <Instance Guid="c2642e8b-24d3-4f48-8682-a6f97ea0a073">
-      <ItemAddTime>636687423621436925</ItemAddTime>
-      <ItemAddTimeCount>11</ItemAddTimeCount>
     </Instance>
     <Instance Guid="e460d9f6-6542-41f3-b2a4-671e6e1e9619">
       <ItemAddTime>636687424465509959</ItemAddTime>
