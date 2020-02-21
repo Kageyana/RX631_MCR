@@ -10,7 +10,6 @@ signed char		accele_fR;		// 右前モーターPWM値
 signed char		accele_fL;		// 左前モーターPWM値
 signed char		accele_rR;		// 右後モーターPWM値
 signed char		accele_rL;		// 左後モーターPWM値
-signed char		sPwm;		// サーボモーターPWM値
 
 /////////////////////////////////////////////////////////////////////
 // モジュール名 motor_f								//
@@ -132,9 +131,6 @@ void servoPwmOut( signed char servopwm )
 {
 	uint16_t pwm;
 	short angle;
-	
-	sPwm = servopwm;		// ログ用変数に代入
-	//servopwm = -servopwm;		// 回転方向を変える
 	
 	// サーボリミット制御
 	angle = getServoAngle();

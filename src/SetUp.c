@@ -267,7 +267,7 @@ void setup( void )
 			break;
 		
 		//------------------------------------------------------------------
-		// y0x6zƒpƒ‰ƒ[ƒ^’²®(â“¹AŠp“x)
+		// y0x6zƒpƒ‰ƒ[ƒ^’²®(Šp“x)
 		//------------------------------------------------------------------
 		case 0x5:
 			data_tuning ( &pattern_parameter4, 1, LR );
@@ -383,8 +383,8 @@ void setup( void )
 			angle_mode = 1;
 			if ( servo_test == 1 ) servoPwmOut( ServoPwm2 );
 			else servoPwmOut( 0 );
-			if ( servo_test2 == 1 ) SetAngle = 120;
-			else SetAngle = -120;
+			if ( servo_test2 == 1 ) SetAngle = 340;
+			else SetAngle = -340;
 			
 			data_tuning ( &pattern_gain2, 1, LR );
 			if ( pattern_gain2 == 4 ) pattern_gain2 = 1;
@@ -569,7 +569,7 @@ void setup( void )
 					if ( cnt_setup >= 100 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 1 );
-						lcdPrintf("   %4.1f",(double)EncoderTotal/SPEED_CURRENT);
+						lcdPrintf("  %4.1f",(double)EncoderTotal/SPEED_CURRENT);
 					}
 					break;
 							
@@ -580,7 +580,7 @@ void setup( void )
 					if ( cnt_setup >= 100 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 1 );
-						lcdPrintf("    %4d",getServoAngle());
+						lcdPrintf("   %4d",getServoAngle());
 					}
 					break;
 					

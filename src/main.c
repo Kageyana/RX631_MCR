@@ -29,7 +29,7 @@ short 	angle_center;
 //====================================//
 // プロトタイプ宣言									//
 //====================================//
-void init_Parameter ( bool lcd );
+void initStatus ( bool lcd );
 //====================================//
 // メインプログラム									//
 //====================================//
@@ -39,14 +39,17 @@ void main(void){
 	//=================================//
 	L_Sen_ON;		//センサ点灯
 	inti_lcd();			// LCD初期化
+	lcd_mode = 1;
 	
 	motor_f( 0, 0 );		// モーター停止
 	motor_r( 0, 0 );
 	servoPwmOut( 0 );
 	
-	pushcart_mode = 0;		// 手押しモードoff
-	angle_mode = 0;		// 白線トレース
-	start = 0;				// ゲートスタート
+	pushcart_mode = 0;	// 手押しモードoff
+	angle_mode = 0;	// 白線トレース
+	start = 0;			// ゲートスタート
+	
+	initParameter();		// 各パラメータ初期化
 	
 	led_out(0);
 	
@@ -66,7 +69,7 @@ void main(void){
 			} else if ( start && pushcart_mode ) {
 				// 手押しモードの場合すぐに通常トレース
 				// 変数初期化
-				init_Parameter( 1 );
+				initStatus( 1 );
 				pattern = 11;		// 通常走行
 				break;
 			}
@@ -77,7 +80,7 @@ void main(void){
 			// スタートバー開閉待ち
 			if ( !startbar_get() ) {
 				// 変数初期化
-				init_Parameter( 0 );
+				initStatus( 0 );
 				break;
 			}
 			// LED点滅処理
@@ -170,8 +173,9 @@ void main(void){
 			motor_f(motorPwm, motorPwm);
 			motor_r(motorPwm, motorPwm);
 			
-			if ( enc1 >= enc_mm(60) && sensor_inp() == 0x2 ) {
+			if ( sensor_inp() == 0x2 ) {
 				enc1 = 0;
+				angle_mode = 0;
 				pattern = 32;
 				break;
 			}
@@ -201,8 +205,9 @@ void main(void){
 			motor_f(motorPwm, motorPwm);
 			motor_r(motorPwm, motorPwm);
 			
-			if ( enc1 >= enc_mm(60) && sensor_inp() == 0x2 ) {
+			if ( sensor_inp() == 0x2 ) {
 				enc1 = 0;
+				angle_mode = 0;
 				pattern = 42;
 				break;
 			}
@@ -501,7 +506,7 @@ void main(void){
 // 引数         lcd: 1 lcd表示  0 lcd非表示						//
 // 戻り値       なし										//
 ///////////////////////////////////////////////////////////////////////////
-void init_Parameter ( bool lcd ) {
+void initStatus ( bool lcd ) {
 	EncoderTotal = 10;	// 総走行距離
 	cnt1 = 0;			// タイマリセット
 	enc1 = 0;			// 区間距離リセット

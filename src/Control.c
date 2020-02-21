@@ -64,7 +64,51 @@ short			targetSpeed;		// 目標速度
 char	kp_buff, ki_buff, kd_buff;
 char	kp2_buff, ki2_buff, kd2_buff;
 char kp3_buff, ki3_buff, kd3_buff;
-
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 initParameter								//
+// 処理概要   各パラメータを初期値に設定する					//
+// 引数         なし										//
+// 戻り値       なし										//
+///////////////////////////////////////////////////////////////////////////
+void initParameter(void)
+{
+	stopping_meter			= STOPPING_METER;
+	
+	speed_straight			= SPEED_STRAIGHT;
+	
+	speed_crossline			= SPEED_CROSSLINE;
+	speed_ckank_trace		= SPEED_CLANK_TRACE;
+	speed_rightclank_curve	= SPEED_RIGHTCLANK_CURVE;
+	speed_rightclank_escape	= SPEED_RIGHTCLANK_ESCAPE;
+	speed_leftclank_curve	= SPEED_LEFTCLANK_CURVE;
+	speed_leftclank_escape	= SPEED_LEFTCLANK_ESCAPE;
+	
+	speed_halfine			= SPEED_HALFLINE;
+	speed_rightchange_trace 	= SPEED_RIGHTCHANGE_TRACE;
+	speed_rightchange_curve	= SPEED_RIGHTCHANGE_CURVE;
+	speed_rightchange_escape= SPEED_RIGHTCHANGE_ESCAPE;
+	speed_leftchange_trace 	= SPEED_LEFTCHANGE_TRACE;
+	speed_leftchange_curve	= SPEED_LEFTCHANGE_CURVE;
+	speed_leftchange_escape	= SPEED_LEFTCHANGE_ESCAPE;
+	
+	angle_rightclank			= ANGLE_RIGHTCLANK;
+	angle_leftclank			= ANGLE_LEFTCLANK;
+	angle_rightchange		= ANGLE_RIGHTCHANGE;
+	angle_leftchange		= ANGLE_LEFTCHANGE;
+	
+	kp_buff				= KP;
+	ki_buff				= KI;
+	kd_buff				= KD;
+	
+	kp2_buff				= KP2;
+	ki2_buff				= KI2;
+	kd2_buff				= KD2;
+	
+	kp3_buff				= KP3;
+	ki3_buff				= KI3;
+	kd3_buff				= KD3;
+	
+}
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 check_crossline							//
 // 処理概要     クロスライン検知								//
@@ -145,6 +189,7 @@ void servoControl2( void )
 	
 	// 目標値、現在値取得
 	i = SetAngle;
+	j = getServoAngle();
 
 	pushcart_mode = 0;		// 手押しモードoff	j = getServoAngle();
 	

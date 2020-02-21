@@ -26,7 +26,6 @@ short				sensorC;	// 中心アナログセンサ平均AD値
 short				sensorLL;	// 最左端アナログセンサ平均AD値
 short				sensorRR;	// 最右端アナログセンサ平均AD値
 short				VoltageC;	// 電圧チェッカーAD値平均値
-short				Angle0;	// サーボセンター値
 
 double		Voltage;
 /////////////////////////////////////////////////////////////////////
@@ -93,7 +92,7 @@ void get_voltage ( void )
 /////////////////////////////////////////////////////////////////////
 short getServoAngle(void) 
 {	
-	return  ( Angle0 - Angle );
+	return  ( SERVO_CENTER - Angle  );
 }
 /////////////////////////////////////////////////////////////////////
 // モジュール名 getAnalogSensor						//

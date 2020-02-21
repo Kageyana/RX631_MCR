@@ -55,7 +55,6 @@ extern signed char	accele_fR;		// 右前モーターPWM値
 extern signed char	accele_fL;		// 左前モーターPWM値
 extern signed char	accele_rR;		// 右後モーターPWM値
 extern signed char	accele_rL;		// 左後モーターPWM値
-extern signed char	sPwm;		// サーボモーターPWM値
 //====================================//
 // プロトタイプ宣言									//
 //====================================//

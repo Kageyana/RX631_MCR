@@ -67,7 +67,7 @@ extern char	msdset;			// MicroSDが初期化されたか	0:初期化失敗	1:初期化成功
 extern char	IMUSet;			// IMUが初期化されたか	0: 初期化失敗	1:初期化成功
 
 // パラメータ関連
-// 距離
+// 距離stopping_meter
 extern short	stopping_meter;			// 停止距離
 // 速度
 extern short	speed_straight;			// 通常トレース
@@ -115,6 +115,9 @@ extern signed char 	ServoPwm2;	// 角度サーボPWM
 //====================================//
 // プロトタイプ宣言									//
 //====================================//
+// パラメータ関連
+void initParameter(void);
+
 // マーカー関連
 signed char check_crossline( void );
 signed char check_rightline( void );

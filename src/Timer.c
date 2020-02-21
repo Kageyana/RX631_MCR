@@ -21,9 +21,7 @@ static char				Timer10;	// 1msカウント用
 void Timer (void) {
 	__setpsw_i();
 	//　タイマカウント
-	if ( pattern >= 11 ) {
-		
-	} else if ( pattern < 11 ) {
+	if ( pattern < 11 ) {
 		cnt_setup++;
 		cnt_setup2++;
 		cnt_setup3++;
