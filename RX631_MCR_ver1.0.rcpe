@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <MicomToolCommonProjectFile Version="1.00">
-  <CreatorType Name="CubeSuite+" Version="V8.03.00  [21 Nov 2019]" />
+  <CreatorType Name="CubeSuite+" Version="V8.05.00  [26 Nov 2020]" />
   <Placeholders>
     <PlaceholderPrefix>%</PlaceholderPrefix>
     <PlaceholderPostfix>%</PlaceholderPostfix>
@@ -144,7 +144,7 @@
       <DebugToolSettings />
     </DebugOptions>
     <Device Series="RX">R5F5631FDxFP</Device>
-    <BuildOptions Name="CC-RX" Version="V3.02.00">
+    <BuildOptions Name="CC-RX" Version="V3.03.00">
       <BuildMode Name="DefaultBuild" Active="True">
         <GeneralOptions>
           <SimultaneouslyBuild>true</SimultaneouslyBuild>

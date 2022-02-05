@@ -76,6 +76,11 @@
 /*                                                                              */
 /*                                                                              */
 /********************************************************************************/
+
+#ifdef _VSCODE
+#define __evenaccess
+#endif
+
 #ifndef __RX63NIODEFINE_HEADER__
 #define __RX63NIODEFINE_HEADER__
 #pragma bit_order left
