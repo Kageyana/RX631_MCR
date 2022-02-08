@@ -1,14 +1,14 @@
 #ifndef MICROSD_H_
 #define MICROSD_H_
 //======================================//
-// インクルード                         //
+// インクルード
 //======================================//
 #include "PeripheralFunctions.h"
 #include "E2dataFlash.h"
 #include <string.h>
 #include <stdarg.h>
 //========================================//
-// シンボル定義										//
+// シンボル定義
 //=======================================//
 #define WRITINGTIME		2		// ログ取得周期(ms)
 #define DATA_BYTE			32		// 一回に保存するデータ数(byte)
@@ -33,21 +33,21 @@
 
 /****************************************************************************************************/
 //========================================//
-// グローバル変数の宣言								//
+// グローバル変数の宣言
 //=======================================//
 // タイマ関連
 extern unsigned short		cnt_log;		// ログ漏れ確認用カウント
 
 // microSD関連
-extern signed char		msdBuff[ 512 ];        // 一時保存バッファ
-extern short			msdBuffaddress;       // 一時記録バッファ書込アドレス
-extern short			msdFlag;                	// 1:データ記録 0:記録しない
-extern short			msdTimer;               	// 取得間隔計算用
-extern unsigned int		msdStartaddress;      // 記録開始アドレス
-extern unsigned int		msdEndaddress;        // 記録終了アドレス
-extern unsigned int		msdWorkaddress;      // 作業用アドレス
+extern signed char		msdBuff[ 512 ];     // 一時保存バッファ
+extern short			msdBuffaddress;     // 一時記録バッファ書込アドレス
+extern short			msdFlag;            // 1:データ記録 0:記録しない
+extern short			msdTimer;           // 取得間隔計算用
+extern unsigned int		msdStartaddress;    // 記録開始アドレス
+extern unsigned int		msdEndaddress;      // 記録終了アドレス
+extern unsigned int		msdWorkaddress;     // 作業用アドレス
 extern unsigned int		msdWorkaddress2;	// 作業用アドレス2
-extern volatile char		msdlibError;		// エラー番号
+extern volatile char		msdlibError;	// エラー番号
 extern signed char 		*msdBuffPointa;		// RAM保存バッファ用ポインタ
 
 extern volatile short			msdlibCnt;
@@ -55,7 +55,7 @@ extern volatile unsigned char	interrupt_msd_send_data;	// 送信フラグ
 
 extern unsigned int 			msdaddrBuff[25];	// MicroSDカードの最終書き込みアドレス保存用
 //========================================//
-// プロトタイプ宣言									//
+// プロトタイプ宣言
 //=======================================//
 void msd_write( unsigned char data );
 unsigned char msd_read( void );

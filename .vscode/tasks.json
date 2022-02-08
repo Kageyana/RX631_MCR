@@ -6,7 +6,7 @@
         {
             "label": "Build", // ビルドタスク
             "type": "shell",
-            "command": "C:\\Program Files (x86)\\Renesas Electronics\\CS+\\CC\\CubeSuite+.exe",
+            "command": "C:\\'Program Files (x86)'\\'Renesas Electronics'\\CS+\\CC\\CubeSuite+.exe",
             "args": [   // 引数指定
                 "/bb", "DefaultBuild",   // ビルドを実行
                 "${workspaceRoot}\\${workspaceRootFolderName}.mtpj",    // プロジェクトファイル(.mtpj)をディレクトリから指定する
@@ -19,9 +19,9 @@
         {
             "label": "Flash", // マイコンへの書き込み
             "type": "shell",
-            "command": "C:\\Program Files (x86)\\Renesas Electronics\\Programming Tools\\Renesas Flash Programmer V3.08\\RFPV3.Console.exe",
+            "command": "C:\\'Program Files (x86)'\\'Renesas Electronics'\\'Programming Tools'\\'Renesas Flash Programmer V3.08'\\RFPV3.Console.exe",
             "args": [   // 引数を指定
-                "${env:USERPROFILE}\\Documents\\Renesas Flash Programmer\\V3.08\\RX631_COM\\RX631_COM.rpj",    // プロジェクトファイル(.rpj)をディレクトリから指定する
+                "${workspaceRoot}\\RX631_MCR\\RX631_MCR.rpj",    // プロジェクトファイル(.rpj)をディレクトリから指定する
             ],
         },
     ]

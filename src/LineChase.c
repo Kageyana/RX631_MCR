@@ -1,17 +1,17 @@
 //====================================//
-// インクルード									//
+// インクルード
 //====================================//
 #include "LineChase.h"
 //====================================//
-// グローバル変数の宣言								//
+// グローバル変数の宣言
 //====================================//
 // モード関連
 char 	lcd_mode = 1;		// LCD表示可否		1:表示		0:消灯		
-char 	slope_mode;		// 坂チェック			0:上り坂始め	1:上り坂終わり	2:下り坂始め
-char 	angle_mode;		// サーボPWM変更		0:白線トレース	1:角度制御
+char 	slope_mode;			// 坂チェック			0:上り坂始め	1:上り坂終わり	2:下り坂始め
+char 	angle_mode;			// サーボPWM変更		0:白線トレース	1:角度制御
 char	pushcart_mode;		// 手押しモード可否	0:自動走行	1:手押し
-char	msdset;			// MicroSDが初期化されたか	0:初期化失敗	1:初期化成功
-char	IMUSet = 0;		// IMUが初期化されたか		0: 初期化失敗	1:初期化成功
+char	msdset;				// MicroSDが初期化されたか	0:初期化失敗	1:初期化成功
+char	IMUSet = 0;			// IMUが初期化されたか		0: 初期化失敗	1:初期化成功
 
 // パラメータ関連
 // 距離
@@ -24,26 +24,26 @@ short	speed_curve_r450;		// R450カーブ速度
 short	speed_curve_straight;		// S字カーブ直線速度
 
 short	speed_crossline;			// クロスライン進入速度
-short	speed_ckank_trace;		// クランク進入速度
-short	speed_rightclank_curve;	// 右クランク旋回速度
+short	speed_ckank_trace;			// クランク進入速度
+short	speed_rightclank_curve;		// 右クランク旋回速度
 short	speed_rightclank_escape;	// 右クランク復帰速度
-short	speed_leftclank_curve;	// 左クランク旋回速度
-short	speed_leftclank_escape;	// 左クランク復帰速度
+short	speed_leftclank_curve;		// 左クランク旋回速度
+short	speed_leftclank_escape;		// 左クランク復帰速度
 
-short	speed_halfine;			// ハーフライン進入速度
+short	speed_halfine;				// ハーフライン進入速度
 short	speed_rightchange_trace;	// 右レーンチェンジ進入速度
 short	speed_rightchange_curve;	// 右レーンチェンジ旋回速度
-short	speed_rightchange_escape;// 右レーンチェンジ復帰速度
+short	speed_rightchange_escape;	// 右レーンチェンジ復帰速度
 
-short	speed_leftchange_trace;	// 左レーンチェンジ進入速度
-short	speed_leftchange_curve;	// 左レーンチェンジ旋回速度
+short	speed_leftchange_trace;		// 左レーンチェンジ進入速度
+short	speed_leftchange_curve;		// 左レーンチェンジ旋回速度
 short	speed_leftchange_escape;	// 左レーンチェンジ旋回速度
 
-short	speed_slope_brake;		// 下り坂終点速度
-short	speed_slope_trace;		// 坂読み飛ばし速度
+short	speed_slope_brake;			// 下り坂終点速度
+short	speed_slope_trace;			// 坂読み飛ばし速度
 
 // サーボ角度
-short	angle_rightclank;		// 右クランク旋回角度
+short	angle_rightclank;			// 右クランク旋回角度
 short	angle_leftclank;			// 左クランク旋回角度
 short	angle_rightchange;		// 右レーンチェンジ旋回角度
 short	angle_leftchange;		// 右レーンチェンジ旋回角度
@@ -87,10 +87,10 @@ char	kp2_buff, ki2_buff, kd2_buff;
 char kp3_buff, ki3_buff, kd3_buff;
 
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 check_crossline							//
-// 処理概要     クロスライン検知								//
-// 引数         なし										//
-// 戻り値       0:クロスラインなし 1:あり							//
+// モジュール名 check_crossline
+// 処理概要     クロスライン検知
+// 引数         なし
+// 戻り値       0:クロスラインなし 1:あり
 ///////////////////////////////////////////////////////////////////////////
 signed char check_crossline( void )
 {
@@ -98,10 +98,10 @@ signed char check_crossline( void )
 	else return 0;
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 check_rightline							//
-// 処理概要     右ハーフライン検出処理						//
-// 引数         なし										//
-// 戻り値       0:右ハーフラインなし 1:あり						//
+// モジュール名 check_rightline
+// 処理概要     右ハーフライン検出処理
+// 引数         なし
+// 戻り値       0:右ハーフラインなし 1:あり
 ///////////////////////////////////////////////////////////////////////////
 signed char check_rightline( void )
 {
@@ -109,10 +109,10 @@ signed char check_rightline( void )
 	else return 0;
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 check_leftline								//
-// 処理概要     左ハーフライン検出処理						//
-// 引数         なし										//
-// 戻り値       0:左ハーフラインなし 1:あり						//
+// モジュール名 check_leftline
+// 処理概要     左ハーフライン検出処理
+// 引数         なし
+// 戻り値       0:左ハーフラインなし 1:あり
 ///////////////////////////////////////////////////////////////////////////
 signed char check_leftline( void )
 {
@@ -120,10 +120,10 @@ signed char check_leftline( void )
 	else return 0;
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 check_slope								//
-// 処理概要     ジャイロセンサの値から坂道検出					//
-// 引数         なし										//
-// 戻り値       0:坂道なし 1:上り坂　-1:下り坂					//
+// モジュール名 check_slope
+// 処理概要     ジャイロセンサの値から坂道検出
+// 引数         なし
+// 戻り値       0:坂道なし 1:上り坂　-1:下り坂
 ///////////////////////////////////////////////////////////////////////////
 signed char check_slope( void )
 {
@@ -135,20 +135,20 @@ signed char check_slope( void )
 	return ret;
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 enc_mm									//
-// 処理概要     mmをエンコーダのパルス数に変換して返す				//
-// 引数         mm:変換する長さ[mm]						//
-// 戻り値       変換したパルス数								//
+// モジュール名 enc_mm
+// 処理概要     mmをエンコーダのパルス数に変換して返す
+// 引数         mm:変換する長さ[mm]
+// 戻り値       変換したパルス数
 ///////////////////////////////////////////////////////////////////////////
 unsigned int enc_mm( short mm )
 {
 	return PALSE_MILLIMETER * mm;
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 servoControl							//
-// 処理概要     ライントレース時サーボのPWMの計算				//
-// 引数         なし									//
-// 戻り値       なし									//
+// モジュール名 servoControl
+// 処理概要     ライントレース時サーボのPWMの計算
+// 引数         なし
+// 戻り値       なし
 ///////////////////////////////////////////////////////////////////////////
 void servoControl( void )
 {
@@ -179,10 +179,10 @@ void servoControl( void )
 	SensorBefore = Dev;				// 次回はこの値が1ms前の値となる
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 servoControl2							//
-// 処理概要     角度制御時サーボのPWMの計算					//
-// 引数         なし									//
-// 戻り値       なし									//
+// モジュール名 servoControl2
+// 処理概要     角度制御時サーボのPWMの計算
+// 引数         なし
+// 戻り値       なし
 ///////////////////////////////////////////////////////////////////////////
 void servoControl2( void )
 {
@@ -223,10 +223,10 @@ void servoControl2( void )
 	AngleBefore2 = Dev;			// 次回はこの値が1ms前の値となる
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 diff									//
-// 処理概要   	R1,R2,R3及びR4の計算					//
-// 引数         なし									//
-// 戻り値       なし									//
+// モジュール名 diff
+// 処理概要   	R1,R2,R3及びR4の計算
+// 引数         なし
+// 戻り値       なし
 ///////////////////////////////////////////////////////////////////////////
 void diff ( signed char pwm )
 {
@@ -540,10 +540,10 @@ void diff ( signed char pwm )
 	}
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 motorControl							//
-// 処理概要     モーターのPWM決計算						//
-// 引数         なし									//
-// 戻り値       なし									//
+// モジュール名 motorControl
+// 処理概要     モーターのPWM決計算
+// 引数         なし
+// 戻り値       なし
 ///////////////////////////////////////////////////////////////////////////
 void motorControl( void )
 {

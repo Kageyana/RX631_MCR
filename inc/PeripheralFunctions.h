@@ -1,26 +1,26 @@
 #ifndef PERIPHERALFUNCTIONS_H_
 #define PERIPHERALFUNCTIONS_H_
 //====================================//
-// インクルード									//
+// インクルード
 //====================================//
 #include "R_PG_IGC-P8080_v1.h"
 //====================================//
-// シンボル定義									//
+// シンボル定義
 //====================================//
 #define SERVO_CENTER		2077		// サーボセンターのAD値
-#define SERVO_LIMIT		420		// サーボリミットAD値±
+#define SERVO_LIMIT		    1500		// サーボリミットAD値±
 #define TGR_MOTOR			1582		// ジェネラルレジスタ初期値(駆動モータ)
 #define TGR_SERVO			1582		// ジェネラルレジスタ初期値(サーボ)
-#define PALSE_METER		24750	// 1mのパルス
-#define PALSE_MILLIMETER	24.75F	// 1mmのパルス
-#define SPEED_CURRENT		25		// 1m/sの時　1msのパルス
-#define GATE_VAL			190		// ゲートセンサしきい値
+#define PALSE_METER		    14644	    // 1mのパルス
+#define PALSE_MILLIMETER	14.64F	    // 1mmのパルス
+#define SPEED_CURRENT		15		    // 1m/sの時　1msのパルス
+#define GATE_VAL			190		    // ゲートセンサしきい値
 
-#define SW_LEFT			0x1
-#define SW_TOP			0x2
+#define SW_LEFT			    0x1
+#define SW_TOP			    0x2
 #define SW_RIGHT			0x4
-#define SW_DOWN			0x8
-#define SW_PUSH			0xf
+#define SW_DOWN			    0x8
+#define SW_PUSH			    0xf
 
 #define LED_R				0x4
 #define LED_G				0x2
@@ -109,7 +109,7 @@
 /******************************************************************************************/
 
 //====================================//
-// グローバル変数の宣言							//
+// グローバル変数の宣言
 //====================================//
 // タイマ関連
 extern volatile unsigned short		cnt0;		// 関数用タイマ
@@ -145,7 +145,7 @@ extern signed char	accele_rL;		// 左後モーターPWM値
 extern signed char	sPwm;		// サーボモーターPWM値
 
 //====================================//
-// プロトタイプ宣言								//
+// プロトタイプ宣言
 //====================================//
 // IOポート
 void init_IO(void);

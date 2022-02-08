@@ -1,16 +1,16 @@
 //====================================//
-// インクルード									//
+// インクルード
 //====================================//
 #include "SetUp.h"
 //====================================//
-// グローバル変数の宣言								//
+// グローバル変数の宣言
 //====================================//
 char 	start;		// 0:セットアップ中	1:セットアップ完了
 
 // タイマ関連
 unsigned short 		cnt_setup;		// セットアップで使用
-unsigned short 		cnt_setup2;	// セットアップで使用
-unsigned short 		cnt_setup3;	// セットアップで使用
+unsigned short 		cnt_setup2;		// セットアップで使用
+unsigned short 		cnt_setup3;		// セットアップで使用
 short				cnt_swR;		// スイッチ長押し判定用右
 short				cnt_swL;		// スイッチ長押し判定用左
 
@@ -40,8 +40,11 @@ char servo_test = 0;
 char servo_test2 = 0;
 char fixSpeed = 0;
 
+// パラメータ関連
+char motorTestPwm = 10;
+
 //====================================//
-// プロトタイプ宣言									//
+// プロトタイプ宣言
 //====================================//
 void data_select ( char *data , char button );
 void data_tuning ( void *data, char add , char direction );
@@ -49,10 +52,10 @@ void wait2 ( int waittime );
 
 char ble;
 ///////////////////////////////////////////////////////////////
-// モジュール名 setup							//
-// 処理概要     走行前設定						//
-// 引数         なし								//
-// 戻り値       なし 							//
+// モジュール名 setup
+// 処理概要     走行前設定
+// 引数         なし
+// 戻り値       なし
 ///////////////////////////////////////////////////////////////
 void setup( void )
 {
@@ -637,7 +640,8 @@ void setup( void )
 					if ( cnt_setup >= 100 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 1 );
-						lcdPrintf("   %4.1f",(double)EncoderTotal/PALSE_MILLIMETER);
+						// lcdPrintf("   %4.1f",(double)EncoderTotal/PALSE_MILLIMETER);
+						lcdPrintf("   %5d",EncoderTotal);
 					}
 					break;
 							
@@ -682,12 +686,13 @@ void setup( void )
 					lcdPosition( 0, 0 );
 					lcdPrintf("Motortes");
 					lcdPosition( 0, 1 );
-					lcdPrintf("     30%%");
+					lcdPrintf("    %3d%%",motorTestPwm);
 					demo = 0;
+					data_tuning ( &motorTestPwm, 10, UD );
 					if ( motor_test == 1 ) {
-						diff( 30 );
-						//motor_f( 30, 30 );
-						//motor_r( 30, 30 );
+						//diff( 10 );
+						motor_f( motorTestPwm, motorTestPwm );
+						motor_r( motorTestPwm, motorTestPwm );
 					} else {
 						motor_f( 0, 0 );
 						motor_r( 0, 0 );
@@ -1101,10 +1106,10 @@ void setup( void )
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////////////
-// モジュール名 data_select										//
-// 処理概要     タクトスイッチで0,1に変化させる						//
-// 引数         data: 変化させる変数 button: どのスイッチで変化させるか		//
-// 戻り値       なし											//
+// モジュール名 data_select
+// 処理概要     タクトスイッチで0,1に変化させる
+// 引数         data: 変化させる変数 button: どのスイッチで変化させるか
+// 戻り値       なし
 ///////////////////////////////////////////////////////////////////////////////////////
 void data_select ( char *data , char button )
 {
@@ -1122,10 +1127,10 @@ void data_select ( char *data , char button )
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////////////
-// モジュール名 data_tuning										//
-// 処理概要     タクトスイッチでdataを加減する							//
-// 引数         data: 加減させる変数 add: 0: 変化量 dir: 0:上下 1:左右			//
-// 戻り値       なし												//
+// モジュール名 data_tuning
+// 処理概要     タクトスイッチでdataを加減する
+// 引数         data: 加減させる変数 add: 0: 変化量 dir: 0:上下 1:左右
+// 戻り値       なし
 ///////////////////////////////////////////////////////////////////////////////////////
 void data_tuning ( void *data, char add , char dir )
 {
@@ -1178,10 +1183,10 @@ void data_tuning ( void *data, char add , char dir )
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////
-// モジュール名 fix_speedsetting								//
-// 処理概要     速度パラメータを固定値にする						//
-// 引数         なし										//
-// 戻り値       0: 速度一定にしない　1: 速度一定にする				//
+// モジュール名 fix_speedsetting
+// 処理概要     速度パラメータを固定値にする
+// 引数         なし
+// 戻り値       0: 速度一定にしない　1: 速度一定にする
 /////////////////////////////////////////////////////////////////////////////////
 char fix_speedsetting ( void )
 {

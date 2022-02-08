@@ -12,7 +12,7 @@
     ],
     "C_Cpp.default.includePath": [
         "${workspaceFolder}/**",
-        "C:\\Program Files (x86)\\Renesas Electronics\\CS+\\CC\\CC-RX\\V3.03.00\\include"
+        "C:\\'Program Files (x86)'\\'Renesas Electronics'\\CS+\\CC\\CC-RX\\V3.03.00\\include\\**"
     ],
     "C_Cpp.errorSquiggles": "Enabled",
     "search.exclude": {
