@@ -49,7 +49,7 @@ short	angle_rightchange;		// 右レーンチェンジ旋回角度
 short	angle_leftchange;		// 右レーンチェンジ旋回角度
 
 // タイマ関連
-short			cnt_gyro;				// 角度計算用カウンタ
+short		cnt_gyro;				// 角度計算用カウンタ
 
 // 角度関連
 double 		TurningAngleEnc;	// エンコーダから求めた旋回角度
@@ -60,14 +60,14 @@ double		gyVoltageBefore;
 // 白線トレース
 signed char	ServoPwm;	// 白線トレースサーボPWM
 short 		SensorBefore;	// 1ms前のセンサ値
-char			DevBefore;		// I成分リセット用
+char		DevBefore;		// I成分リセット用
 double		Int;			// I成分積算値(白線トレース)
 // 角度制御
 signed char	ServoPwm2;		// 角度サーボPWM
 short 		SetAngle;		// 目標角度
-short			SetAngleBefore;		// 1ms前の目標角度
+short		SetAngleBefore;		// 1ms前の目標角度
 short 		AngleBefore2;	// 1ms前の角度
-char			AngleBefore3;		// I成分リセット用
+char		AngleBefore3;		// I成分リセット用
 double		Int2;			// I成分積算値(角度制御)
 
 // モーター関連
@@ -75,7 +75,7 @@ signed char 	motorPwm;	// モーター制御PWM
 char 			AccelefBefore;		// I成分リセット用
 short			EncoderBefore;		// 1ms前の速度
 int 			targetSpeedBefore;	// 1ms前の目標速度	
-double 		Int3;			// I成分積算値(速度制御)
+double 			Int3;			// I成分積算値(速度制御)
 short			targetSpeed;		// 目標速度
 
 // デモ関連
@@ -84,7 +84,7 @@ char 	demo;
 // ゲイン関連
 char	kp_buff, ki_buff, kd_buff;
 char	kp2_buff, ki2_buff, kd2_buff;
-char kp3_buff, ki3_buff, kd3_buff;
+char 	kp3_buff, ki3_buff, kd3_buff;
 
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 check_crossline

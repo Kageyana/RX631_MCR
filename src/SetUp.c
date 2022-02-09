@@ -339,7 +339,7 @@ void setup( void )
 					lcdPosition( 0, 0 );
 					lcdPrintf("ANG_RCR ");
 					lcdPosition( 0, 1 );
-					lcdPrintf("    %4d", angle_rightclank );
+					lcdPrintf("   %5d", angle_rightclank );
 					
 					data_tuning ( &angle_rightclank, 1, UD );
 					break;
@@ -348,7 +348,7 @@ void setup( void )
 					lcdPosition( 0, 0 );
 					lcdPrintf("ANG_LCL ");
 					lcdPosition( 0, 1 );
-					lcdPrintf("    %4d", angle_leftclank );
+					lcdPrintf("   %5d", angle_leftclank );
 					
 					data_tuning ( &angle_leftclank, 1, UD );
 					break;
@@ -357,7 +357,7 @@ void setup( void )
 					lcdPosition( 0, 0 );
 					lcdPrintf("ANG_RLC ");
 					lcdPosition( 0, 1 );
-					lcdPrintf("    %4d", angle_rightchange );
+					lcdPrintf("   %5d", angle_rightchange );
 					
 					data_tuning ( &angle_rightchange, 1, UD );
 					break;
@@ -366,7 +366,7 @@ void setup( void )
 					lcdPosition( 0, 0 );
 					lcdPrintf("ANG_LLC ");
 					lcdPosition( 0, 1 );
-					lcdPrintf("    %4d", angle_leftchange );
+					lcdPrintf("   %5d", angle_leftchange );
 					
 					data_tuning ( &angle_leftchange, 1, UD );
 					break;
@@ -652,7 +652,7 @@ void setup( void )
 					if ( cnt_setup >= 100 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 1 );
-						lcdPrintf("    %4d",getServoAngle());
+						lcdPrintf("   %5d",getServoAngle());
 					}
 					break;
 					

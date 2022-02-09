@@ -42,20 +42,20 @@
 
 // 記録領域
 #define PARAMETER_AREA			879		// パラメータ保存領域
-#define PARAMETER_STARTAREA	0		// パラメータ書き込みアドレス記録領域1
+#define PARAMETER_STARTAREA	    0		// パラメータ書き込みアドレス記録領域1
 #define PARAMETER_ENDAREA		10		// パラメータ書き込みアドレス記録領域2
 
-#define ANGLE0_DATA		1023			// Angle0保存領域
+#define ANGLE0_DATA		    1023			// Angle0保存領域
 #define ANGLE0_STARTAREA	1019			// Angle0書き込みアドレス記録領域1
 #define ANGLE0_ENDAREA		1021			// Angle0書き込みアドレス記録領域2
 
 #define MSD_DATA			1018			// msdWorkAddress保存領域
 #define MSD_STARTAREA		997			// msdWorkAddress書き込みアドレス記録領域1
-#define MSD_ENDAREA		1007			// msdWorkAddress書き込みアドレス記録領域2
+#define MSD_ENDAREA		    1007			// msdWorkAddress書き込みアドレス記録領域2
 
 #define PID_DATA			996			// 白線トレース用PIDゲイン保存領域
 #define PID_STARTAREA		967			// 白線トレース用PIDゲイン書き込みアドレス記録領域1
-#define PID_ENDAREA		976			// 白線トレース用PIDゲイン書き込みアドレス記録領域2
+#define PID_ENDAREA		    976			// 白線トレース用PIDゲイン書き込みアドレス記録領域2
 
 #define PID2_DATA			966			// 角度制御用PIDゲイン保存領域
 #define PID2_STARTAREA		937			// 角度制御用PIDゲイン書き込みアドレス記録領域1
@@ -66,7 +66,7 @@
 #define PID3_ENDAREA		916			// 速度制御用PIDゲイン書き込みアドレス記録領域2
 
 #define STOPMETER_DATA			906		// 速度制御用PIDゲイン保存領域
-#define STOPMETER_STARTAREA	877		// 速度制御用PIDゲイン書き込みアドレス記録領域1
+#define STOPMETER_STARTAREA	    877		// 速度制御用PIDゲイン書き込みアドレス記録領域1
 #define STOPMETER_ENDAREA		886		// 速度制御用PIDゲイン書き込みアドレス記録領域2
 //======================================//
 // グローバル変数の宣言

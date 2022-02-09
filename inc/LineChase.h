@@ -20,7 +20,7 @@
 #define SPEED_CURVE_R450		40	// R450カーブ速度
 #define SPEED_CURVE_STRAIGHT	42	// S字カーブ直線速度
 
-#define SPEED_CROSSLINE			28	// クロスライン進入速度
+#define SPEED_CROSSLINE			    28	// クロスライン進入速度
 #define SPEED_CLANK_TRACE			32	// クランク進入速度
 #define SPEED_RIGHTCLANK_CURVE		22	// 右クランク旋回速度
 #define SPEED_RIGHTCLANK_ESCAPE		40	// 右クランク復帰速度
@@ -28,8 +28,8 @@
 #define SPEED_LEFTCLANK_ESCAPE		40	// 左クランク復帰速度
 
 #define SPEED_HALFLINE				30	// ハーフライン進入速度
-#define SPEED_RIGHTCHANGE_TRACE	46	// 右レーンチェンジ進入速度
-#define SPEED_RIGHTCHANGE_CURVE	46	// 右レーンチェンジ旋回速度
+#define SPEED_RIGHTCHANGE_TRACE	    46	// 右レーンチェンジ進入速度
+#define SPEED_RIGHTCHANGE_CURVE	    46	// 右レーンチェンジ旋回速度
 #define SPEED_RIGHTCHANGE_ESCAPE	46	// 右レーンチェンジ復帰速度
 #define SPEED_LEFTCHANGE_TRACE		46	// 左レーンチェンジ進入速度
 #define SPEED_LEFTCHANGE_CURVE		46	// 左レーンチェンジ旋回速度
@@ -38,18 +38,18 @@
 #define SPEED_SLOPE_BRAKE		26	// 下り坂終点速度
 #define SPEED_SLOPE_TRACE		36	// 坂読み飛ばし速度
 // 角度
-#define ANGLE_RIGHTCLANK		-1400	// 右クランク旋回角度
-#define ANGLE_LEFTCLANK		1400	// 左クランク旋回角度
-#define ANGLE_RIGHTCHANGE		-160	// 右レーンチェンジ旋回角度
-#define ANGLE_LEFTCHANGE		160	// 右レーンチェンジ旋回角度
+#define ANGLE_RIGHTCLANK		-1300	// 右クランク旋回角度
+#define ANGLE_LEFTCLANK		    1300	// 左クランク旋回角度
+#define ANGLE_RIGHTCHANGE		-700	// 右レーンチェンジ旋回角度
+#define ANGLE_LEFTCHANGE		700	// 右レーンチェンジ旋回角度
 
 // カーブ関連
-#define CURVE_R600_START		20		// R600開始AD値
-#define CURVE_R450_START		140		// R450開始AD値
+#define CURVE_R600_START		120		// R600開始AD値
+#define CURVE_R450_START		600		// R450開始AD値
 
 // ジャイロ関連
 #define SLOPE_UPPERLINE_IMU		4		// 上り坂検出角度
-#define SLOPE_LOWERLINE_IMU	-4		// 下り坂検出角度
+#define SLOPE_LOWERLINE_IMU	    -4		// 下り坂検出角度
 #define INTEGRAL_LIMIT			200		// 角速度積算時間
 
 // PIDゲイン関連
@@ -133,8 +133,8 @@ extern signed char 	motorPwm;	    // モーター制御PWM
 extern short		targetSpeed;	// 目標速度
 
 // ゲイン関連
-extern char	kp_buff, ki_buff, kd_buff;
-extern char	kp2_buff, ki2_buff, kd2_buff;
+extern char	    kp_buff, ki_buff, kd_buff;
+extern char	    kp2_buff, ki2_buff, kd2_buff;
 extern char 	kp3_buff, ki3_buff, kd3_buff;
 
 // デモ関連
