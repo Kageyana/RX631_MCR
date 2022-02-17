@@ -306,108 +306,49 @@ unsigned char startbar_get(void)
 // ˆø”         accelefL, accelefR(PWM‚ð1`100%‚ÅŽw’è)
 // –ß‚è’l       ‚È
 ///////////////////////////////////////////////////////////////////////////
-void motor_f( signed char accelefL, signed char accelefR )
+void motorPwmOut( signed char accelefL, signed char accelefR, signed char accelerL, signed char accelerR )
 {
-	uint16_t pwmfl, pwmfr;
+	uint16_t pwmfl, pwmfr, pwmrl, pwmrr;
 	
 	if ( pushcart_mode ) {
 		accelefR = 0;
 		accelefL = 0;
-	}
-	
-	accele_fR = accelefR;
-	accele_fL = accelefL;
-	
-	pwmfl = TGR_MOTOR * accelefL / 100;
-	pwmfr = TGR_MOTOR * accelefR / 100;
-	
-	// ¶‘O—Ö
-	if( accelefL >= 0) {					
-		// ³“]
-		DIR_FL_FOR
-	} else if ( accelefL == 100 || accelefL == -100 ) {	
-		// 100%
-		if ( accelefL > 0 ) DIR_FL_FOR
-		else DIR_FL_REV
-		
-		pwmfl = TGR_MOTOR + 2;
-	} else {						
-		// ‹t“]
-		pwmfl = -pwmfl;
-		DIR_FL_REV
-	}
-	PWM_FL_OUT
-	
-	// ‰E‘O—Ö
-	if( accelefR >= 0) {					
-		// ³“]
-		DIR_FR_FOR
-	} else if ( accelefR == 100 || accelefR == -100 ) {	
-		// 100%
-		if ( accelefR > 0 ) DIR_FR_FOR
-		else DIR_FR_REV
-		
-		pwmfr = TGR_MOTOR + 2;
-	} else {						
-		// ‹t“]
-		pwmfr = -pwmfr;
-		DIR_FR_REV
-	}
-	PWM_FR_OUT
-}
-///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ motor_r
-// ˆ—ŠT—v     ƒ‚[ƒ^[‚ÌPWM‚Ì•ÏX
-// ˆø”         acelerL, accelerR(PWM‚ð1`100%‚ÅŽw’è)
-// –ß‚è’l       ‚È‚µ
-///////////////////////////////////////////////////////////////////////////
-void motor_r( signed char accelerL, signed char accelerR )
-{
-	uint16_t pwmrl, pwmrr;
-	
-	if ( pushcart_mode ) {
 		accelerL = 0;
 		accelerR = 0;
 	}
 	
+	accele_fR = accelefR;
+	accele_fL = accelefL;
 	accele_rR = accelerR;
 	accele_rL = accelerL;
 	
+	pwmfl = TGR_MOTOR * accelefL / 100;
+	pwmfr = TGR_MOTOR * accelefR / 100;
 	pwmrl = TGR_MOTOR * accelerL / 100;
 	pwmrr = TGR_MOTOR * accelerR / 100;
 	
+	// ¶‘O—Ö
+	if( accelefL >= 0) DIR_FL_FOR
+	else DIR_FL_REV
+	if ( accelefL == 100 || accelefL == -100 )pwmfl = TGR_MOTOR + 2;
+	PWM_FL_OUT
+	
+	// ‰E‘O—Ö
+	if( accelefR >= 0) DIR_FR_FOR
+	else DIR_FR_REV
+	if ( accelefR == 100 || accelefR == -100 ) pwmfr = TGR_MOTOR + 2;
+	PWM_FR_OUT
+
 	// ¶Œã—Ö
-	if( accelerL >= 0 ) {					
-		// ³“]
-		DIR_RL_FOR
-	} else if ( accelerL == 100 || accelerL == -100 ) {	
-		// 100%
-		if (accelerL > 0) DIR_RL_FOR
-		else DIR_RL_REV
-		
-		pwmrl = TGR_MOTOR + 2;
-	} else {						
-		// ‹t“]
-		pwmrl = -pwmrl;
-		DIR_RL_REV
-	}
+	if( accelerL >= 0 ) DIR_RL_FOR
+	else DIR_RL_REV
+	if ( accelerL == 100 || accelerL == -100 ) pwmrl = TGR_MOTOR + 2;
 	PWM_RL_OUT
 	
 	// ‰EŒã—Ö
-	if( accelerR >= 0 ) {					
-		// ³“]
-		DIR_RR_FOR
-	} else if ( accelerR == 100 || accelerR == -100 ) {	
-		// 100%
-		if ( accelerR > 0 ) DIR_RR_FOR
-		else DIR_RR_REV
-		
-		pwmrr = TGR_MOTOR + 2;
-	} else {						
-		// ‹t“]
-		pwmrr = -pwmrr;
-		DIR_RR_REV
-	}
+	if( accelerR >= 0 ) DIR_RR_FOR
+	else DIR_RR_REV
+	if ( accelerR == 100 || accelerR == -100 ) pwmrr = TGR_MOTOR + 2;
 	PWM_RR_OUT
 }
 ///////////////////////////////////////////////////////////////////////////

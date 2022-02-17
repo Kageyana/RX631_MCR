@@ -47,8 +47,7 @@ void main(void){
 	L_Sen_ON;		//センサ点灯
 	inti_lcd();			// LCD初期化
 	
-	motor_f( 0, 0 );		// モーター停止
-	motor_r( 0, 0 );
+	motorPwmOut(0, 0, 0, 0);	// モーター停止
 	servoPwmOut( 0 );
 	
 	pushcart_mode = 0;		// 手押しモードoff
@@ -679,8 +678,7 @@ void main(void){
 			SetAngle = 0;
 			servoPwmOut( ServoPwm2 );
 			targetSpeed = speed_rightchange_curve * SPEED_CURRENT;
-			motor_f( motorPwm, motorPwm );
-			motor_r( motorPwm, motorPwm );
+			motorPwmOut(motorPwm, motorPwm, motorPwm, motorPwm);
 			
 			if( sensor_inp() == 0x2 && getAnalogSensor() < 1500 && getAnalogSensor() > -1500 ) {
 				enc1 = 0;
@@ -792,8 +790,7 @@ void main(void){
 			SetAngle = 0;
 			servoPwmOut( ServoPwm2 );
 			targetSpeed = speed_leftchange_curve * SPEED_CURRENT;
-			motor_f( motorPwm, motorPwm );
-			motor_r( motorPwm, motorPwm );
+			motorPwmOut(motorPwm, motorPwm, motorPwm, motorPwm);
 
 			if( sensor_inp() == 0x2 && getAnalogSensor() < 1500 && getAnalogSensor() > -1500 ) {
 				enc1 = 0;
@@ -915,8 +912,7 @@ void main(void){
 		case 73:
 			// 上り坂終点ブレーキ
 			servoPwmOut( ServoPwm );
-			motor_f( -100, -100 );
-			motor_r( -100, -100 );
+			motorPwmOut(-100, -100, -100, -100);
 			
 			if( enc1 >= enc_mm( 50 ) ) {
 				enc1 = 0;
@@ -1018,8 +1014,7 @@ void main(void){
 		case 102:
 			servoPwmOut( ServoPwm );
 			targetSpeed = 0;
-			motor_f( motorPwm, motorPwm );
-			motor_r( motorPwm, motorPwm );
+			motorPwmOut(motorPwm, motorPwm, motorPwm, motorPwm);
 			
 			if( Encoder <= 0 && Encoder >= -1 ) {
 				enc1 = 0;
@@ -1030,8 +1025,7 @@ void main(void){
 			
 		case 103:
 			servoPwmOut( ServoPwm );
-			motor_f( 0, 0 );
-			motor_r( 0, 0 );
+			motorPwmOut(0, 0, 0, 0);
 			
 			if( msdset == 1 ) {
 				pattern = 104;

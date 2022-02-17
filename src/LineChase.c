@@ -494,8 +494,7 @@ void diff ( signed char pwm )
 	angle = getServoAngle();
 	
 	if ( angle < 20 && angle > -20 ) {
-		motor_f( pwm, pwm );
-		motor_r( pwm, pwm );
+		motorPwmOut(pwm, pwm, pwm, pwm);
 	} else {
 		angle2 = angle;
 		// •‰‚È‚ç³‚É‚·‚é
@@ -513,11 +512,9 @@ void diff ( signed char pwm )
 			R4 = pwm;
 			
 			if ( angle >= 0 ) {
-				motor_f( R1, R3 );
-				motor_r( R2, R4 );
+				motorPwmOut(R1, R3, R2, R4);
 			} else {
-				motor_f( R3, R1 );
-				motor_r( R4, R2 );
+				motorPwmOut(R3, R1, R4, R2);
 			}
 		} else {
 			r1 = rev_difference_D[ pa_number ];
@@ -530,11 +527,9 @@ void diff ( signed char pwm )
 			R4 = pwm;
 			
 			if ( angle >= 0 ) {
-				motor_f( R3, R4 );
-				motor_r( R1, R2 );
+				motorPwmOut(R3, R4, R1, R2);
 			} else {
-				motor_f( R4, R3 );
-				motor_r( R2, R1 );
+				motorPwmOut(R4, R3, R2, R1);
 			}
 		}
 	}

@@ -640,8 +640,8 @@ void setup( void )
 					if ( cnt_setup >= 100 ) {
 						cnt_setup = 0;
 						lcdPosition( 0, 1 );
-						// lcdPrintf("   %4.1f",(double)EncoderTotal/PALSE_MILLIMETER);
-						lcdPrintf("   %5d",EncoderTotal);
+						lcdPrintf("   %4.1f",(double)EncoderTotal/PALSE_MILLIMETER);
+						// lcdPrintf("   %5d",EncoderTotal);
 					}
 					break;
 							
@@ -691,11 +691,9 @@ void setup( void )
 					data_tuning ( &motorTestPwm, 10, UD );
 					if ( motor_test == 1 ) {
 						//diff( 10 );
-						motor_f( motorTestPwm, motorTestPwm );
-						motor_r( motorTestPwm, motorTestPwm );
+						motorPwmOut(motorTestPwm, motorTestPwm, motorTestPwm, motorTestPwm);
 					} else {
-						motor_f( 0, 0 );
-						motor_r( 0, 0 );
+						motorPwmOut(0, 0, 0, 0);
 					}
 					
 					data_select( &motor_test, SW_PUSH );
@@ -778,8 +776,7 @@ void setup( void )
 			
 			data_select ( &demo, 1 );
 			if ( demo == 1 ) {
-				motor_f( motorPwm, motorPwm );
-				motor_r( motorPwm, motorPwm );
+				motorPwmOut(motorPwm, motorPwm, motorPwm, motorPwm);
 				lcdPosition( 0, 1 );
 				lcdPrintf("   Start");
 			} else {
@@ -1227,10 +1224,10 @@ char fix_speedsetting ( void )
 		speed_curve_straight	= 20;
 		
 		speed_crossline		= 20;
-		speed_ckank_trace	= 20;
-		speed_rightclank_curve	= 20;
+		speed_ckank_trace	= 16;
+		speed_rightclank_curve	= 16;
 		speed_rightclank_escape	= 20;
-		speed_leftclank_curve	= 20;
+		speed_leftclank_curve	= 16;
 		speed_leftclank_escape	= 20;
 		
 		speed_halfine		= 20;
@@ -1254,10 +1251,10 @@ char fix_speedsetting ( void )
 		speed_curve_straight	= 30;
 		
 		speed_crossline		= 25;
-		speed_ckank_trace	= 20;
-		speed_rightclank_curve	= 18;
+		speed_ckank_trace	= 16;
+		speed_rightclank_curve	= 16;
 		speed_rightclank_escape	= 30;
-		speed_leftclank_curve	= 18;
+		speed_leftclank_curve	= 16;
 		speed_leftclank_escape	= 30;
 		
 		speed_halfine		= 30;

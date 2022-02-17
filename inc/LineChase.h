@@ -38,8 +38,8 @@
 #define SPEED_SLOPE_BRAKE		26	// 下り坂終点速度
 #define SPEED_SLOPE_TRACE		36	// 坂読み飛ばし速度
 // 角度
-#define ANGLE_RIGHTCLANK		-1300	// 右クランク旋回角度
-#define ANGLE_LEFTCLANK		    1300	// 左クランク旋回角度
+#define ANGLE_RIGHTCLANK		-1450	// 右クランク旋回角度
+#define ANGLE_LEFTCLANK		    1450	// 左クランク旋回角度
 #define ANGLE_RIGHTCHANGE		-700	// 右レーンチェンジ旋回角度
 #define ANGLE_LEFTCHANGE		700	// 右レーンチェンジ旋回角度
 
@@ -54,9 +54,9 @@
 
 // PIDゲイン関連
 //白線トレース
-#define KP			16
+#define KP			10
 #define KI			0
-#define KD		55
+#define KD		44
 
 // 角度制御
 #define KP2		9

@@ -84,27 +84,27 @@
 // 左前輪
 #define DIR_FL_FOR		R_PG_IO_PORT_Write_PE3( 1 );		// モータ回転方向(正転)
 #define DIR_FL_REV		R_PG_IO_PORT_Write_PE3( 0 );		// モータ回転方向(逆転）
-#define PWM_FL_OUT	R_PG_Timer_SetTGR_B_MTU_U0_C4( pwmfl );	// PWM出力
+#define PWM_FL_OUT	R_PG_Timer_SetTGR_B_MTU_U0_C4( abs(pwmfl) );	// PWM出力
 // 右前輪
 #define DIR_FR_FOR		R_PG_IO_PORT_Write_PE7( 0 );
 #define DIR_FR_REV		R_PG_IO_PORT_Write_PE7( 1 );
-#define PWM_FR_OUT	R_PG_Timer_SetTGR_B_MTU_U0_C0( pwmfr );
+#define PWM_FR_OUT	R_PG_Timer_SetTGR_B_MTU_U0_C0( abs(pwmfr) );
 // 左後輪
 #define DIR_RL_FOR		R_PG_IO_PORT_Write_PC4( 1 );
 #define DIR_RL_REV		R_PG_IO_PORT_Write_PC4( 0 );
-#define PWM_RL_OUT	R_PG_Timer_SetTGR_B_MTU_U0_C3( pwmrl );
+#define PWM_RL_OUT	R_PG_Timer_SetTGR_B_MTU_U0_C3( abs(pwmrl) );
 // 右後輪
 #define DIR_RR_FOR		R_PG_IO_PORT_Write_PB2( 0 );
 #define DIR_RR_REV		R_PG_IO_PORT_Write_PB2( 1 );
-#define PWM_RR_OUT	R_PG_Timer_SetTGR_B_MTU_U0_C2( pwmrr );
+#define PWM_RR_OUT	R_PG_Timer_SetTGR_B_MTU_U0_C2( abs(pwmrr) );
 // サーボ1
 #define DIR_SERVO_FOR	R_PG_IO_PORT_Write_PE5( 1 );
 #define DIR_SERVO_REV	R_PG_IO_PORT_Write_PE5( 0 );
-#define PWM_SERVO_OUT	R_PG_Timer_SetTGR_D_MTU_U0_C0( pwm );
+#define PWM_SERVO_OUT	R_PG_Timer_SetTGR_D_MTU_U0_C0( abs(pwm) );
 // サーボ2
 #define DIR_LANCER_FOR	R_PG_IO_PORT_Write_PC2( 0 );
 #define DIR_LANCER_REV	R_PG_IO_PORT_Write_PC2( 1 );
-#define PWM_LANCER_OUT	R_PG_Timer_SetTGR_D_MTU_U0_C3( pwml );
+#define PWM_LANCER_OUT	R_PG_Timer_SetTGR_D_MTU_U0_C3( abs(pwml) );
 
 /******************************************************************************************/
 
@@ -176,9 +176,7 @@ void setBeepPatternS( unsigned short Beep );
 void beepProcessS( void );
 
 // モーター関連
-void motor_f( signed char accelefL, signed char accelefR );
-void motor_r( signed char accelerL, signed char accelerR );
-
+void motorPwmOut( signed char accelefL, signed char accelefR, signed char accelerL, signed char accelerR );
 // サーボ関連
 void servoPwmOut( signed char pwm );
 
