@@ -79,7 +79,7 @@ void setup( void )
 			// ’âŽ~‹——£“ü—Í
 			data_tuning ( &stopping_meter, 1, UD );
 			
-			angle_mode = 0;
+			mode_angle = 0;
 			data_select( &servo_test, SW_RIGHT );
 			if ( servo_test == 1 ) servoPwmOut( ServoPwm );
 			else servoPwmOut( 0 );
@@ -90,7 +90,7 @@ void setup( void )
 			} else if ( tasw_get() == SW_LEFT ) {
 				start = START_GATE;
 			} else if ( tasw_get() == SW_RIGHT ) {
-				pushcart_mode = 1;
+				mode_pushcart = 1;
 				start = START_COUNT;
 			}
 			
@@ -380,7 +380,7 @@ void setup( void )
 			lcdPrintf("kp ki kd");
 			
 			data_select( &servo_test, SW_PUSH );
-			angle_mode = 0;
+			mode_angle = 0;
 			if ( servo_test == 1 ) servoPwmOut( ServoPwm );
 			else servoPwmOut( 0 );
 			
@@ -438,7 +438,7 @@ void setup( void )
 			lcdPrintf("kp ki kd");
 			
 			data_select( &servo_test2, SW_PUSH );
-			angle_mode = 1;
+			mode_angle = 1;
 			if ( servo_test == 1 ) servoPwmOut( ServoPwm2 );
 			else servoPwmOut( 0 );
 			if ( servo_test2 == 1 ) SetAngle = 120;
@@ -595,7 +595,7 @@ void setup( void )
 		//------------------------------------------------------------------
 		case 0xa:
 			data_tuning ( &pattern_sensor, 1, LR );
-			angle_mode = 0;
+			mode_angle = 0;
 			
 			if ( pattern_sensor == 14 ) pattern_sensor = 1;
 			else if ( pattern_sensor == 0 ) pattern_sensor = 13;
@@ -792,7 +792,7 @@ void setup( void )
 			lcdPrintf("MicroSD ");
 			
 			servo_test = 0;
-			angle_mode = 0;
+			mode_angle = 0;
 			data_tuning ( &pattern_msd, 1, LR );
 			if ( pattern_msd == 13 ) pattern_msd = 1;
 			else if ( pattern_msd == 0 ) pattern_msd = 12;
@@ -1017,7 +1017,7 @@ void setup( void )
 			flashDataBuff[0] = Angle0;
 			data_tuning ( &Angle0, 1, UD );
 			data_select( &servo_test, SW_PUSH );
-			angle_mode = 1;
+			mode_angle = 1;
 			if ( servo_test == 1 ) {
 				SetAngle = 0;
 				servoPwmOut( ServoPwm2 );

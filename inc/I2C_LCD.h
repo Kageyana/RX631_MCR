@@ -23,7 +23,7 @@
 /******************************** ©“®¶¬ŠÖ” *********************************/
 #define 	SET_SCI_C9	R_PG_SCI_Set_C9();	// I2C‰Šú‰»
 #define 	I2C_LCD_SEND	R_PG_SCI_I2CMode_Send_C9(0, LCD_SLAVEADDRESS, word, 2);
-#define	I2C_LCD_READ	R_PG_SCI_I2CMode_Send_C9(0, LCD_SLAVEADDRESS, Command, 2);
+#define	    I2C_LCD_READ	R_PG_SCI_I2CMode_Send_C9(0, LCD_SLAVEADDRESS, Command, 2);
 /***************************************************************************/
 //====================================//
 // ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾

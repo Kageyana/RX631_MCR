@@ -310,7 +310,7 @@ void motorPwmOut( signed char accelefL, signed char accelefR, signed char accele
 {
 	uint16_t pwmfl, pwmfr, pwmrl, pwmrr;
 	
-	if ( pushcart_mode ) {
+	if ( mode_pushcart ) {
 		accelefR = 0;
 		accelefL = 0;
 		accelerL = 0;

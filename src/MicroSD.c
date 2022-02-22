@@ -982,7 +982,7 @@ void sendLog (char c, char s, char i, ...) {
 		send_Char			(	pattern		);
 		send_Char			(	motorPwm 	);
 		send_Char			(	sensor_inp() 	);
-		send_Char			( 	slope_mode	);
+		send_Char			( 	mode_slope	);
 		send_Char			(	(char)Encoder		);
 		send_Char			(	sPwm		);
 		send_Char			(	(char)PichAngleIMU*10	);
@@ -1038,7 +1038,7 @@ void msd_sendToPC ( void )
 				printf(	"pattern,"			);
 				printf(	"MotorPwm,"		);
 				printf(	"sensor_inp(),"		);
-				printf(	"slope_mode,"		);
+				printf(	"mode_slope,"		);
 				printf(	"Encoder,"			);
 				printf(	"sPwm,"		);
 				printf(	"PichAngleIMU,"		);
@@ -1093,7 +1093,7 @@ void msd_sendToPC ( void )
 				printf("%5d,", msdBuff[ msdBuffaddress + 0 ]);	// pattern
 				printf("%5d,", msdBuff[ msdBuffaddress + 1 ]);	// motorPwm
 				printf("%5d,", msdBuff[ msdBuffaddress + 2 ]);	// sensor_inp()
-				printf("%5d,", msdBuff[ msdBuffaddress + 3 ]);	// slope_mode
+				printf("%5d,", msdBuff[ msdBuffaddress + 3 ]);	// mode_slope
 				printf("%5d,", msdBuff[ msdBuffaddress + 4 ]);	// Encoder
 				printf("%5d,", msdBuff[ msdBuffaddress + 5 ]);	// targetSpeed
 				printf("%5d,", msdBuff[ msdBuffaddress + 6 ]/10);	// PichAngleIMU
