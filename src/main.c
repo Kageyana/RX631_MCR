@@ -1,14 +1,17 @@
 //====================================//
 // インクルード
 //====================================//
-#include "PeripheralFunctions.h"
-#include "LineChase.h"
-#include "SetUp.h"
-#include "SCI.h"
+#include "io.h"
+#include "mtu.h"
+#include "ADconverter.h"
+
+#include "control.h"
+#include "setup.h"
+#include "sci.h"
 #include "E2dataFlash.h"
-#include "I2C_LCD.h"
-#include "MicroSD.h"
-#include "SPI_ICM20648.h"
+#include "AQM1602Y.h"
+#include "microSD.h"
+#include "ICM20648.h"
 #include "MemorryTrace.h"
 //====================================//
 // グローバル変数の宣言
@@ -46,7 +49,7 @@ void main(void){
 	// 初期化
 	//=================================//
 	L_Sen_ON;		//センサ点灯
-	inti_lcd();			// LCD初期化
+	inti_lcd();		// LCD初期化
 	
 	motorPwmOut(0, 0, 0, 0);	// モーター停止
 	servoPwmOut( 0 );
@@ -1037,7 +1040,6 @@ void Timer (void) {
 		cnt_swL++;
 		cnt_flash++;
 	}
-	cnt0++;
 	cnt1++;
 	
 	

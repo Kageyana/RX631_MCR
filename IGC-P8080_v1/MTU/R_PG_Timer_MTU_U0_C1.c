@@ -36,7 +36,7 @@
 * Description  : 
 * Limitations  : 
 ******************************************************************************
-* History : 16.02.2020 Version Description
+* History : 23.02.2022 Version Description
 *         :   
 ******************************************************************************/
 
@@ -87,7 +87,7 @@ bool R_PG_Timer_Set_MTU_U0_C1(void)
 
 	res = R_MTU2_Set(
 		1,
-		PDL_MTU2_PIN_1A_PE4 | PDL_MTU2_PIN_1B_P21,
+		PDL_MTU2_PIN_1A_P20 | PDL_MTU2_PIN_1B_P21,
 		PDL_MTU2_PIN_CLKA_P24 | PDL_MTU2_PIN_CLKB_P25
 	);
 

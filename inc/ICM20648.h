@@ -4,7 +4,6 @@
 // インクルード
 //==========================//
 #include "R_PG_IGC-P8080_v1.h"
-#include "PeripheralFunctions.h"
 #include <math.h>
 //==========================//
 // シンボル定義
@@ -96,7 +95,7 @@
 #define TEMP_CONFIG			    0x53
 #define MOD_CTRL_USR			0x54
 
-
+/*************************************** 自動生成関数 *************************************/
 #define CS_RESET 		R_PG_IO_PORT_Write_PC6( 0x0 );
 #define CS_SET   		R_PG_IO_PORT_Write_PC6( 0x1 );
 #define SET_SCI_C2		R_PG_SCI_Set_C2();		// シリアルI/Oチャネルを設定(SPI)
@@ -104,7 +103,7 @@
 #define SPITRANSFER2	R_PG_SCI_SPIMode_Transfer_C2( dummy, val, 1);
 #define SPITRANSFER3	R_PG_SCI_SPIMode_Transfer_C2( ret, dummy, 1);
 #define SPITRANSFER4	R_PG_SCI_SPIMode_Transfer_C2( val2, dummy, 1);
-
+/******************************************************************************************/
 #define ACCELLSB			4096		// 16[g]
 #define GYROLSB			    32.8		// 2000[deg/s]
 #define TEMP_LSB			333.87	// LSB/°C

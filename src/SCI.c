@@ -1,7 +1,7 @@
 //====================================//
 // インクルード
 //====================================//
-#include "SCI.h"
+#include "sci.h"
 
 //====================================//
 // グローバル変数の宣言
@@ -229,7 +229,6 @@ void init_SCI6( char rate )
 void charput( uint8_t data )
 {
 	while(SCI6.SSR.BIT.TEND == 0);
-	LEDR_ON
 	SCI6.TDR = data;
 	SCI6.SSR.BIT.TEND = 0;
 }

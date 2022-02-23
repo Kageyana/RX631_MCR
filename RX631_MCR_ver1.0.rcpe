@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <MicomToolCommonProjectFile Version="1.00">
-  <CreatorType Name="CubeSuite+" Version="V8.06.00  [03 Jun 2021]" />
+  <CreatorType Name="CubeSuite+" Version="V8.07.00  [01 Dec 2021]" />
   <Placeholders>
     <PlaceholderPrefix>%</PlaceholderPrefix>
     <PlaceholderPostfix>%</PlaceholderPostfix>
@@ -22,26 +22,30 @@
       <Category Name="src">
         <Path>src\E2dataFlash.c</Path>
         <Path>src\hwsetup.c</Path>
-        <Path>src\I2C_LCD.c</Path>
-        <Path>src\SPI_ICM20648.c</Path>
-        <Path>src\LineChase.c</Path>
+        <Path>src\AQM1602Y.c</Path>
+        <Path>src\ICM20648.c</Path>
+        <Path>src\control.c</Path>
         <Path>src\main.c</Path>
-        <Path>src\MemorryTrace.c</Path>
-        <Path>src\MicroSD.c</Path>
-        <Path>src\PeripheralFunctions.c</Path>
-        <Path>src\SCI.c</Path>
-        <Path>src\SetUp.c</Path>
+        <Path>src\memorrytrace.c</Path>
+        <Path>src\microSD.c</Path>
+        <Path>src\sci.c</Path>
+        <Path>src\setup.c</Path>
+        <Path>src\mtu.c</Path>
+        <Path>src\ADconverter.c</Path>
+        <Path>src\io.c</Path>
       </Category>
       <Category Name="inc">
         <Path>inc\E2dataFlash.h</Path>
-        <Path>inc\I2C_LCD.h</Path>
-        <Path>inc\SPI_ICM20648.h</Path>
-        <Path>inc\LineChase.h</Path>
-        <Path>inc\MemorryTrace.h</Path>
-        <Path>inc\MicroSD.h</Path>
-        <Path>inc\PeripheralFunctions.h</Path>
-        <Path>inc\SCI.h</Path>
-        <Path>inc\SetUp.h</Path>
+        <Path>inc\AQM1602Y.h</Path>
+        <Path>inc\ICM20648.h</Path>
+        <Path>inc\control.h</Path>
+        <Path>inc\memorrytrace.h</Path>
+        <Path>inc\microSD.h</Path>
+        <Path>inc\sci.h</Path>
+        <Path>inc\setup.h</Path>
+        <Path>inc\ADconverter.h</Path>
+        <Path>inc\io.h</Path>
+        <Path>inc\mtu.h</Path>
       </Category>
       <Category Name="AddFromPDG">
         <Category Name="SYSTEM">
@@ -69,6 +73,8 @@
           <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_PB.h</Path>
           <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_PC.c</Path>
           <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_PC.h</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_PD.c</Path>
+          <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_PD.h</Path>
           <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_PE.c</Path>
           <Path>IGC-P8080_v1\IO\R_PG_IO_PORT_PE.h</Path>
         </Category>
@@ -93,14 +99,10 @@
           <Path>IGC-P8080_v1\CMT\R_PG_Timer_CMT_U1.h</Path>
         </Category>
         <Category Name="SCI">
-          <Path>IGC-P8080_v1\SCI\R_PG_SCI_C1.c</Path>
-          <Path>IGC-P8080_v1\SCI\R_PG_SCI_C1.h</Path>
           <Path>IGC-P8080_v1\SCI\R_PG_SCI_C2.c</Path>
           <Path>IGC-P8080_v1\SCI\R_PG_SCI_C2.h</Path>
           <Path>IGC-P8080_v1\SCI\R_PG_SCI_C5.c</Path>
           <Path>IGC-P8080_v1\SCI\R_PG_SCI_C5.h</Path>
-          <Path>IGC-P8080_v1\SCI\R_PG_SCI_C6.c</Path>
-          <Path>IGC-P8080_v1\SCI\R_PG_SCI_C6.h</Path>
           <Path>IGC-P8080_v1\SCI\R_PG_SCI_C9.c</Path>
           <Path>IGC-P8080_v1\SCI\R_PG_SCI_C9.h</Path>
         </Category>
@@ -144,7 +146,7 @@
       <DebugToolSettings />
     </DebugOptions>
     <Device Series="RX">R5F5631FDxFP</Device>
-    <BuildOptions Name="CC-RX" Version="V3.03.00">
+    <BuildOptions Name="CC-RX" Version="V3.04.00">
       <BuildMode Name="DefaultBuild" Active="True">
         <GeneralOptions>
           <SimultaneouslyBuild>true</SimultaneouslyBuild>
@@ -247,15 +249,17 @@
           <Path>DefaultBuild\sbrk.obj</Path>
           <Path>DefaultBuild\E2dataFlash.obj</Path>
           <Path>DefaultBuild\hwsetup.obj</Path>
-          <Path>DefaultBuild\I2C_LCD.obj</Path>
-          <Path>DefaultBuild\LineChase.obj</Path>
+          <Path>DefaultBuild\AQM1602Y.obj</Path>
+          <Path>DefaultBuild\control.obj</Path>
           <Path>DefaultBuild\main.obj</Path>
-          <Path>DefaultBuild\MemorryTrace.obj</Path>
-          <Path>DefaultBuild\MicroSD.obj</Path>
-          <Path>DefaultBuild\PeripheralFunctions.obj</Path>
-          <Path>DefaultBuild\SCI.obj</Path>
-          <Path>DefaultBuild\SetUp.obj</Path>
-          <Path>DefaultBuild\SPI_ICM20648.obj</Path>
+          <Path>DefaultBuild\ICM20648.obj</Path>
+          <Path>DefaultBuild\memorrytrace.obj</Path>
+          <Path>DefaultBuild\microSD.obj</Path>
+          <Path>DefaultBuild\sci.obj</Path>
+          <Path>DefaultBuild\setup.obj</Path>
+          <Path>DefaultBuild\mtu.obj</Path>
+          <Path>DefaultBuild\ADconverter.obj</Path>
+          <Path>DefaultBuild\io.obj</Path>
           <Path>DefaultBuild\R_PG_Clock.obj</Path>
           <Path>DefaultBuild\R_PG_IO_PORT.obj</Path>
           <Path>DefaultBuild\R_PG_IO_PORT_P0.obj</Path>
@@ -267,6 +271,7 @@
           <Path>DefaultBuild\R_PG_IO_PORT_PA.obj</Path>
           <Path>DefaultBuild\R_PG_IO_PORT_PB.obj</Path>
           <Path>DefaultBuild\R_PG_IO_PORT_PC.obj</Path>
+          <Path>DefaultBuild\R_PG_IO_PORT_PD.obj</Path>
           <Path>DefaultBuild\R_PG_IO_PORT_PE.obj</Path>
           <Path>DefaultBuild\R_PG_Timer_MTU_U0_C0.obj</Path>
           <Path>DefaultBuild\R_PG_Timer_MTU_U0_C1.obj</Path>
@@ -276,10 +281,8 @@
           <Path>DefaultBuild\R_PG_Timer_MTU_U0.obj</Path>
           <Path>DefaultBuild\R_PG_Timer_CMT_U0.obj</Path>
           <Path>DefaultBuild\R_PG_Timer_CMT_U1.obj</Path>
-          <Path>DefaultBuild\R_PG_SCI_C1.obj</Path>
           <Path>DefaultBuild\R_PG_SCI_C2.obj</Path>
           <Path>DefaultBuild\R_PG_SCI_C5.obj</Path>
-          <Path>DefaultBuild\R_PG_SCI_C6.obj</Path>
           <Path>DefaultBuild\R_PG_SCI_C9.obj</Path>
           <Path>DefaultBuild\R_PG_ADC_12_S12AD0.obj</Path>
           <Path>DefaultBuild\Interrupt_INTC.obj</Path>

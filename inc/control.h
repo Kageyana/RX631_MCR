@@ -3,13 +3,22 @@
 //====================================//
 // インクルード
 //====================================//
-#include "PeripheralFunctions.h"
-#include "LineChase.h"
-#include "SPI_ICM20648.h"
+#include "io.h"
+#include "mtu.h"
+#include "ADconverter.h"
+#include "control.h"
+#include "ICM20648.h"
 #include <math.h>
 //====================================//
 // シンボル定義
 //====================================//
+/*************************************** 自動生成関数 *************************************/
+// タイマ割り込み
+#define SET_CMT_C0		R_PG_Timer_Set_CMT_U0_C0();			// コンペアマッチタイマ初期化(ch0)
+#define START_CMT_C0	R_PG_Timer_StartCount_CMT_U0_C0();	// カウントスタート(ch0)
+#define STOP_CMT_C0	R_PG_Timer_HaltCount_CMT_U0_C0();	// カウント一時停止(ch0)
+/******************************************************************************************/
+
 // 緊急停止
 #define	STOPPING_METER		40		// 停止距離
 

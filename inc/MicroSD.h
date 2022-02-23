@@ -3,7 +3,7 @@
 //======================================//
 // インクルード
 //======================================//
-#include "PeripheralFunctions.h"
+//#include "PeripheralFunctions.h"
 #include "E2dataFlash.h"
 #include <string.h>
 #include <stdarg.h>
@@ -17,19 +17,19 @@
 #define MSD_ENDADDRESS	960000	// 終了アドレス　RECODTIME * DATA_BYTE / WRITINGTIME
 
 /******************************************** 自動生成関数 *****************************************/
-#define SET_SCI_C5		R_PG_SCI_Set_C5();		// シリアルI/Oチャネルを設定(SPI)
-#define SET_CMT_C2		R_PG_Timer_Set_CMT_U1_C2();	// コンペアマッチタイマ初期化(ch2)
-#define START_CMT_C2	R_PG_Timer_StartCount_CMT_U1_C2();	// カウントスタート(ch2)
+#define SET_SCI_MSD		R_PG_SCI_Set_C5();		// シリアルI/Oチャネルを設定(SPI)
+#define SET_CMT_MSD		R_PG_Timer_Set_CMT_U1_C2();	// コンペアマッチタイマ初期化(ch2)
+#define START_CMT_MSD	R_PG_Timer_StartCount_CMT_U1_C2();	// カウントスタート(ch2)
 
 // CS端子
-#define MSD_CS_TERMINAL_HIGH	R_PG_IO_PORT_Write_PA0( 1 );	// HIGHT
-#define MSD_CS_TERMINAL_LOW	R_PG_IO_PORT_Write_PA0( 0 );	// LOW
+#define MSD_CS_TERMINAL_HIGH	R_PG_IO_PORT_Write_PA3( 1 );	// HIGHT
+#define MSD_CS_TERMINAL_LOW	R_PG_IO_PORT_Write_PA3( 0 );	// LOW
 
 // SPI
 #define SPI_SEND			R_PG_SCI_SPIMode_Transfer_C5( data_tr, data_re, 1);
 
 // SDスイッチ
-#define GET_SDSWITCH		R_PG_IO_PORT_Read_PA6(&sd_sw)
+#define GET_SDSWITCH		R_PG_IO_PORT_Read_PA5(&sd_sw)
 
 /****************************************************************************************************/
 //========================================//

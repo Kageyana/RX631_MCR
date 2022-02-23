@@ -9,7 +9,7 @@
 * Version      : 1.00
 * Description  : 
 ******************************************************************************
-* History : 16.02.2020 Version Description
+* History : 23.02.2022 Version Description
 *         :   
 ******************************************************************************/
 
@@ -21,7 +21,6 @@ Includes   <System Includes> , "Project Includes"
 #include <stdbool.h>
 
 bool R_PG_IO_PORT_Set_PE(void);
-bool R_PG_IO_PORT_Set_PE1(void);
 bool R_PG_IO_PORT_Set_PE3(void);
 bool R_PG_IO_PORT_Set_PE4(void);
 bool R_PG_IO_PORT_Set_PE5(void);
@@ -37,7 +36,6 @@ bool R_PG_IO_PORT_Read_PE5(uint8_t * data);
 bool R_PG_IO_PORT_Read_PE6(uint8_t * data);
 bool R_PG_IO_PORT_Read_PE7(uint8_t * data);
 bool R_PG_IO_PORT_Write_PE(uint8_t data);
-bool R_PG_IO_PORT_Write_PE1(uint8_t data);
 bool R_PG_IO_PORT_Write_PE3(uint8_t data);
 bool R_PG_IO_PORT_Write_PE4(uint8_t data);
 bool R_PG_IO_PORT_Write_PE5(uint8_t data);

@@ -26,10 +26,12 @@
 // インクルード
 //======================================//
 #include "iodefine.h"
-#include "PeripheralFunctions.h"
-#include "SetUp.h"
-#include "LineChase.h"
-#include "MicroSD.h"
+#include "io.h"
+#include "mtu.h"
+#include "ADconverter.h"
+#include "setup.h"
+#include "control.h"
+#include "microSD.h"
 #include <stdio.h>
 //======================================//
 // シンボル定義

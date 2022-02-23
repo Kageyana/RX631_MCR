@@ -4,7 +4,7 @@
 // インクルード 
 //====================================//
 #include "R_PG_IGC-P8080_v1.h"
-#include "SCI.h"
+#include "sci.h"
 #include <stdio.h>
 #include <stdarg.h>
 //====================================//
@@ -21,7 +21,7 @@
 #define CLOCK		96		// 動作周波数[MHz]
 
 /******************************** 自動生成関数 *********************************/
-#define 	SET_SCI_C9	R_PG_SCI_Set_C9();	// I2C初期化
+#define 	SET_SCI_LCD	R_PG_SCI_Set_C9();	// I2C初期化
 #define 	I2C_LCD_SEND	R_PG_SCI_I2CMode_Send_C9(0, LCD_SLAVEADDRESS, word, 2);
 #define	    I2C_LCD_READ	R_PG_SCI_I2CMode_Send_C9(0, LCD_SLAVEADDRESS, Command, 2);
 /***************************************************************************/

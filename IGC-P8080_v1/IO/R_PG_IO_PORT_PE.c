@@ -36,7 +36,7 @@
 * Description  : 
 * Limitations  : 
 ******************************************************************************
-* History : 16.02.2020 Version Description
+* History : 23.02.2022 Version Description
 *         :   
 ******************************************************************************/
 
@@ -71,15 +71,6 @@ Includes   <System Includes> , "Project Includes"
 bool R_PG_IO_PORT_Set_PE(void)
 {
 	bool res;
-
-	res = R_IO_PORT_Set(
-		PDL_IO_PORT_E_1,
-		PDL_IO_PORT_OUTPUT | PDL_IO_PORT_TYPE_CMOS | PDL_IO_PORT_DRIVE_NORMAL
-	);
-
-	if( !res ){
-		return res;
-	}
 
 	res = R_IO_PORT_Set(
 		PDL_IO_PORT_E_3,
@@ -127,35 +118,6 @@ bool R_PG_IO_PORT_Set_PE(void)
 	}
 
 	return res;
-}
-
-/******************************************************************************
-* ID           : 
-*
-* Include      : 
-*
-* Declaration  : bool R_PG_IO_PORT_Set_PE1(void)
-*
-* Function Name: R_PG_IO_PORT_Set_PE1
-*
-* Description  : I/Oポート(1端子)の設定
-*
-* Arguments    : なし
-*
-* Return Value : true  : 設定が正しく行われた場合
-*              : false : 設定に失敗した場合
-*
-* Calling Functions : R_IO_PORT_Set
-*
-* Details      : 詳細についてはリファレンスマニュアルを参照してください。
-******************************************************************************/
-bool R_PG_IO_PORT_Set_PE1(void)
-{
-	return R_IO_PORT_Set(
-		PDL_IO_PORT_E_1,
-		PDL_IO_PORT_OUTPUT | PDL_IO_PORT_TYPE_CMOS | PDL_IO_PORT_DRIVE_NORMAL
-	);
-
 }
 
 /******************************************************************************
@@ -606,35 +568,6 @@ bool R_PG_IO_PORT_Write_PE(uint8_t data)
 {
 	return R_IO_PORT_Write(
 		PDL_IO_PORT_E,
-		data
-	);
-
-}
-
-/******************************************************************************
-* ID           : 
-*
-* Include      : 
-*
-* Declaration  : bool R_PG_IO_PORT_Write_PE1(uint8_t data)
-*
-* Function Name: R_PG_IO_PORT_Write_PE1
-*
-* Description  : I/Oポートデータレジスタへのビット書き込み
-*
-* Arguments    : uint8_t data : 書き込む値
-*
-* Return Value : true  : 書き込みに成功した場合
-*              : false : 書き込みに失敗した場合
-*
-* Calling Functions : R_IO_PORT_Write
-*
-* Details      : 詳細についてはリファレンスマニュアルを参照してください。
-******************************************************************************/
-bool R_PG_IO_PORT_Write_PE1(uint8_t data)
-{
-	return R_IO_PORT_Write(
-		PDL_IO_PORT_E_1,
 		data
 	);
 

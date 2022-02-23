@@ -1,7 +1,7 @@
 //==========================//
 // インクルード
 //==========================//
-#include "SPI_ICM20648.h"
+#include "ICM20648.h"
 //==========================//
 // グローバル変数の宣言
 //==========================//
@@ -98,7 +98,7 @@ void caribrateIMU(void)
 	short i, j, axisData[8];
 	int axg = 0, ayg = 0, azg = 0;
 	
-	STOP_CMT_C0
+	//STOP_CMT_C0
 	for ( i = 0; i < SAMPLE; i++ ) {
 		read_arry(GYRO_XOUT_H, val);
 		for ( j = 0; j < 3; j++ ) {
@@ -125,7 +125,7 @@ void caribrateIMU(void)
 	RollAngleIMU = 0;
 	PichAngleIMU = 0;
 	
-	START_CMT_C0
+	//START_CMT_C0
 }
 /////////////////////////////////////////////////////////////////////
 // モジュール名 check_crossline

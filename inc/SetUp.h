@@ -3,13 +3,15 @@
 //======================================//
 // インクルード
 //======================================//
-#include "PeripheralFunctions.h"
-#include "LineChase.h"
+#include "io.h"
+#include "mtu.h"
+#include "ADconverter.h"
+#include "control.h"
 #include "E2dataFlash.h"
-#include "I2C_LCD.h"
+#include "AQM1602Y.h"
 #include "MicroSD.h"
-#include "SCI.h"
-#include "SPI_ICM20648.h"
+#include "sci.h"
+#include "ICM20648.h"
 #include "MemorryTrace.h"
 #include <stdio.h>
 //======================================//

@@ -7,8 +7,9 @@
 #include <machine.h>
 #include <stdio.h>
 #include <string.h>
+#include "R_PG_IGC-P8080_v1.h"
 //#include "vect.h"
-#include "PeripheralFunctions.h"
+//#include "PeripheralFunctions.h"
 //======================================//
 // ƒVƒ“ƒ{ƒ‹’è‹`
 //======================================//

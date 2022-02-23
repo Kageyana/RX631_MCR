@@ -48,12 +48,12 @@ void HardwareSetup(void)
 	SET_MTU_C4
 	
 	SET_SCI_C2
-	SET_SCI_MSD		// シリアルI/Oチャネルを設定(SPI microSd)
+	SET_SCI_C5		// シリアルI/Oチャネルを設定(SPI microSd)
 	init_SCI6( RATE_230400 );		// シリアルI/Oチャネルを設定(UART)
 	SET_SCI_LCD 		// シリアルI/Oチャネルを設定(I2C)
 	
 	SET_CMT_C0		// コンペアマッチタイマを設定(ch0)
-	SET_CMT_MSD		// コンペアマッチタイマを設定(ch2)
+	SET_CMT_C2		// コンペアマッチタイマを設定(ch2)
 	
 	init_IO();			// IOポートの初期化
 	
@@ -63,13 +63,13 @@ void HardwareSetup(void)
 	
 	START_ADC		// A/D変換開始
 	START_CMT_C0 	// カウントスタート(ch0)
-	START_CMT_MSD 	// カウントスタート(ch2)
+	START_CMT_C2 	// カウントスタート(ch2)
 	
 	/*----------0:brake　1:stop----------*/	
 	R_PG_IO_PORT_Write_PE4( 0 );	//左前モータ
-	R_PG_IO_PORT_Write_PA0( 0 );	//右前モータ
+	R_PG_IO_PORT_Write_PA7( 0 );	//右前モータ
 	R_PG_IO_PORT_Write_PC5( 0 );	//左後モータ
-	R_PG_IO_PORT_Write_PB4( 0 );	//右後モータ
-	R_PG_IO_PORT_Write_PE6( 1 );	//サーボモータ
+	R_PG_IO_PORT_Write_PB7( 0 );	//右後モータ
+	R_PG_IO_PORT_Write_PE7( 1 );	//サーボモータ
 	R_PG_IO_PORT_Write_PC3( 1 );	//ランサーモータ
 }
