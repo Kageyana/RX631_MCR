@@ -514,7 +514,7 @@ void main(void){
 		case 34:
 			// 角度維持
 			// sensor_inp() == 2を読んだあとに実行
-			SetAngle = -( 90 - 10 - i ) * (435/35);	// ラインからの角度10°
+			SetAngle = -( 90 - 10 - i ) * DEGPERAD;	// ラインからの角度10°
 			//SetAngle = angle_rightclank + 160;
 			targetSpeed = speed_rightclank_escape * SPEED_CURRENT;
 			j = getAnalogSensor();
@@ -577,7 +577,7 @@ void main(void){
 		case 44:
 			// 角度維持
 			// sensor_inp() == 2を読んだあとに実行
-			SetAngle = ( 90 - 10 - i ) * (435/35);	// ラインからの角度10°
+			SetAngle = ( 90 - 10 - i ) * DEGPERAD;	// ラインからの角度10°
 			//SetAngle = angle_leftclank - 160;
 			targetSpeed = speed_leftclank_escape * SPEED_CURRENT;
 			j = getAnalogSensor();
@@ -815,20 +815,17 @@ void main(void){
 			
 			if( enc1 >= enc_mm( 1200 ) ) {
 				enc1 = 0;
-				mode_autoMotor = 0;
 				pattern = 73;
 				break;
 			}
 			break;
 			
 		case 73:
-			// 上り坂終点ブレーキ
-			servoPwmOut( ServoPwm );
-			motorPwmOut(-100, -100, -100, -100);
-			
+			// 上り坂終点ブレーキ 全力ブレーキ
+			targetSpeed = 0;
+
 			if( enc1 >= enc_mm( 50 ) ) {
 				enc1 = 0;
-				mode_autoMotor = 1;
 				pattern = 75;
 				break;
 			}
@@ -1060,7 +1057,9 @@ void Timer (void) {
 	if ( mode_autoMotor ) {
 		if ( mode_angle ) servoPwmOut( ServoPwm2 );	// 角度
 		else servoPwmOut( ServoPwm );	// 白線
-		diff( motorPwm ); // 駆動輪モータPWM出力
+		if (!mode_pushcart) {
+			diff( motorPwm ); // 駆動輪モータPWM出力
+		}
 	}
 	
 	// MicroSD書き込み
