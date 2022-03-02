@@ -10,11 +10,11 @@
 //========================================//
 // シンボル定義
 //=======================================//
-#define WRITINGTIME		2		// ログ取得周期(ms)
+#define WRITINGTIME			2		// ログ取得周期(ms)
 #define DATA_BYTE			32		// 一回に保存するデータ数(byte)
 #define RECODTIME			30000	// 記録時間(ms)
 #define MSD_STARTADDRESS	0		// 開始アドレス
-#define MSD_ENDADDRESS	960000	// 終了アドレス　RECODTIME * DATA_BYTE / WRITINGTIME
+#define MSD_ENDADDRESS		960000	// 終了アドレス　RECODTIME * DATA_BYTE / WRITINGTIME
 
 /******************************************** 自動生成関数 *****************************************/
 #define SET_SCI_MSD		R_PG_SCI_Set_C5();		// シリアルI/Oチャネルを設定(SPI)
@@ -23,7 +23,7 @@
 
 // CS端子
 #define MSD_CS_TERMINAL_HIGH	R_PG_IO_PORT_Write_PA3( 1 );	// HIGHT
-#define MSD_CS_TERMINAL_LOW	R_PG_IO_PORT_Write_PA3( 0 );	// LOW
+#define MSD_CS_TERMINAL_LOW		R_PG_IO_PORT_Write_PA3( 0 );	// LOW
 
 // SPI
 #define SPI_SEND			R_PG_SCI_SPIMode_Transfer_C5( data_tr, data_re, 1);
@@ -47,7 +47,7 @@ extern unsigned int		msdStartaddress;    // 記録開始アドレス
 extern unsigned int		msdEndaddress;      // 記録終了アドレス
 extern unsigned int		msdWorkaddress;     // 作業用アドレス
 extern unsigned int		msdWorkaddress2;	// 作業用アドレス2
-extern volatile char		msdlibError;	// エラー番号
+extern volatile char	msdlibError;		// エラー番号
 extern signed char 		*msdBuffPointa;		// RAM保存バッファ用ポインタ
 
 extern volatile short			msdlibCnt;

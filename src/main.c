@@ -483,13 +483,12 @@ void main(void){
 			i = -TurningAngleIMU;
 			j = getAnalogSensor();
 			
-			if ( i >= 20 ) {
-				if( j <= -1800 && sensor_inp() == 0x2 ) {
-					enc1 = 0;
-					i = (short)-TurningAngleIMU;
-					pattern = 34;
-					break;
-				}
+			if (sensor_inp() == 0x2) {
+				enc1 = 0;
+				mode_angle = 0;
+				Int = 0;			// 積分リセット
+				pattern = 36;
+				break;
 			}
 			break;
 			
@@ -952,6 +951,8 @@ void main(void){
 					break;
 				}
 			} else {			// 500ms以上経過したら終了
+				servoPwmOut( 0 );
+				R_PG_IO_PORT_Write_PE6( 0 );	//サーボモータ freeモード
 				pattern = 107;
 				break;
 			}
@@ -965,14 +966,15 @@ void main(void){
 				flashDataBuff[ 0 ] = msdWorkaddress >> 16;
 				flashDataBuff[ 1 ] = msdWorkaddress & 0xffff;	// 終了アドレス
 				writeFlashData( MSD_STARTAREA, MSD_ENDAREA, MSD_DATA, 2 );
+				servoPwmOut( 0 );
+				R_PG_IO_PORT_Write_PE6( 0 );	//サーボモータ freeモード
 				pattern = 106;
 				break;
 			}
 			break;
 			
 		case 106:
-		// mMicroSD書き込み成功
-			servoPwmOut( 0 );
+			// mMicroSD書き込み成功
 			// LED点滅処理
 			if( cnt1 >= 200 ) cnt1 = 0;
 			if( cnt1 < 100 ) {
@@ -984,7 +986,6 @@ void main(void){
 			
 		case 107:
 			// mMicroSD書き込み失敗
-			servoPwmOut( 0 );
 			// LED点滅処理
 			if( cnt1 >= 200 ) cnt1 = 0;
 			if( cnt1 < 100 ) {

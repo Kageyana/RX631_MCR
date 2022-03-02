@@ -187,3 +187,38 @@ void lcdPosition(char x ,char y)
 
     lcdBuffPosition = x + y * LCD_MAX_X;
 }
+//////////////////////////////////////////////////////////////////////////
+// モジュール名 lcdPrintf
+// 処理概要     液晶へ表示 表示位置は過去に表示した位置の次から
+// 引数         printfと同じ
+// 戻り値       正常時：出力した文字列 異常時：負の数
+//////////////////////////////////////////////////////////////////////////
+int lcdRowPrintf(char step, char *format, ...)
+{
+    volatile va_list argptr;
+    volatile char    *p;
+    volatile short     ret = 0;
+
+	if(step == UPROW){
+		lcdPosition( 0, 0 );
+	} else if (step == LOWROW){
+		lcdPosition( 0, 1 );
+	}
+
+    va_start(argptr, format);
+    ret = vsprintf( buffLcdData2, format, argptr );
+    va_end(argptr);
+
+    if( ret > 0 ) {
+        // vsprintfが正常なら液晶バッファへ転送
+        p = buffLcdData2;
+        while( *p ) {
+            buffLcdData[lcdBuffPosition++] = *p++;
+            if( lcdBuffPosition >= LCD_MAX_X * LCD_MAX_Y ) {
+                lcdBuffPosition = 0;
+            }
+        }
+        lcdRefreshFlag = 1;
+    }
+    return ret;
+}

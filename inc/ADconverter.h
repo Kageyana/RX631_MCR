@@ -12,7 +12,7 @@
 /*************************************** 自動生成関数 *************************************/
 // ADコンバータ
 #define SET_ADC		R_PG_ADC_12_Set_S12AD0(); 				// 12ビットA/Dコンバータ(S12AD0)を設定
-#define START_ADC		R_PG_ADC_12_StartConversionSW_S12AD0();	// A/D変換開始
+#define START_ADC	R_PG_ADC_12_StartConversionSW_S12AD0();	// A/D変換開始
 #define GET_ADC		R_PG_ADC_12_GetResult_S12AD0( result );	// AD値を取得
 /******************************************************************************************/
 

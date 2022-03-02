@@ -15,8 +15,10 @@
 // 液晶関連変数
 #define LCD_MAX_X	17		// 表示文字数 横 16 or 20
 #define LCD_MAX_Y	2		// 表示文字数 縦  2 or  4
-#define RSBIT0		0x00		// コマンド送信ビット
-#define RSBIT1		0x40		// データ送信ビット
+#define RSBIT0		0x00	// コマンド送信ビット
+#define RSBIT1		0x40	// データ送信ビット
+#define UPROW       0       // 1行目
+#define LOWROW      1       // 2行目
 
 #define CLOCK		96		// 動作周波数[MHz]
 
@@ -41,5 +43,6 @@ void lcd_CMD( unsigned char cmd );
 void lcd_put( unsigned char data );
 int lcdPrintf( char *format, ... );
 void lcdcursol (void);
+int lcdRowPrintf(char step, char *format, ...);
 
 #endif // I2C_LCD_H_

@@ -152,7 +152,7 @@ unsigned int enc_mm( short mm )
 ///////////////////////////////////////////////////////////////////////////
 void servoControl( void )
 {
-	int iP, iD, iI, iRet;
+	int iP, iD, iI, iRet, maxpwm;
 	short Dev, Dif;
 	
 	//サーボモータ用PWM値計算
@@ -169,9 +169,12 @@ void servoControl( void )
 	iRet = iP + iI + iD;
 	iRet = iRet >> 10;
 
-	// PWMの上限の設定(安定したら70程度に)
-	if ( iRet >  70 ) iRet =  90;		// マイコンカーが安定したら
-	if ( iRet <  -70 ) iRet = -90;	// 上限を90くらいにしてください
+	// PWMの上限の設定
+	// 出力電圧がVOLTAGELIMとなるDuty比を計算
+	maxpwm = (int8_t)(VOLTAGELIM / Voltage *100);
+
+	if ( iRet > maxpwm ) iRet =  maxpwm;
+	if ( iRet < -maxpwm ) iRet = -maxpwm;
 	
 	if ( Dev >= 0 )	DevBefore = 0;
 	else			DevBefore = 1;
@@ -187,7 +190,7 @@ void servoControl( void )
 void servoControl2( void )
 {
 	short i, j, Dev, Dif;
-	int iP, iD, iI, iRet;
+	int iP, iD, iI, iRet, maxpwm;
 	
 	// 目標値、現在値取得
 	i = SetAngle;
@@ -212,10 +215,15 @@ void servoControl2( void )
 	iRet = iP + iI + iD;
 	iRet = iRet >> 4;		// PWMを0～100の間に収める
 
-	// PWMの上限の設定(安定したら70程度に)
-	if ( iRet >  90 ) iRet =  90;		// マイコンカーが安定したら
-	if ( iRet <  -90 ) iRet = -90;	// 上限を90くらいにしてください
-	
+	// PWMの上限の設定
+	// if ( iRet >  100 ) iRet =  100;
+	// if ( iRet <  -100 ) iRet = -100;
+	// 出力電圧がVOLTAGELIMとなるDuty比を計算
+	maxpwm = (int8_t)(VOLTAGELIM / Voltage *100);
+
+	if ( iRet > maxpwm ) iRet =  maxpwm;
+	if ( iRet < -maxpwm ) iRet = -maxpwm;
+
 	if ( Dev >= 0 ) 	AngleBefore3 = 0;
 	else 			AngleBefore3 = 1;
 	SetAngleBefore = i;
@@ -542,7 +550,7 @@ void diff ( signed char pwm )
 ///////////////////////////////////////////////////////////////////////////
 void motorControl( void )
 {
-	int i, j, iRet, Dif, iP, iI, iD, Dev;
+	int i, j, iRet, Dif, iP, iI, iD, Dev, maxpwm;
 	char kp3, ki3, kd3;
 	
 	i = targetSpeed;		// 目標値
@@ -574,8 +582,14 @@ void motorControl( void )
 	iRet = iRet >> 4;
 	
 	// PWMの上限の設定
-	if ( iRet >  100 )	iRet =  100;
-	if ( iRet <  -100 )	iRet = -100;
+	// if ( iRet >  100 )	iRet =  100;
+	// if ( iRet <  -100 )	iRet = -100;
+
+	// 出力電圧がVOLTAGELIMとなるDuty比を計算
+	maxpwm = (int8_t)(VOLTAGELIM / Voltage *100);
+
+	if ( iRet > maxpwm ) iRet =  maxpwm;
+	if ( iRet < -maxpwm ) iRet = -maxpwm;
 	
 	motorPwm = iRet;
 	EncoderBefore = Dev;

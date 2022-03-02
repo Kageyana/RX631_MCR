@@ -16,7 +16,7 @@
 // タイマ割り込み
 #define SET_CMT_C0		R_PG_Timer_Set_CMT_U0_C0();			// コンペアマッチタイマ初期化(ch0)
 #define START_CMT_C0	R_PG_Timer_StartCount_CMT_U0_C0();	// カウントスタート(ch0)
-#define STOP_CMT_C0	R_PG_Timer_HaltCount_CMT_U0_C0();	// カウント一時停止(ch0)
+#define STOP_CMT_C0	    R_PG_Timer_HaltCount_CMT_U0_C0();	// カウント一時停止(ch0)
 /******************************************************************************************/
 
 // 緊急停止
@@ -62,9 +62,10 @@
 #define INTEGRAL_LIMIT			200		// 角速度積算時間
 
 // PIDゲイン関連
+#define VOLTAGELIM 10.5 // 出力最大電圧
 //白線トレース
-#define KP			10
-#define KI			0
+#define KP		10
+#define KI		0
 #define KD		44
 
 // 角度制御
@@ -78,10 +79,10 @@
 #define KD3		0
 
 // 緊急停止関連
-#define STOP_SENSOR1		60		// センサ全灯
-#define STOP_SENSOR2		800		// センサ全消灯
-#define STOP_ENCODER		100		// エンコーダ停止(ひっくり返った？)
-#define STOP_GYRO			100		// マイナスの加速度検知(コースから落ちた？)
+#define STOP_SENSOR1	60		// センサ全灯
+#define STOP_SENSOR2	800		// センサ全消灯
+#define STOP_ENCODER	100		// エンコーダ停止(ひっくり返った？)
+#define STOP_GYRO		100		// マイナスの加速度検知(コースから落ちた？)
 #define STOP_COUNT		10000	// 時間停止
 //====================================//
 // グローバル変数の宣言
