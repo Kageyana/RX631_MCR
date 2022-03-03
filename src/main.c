@@ -59,24 +59,29 @@ void main(void){
 	mode_angle = 0;			// 白線トレース
 	mode_autoMotor = 0;		// 自動PWM出力停止
 	start = 0;				// ゲートスタート
+
+	// 電源電圧の確認
+	if (Voltage < LOWVOLTAGE ) {
+		lcdRowPrintf(UPROW, "LOW BAT ");
+		lcdRowPrintf(LOWROW, "  %05.2fV",Voltage);
+		led_out(LED_R);
+		while(1);
+	}
 	
 	//IMU初期化
 	IMU_init();
 	// フラッシュ初期化
-	if( !initFlash() ) readFlashSetup( 1, 1, 1 ,1 ,1 ,1 ,1);	// データフラッシュから前回パラメータを読み込む
+	// データフラッシュから前回パラメータを読み込む
+	if( !initFlash() ) readFlashSetup( 1, 1, 1 ,1 ,1 ,1 ,1);
 	// MicroSDカード初期化
 	if( !init_msd() ) msdset = 1;
 	else msdset = 0;
-	
-	// 電源電圧確認
+
 	cnt1=0;
-	
 	while(msdset == 1 && cnt1 < 2000){
-		lcdPosition( 0, 0 );
-		lcdPrintf(" SYSTEM ");
-		lcdPosition( 0, 1 );
-		lcdPrintf("ALLGREEN");
-		led_out(0x2);
+		lcdRowPrintf(UPROW, " SYSTEM ");
+		lcdRowPrintf(LOWROW, "ALLGREEN");
+		led_out(LED_G);
 	}
 	led_out(0);
 	
@@ -1039,8 +1044,6 @@ void Timer (void) {
 		cnt_flash++;
 	}
 	cnt1++;
-	
-	
 	cnt_gyro++;
 			
 	// LCD表示
@@ -1065,7 +1068,7 @@ void Timer (void) {
 	
 	// MicroSD書き込み
 	microSDProcess();
-	if ( msdFlag ) sendLog( 8, 7, 3
+	if ( msdFlag ) sendLog( 8, 8, 3
 					// char
 					, pattern
 					, motorPwm
@@ -1073,16 +1076,17 @@ void Timer (void) {
 					, mode_slope
 					, (char)Encoder
 					, sPwm
-					, (char)PichAngleIMU*10
-					, (char)RollAngleIMU*10
+					, (char)(PichAngleIMU*10)
+					, (char)(RollAngleIMU*10)
 					//short
-					, (short)TurningAngleIMU*10
+					, (short)(TurningAngleIMU*10)
 					, xg
 					, yg
 					, zg
 					, getServoAngle()
 					, SetAngle
 					, getAnalogSensor()
+					, (short)(Voltage*100)
 					// unsigned int
 					, EncoderTotal
 					, enc1

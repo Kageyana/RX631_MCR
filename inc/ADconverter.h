@@ -9,6 +9,7 @@
 //====================================//
 #define GATE_VAL			190		    // ゲートセンサしきい値
 #define DEGPERAD            40.55       // 1度あたりのAD値 サーボ最大切れ角時のAD値[]/サーボ最大切れ角[°]
+#define LOWVOLTAGE          10.5        // 最低動作電圧
 /*************************************** 自動生成関数 *************************************/
 // ADコンバータ
 #define SET_ADC		R_PG_ADC_12_Set_S12AD0(); 				// 12ビットA/Dコンバータ(S12AD0)を設定
@@ -30,10 +31,9 @@ extern short		sensorRR;		// 最右端アナログセンサ
 
 extern short		L_sencnt;
 
-extern short		VoltageC;	//電圧チェッカー
-extern double		Voltage;
+extern double		Voltage;        //電圧チェッカー
 
-extern short		Angle0;		// サーボセンター値
+extern short		Angle0;		    // サーボセンター値
 //====================================//
 // プロトタイプ宣言
 //====================================//

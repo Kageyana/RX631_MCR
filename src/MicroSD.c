@@ -960,7 +960,7 @@ char msdEndLog ( void )
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 sendLog
-// 処理概要     PCへデータ転送
+// 処理概要     データを一時保存配列に転送
 // 引数         c:char型変数の個数 s:short型変数の個数 i:int型変数の個数
 // 戻り値       なし
 ///////////////////////////////////////////////////////////////////////////
@@ -1051,6 +1051,7 @@ void msd_sendToPC ( void )
 				printf(	"getServoAngle,"	);
 				printf(	"SetAngle,"		);
 				printf(	"getAnalogSensor,"	);
+				printf(	"Voltage,"	);
 				
 				printf(	"EncoderTotal,"		);
 				printf(	"enc1,"			);
@@ -1096,20 +1097,21 @@ void msd_sendToPC ( void )
 				printf("%5d,", msdBuff[ msdBuffaddress + 3 ]);	// mode_slope
 				printf("%5d,", msdBuff[ msdBuffaddress + 4 ]);	// Encoder
 				printf("%5d,", msdBuff[ msdBuffaddress + 5 ]);	// targetSpeed
-				printf("%5d,", msdBuff[ msdBuffaddress + 6 ]/10);	// PichAngleIMU
-				printf("%5d,", msdBuff[ msdBuffaddress + 7 ]/10);	// RollAngleIMU
+				printf("%5d,", msdBuff[ msdBuffaddress + 6 ] / 10 );	// PichAngleIMU
+				printf("%5d,", msdBuff[ msdBuffaddress + 7 ] / 10 );	// RollAngleIMU
 				
-				printf("%4.2f,", (double)CharToShort(8)/10);	// TurningAngleIMU
-				printf("%4.4f,", (double)CharToShort(10) / GYROLSB);// xg
-				printf("%4.4f,", (double)CharToShort(12) / GYROLSB);// yg
-				printf("%4.4f,", (double)CharToShort(14) / GYROLSB);// zg
-				printf("%5d,", CharToShort(16));				// getServoAngle()
-				printf("%5d,", CharToShort(18));				// SetAngle
-				printf("%5d,", CharToShort(20));				// getAnalogSensor()
+				printf("%4.2f,", (double)CharToShort(8) / 10 );	// TurningAngleIMU
+				printf("%4.4f,", (double)CharToShort(10) / GYROLSB );// xg
+				printf("%4.4f,", (double)CharToShort(12) / GYROLSB );// yg
+				printf("%4.4f,", (double)CharToShort(14) / GYROLSB );// zg
+				printf("%5d,", CharToShort(16) );				// getServoAngle()
+				printf("%5d,", CharToShort(18) );				// SetAngle
+				printf("%5d,", CharToShort(20) );				// getAnalogSensor()
+				printf("%5d,", CharToShort(22) / 100);
 				
-				printf("%6d,", CharTouInt (22));		// EncoderTotal
-				printf("%6d,", CharTouInt (26));		// enc1
-				printf("%6d", CharToShort (30));		// cnt_log
+				printf("%6d,", CharTouInt (24) );		// EncoderTotal
+				printf("%6d,", CharTouInt (28) );		// enc1
+				printf("%6d", CharToShort (32) );		// cnt_log
 				printf("\n");
 				i += WRITINGTIME;
 				msdBuffaddress += DATA_BYTE;
