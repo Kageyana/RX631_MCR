@@ -34,19 +34,19 @@
 // 左前輪
 #define DIR_FL_FOR		R_PG_IO_PORT_Write_PE3( 1 );		// モータ回転方向(正転)
 #define DIR_FL_REV		R_PG_IO_PORT_Write_PE3( 0 );		// モータ回転方向(逆転）
-#define PWM_FL_OUT	R_PG_Timer_SetTGR_B_MTU_U0_C4( abs(pwmfl) );	// PWM出力
+#define PWM_FL_OUT	    R_PG_Timer_SetTGR_B_MTU_U0_C4( abs(pwmfl) );	// PWM出力
 // 右前輪
 #define DIR_FR_FOR		R_PG_IO_PORT_Write_PE7( 0 );
 #define DIR_FR_REV		R_PG_IO_PORT_Write_PE7( 1 );
-#define PWM_FR_OUT	R_PG_Timer_SetTGR_B_MTU_U0_C0( abs(pwmfr) );
+#define PWM_FR_OUT	    R_PG_Timer_SetTGR_B_MTU_U0_C0( abs(pwmfr) );
 // 左後輪
 #define DIR_RL_FOR		R_PG_IO_PORT_Write_PC4( 1 );
 #define DIR_RL_REV		R_PG_IO_PORT_Write_PC4( 0 );
-#define PWM_RL_OUT	R_PG_Timer_SetTGR_B_MTU_U0_C3( abs(pwmrl) );
+#define PWM_RL_OUT	    R_PG_Timer_SetTGR_B_MTU_U0_C3( abs(pwmrl) );
 // 右後輪
 #define DIR_RR_FOR		R_PG_IO_PORT_Write_PB2( 0 );
 #define DIR_RR_REV		R_PG_IO_PORT_Write_PB2( 1 );
-#define PWM_RR_OUT	R_PG_Timer_SetTGR_B_MTU_U0_C2( abs(pwmrr) );
+#define PWM_RR_OUT	    R_PG_Timer_SetTGR_B_MTU_U0_C2( abs(pwmrr) );
 // サーボ1
 #define DIR_SERVO_FOR	R_PG_IO_PORT_Write_PE5( 1 );
 #define DIR_SERVO_REV	R_PG_IO_PORT_Write_PE5( 0 );
