@@ -171,10 +171,13 @@ void servoControl( void )
 
 	// PWMの上限の設定
 	// 出力電圧がVOLTAGELIMとなるDuty比を計算
-	maxpwm = (int8_t)(VOLTAGELIM / Voltage *100);
+	maxpwm = (int8_t)(VOLTAGELIMTRACE / Voltage *100);
 
 	if ( iRet > maxpwm ) iRet =  maxpwm;
 	if ( iRet < -maxpwm ) iRet = -maxpwm;
+
+	if ( iRet >  100 ) iRet =  100;
+	if ( iRet <  -100 ) iRet = -100;
 	
 	if ( Dev >= 0 )	DevBefore = 0;
 	else			DevBefore = 1;
@@ -216,13 +219,13 @@ void servoControl2( void )
 	iRet = iRet >> 4;		// PWMを0～100の間に収める
 
 	// PWMの上限の設定
-	// if ( iRet >  100 ) iRet =  100;
-	// if ( iRet <  -100 ) iRet = -100;
 	// 出力電圧がVOLTAGELIMとなるDuty比を計算
-	maxpwm = (int8_t)(VOLTAGELIM / Voltage *100);
+	maxpwm = (int8_t)(VOLTAGELIMTRACE / Voltage *100);
 
 	if ( iRet > maxpwm ) iRet =  maxpwm;
 	if ( iRet < -maxpwm ) iRet = -maxpwm;
+	if ( iRet >  100 ) iRet =  100;
+	if ( iRet <  -100 ) iRet = -100;
 
 	if ( Dev >= 0 ) 	AngleBefore3 = 0;
 	else 			AngleBefore3 = 1;
@@ -554,13 +557,14 @@ void motorControl( void )
 	char kp3, ki3, kd3;
 	
 	i = targetSpeed;		// 目標値
-	j = Encoder * 10;		// 現在値
-	
+	j = Encoder * 10;		// 現在値 targetSpeedはエンコーダのパルス数*10のため
+							// 現在位置も10倍する
+
 	// デモモードのときゲイン変更
 	if ( demo ) {
-		kp3 = 49;
-		ki3 = 41;
-		kd3 = 0;
+		kp3 = kp3_buff;
+		ki3 = ki3_buff;
+		kd3 = kd3_buff;
 	} else {
 		kp3 = kp3_buff;
 		ki3 = ki3_buff;
@@ -572,7 +576,7 @@ void motorControl( void )
 	// 目標値を変更したらI成分リセット
 	if ( i != targetSpeedBefore ) Int3 = 0;
 	
-	Int3 += (double)Dev * 0.001;	// 積分
+	Int3 += (double)Dev * 0.001;	// 時間積分
 	Dif = Dev - EncoderBefore;		// 微分　dゲイン1/1000倍
 	
 	iP = (int)kp3 * Dev;			// 比例
@@ -582,14 +586,13 @@ void motorControl( void )
 	iRet = iRet >> 4;
 	
 	// PWMの上限の設定
-	// if ( iRet >  100 )	iRet =  100;
-	// if ( iRet <  -100 )	iRet = -100;
-
 	// 出力電圧がVOLTAGELIMとなるDuty比を計算
 	maxpwm = (int8_t)(VOLTAGELIM / Voltage *100);
 
-	if ( iRet > maxpwm ) iRet =  maxpwm;
-	if ( iRet < -maxpwm ) iRet = -maxpwm;
+	// if ( iRet > maxpwm ) iRet =  maxpwm;
+	// if ( iRet < -maxpwm ) iRet = -maxpwm;
+	if ( iRet >  100 ) iRet = 100;
+	if ( iRet <  -100 ) iRet = -100;
 	
 	motorPwm = iRet;
 	EncoderBefore = Dev;

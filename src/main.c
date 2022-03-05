@@ -59,14 +59,6 @@ void main(void){
 	mode_angle = 0;			// 白線トレース
 	mode_autoMotor = 0;		// 自動PWM出力停止
 	start = 0;				// ゲートスタート
-
-	// 電源電圧の確認
-	if (Voltage < LOWVOLTAGE ) {
-		lcdRowPrintf(UPROW, "LOW BAT ");
-		lcdRowPrintf(LOWROW, "  %05.2fV",Voltage);
-		led_out(LED_R);
-		while(1);
-	}
 	
 	//IMU初期化
 	IMU_init();
@@ -77,8 +69,22 @@ void main(void){
 	if( !init_msd() ) msdset = 1;
 	else msdset = 0;
 
+	// 電源電圧の確認
+	if (Voltage < LOWVOLTAGE ) {
+		lcdRowPrintf(UPROW, "LOW BAT ");
+		lcdRowPrintf(LOWROW, "  %05.2fV",Voltage);
+		led_out(LED_R);
+		while(1);
+	} else {
+		cnt1=0;
+		while( cnt1 < 1500){
+			lcdRowPrintf(UPROW, "Voltage ");
+			lcdRowPrintf(LOWROW, "  %05.2fV",Voltage);
+		}
+	}
+
 	cnt1=0;
-	while(msdset == 1 && cnt1 < 2000){
+	while(msdset == 1 && cnt1 < 1500){
 		lcdRowPrintf(UPROW, " SYSTEM ");
 		lcdRowPrintf(LOWROW, "ALLGREEN");
 		led_out(LED_G);

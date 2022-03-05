@@ -63,10 +63,11 @@
 
 // PIDゲイン関連
 #define VOLTAGELIM 10.5 // 出力最大電圧
+#define VOLTAGELIMTRACE 7.0 // 出力最大電圧
 //白線トレース
-#define KP		10
+#define KP		14
 #define KI		0
-#define KD		44
+#define KD		53
 
 // 角度制御
 #define KP2		9
@@ -74,8 +75,8 @@
 #define KD2		90
 
 // 速度制御
-#define KP3		6
-#define KI3		10
+#define KP3		4
+#define KI3		0
 #define KD3		0
 
 // 緊急停止関連

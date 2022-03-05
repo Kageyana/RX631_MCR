@@ -385,8 +385,8 @@ void setup( void )
 			mode_angle = 1;
 			if ( servo_test == 1 ) servoPwmOut( ServoPwm2 );
 			else servoPwmOut( 0 );
-			if ( servo_test2 == 1 ) SetAngle = 120;
-			else SetAngle = -120;
+			if ( servo_test2 == 1 ) SetAngle = 700;
+			else SetAngle = -700;
 			
 			data_tuning ( &pattern_gain2, 1, LR );
 			if ( pattern_gain2 == 4 ) pattern_gain2 = 1;
@@ -576,8 +576,9 @@ void setup( void )
 					lcdRowPrintf(UPROW, "Encoder ");
 					if ( cnt_setup >= 100 ) {
 						cnt_setup = 0;
-						lcdRowPrintf(LOWROW, "   %4.1f",(double)EncoderTotal/PALSE_MILLIMETER);
-						// lcdRowPrintf("   %5d",EncoderTotal);
+						// lcdRowPrintf(LOWROW, "   %4.1f",(double)EncoderTotal/PALSE_MILLIMETER);
+						// lcdRowPrintf(LOWROW, "   %5d",EncoderTotal);
+						lcdRowPrintf(LOWROW, "   %5d",Encoder);
 					}
 					break;
 							
@@ -616,7 +617,7 @@ void setup( void )
 					lcdRowPrintf(UPROW, "Motortes");
 					lcdRowPrintf(LOWROW, "    %3d%%",motorTestPwm);
 					demo = 0;
-					data_tuning ( &motorTestPwm, 10, UD );
+					data_tuning ( &motorTestPwm, 1, UD );
 					if ( motor_test == 1 ) {
 						//diff( 10 );
 						motorPwmOut(motorTestPwm, motorTestPwm, motorTestPwm, motorTestPwm);
@@ -687,6 +688,10 @@ void setup( void )
 		//------------------------------------------------------------------
 		case 0xb:
 			lcdRowPrintf(UPROW, "DEMO%4d",motorPwm);
+			if ( cnt_setup >= 500 ) {
+					cnt_setup = 0;
+					printf("DEMO %5d %5d\n",motorPwm, Encoder);
+				}
 			targetSpeed  = 0;
 			
 			data_select ( &demo, 1 );

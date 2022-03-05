@@ -1107,7 +1107,7 @@ void msd_sendToPC ( void )
 				printf("%5d,", CharToShort(16) );				// getServoAngle()
 				printf("%5d,", CharToShort(18) );				// SetAngle
 				printf("%5d,", CharToShort(20) );				// getAnalogSensor()
-				printf("%5d,", CharToShort(22) / 100);
+				printf("%2.2f,", (double)CharToShort(22) / 100);
 				
 				printf("%6d,", CharTouInt (24) );		// EncoderTotal
 				printf("%6d,", CharTouInt (28) );		// enc1
