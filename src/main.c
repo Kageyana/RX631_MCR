@@ -23,7 +23,7 @@ short 		angle_center;
 
 // モード関連
 char		mode_curve;		// カーブ判定	0:カーブ以外	1:カーブ走行中
-char		mode_error;		// 0:距離停止 1:センサ全灯 2:センサ全消灯 3:エンコーダ停止 4:ジャイロ反応
+char		mode_error;		// 0: 通常走行 1:距離停止 2:センサ全灯 3:センサ全消灯 4:エンコーダ停止 5:ジャイロ反応
 char 		mode_autoMotor;	// 0: switch文でサーボ、駆動モータのPWM出力を指定する 1: Timer関数内で自動的にPWM出力を実行
 
 // タイマ関連
@@ -98,39 +98,32 @@ void main(void){
 				// 手押しモードOFF
 				if( cnt1 >= 100 ) {		// 動き出してから
 					if ( EncoderTotal >= ( PALSE_METER * stopping_meter ) ) { // 距離超過の場合
-						mode_error = 0;
-						pattern = 101;
-						mode_autoMotor = 0;
-					} else if ( cnt_out >= STOP_SENSOR1 ) {	// センサ全灯
 						mode_error = 1;
-						pattern = 101;
-						mode_autoMotor = 0;
-					} else if ( cnt_out2 >= STOP_SENSOR2 ) {	// センサ全消灯
+					} else if ( cnt_out >= STOP_SENSOR1 ) {	// センサ全灯
 						mode_error = 2;
-						pattern = 101;
-						mode_autoMotor = 0;
-					} else if ( cnt_out3 >= STOP_ENCODER ) {	// エンコーダ停止(ひっくり返った？)
+					} else if ( cnt_out2 >= STOP_SENSOR2 ) {	// センサ全消灯
 						mode_error = 3;
-						pattern = 101;
-						mode_autoMotor = 0;
+					} else if ( cnt_out3 >= STOP_ENCODER ) {	// エンコーダ停止(ひっくり返った？)
+						mode_error = 4;
 					} else if( cnt_out4 >= STOP_GYRO ) {	// マイナスの加速度検知(コースから落ちた？)
-						mode_error = 4;	
+						mode_error = 5;	
+					}
+					// // Buletoothで外部から停止
+					// if ( stopWord == 1 ) {
+					// 	mode_error = 6;
+					// }
+					// // 一定時間で停止
+					// if( cnt1 >= STOP_COUNT ) {
+					// 	mode_error = 7;
+					// }
+					if (mode_error > 0) {
 						pattern = 101;
 						mode_autoMotor = 0;
+						ui = cnt1;	// 走行時間取得
+						LEDR_OFF;
+						LEDG_OFF;
+						LEDB_OFF;
 					}
-					/*
-					// Buletoothで外部から停止
-					if ( stopWord == 1 ) {
-						mode_error = 5;
-						pattern = 101;
-					}
-					*/
-					/*
-					// 一定時間で停止
-					if( cnt1 >= STOP_COUNT ) {
-						pattern = 101;
-					}
-					*/
 				}
 			} else {			
 				// 手押しモードON
@@ -915,76 +908,66 @@ void main(void){
 		//【100】停止処理
 		//-------------------------------------------------------------------
 		case 101:
-			enc1 = 0;	
-			ui = cnt1;	// 走行時間取得
-			
-			LEDR_OFF;
-			LEDG_OFF;
-			LEDB_OFF;
-	
-			pattern = 102;
-			break;
-			
-		case 102:
+			// 減速処理
 			servoPwmOut( ServoPwm );
 			targetSpeed = 0;
 			motorPwmOut(motorPwm, motorPwm, motorPwm, motorPwm);
 			
-			if( Encoder <= 0 && Encoder >= -1 ) {
+			if( Encoder <= SPEED_CURRENT && Encoder >= -SPEED_CURRENT ) {
 				enc1 = 0;
-				pattern = 103;
+				pattern = 102;
 				break;
 			}
 			break;
 			
-		case 103:
+		case 102:
 			servoPwmOut( ServoPwm );
 			motorPwmOut(0, 0, 0, 0);
 			
-			if( msdset == 1 ) {
-				pattern = 104;
-				cnt1 = 0;
-				break;
-			}else{
+			if( Encoder <= 5 && Encoder >= -1 ) {
+				if( msdset == 1 ) {
+					pattern = 103;
+					cnt1 = 0;
+					break;
+				}else{
+					pattern = 106;
+					break;
+				}
+			}
+			break;
+			
+		case 103:
+			servoPwmOut( 0 );
+			// 最後のデータが書き込まれるまで待つ
+			if ( cnt1 <= 1000 ) {	// 1000ms待つ
+				if( checkMicroSDProcess() == 11 ) {
+					msdFlag = 0;			// ログ記録終了
+					microSDProcessEnd();    // microSDProcess終了処理
+					pattern = 104;
+					break;
+				}
+			} else {			// 1000ms以上経過したら書き込みを強制終了
+				servoPwmOut( 0 );
+				R_PG_IO_PORT_Write_PE6( 0 );	//サーボモータ freeモード
 				pattern = 106;
 				break;
 			}
 			break;
 			
 		case 104:
-			servoPwmOut( ServoPwm );
-			// 最後のデータが書き込まれるまで待つ
-			if ( cnt1 <= 1000 ) {	// 500ms待つ
-				if( checkMicroSDProcess() == 11 ) {
-					msdFlag = 0;			// ログ記録終了
-					microSDProcessEnd();        // microSDProcess終了処理
-					pattern = 105;
-					break;
-				}
-			} else {			// 500ms以上経過したら終了
-				servoPwmOut( 0 );
-				R_PG_IO_PORT_Write_PE6( 0 );	//サーボモータ freeモード
-				pattern = 107;
-				break;
-			}
-			break;
-			
-		case 105:
-			servoPwmOut( ServoPwm );
-			// 終了処理が終わるまで待つ
+			// microSDの書き込み終了処理が終わるまで待つ
 			if( checkMicroSDProcess() == 0 ) {
 				// MicroSD最終書き込みアドレス保存
 				flashDataBuff[ 0 ] = msdWorkaddress >> 16;
 				flashDataBuff[ 1 ] = msdWorkaddress & 0xffff;	// 終了アドレス
 				writeFlashData( MSD_STARTAREA, MSD_ENDAREA, MSD_DATA, 2 );
-				servoPwmOut( 0 );
 				R_PG_IO_PORT_Write_PE6( 0 );	//サーボモータ freeモード
-				pattern = 106;
+				pattern = 105;
 				break;
 			}
 			break;
 			
-		case 106:
+		case 105:
 			// mMicroSD書き込み成功
 			// LED点滅処理
 			if( cnt1 >= 200 ) cnt1 = 0;
@@ -995,7 +978,7 @@ void main(void){
 			}
 			break;
 			
-		case 107:
+		case 106:
 			// mMicroSD書き込み失敗
 			// LED点滅処理
 			if( cnt1 >= 200 ) cnt1 = 0;
