@@ -1,38 +1,40 @@
 ///////////////////////////////メモ///////////////////////////////////////
-// 	書き込みアドレス記録領域1	0～10ブロック				//
-//	パラメータ保存領域		11～879ブロック				//
-//												//
-//	書き込みアドレス記録領域2	1022~1023ブロック			//
-//	Angle0保存領域			1019~1021ブロック			//
-//												//
-//	書き込みアドレス記録領域3	997～1007ブロック			//
-//	msdWorkAddress保存領域	1008～1018ブロック			//
-//												//
-//	書き込みアドレス記録領域4	967～976ブロック			//
-//	白線トレース用PIDゲイン保存領域	977～996	ブロック		//
-//												//
-//	書き込みアドレス記録領域5	937～946ブロック			//
-//	角度制御用PIDゲイン保存領域	947～966ブロック		//
-//												//
-//	書き込みアドレス記録領域6	907～916ブロック			//
-//	速度制御用PIDゲイン保存領域	917～936ブロック		//
-//												//
-//	書き込みアドレス記録領域7	877～886ブロック			//
-//	停止距離保存領域			887～906ブロック			//
+// 	書き込みアドレス記録領域1	0～10ブロック
+//	パラメータ保存領域		    11～879ブロック
+//	
+//	書き込みアドレス記録領域2	1022~1023ブロック
+//	Angle0保存領域			    1019~1021ブロック
+//	
+//	書き込みアドレス記録領域3	    997～1007ブロック
+//	msdWorkAddress保存領域          1008～1018ブロック
+//	
+//	書き込みアドレス記録領域4	    967～976ブロック
+//	白線トレース用PIDゲイン保存領域	977～996	ブロック
+//	
+//	書き込みアドレス記録領域5	937～946ブロック
+//	角度制御用PIDゲイン保存領域	947～966ブロック
+//	
+//	書き込みアドレス記録領域6	907～916ブロッ
+//	速度制御用PIDゲイン保存領域	917～936ブロック
+//	
+//	書き込みアドレス記録領域7	877～886ブロック
+//	停止距離保存領域			887～906ブロック
 //////////////////////////////////////////////////////////////////////////
 #ifndef E2DATAFLASH_H_
 #define E2DATAFLASH_H_
 //======================================//
-// インクルード                         //
+// インクルード
 //======================================//
 #include "iodefine.h"
-#include "PeripheralFunctions.h"
-#include "SetUp.h"
-#include "LineChase.h"
-#include "MicroSD.h"
+#include "io.h"
+#include "mtu.h"
+#include "ADconverter.h"
+#include "setup.h"
+#include "control.h"
+#include "microSD.h"
 #include <stdio.h>
 //======================================//
-// シンボル定義                         //
+// シンボル定義
 //======================================//
 #define NUMDATA		24				// 要素数
 #define DATASIZE		( 2 * NUMDATA ) + 2	// ( 2バイト　* 要素数 ) + 2バイト
@@ -42,20 +44,20 @@
 
 // 記録領域
 #define PARAMETER_AREA			879		// パラメータ保存領域
-#define PARAMETER_STARTAREA	0		// パラメータ書き込みアドレス記録領域1
+#define PARAMETER_STARTAREA	    0		// パラメータ書き込みアドレス記録領域1
 #define PARAMETER_ENDAREA		10		// パラメータ書き込みアドレス記録領域2
 
-#define ANGLE0_DATA		1023			// Angle0保存領域
+#define ANGLE0_DATA		    1023			// Angle0保存領域
 #define ANGLE0_STARTAREA	1019			// Angle0書き込みアドレス記録領域1
 #define ANGLE0_ENDAREA		1021			// Angle0書き込みアドレス記録領域2
 
 #define MSD_DATA			1018			// msdWorkAddress保存領域
 #define MSD_STARTAREA		997			// msdWorkAddress書き込みアドレス記録領域1
-#define MSD_ENDAREA		1007			// msdWorkAddress書き込みアドレス記録領域2
+#define MSD_ENDAREA		    1007			// msdWorkAddress書き込みアドレス記録領域2
 
 #define PID_DATA			996			// 白線トレース用PIDゲイン保存領域
 #define PID_STARTAREA		967			// 白線トレース用PIDゲイン書き込みアドレス記録領域1
-#define PID_ENDAREA		976			// 白線トレース用PIDゲイン書き込みアドレス記録領域2
+#define PID_ENDAREA		    976			// 白線トレース用PIDゲイン書き込みアドレス記録領域2
 
 #define PID2_DATA			966			// 角度制御用PIDゲイン保存領域
 #define PID2_STARTAREA		937			// 角度制御用PIDゲイン書き込みアドレス記録領域1
@@ -66,10 +68,10 @@
 #define PID3_ENDAREA		916			// 速度制御用PIDゲイン書き込みアドレス記録領域2
 
 #define STOPMETER_DATA			906		// 速度制御用PIDゲイン保存領域
-#define STOPMETER_STARTAREA	877		// 速度制御用PIDゲイン書き込みアドレス記録領域1
+#define STOPMETER_STARTAREA	    877		// 速度制御用PIDゲイン書き込みアドレス記録領域1
 #define STOPMETER_ENDAREA		886		// 速度制御用PIDゲイン書き込みアドレス記録領域2
 //======================================//
-// グローバル変数の宣言                 //
+// グローバル変数の宣言
 //======================================//
 // タイマ関連
 extern unsigned short		cnt_flash;	// フラッシュ用カウント
@@ -78,7 +80,7 @@ extern short			flashDataBuff[45];	// 一時保存バッファ
 
 extern volatile unsigned int 		beforeAddr;	// 前回保存時のブロック番号
 //======================================//
-// プロトタイプ宣言                     //
+// プロトタイプ宣言
 //======================================//
 void wait_flash ( short waitTime );
 void FirmWareCopy ( void );

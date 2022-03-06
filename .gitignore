@@ -1,2 +1,7 @@
 SmartManual Docs/
 DefaultBuild/
+DepFiles/
+DepFilestemp/
+DepFilesTmp/
+IGC-P8080_v1/*
+!IGC-P8080_v1.pd2

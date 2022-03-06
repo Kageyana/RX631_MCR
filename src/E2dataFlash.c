@@ -1,9 +1,9 @@
 //======================================//
-// インクルード                         //
+// インクルード
 //======================================//
 #include "E2dataFlash.h"
 //======================================//
-// グローバル変数の宣言                 //
+// グローバル変数の宣言
 //======================================//
 // タイマ関連
 unsigned short	cnt_flash;	// フラッシュ用カウント
@@ -14,10 +14,10 @@ short 				flashDataBuff[45];	// 一時保存バッファ
 
 volatile unsigned int 		nowAddr;		// 現在の書き込まれているブロック番号
 //////////////////////////////////////////////////////////////////////////
-// モジュール名 wait_flash						//
-// 処理概要     遅延処理						//
-// 引数         遅延時間(ms)						//
-// 戻り値       なし                                                    //
+// モジュール名 wait_flash
+// 処理概要     遅延処理
+// 引数         遅延時間(ms)
+// 戻り値       なし
 //////////////////////////////////////////////////////////////////////////
 void wait_flash ( short waitTime )
 {
@@ -27,10 +27,10 @@ void wait_flash ( short waitTime )
 	for ( i = 0; i < time; i++) __nop();
 }
 //////////////////////////////////////////////////////////////////////////
-// モジュール名 FirmWareCopy						//
-// 処理概要     FCU RAMへのファームウェアコピー				//
-// 引数         なし							//
-// 戻り値       なし							//
+// モジュール名 FirmWareCopy
+// 処理概要     FCU RAMへのファームウェアコピー
+// 引数         なし
+// 戻り値       なし
 //////////////////////////////////////////////////////////////////////////
 void FirmWareCopy ( void )
 {
@@ -52,11 +52,11 @@ void FirmWareCopy ( void )
 
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-// モジュール名 fcuCommandByte							//
-// 処理概要     指定アドレスにFCUコマンド発行						//
-// 引数         Block_number: ブロック番号　command:FCUコマンド(16進数)バイトサイズ 	//
-//		Addr_number: 先頭アドレスからのオフセット値				//
-// 戻り値       なし									//
+// モジュール名 fcuCommandByte
+// 処理概要     指定アドレスにFCUコマンド発行
+// 引数         Block_number: ブロック番号　command:FCUコマンド(16進数)バイトサイズ
+//				Addr_number: 先頭アドレスからのオフセット値
+// 戻り値       なし
 //////////////////////////////////////////////////////////////////////////////////////////
 void fcuCommandByte ( unsigned int Addr, unsigned char command )
 {
@@ -66,11 +66,11 @@ void fcuCommandByte ( unsigned int Addr, unsigned char command )
 	*e2data = command;			// 指定アドレスにコマンド発行
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-// モジュール名 fcuCommandWord							//
-// 処理概要     指定アドレスにFCUコマンド発行						//
-// 引数         Block_number: ブロック番号　command:FCUコマンド(16進数)ワードサイズ 	//
-//		Addr_number: 先頭アドレスからのオフセット値				//
-// 戻り値       なし									//
+// モジュール名 fcuCommandWord
+// 処理概要     指定アドレスにFCUコマンド発行
+// 引数         Block_number: ブロック番号　command:FCUコマンド(16進数)ワードサイズ
+//				Addr_number: 先頭アドレスからのオフセット値
+// 戻り値       なし
 //////////////////////////////////////////////////////////////////////////////////////////
 void fcuCommandWord ( unsigned int Addr, unsigned short command )
 {
@@ -80,10 +80,10 @@ void fcuCommandWord ( unsigned int Addr, unsigned short command )
 	*e2data = command;			// 指定アドレスにコマンド発行
 }
 //////////////////////////////////////////////////////////////////////////
-// モジュール名 checkFRDY						//
-// 処理概要     P/E処理中か判定する					//
-// 引数         nバイトのブロックに対する消去時間			//
-// 戻り値      	0: エラーなし 1:タイムアウトエラー			//
+// モジュール名 checkFRDY
+// 処理概要     P/E処理中か判定する
+// 引数         nバイトのブロックに対する消去時間
+// 戻り値      	0: エラーなし 1:タイムアウトエラー
 //////////////////////////////////////////////////////////////////////////
 bool checkFRDY ( unsigned short waittime )
 {
@@ -126,10 +126,10 @@ bool checkFRDY ( unsigned short waittime )
 	return timeout;
 }
 //////////////////////////////////////////////////////////////////////////
-// モジュール名 checkErrorFlash						//
-// 処理概要     エラー確認						//
-// 引数         なし							//
-// 戻り値       0: エラーなし 1:エラーあり				//
+// モジュール名 checkErrorFlash
+// 処理概要     エラー確認
+// 引数         なし
+// 戻り値       0: エラーなし 1:エラーあり
 //////////////////////////////////////////////////////////////////////////
 bool checkErrorFlash ( void )
 {
@@ -162,11 +162,11 @@ bool checkErrorFlash ( void )
 	return error;
 }
 //////////////////////////////////////////////////////////////////////////
-// モジュール名 inti_falsh						//
-// 処理概要     E2データフラッシュの初期化				//
-// 引数         なし							//
-// 戻り値       0:エラーなし　1:エラーあり				//
-// 補足		初期状態 P/Eノーマルモード				//
+// モジュール名 inti_falsh
+// 処理概要     E2データフラッシュの初期化
+// 引数         なし
+// 戻り値       0:エラーなし　1:エラーあり
+// 補足			初期状態 P/Eノーマルモード
 //////////////////////////////////////////////////////////////////////////
 bool initFlash ( void )
 {	
@@ -211,11 +211,11 @@ bool initFlash ( void )
 	return ret;
 }
 //////////////////////////////////////////////////////////////////////////
-// モジュール名 changeFlashPE						//
-// 処理概要     E2データフラッシュのP/Eモード移行			//
-// 引数         なし							//
-// 戻り値       なし							//
-// 補足		初期状態 P/Eノーマルモード				//
+// モジュール名 changeFlashPE
+// 処理概要     E2データフラッシュのP/Eモード移行
+// 引数         なし
+// 戻り値       なし
+// 補足		初期状態 P/Eノーマルモード
 //////////////////////////////////////////////////////////////////////////
 void changeFlashPE ( void )
 {
@@ -241,10 +241,10 @@ void changeFlashPE ( void )
 	}
 }
 //////////////////////////////////////////////////////////////////////////
-// モジュール名 changeFlashRead					//
-// 処理概要     E2データフラッシュのリードモード移行			//
-// 引数         なし							//
-// 戻り値       なし							//
+// モジュール名 changeFlashRead
+// 処理概要     E2データフラッシュのリードモード移行
+// 引数         なし
+// 戻り値       なし
 //////////////////////////////////////////////////////////////////////////
 void changeFlashRead ( void ) 
 {
@@ -263,11 +263,11 @@ void changeFlashRead ( void )
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////
-// モジュール名 checkBlank							//
-// 処理概要     指定アドレスにブランクチェック					//
-// 引数         Block_number: ブランクチェックするブロック番号			//
-//		Addr_offset: 先頭アドレスからのオフセット値			//
-// 戻り値       0:イレーズ済み　1:書き込み済み -1:エラーあり			//
+// モジュール名 checkBlank
+// 処理概要     指定アドレスにブランクチェック
+// 引数         Block_number: ブランクチェックするブロック番号
+//				Addr_offset: 先頭アドレスからのオフセット値
+// 戻り値       0:イレーズ済み　1:書き込み済み -1:エラーあり
 //////////////////////////////////////////////////////////////////////////////////
 signed char checkBlank ( unsigned int Addr )
 {
@@ -331,10 +331,10 @@ signed char checkBlank ( unsigned int Addr )
 	return ret;
 }
 //////////////////////////////////////////////////////////////////////////////////
-// モジュール名 eraseE2DataFlash						//
-// 処理概要     指定データブロックをイレーズ					//
-// 引数         Block_number: イレーズするブロック番号　			//
-// 戻り値      	0:イレーズ完了 1:イレーズエラー					//
+// モジュール名 eraseE2DataFlash
+// 処理概要     指定データブロックをイレーズ
+// 引数         Block_number: イレーズするブロック番号
+// 戻り値      	0:イレーズ完了 1:イレーズエラー
 //////////////////////////////////////////////////////////////////////////////////
 bool eraseE2DataFlash ( unsigned short Block_number )
 {
@@ -376,11 +376,11 @@ bool eraseE2DataFlash ( unsigned short Block_number )
 	return ret;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-// モジュール名 checkWriteAddr										//
-// 処理概要     startBlockからendbloockまでのイレーズ済み領域を探す					//
-// 引数         startBlock: 開始ブロック番号 	endbloock: 終了ブロック番号				//
-//		startoffset: 開始オフセット値	width_data: 確保するデータ量				//
-// 戻り値       0: イレーズ済み領域あり 1:イレーズ済み領域なし						//
+// モジュール名 checkWriteAddr
+// 処理概要     startBlockからendbloockまでのイレーズ済み領域を探す
+// 引数         startBlock: 開始ブロック番号 	endbloock: 終了ブロック番号
+//				startoffset: 開始オフセット値	width_data: 確保するデータ量
+// 戻り値       0: イレーズ済み領域あり 1:イレーズ済み領域なし
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 void checkWriteAddr ( unsigned int Addr, short endblock, short width_data, short startBlock )
 {
@@ -424,10 +424,10 @@ void checkWriteAddr ( unsigned int Addr, short endblock, short width_data, short
 	nowAddr = leadAddr;
 }
 //////////////////////////////////////////////////////////////////////////////////
-// モジュール名 writeFlash							//
-// 処理概要     指定アドレスに書き込み						//
-// 引数         write_data:書き込むデータのある配列 　width_data:データの個数	//
-// 戻り値       0: 書き込み完了	1: エラーあり					//
+// モジュール名 writeFlash
+// 処理概要     指定アドレスに書き込み
+// 引数         write_data:書き込むデータのある配列 　width_data:データの個数
+// 戻り値       0: 書き込み完了	1: エラーあり
 //////////////////////////////////////////////////////////////////////////////////
 bool writeFlash ( short* write_data, short width_data )
 {
@@ -489,10 +489,10 @@ bool writeFlash ( short* write_data, short width_data )
 	return ret;
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-// モジュール名 readFlashAddr								//
-// 処理概要     指定アドレスの値を読む							//
-// 引数         Addr: E2データフラッシュ領域のアドレス					//
-// 戻り値       Addrの値								//
+// モジュール名 readFlashAddr
+// 処理概要     指定アドレスの値を読む
+// 引数         Addr: E2データフラッシュ領域のアドレス
+// 戻り値       Addrの値
 //////////////////////////////////////////////////////////////////////////////////////////
 short readFlashAddr ( unsigned int Addr )
 {
@@ -513,10 +513,10 @@ short readFlashAddr ( unsigned int Addr )
 	return ret;
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-// モジュール名 readFlashArray								//
-// 処理概要     指定した領域に保存されているアドレス値から指定された数のデータを読む	//
-// 引数         dataarray: 読んだ値を保存する配列 width_data: データの個数		//
-// 戻り値       なし									//
+// モジュール名 readFlashArray
+// 処理概要     指定した領域に保存されているアドレス値から指定された数のデータを読む
+// 引数         dataarray: 読んだ値を保存する配列 width_data: データの個数
+// 戻り値       なし
 //////////////////////////////////////////////////////////////////////////////////////////
 void readFlashArray ( unsigned int Addr, volatile short* dataArray, short width_data )
 {
@@ -535,10 +535,10 @@ void readFlashArray ( unsigned int Addr, volatile short* dataArray, short width_
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-// モジュール名 readFlashArray2								//
-// 処理概要     指定した領域に保存されているアドレス値から指定された数のデータを読む	//
-// 引数         dataarray: 読んだ値を保存する配列 width_data: データの個数		//
-// 戻り値       なし									//
+// モジュール名 readFlashArray2
+// 処理概要     指定した領域に保存されているアドレス値から指定された数のデータを読む
+// 引数         dataarray: 読んだ値を保存する配列 width_data: データの個数
+// 戻り値       なし
 //////////////////////////////////////////////////////////////////////////////////////////
 void readFlashArray2 ( unsigned int Addr, volatile short* dataArray, short width_data, short limitArea )
 {
@@ -573,10 +573,10 @@ void readFlashArray2 ( unsigned int Addr, volatile short* dataArray, short width
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-// モジュール名 readbeforeAddr								//
-// 処理概要     指定ブロック間に記録されているブロック番号、オフセット値を読む		//
-// 引数         startBlock: 開始ブロック番号 	endbloock: 終了ブロック番号		//
-// 戻り値       なし									//
+// モジュール名 readbeforeAddr
+// 処理概要     指定ブロック間に記録されているブロック番号、オフセット値を読む
+// 引数         startBlock: 開始ブロック番号 	endbloock: 終了ブロック番号
+// 戻り値       なし
 //////////////////////////////////////////////////////////////////////////////////////////
 void readbeforeAddr ( short startBlockNumber, short endBlockNumber )
 {
@@ -602,11 +602,11 @@ void readbeforeAddr ( short startBlockNumber, short endBlockNumber )
 	//printf("beforeAddr = %x\n", beforeAddr);
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-// モジュール名 writeFlashData								//
-// 処理概要     指定ブロック間にflashDataBuffを書き込みアドレスを記録する		//
-// 引数          startBlock: 開始ブロック番号 	endbloock: 終了ブロック番号		//
-//		endData: データ保存最後ブロック	width_data: 確保するデータ量		//
-// 戻り値       なし									//
+// モジュール名 writeFlashData
+// 処理概要     指定ブロック間にflashDataBuffを書き込みアドレスを記録する
+// 引数			startBlock: 開始ブロック番号 	endbloock: 終了ブロック番号
+//				endData: データ保存最後ブロック	width_data: 確保するデータ量
+// 戻り値		なし
 //////////////////////////////////////////////////////////////////////////////////////////
 void writeFlashData ( short startBlockNumber, short endBlockNumber, short endData, short width_data )
 {
@@ -629,10 +629,10 @@ void writeFlashData ( short startBlockNumber, short endBlockNumber, short endDat
 	
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-// モジュール名 readFlashSetup								//
-// 処理概要     指定アドレスの値を読む							//
-// 引数         Addr: E2データフラッシュ領域のアドレス					//
-// 戻り値       Addrの値								//
+// モジュール名 readFlashSetup
+// 処理概要     指定アドレスの値を読む
+// 引数         Addr: E2データフラッシュ領域のアドレス
+// 戻り値       Addrの値
 //////////////////////////////////////////////////////////////////////////////////////////
 void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pid_angle, bool pid_speed, bool meter)
 {
@@ -848,10 +848,10 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-// モジュール名 writeFlashBeforeStart							//
-// 処理概要     指定アドレスの値を読む							//
-// 引数         Addr: E2データフラッシュ領域のアドレス					//
-// 戻り値       Addrの値								//
+// モジュール名 writeFlashBeforeStart
+// 処理概要     指定アドレスの値を読む
+// 引数         Addr: E2データフラッシュ領域のアドレス
+// 戻り値       Addrの値
 //////////////////////////////////////////////////////////////////////////////////////////
 void writeFlashBeforeStart ( bool speed, bool C_angle, bool pid_line, bool pid_angle, bool pid_speed, bool meter )
 {

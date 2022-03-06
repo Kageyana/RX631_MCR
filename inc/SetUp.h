@@ -1,25 +1,30 @@
 #ifndef SETUP_H_
 #define SETUP_H_
 //======================================//
-// インクルード                         //
+// インクルード
 //======================================//
-#include "PeripheralFunctions.h"
-#include "LineChase.h"
+#include "io.h"
+#include "mtu.h"
+#include "ADconverter.h"
+#include "control.h"
 #include "E2dataFlash.h"
-#include "I2C_LCD.h"
+#include "AQM1602Y.h"
 #include "MicroSD.h"
-#include "SCI.h"
-#include "I2C_MPU-9255.h"
+#include "sci.h"
+#include "ICM20648.h"
 #include "MemorryTrace.h"
 #include <stdio.h>
 //======================================//
-// シンボル定義                         //
+// シンボル定義
 //======================================//
-#define RIGHT	0
-#define LEFT	1
+#define UD	0
+#define LR		1
+
+#define START_COUNT	1
+#define START_GATE		2
 
 //======================================//
-// グローバル変数の宣言                 //
+// グローバル変数の宣言
 //======================================//
 // パターン関連
 extern char		start;
@@ -35,7 +40,7 @@ extern short		cnt_swL;	// スイッチ長押し判定用左
 extern char fixSpeed;
 
 //======================================//
-// プロトタイプ宣言                     //
+// プロトタイプ宣言
 //======================================//
 void setup(void);
 char fix_speedsetting ( void );
