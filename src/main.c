@@ -112,10 +112,10 @@ void main(void){
 					// if ( stopWord == 1 ) {
 					// 	modeError = 6;
 					// }
-					// // ˆê’èŽžŠÔ‚Å’âŽ~
-					// if( cnt1 >= STOP_COUNT ) {
-					// 	modeError = 7;
-					// }
+					// ˆê’èŽžŠÔ‚Å’âŽ~
+					if( cnt1 >= STOP_COUNT ) {
+						modeError = 7;
+					}
 					if (modeError > 0) {
 						pattern = 101;
 						modeAutoMotor = 0;
@@ -913,7 +913,7 @@ void main(void){
 			targetSpeed = 0;
 			motorPwmOut(motorPwm, motorPwm, motorPwm, motorPwm);
 			
-			if( Encoder <= SPEED_CURRENT && Encoder >= -SPEED_CURRENT ) {
+			if( Encoder <= 3 && Encoder >= -1 ) {
 				enc1 = 0;
 				pattern = 102;
 				break;
@@ -1027,8 +1027,6 @@ void Timer (void) {
 		cntSetup1++;
 		cntSetup2++;
 		cntSetup3++;
-		cnt_swR++;
-		cnt_swL++;
 		cnt_flash++;
 	}
 	cnt1++;

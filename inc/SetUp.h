@@ -33,8 +33,8 @@ extern char		start;
 extern unsigned short 	cntSetup1;
 extern unsigned short 	cntSetup2;
 extern unsigned short 	cntSetup3;	
-extern short		cnt_swR;	// スイッチ長押し判定用右
-extern short		cnt_swL;	// スイッチ長押し判定用左
+extern short		cntSwitchUD;	// スイッチ長押し判定用右
+extern short		cntSwitchLR;	// スイッチ長押し判定用左
 
 // パラメータ関連
 extern char fixSpeed;
