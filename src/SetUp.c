@@ -816,8 +816,7 @@ void setup( void )
 					if ( i > 0 ) {
 						pattern_flash = 1;
 						break;
-					}
-					if ( i < 0 ) {
+					} else if ( i < 0 ) {
 						pattern_flash = 3;
 						break;
 					}

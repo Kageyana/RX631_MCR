@@ -6,7 +6,7 @@
 // グローバル変数の宣言
 //====================================//
 // タイマ関連
-unsigned short			cnt_log;				// ログ漏れ確認用カウント
+unsigned int			cnt_log = 0;				// ログ漏れ確認用カウント
 
 static unsigned char	msdlibBuff[512 + 128];	// 一時保管バッファ
 static volatile short	msdlibMode;				// 状態
@@ -1082,7 +1082,7 @@ void msd_sendToPC ( void )
 				} else {
 					// エラーなし
 					msdWorkaddress += 512;		// microSDのアドレスを+512する
-					msdBuffaddress = 0;		// 配列からの読み込み位置を0に
+					msdBuffaddress = 0;			// 配列からの読み込み位置を0に
 					pattern_send = 3;
 					break;
 				}
@@ -1111,7 +1111,7 @@ void msd_sendToPC ( void )
 				
 				printf("%6d,", CharTouInt (24) );		// EncoderTotal
 				printf("%6d,", CharTouInt (28) );		// enc1
-				printf("%6d", CharToShort (32) );		// cnt_log
+				printf("%6d", CharTouInt (32) );		// cnt_log
 				printf("\n");
 				i += WRITINGTIME;
 				msdBuffaddress += DATA_BYTE;

@@ -11,7 +11,7 @@
 // シンボル定義
 //=======================================//
 #define WRITINGTIME			2		// ログ取得周期(ms)
-#define DATA_BYTE			32		// 一回に保存するデータ数(byte)
+#define DATA_BYTE			40		// 一回に保存するデータ数(byte)
 #define RECODTIME			30000	// 記録時間(ms)
 #define MSD_STARTADDRESS	0		// 開始アドレス
 #define MSD_ENDADDRESS		960000	// 終了アドレス　RECODTIME * DATA_BYTE / WRITINGTIME
@@ -36,7 +36,7 @@
 // グローバル変数の宣言
 //=======================================//
 // タイマ関連
-extern unsigned short		cnt_log;		// ログ漏れ確認用カウント
+extern unsigned int		cnt_log;		// ログ漏れ確認用カウント
 
 // microSD関連
 extern signed char		msdBuff[ 512 ];     // 一時保存バッファ
