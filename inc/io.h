@@ -50,14 +50,14 @@
 // プロトタイプ宣言
 //====================================//
 // IOポート
-void init_IO(void);
+void initIO(void);
 
 // LED関連
-void led_out ( char rgb );
+void ledOut ( char rgb );
 
 // スイッチ関連
 void getSwitch(void);
-unsigned char tasw_get ( void );
-unsigned char dipsw_get( void );
+unsigned char taswGet ( void );
+unsigned char dipswGet( void );
 
 #endif // IO_H_

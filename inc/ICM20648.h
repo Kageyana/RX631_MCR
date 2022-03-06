@@ -131,13 +131,13 @@ extern double 		PichAngleIMU;		// Pich角度
 //==========================//
 // プロトタイプ宣言
 //==========================//
-uint8_t read_byte( uint8_t );
-void write_byte( uint8_t, uint8_t);
-void read_arry( uint8_t reg, char *val);
-uint8_t IMU_init(void);
+uint8_t readByte( uint8_t );
+void writeByte( uint8_t, uint8_t);
+void readArry( uint8_t reg, char *val);
+uint8_t initIMU(void);
 void caribrateIMU(void);
-void read_gyro_data(void);
-void read_accel_data(void);
+void readGyroData(void);
+void readAccelData(void);
 void getTurningAngleIMU(void);
 void getRollAngleIMU(void);
 void getPichAngleIMU( void );

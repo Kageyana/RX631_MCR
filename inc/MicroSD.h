@@ -61,7 +61,7 @@ void msd_write( unsigned char data );
 unsigned char msd_read( void );
 unsigned char msd_CMD ( unsigned char cmd, unsigned char arg1, unsigned char arg2,
 			unsigned char arg3, unsigned char arg4, unsigned char crc );
-char init_msd ( void );
+char initMicroSD ( void );
 void init_log ( void );
 bool getMicroSD_CSD( volatile unsigned char *p );
 char readMicroSD ( unsigned int address, signed char *read );

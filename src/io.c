@@ -9,12 +9,12 @@
 static unsigned char 	dpsw_d[4];	// ディップスイッチの格納先
 static unsigned char	tasw_d[5];	// スイッチ値の格納先
 /////////////////////////////////////////////////////////////////////
-// モジュール名 init_IO
+// モジュール名 initIO
 // 処理概要     IOポートの初期化
 // 引数         なし
 // 戻り値       なし
 /////////////////////////////////////////////////////////////////////
-void init_IO(void)
+void initIO(void)
 {
 	// I/Oポートを設定
 	R_PG_IO_PORT_Set_P1();
@@ -37,12 +37,12 @@ void init_IO(void)
 	R_PG_IO_PORT_Write_PE(0);
 }
 /////////////////////////////////////////////////////////////////////
-// モジュール名 led_out
+// モジュール名 ledOut
 // 処理概要     LEDの点灯
 // 引数         rgb 	0x1:青 0x2緑 0x4
 // 戻り値       なし
 /////////////////////////////////////////////////////////////////////
-void led_out ( char rgb )
+void ledOut ( char rgb )
 {
 	if ( (rgb & 0x4) == 0x4 ) LEDR_ON
 	else LEDR_OFF
@@ -75,12 +75,12 @@ void getSwitch(void)
 	DIPSWITCH4
 }
 /////////////////////////////////////////////////////////////////////
-// モジュール名 dipsw_get
+// モジュール名 dipswGet
 // 処理概要     ディップスイッチ値を16進数で取得
 // 引数         なし
 // 戻り値       スイッチ値 0～15
 /////////////////////////////////////////////////////////////////////
-unsigned char dipsw_get(void) 
+unsigned char dipswGet(void) 
 {
 	char	dpsw[4];
 	
@@ -99,12 +99,12 @@ unsigned char dipsw_get(void)
 	return ( dpsw[0] + dpsw[1] + dpsw[2] + dpsw[3] );
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 tasw_get
+// モジュール名 taswGet
 // 処理概要     タクトスイッチ値を16進数で取得
 // 引数         なし
 // 戻り値       スイッチ値 0～7
 ///////////////////////////////////////////////////////////////////////////
-unsigned char tasw_get(void) 
+unsigned char taswGet(void) 
 {
 	char	tasw[5];
 	

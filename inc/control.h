@@ -91,9 +91,9 @@
 // パターン、モード関連
 extern char pattern;		// パターン番号
 extern char mode_lcd;		// LCD表示選択
-extern char mode_slope;		// 坂チェック		0:上り坂始め	1:上り坂終わり	2:下り坂始め	3:下り坂終わり
-extern char	mode_angle;		// サーボPWM変更	0:白線トレース	1:角度制御
-extern char	mode_pushcart;	// 手押しモード可否	0:自動走行	1:手押し
+extern char modeSlope;		// 坂チェック		0:上り坂始め	1:上り坂終わり	2:下り坂始め	3:下り坂終わり
+extern char	modeAngle;		// サーボPWM変更	0:白線トレース	1:角度制御
+extern char	modePushcart;	// 手押しモード可否	0:自動走行	1:手押し
 extern char	msdset;			// MicroSDが初期化されたか	0:初期化失敗	1:初期化成功
 extern char	IMUSet;			// IMUが初期化されたか	0: 初期化失敗	1:初期化成功
 
@@ -133,7 +133,7 @@ extern short	angle_rightchange;		    // 右レーンチェンジ旋回角度
 extern short	angle_leftchange;		    // 右レーンチェンジ旋回角度
 
 // タイマ関連
-extern short	cnt_gyro;			// 角度計算用カウンタ
+extern short	cntGyro;			// 角度計算用カウンタ
 
 // 角度関連
 extern double 	TurningAngleEnc;	// エンコーダから求めた旋回角度
@@ -161,13 +161,13 @@ extern signed char 	ServoPwm2;	// 角度サーボPWM
 // プロトタイプ宣言
 //====================================//
 // マーカー関連
-bool check_crossline( void );
-bool check_rightline( void );
-bool check_leftline( void );
-signed char check_slope( void );
+bool checkCrossLine( void );
+bool checkRightLine( void );
+bool checkLeftLine( void );
+signed char checkSlope( void );
 
 // エンコーダ関連
-unsigned int enc_mm( short mm );
+unsigned int encMM( short mm );
 
 // モーター関連
 void motorControl( void );
@@ -176,7 +176,7 @@ void motorControl( void );
 void diff ( signed char pwm );
 
 // サーボ関連
-void servoControl( void );
-void servoControl2( void );
+void servoControlTrace( void );
+void servoControlAngle( void );
 
 #endif // LINECHASE_H_

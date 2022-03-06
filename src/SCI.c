@@ -8,13 +8,13 @@
 //====================================//
 char		revErr = 0;			// 通信エラー番号
 // SCI1関連
-char		SCI1_mode;			// 通信方式
-char		txt_command[128];	// コマンド格納
-char		txt_data[128];		// データ格納
+char		modeSCI1;			// 通信方式
+char		txtCommand[128];	// コマンド格納
+char		txtData[128];		// データ格納
 char*	txt;					// 受信データ格納
 char		cmmandMode = 0;		// コマンド選択
 char		stopWord = 0;		// 0: 停止ワード未受信 1:停止ワード受信
-short 	cnt_byte = 0;			// 受信したバイト数
+short 	cntByte = 0;			// 受信したバイト数
 char 		command = 0;		// 0:コマンド受信待ち 1:コマンド入力中 2:コマンド判定中
 
 char		SCI1_Req_mode;		// 0:スタート 1:ストップ 2:データ送受信中
@@ -33,12 +33,12 @@ char*		SCI12_DataArry;			// データ配列
 char*		SCI1_DataArry2;			// 送信データ配列2
 char		SCI12_DataBuff[255];	// 送信データバッファ
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 init_SCI1
+// モジュール名 initSCI1
 // 処理概要     SCI1の初期化
 // 引数         mode: 通信方式 rate:ボーレートをbpsで入力
 // 戻り値       なし
 ///////////////////////////////////////////////////////////////////////////
-void init_SCI1( char rate )
+void initSCI1( char rate )
 {
 	unsigned char brr,abcs;
 	
@@ -127,12 +127,12 @@ void init_SCI1( char rate )
 	SCI1.SCR.BIT.RE = 1;			// Enable RX
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 init_SCI6
+// モジュール名 initSCI6
 // 処理概要     SCI1の初期化
 // 引数         mode: 通信方式 rate:ボーレートをbpsで入力
 // 戻り値       なし
 ///////////////////////////////////////////////////////////////////////////
-void init_SCI6( char rate )
+void initSCI6( char rate )
 {
 	unsigned char brr,abcs;
 	

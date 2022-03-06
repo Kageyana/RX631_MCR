@@ -7,9 +7,9 @@
 //====================================//
 // モード関連
 char 	mode_lcd = 1;		// LCD表示可否		1:表示		0:消灯		
-char 	mode_slope;			// 坂チェック		0:上り坂始め	1:上り坂終わり	2:下り坂始め
-char 	mode_angle;			// サーボPWM変更	0:白線トレース	1:角度制御
-char	mode_pushcart;		// 手押しモード可否	0:自動走行	1:手押し
+char 	modeSlope;			// 坂チェック		0:上り坂始め	1:上り坂終わり	2:下り坂始め
+char 	modeAngle;			// サーボPWM変更	0:白線トレース	1:角度制御
+char	modePushcart;		// 手押しモード可否	0:自動走行	1:手押し
 char	msdset;				// MicroSDが初期化されたか	0:初期化失敗	1:初期化成功
 char	IMUSet = 0;			// IMUが初期化されたか		0: 初期化失敗	1:初期化成功
 
@@ -49,7 +49,7 @@ short	angle_rightchange;		// 右レーンチェンジ旋回角度
 short	angle_leftchange;		// 右レーンチェンジ旋回角度
 
 // タイマ関連
-short		cnt_gyro;			// 角度計算用カウンタ
+short		cntGyro;			// 角度計算用カウンタ
 
 // 角度関連
 double 		TurningAngleEnc;	// エンコーダから求めた旋回角度
@@ -87,45 +87,45 @@ char	kp2_buff, ki2_buff, kd2_buff;
 char 	kp3_buff, ki3_buff, kd3_buff;
 
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 check_crossline
+// モジュール名 checkCrossLine
 // 処理概要     クロスライン検知
 // 引数         なし
 // 戻り値       0:クロスラインなし 1:あり
 ///////////////////////////////////////////////////////////////////////////
-bool check_crossline( void )
+bool checkCrossLine( void )
 {
 	if ( sensor_inp() == 0x7 ) return true;
 	else return false;
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 check_rightline
+// モジュール名 checkRightLine
 // 処理概要     右ハーフライン検出処理
 // 引数         なし
 // 戻り値       0:右ハーフラインなし 1:あり
 ///////////////////////////////////////////////////////////////////////////
-bool check_rightline( void )
+bool checkRightLine( void )
 {
 	if ( sensor_inp() == 0x3 ) return true;
 	else return false;
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 check_leftline
+// モジュール名 checkLeftLine
 // 処理概要     左ハーフライン検出処理
 // 引数         なし
 // 戻り値       0:左ハーフラインなし 1:あり
 ///////////////////////////////////////////////////////////////////////////
-bool check_leftline( void )
+bool checkLeftLine( void )
 {
 	if ( sensor_inp() == 0x6 ) return true;
 	else return false;
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 check_slope
+// モジュール名 checkSlope
 // 処理概要     ジャイロセンサの値から坂道検出
 // 引数         なし
 // 戻り値       0:坂道なし 1:上り坂　-1:下り坂
 ///////////////////////////////////////////////////////////////////////////
-signed char check_slope( void )
+signed char checkSlope( void )
 {
 	signed char ret = 0;
 
@@ -135,22 +135,22 @@ signed char check_slope( void )
 	return ret;
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 enc_mm
+// モジュール名 encMM
 // 処理概要     mmをエンコーダのパルス数に変換して返す
 // 引数         mm:変換する長さ[mm]
 // 戻り値       変換したパルス数
 ///////////////////////////////////////////////////////////////////////////
-unsigned int enc_mm( short mm )
+unsigned int encMM( short mm )
 {
 	return PALSE_MILLIMETER * mm;
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 servoControl
+// モジュール名 servoControlTrace
 // 処理概要     ライントレース時サーボのPWMの計算
 // 引数         なし
 // 戻り値       なし
 ///////////////////////////////////////////////////////////////////////////
-void servoControl( void )
+void servoControlTrace( void )
 {
 	int iP, iD, iI, iRet, maxpwm;
 	short Dev, Dif;
@@ -185,12 +185,12 @@ void servoControl( void )
 	SensorBefore = Dev;				// 次回はこの値が1ms前の値となる
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 servoControl2
+// モジュール名 servoControlAngle
 // 処理概要     角度制御時サーボのPWMの計算
 // 引数         なし
 // 戻り値       なし
 ///////////////////////////////////////////////////////////////////////////
-void servoControl2( void )
+void servoControlAngle( void )
 {
 	short i, j, Dev, Dif;
 	int iP, iD, iI, iRet, maxpwm;

@@ -15,12 +15,12 @@ double 		TurningAngleIMU;	// yaw軸角度
 double		RollAngleIMU;		// Roll角度
 double 		PichAngleIMU;		// Pich角度
 /////////////////////////////////////////////////////////////////////
-// モジュール名 read_byte
+// モジュール名 readByte
 // 処理概要     クロスライン検知
 // 引数         なし
 // 戻り値       0:クロスラインなし 1:あり
 ////////////////////////////////////////////////////////////////////
-uint8_t read_byte( uint8_t reg ) {
+uint8_t readByte( uint8_t reg ) {
 	uint8_t ret[1],val[1],dummy[1];
 	
 	ret[0] = reg | 0x80;
@@ -32,12 +32,12 @@ uint8_t read_byte( uint8_t reg ) {
 	return val[0];
 }
 /////////////////////////////////////////////////////////////////////
-// モジュール名 write_byte
+// モジュール名 writeByte
 // 処理概要     クロスライン検知
 // 引数         なし
 // 戻り値       0:クロスラインなし 1:あり
 ////////////////////////////////////////////////////////////////////
-void write_byte( uint8_t reg, uint8_t val )  {
+void writeByte( uint8_t reg, uint8_t val )  {
 	uint8_t ret[1],dummy[1],val2[1];
 	
 	ret[0] = reg & 0x7F;
@@ -48,12 +48,12 @@ void write_byte( uint8_t reg, uint8_t val )  {
 	CS_SET;
 }
 /////////////////////////////////////////////////////////////////////
-// モジュール名 read_arry
+// モジュール名 readArry
 // 処理概要     クロスライン検知
 // 引数         なし
 // 戻り値       0:クロスラインなし 1:あり
 ////////////////////////////////////////////////////////////////////
-void read_arry( uint8_t reg, char *val ) {
+void readArry( uint8_t reg, char *val ) {
 	uint8_t ret[1],dummy[1];
 	
 	ret[0] = reg | 0x80;
@@ -64,30 +64,30 @@ void read_arry( uint8_t reg, char *val ) {
 	
 }
 /////////////////////////////////////////////////////////////////////
-// モジュール名 check_crossline
+// モジュール名 checkCrossLine
 // 処理概要     クロスライン検知
 // 引数         なし
 // 戻り値       0:クロスラインなし 1:あり
 ////////////////////////////////////////////////////////////////////
-uint8_t IMU_init() {
+uint8_t initIMU() {
 
 	
-	who_am_i = read_byte(0x00);	//IMU動作確認　0xE0が送られてくればおｋ
+	who_am_i = readByte(0x00);	//IMU動作確認　0xE0が送られてくればおｋ
 	if ( who_am_i == 0xE0 ) {
 		ret = 1;
-		write_byte(PWR_MGMT_1,0x01);	//PWR_MGMT_1	スリープﾓｰﾄﾞ解除
-		write_byte(USER_CTRL,0x10);		//USER_CTRL	諸々機能無効　SPIonly
-		write_byte(REG_BANK_SEL,0x20);	//USER_BANK2
-		write_byte(GYRO_CONFIG_1,0x04);	//レンジ±1000dps
+		writeByte(PWR_MGMT_1,0x01);	//PWR_MGMT_1	スリープﾓｰﾄﾞ解除
+		writeByte(USER_CTRL,0x10);		//USER_CTRL	諸々機能無効　SPIonly
+		writeByte(REG_BANK_SEL,0x20);	//USER_BANK2
+		writeByte(GYRO_CONFIG_1,0x04);	//レンジ±1000dps
 		//2:1 GYRO_FS_SEL[1:0] 00:±250	01:±500 10:±1000 11:±2000
-		write_byte(ACCEL_CONFIG,0x04);	//レンジ±8g
+		writeByte(ACCEL_CONFIG,0x04);	//レンジ±8g
 		//2:1 ACCEL_FS_SEL[1:0] 00:±2	01:±4 10:±8 11:±16
-		write_byte(REG_BANK_SEL,0x00);	//USER_BANK0
+		writeByte(REG_BANK_SEL,0x00);	//USER_BANK0
 	}
 	return ret;
 }
 /////////////////////////////////////////////////////////////////////
-// モジュール名 check_crossline
+// モジュール名 checkCrossLine
 // 処理概要     クロスライン検知
 // 引数         なし
 // 戻り値       0:クロスラインなし 1:あり
@@ -100,7 +100,7 @@ void caribrateIMU(void)
 	
 	//STOP_CMT_C0
 	for ( i = 0; i < SAMPLE; i++ ) {
-		read_arry(GYRO_XOUT_H, val);
+		readArry(GYRO_XOUT_H, val);
 		for ( j = 0; j < 3; j++ ) {
 			axisData[j] = (short)((val[j * 2] << 8 & 0xff00 ) | val[j * 2 + 1]);
 			axisData[j] = axisData[j] & 0xfff8;
@@ -128,14 +128,14 @@ void caribrateIMU(void)
 	//START_CMT_C0
 }
 /////////////////////////////////////////////////////////////////////
-// モジュール名 check_crossline
+// モジュール名 checkCrossLine
 // 処理概要     クロスライン検知
 // 引数         なし
 // 戻り値       0:クロスラインなし 1:あり
 ////////////////////////////////////////////////////////////////////
-void read_gyro_data() {
+void readGyroData() {
 	char val[6];
-	read_arry(GYRO_XOUT_H, val);
+	readArry(GYRO_XOUT_H, val);
 	
 	xg = (int16_t)((val[0] << 8 & 0xff00 ) | val[1]);
 	yg = (int16_t)((val[2] << 8 & 0xff00 ) | val[3]);
@@ -149,14 +149,14 @@ void read_gyro_data() {
 	else		zg -= offset[2];*/
 }
 /////////////////////////////////////////////////////////////////////
-// モジュール名 check_crossline
+// モジュール名 checkCrossLine
 // 処理概要     クロスライン検知
 // 引数         なし
 // 戻り値       0:クロスラインなし 1:あ
 ////////////////////////////////////////////////////////////////////
-void read_accel_data() {
+void readAccelData() {
 	char val[6];
-	read_arry(ACCEL_XOUT_H, val);
+	readArry(ACCEL_XOUT_H, val);
 	
 	xa = ((int16_t)val[0] << 8) | ((int16_t)val[1]);
 	ya = ((int16_t)val[2] << 8) | ((int16_t)val[3]);

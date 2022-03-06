@@ -49,13 +49,13 @@ void HardwareSetup(void)
 	
 	SET_SCI_C2
 	SET_SCI_MSD		// シリアルI/Oチャネルを設定(SPI microSd)
-	init_SCI6( RATE_230400 );		// シリアルI/Oチャネルを設定(UART)
+	initSCI6( RATE_230400 );		// シリアルI/Oチャネルを設定(UART)
 	SET_SCI_LCD 		// シリアルI/Oチャネルを設定(I2C)
 	
 	SET_CMT_C0		// コンペアマッチタイマを設定(ch0)
 	SET_CMT_MSD		// コンペアマッチタイマを設定(ch2)
 	
-	init_IO();			// IOポートの初期化
+	initIO();			// IOポートの初期化
 	
 	SET_ADC			// 12ビットA/Dコンバータ(S12AD0)を設定
 	

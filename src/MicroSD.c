@@ -92,12 +92,12 @@ unsigned char msd_CMD ( unsigned char cmd, unsigned char arg1, unsigned char arg
 	return ret;
 }
 ///////////////////////////////////////////////////////////////////////////
-// モジュール名 init_msd
+// モジュール名 initMicroSD
 // 処理概要     MicroSDの初期化
 // 引数         なし
 // 戻り値       0:初期化成功	1以上:初期化失敗
 ///////////////////////////////////////////////////////////////////////////
-char init_msd ( void )
+char initMicroSD ( void )
 {
 	uint8_t sd_sw;
 	volatile unsigned char pattern_intimsd = 1, ret = 0, response_register[ 16 ];
@@ -933,7 +933,7 @@ char msdEndLog ( void )
 				// 最後のデータが書き込まれるまで待つ
 				if ( checkMicroSDProcess() == 11 ) {
 					msdFlag = 0;			// ログ記録終了
-					microSDProcessEnd();        // microSDProcess終了処理
+					microSDProcessEnd();	// microSDProcess終了処理
 					pattern_msdend = 1;
 					break;
 				} else if ( checkMicroSDProcess() == 0 ) {
@@ -982,7 +982,7 @@ void sendLog (char c, char s, char i, ...) {
 		send_Char			(	pattern		);
 		send_Char			(	motorPwm 	);
 		send_Char			(	sensor_inp() 	);
-		send_Char			( 	mode_slope	);
+		send_Char			( 	modeSlope	);
 		send_Char			(	(char)Encoder		);
 		send_Char			(	sPwm		);
 		send_Char			(	(char)PichAngleIMU*10	);
@@ -1026,7 +1026,7 @@ void msd_sendToPC ( void )
 	volatile char pattern_send = 1;
 	
 	while ( pattern_send < 4 ) {
-		if( tasw_get() == 0x2 ) {
+		if( taswGet() == 0x2 ) {
 			msdWorkaddress = msdEndaddress;
 			pattern_send = 2;
 		}
@@ -1038,7 +1038,7 @@ void msd_sendToPC ( void )
 				printf(	"pattern,"			);
 				printf(	"MotorPwm,"		);
 				printf(	"sensor_inp(),"		);
-				printf(	"mode_slope,"		);
+				printf(	"modeSlope,"		);
 				printf(	"Encoder,"			);
 				printf(	"sPwm,"		);
 				printf(	"PichAngleIMU,"		);
@@ -1094,7 +1094,7 @@ void msd_sendToPC ( void )
 				printf("%5d,", msdBuff[ msdBuffaddress + 0 ]);	// pattern
 				printf("%5d,", msdBuff[ msdBuffaddress + 1 ]);	// motorPwm
 				printf("%5d,", msdBuff[ msdBuffaddress + 2 ]);	// sensor_inp()
-				printf("%5d,", msdBuff[ msdBuffaddress + 3 ]);	// mode_slope
+				printf("%5d,", msdBuff[ msdBuffaddress + 3 ]);	// modeSlope
 				printf("%5d,", msdBuff[ msdBuffaddress + 4 ]);	// Encoder
 				printf("%5d,", msdBuff[ msdBuffaddress + 5 ]);	// targetSpeed
 				printf("%5d,", msdBuff[ msdBuffaddress + 6 ] / 10 );	// PichAngleIMU

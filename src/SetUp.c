@@ -8,9 +8,9 @@
 char 	start;		// 0:セットアップ中	1:セットアップ完了
 
 // タイマ関連
-unsigned short 		cnt_setup;		// セットアップで使用
-unsigned short 		cnt_setup2;		// セットアップで使用
-unsigned short 		cnt_setup3;		// セットアップで使用
+unsigned short 		cntSetup1;		// セットアップで使用
+unsigned short 		cntSetup2;		// セットアップで使用
+unsigned short 		cntSetup3;		// セットアップで使用
 short				cnt_swR;		// スイッチ長押し判定用右
 short				cnt_swL;		// スイッチ長押し判定用左
 
@@ -64,7 +64,7 @@ void setup( void )
 	uint8_t sd_sw;
 	
 	// ディップスイッチで項目選択
-	switch ( dipsw_get() ) {
+	switch ( dipswGet() ) {
 		//------------------------------------------------------------------
 		// スタート待ち
 		//------------------------------------------------------------------
@@ -73,23 +73,23 @@ void setup( void )
 			lcdRowPrintf(LOWROW, "STOP %2dm", stopping_meter );
 			
 			// ゲート検出
-			if ( startbar_get() ) led_out(LED_B);
-			else 	led_out(LED_R);
+			if ( startbar_get() ) ledOut(LED_B);
+			else 	ledOut(LED_R);
 			// 停止距離入力
 			data_tuning ( &stopping_meter, 1, UD );
 			
-			mode_angle = 0;
+			modeAngle = 0;
 			data_select( &servo_test, SW_RIGHT );
 			if ( servo_test == 1 ) servoPwmOut( ServoPwm );
 			else servoPwmOut( 0 );
 			
 			// プッシュスイッチ押下待ち
-			if ( tasw_get() == SW_PUSH ) {
+			if ( taswGet() == SW_PUSH ) {
 				start = START_COUNT;
-			} else if ( tasw_get() == SW_LEFT ) {
+			} else if ( taswGet() == SW_LEFT ) {
 				start = START_GATE;
-			} else if ( tasw_get() == SW_RIGHT ) {
-				mode_pushcart = 1;
+			} else if ( taswGet() == SW_RIGHT ) {
+				modePushcart = 1;
 				start = START_COUNT;
 			}
 			
@@ -321,7 +321,7 @@ void setup( void )
 			lcdRowPrintf(UPROW, "kp ki kd");
 			
 			data_select( &servo_test, SW_PUSH );
-			mode_angle = 0;
+			modeAngle = 0;
 			if ( servo_test == 1 ) servoPwmOut( ServoPwm );
 			else servoPwmOut( 0 );
 			
@@ -333,8 +333,8 @@ void setup( void )
 				case 1:
 					// kp
 					//値を点滅
-					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
+					if ( cntSetup1 >= 500 ) cntSetup1 = 0;
+					if ( cntSetup1 < 250 ) {
 						lcdRowPrintf(LOWROW, "   %2d %2d", ki_buff, kd_buff);
 					} else {
 						lcdRowPrintf(LOWROW, "%2d %2d %2d", kp_buff, ki_buff, kd_buff);
@@ -345,8 +345,8 @@ void setup( void )
 				case 2:
 					// ki
 					//値を点滅
-					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
+					if ( cntSetup1 >= 500 ) cntSetup1 = 0;
+					if ( cntSetup1 < 250 ) {
 						lcdRowPrintf(LOWROW, "%2d    %2d", kp_buff, kd_buff);
 					} else {
 						lcdRowPrintf(LOWROW, "%2d %2d %2d", kp_buff, ki_buff, kd_buff);
@@ -357,8 +357,8 @@ void setup( void )
 				case 3:
 					// kd
 					//値を点滅
-					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
+					if ( cntSetup1 >= 500 ) cntSetup1 = 0;
+					if ( cntSetup1 < 250 ) {
 						lcdRowPrintf(LOWROW, "%2d %2d   ", kp_buff, ki_buff);
 					} else {
 						lcdRowPrintf(LOWROW, "%2d %2d %2d", kp_buff, ki_buff, kd_buff);
@@ -375,7 +375,7 @@ void setup( void )
 			lcdRowPrintf(UPROW, "kp ki kd");
 			
 			data_select( &servo_test2, SW_PUSH );
-			mode_angle = 1;
+			modeAngle = 1;
 			if ( servo_test == 1 ) servoPwmOut( ServoPwm2 );
 			else servoPwmOut( 0 );
 			if ( servo_test2 == 1 ) SetAngle = 700;
@@ -389,8 +389,8 @@ void setup( void )
 				case 1:
 					// kp2
 					//値を点滅
-					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
+					if ( cntSetup1 >= 500 ) cntSetup1 = 0;
+					if ( cntSetup1 < 250 ) {
 						lcdRowPrintf(LOWROW, "   %2d %2d", ki2_buff, kd2_buff);
 					} else {
 						lcdRowPrintf(LOWROW, "%2d %2d %2d", kp2_buff, ki2_buff, kd2_buff);
@@ -400,8 +400,8 @@ void setup( void )
 				case 2:
 					// ki2
 					//値を点滅
-					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
+					if ( cntSetup1 >= 500 ) cntSetup1 = 0;
+					if ( cntSetup1 < 250 ) {
 						lcdRowPrintf(LOWROW, "%2d    %2d", kp2_buff, kd2_buff);
 					} else {
 						lcdRowPrintf(LOWROW, "%2d %2d %2d", kp2_buff, ki2_buff, kd2_buff);
@@ -411,8 +411,8 @@ void setup( void )
 				case 3:
 					// kd2
 					//値を点滅
-					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
+					if ( cntSetup1 >= 500 ) cntSetup1 = 0;
+					if ( cntSetup1 < 250 ) {
 						lcdRowPrintf(LOWROW, "%2d %2d   ", kp2_buff, ki2_buff);
 					} else {
 						lcdRowPrintf(LOWROW, "%2d %2d %2d", kp2_buff, ki2_buff, kd2_buff);
@@ -435,8 +435,8 @@ void setup( void )
 				case 1:
 					// kp3
 					//値を点滅
-					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
+					if ( cntSetup1 >= 500 ) cntSetup1 = 0;
+					if ( cntSetup1 < 250 ) {
 						lcdRowPrintf(LOWROW, "   %2d %2d", ki3_buff, kd3_buff );
 					} else {
 						lcdRowPrintf(LOWROW, "%2d %2d %2d", kp3_buff, ki3_buff, kd3_buff );
@@ -446,8 +446,8 @@ void setup( void )
 				case 2:
 					// ki3
 					//値を点滅
-					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
+					if ( cntSetup1 >= 500 ) cntSetup1 = 0;
+					if ( cntSetup1 < 250 ) {
 						lcdRowPrintf(LOWROW, "%2d    %2d", kp3_buff, kd3_buff );
 					} else {
 						lcdRowPrintf(LOWROW, "%2d %2d %2d", kp3_buff, ki3_buff, kd3_buff );
@@ -458,8 +458,8 @@ void setup( void )
 				case 3:
 					// kd3
 					//値を点滅
-					if ( cnt_setup >= 500 ) cnt_setup = 0;
-					if ( cnt_setup < 250 ) {
+					if ( cntSetup1 >= 500 ) cntSetup1 = 0;
+					if ( cntSetup1 < 250 ) {
 						lcdRowPrintf(LOWROW, "%2d %2d   ", kp3_buff, ki3_buff );
 					} else {
 						lcdRowPrintf(LOWROW, "%2d %2d %2d", kp3_buff, ki3_buff, kd3_buff );
@@ -484,7 +484,7 @@ void setup( void )
 					
 					data_select( &setting_1meter, SW_PUSH );
 					if ( setting_1meter == 1 ) {
-						fix_speedsetting();
+						fixSpeedSetting();
 						setting_2meter = 0;
 						setting_3meter = 0;
 					} else {
@@ -499,7 +499,7 @@ void setup( void )
 					
 					data_select( &setting_2meter, SW_PUSH );
 					if ( setting_2meter == 1 ) {
-						fix_speedsetting();
+						fixSpeedSetting();
 						setting_1meter = 0;
 						setting_3meter = 0;
 					} else {
@@ -514,7 +514,7 @@ void setup( void )
 					
 					data_select( &setting_3meter, SW_PUSH );
 					if ( setting_3meter == 1 ) {
-						fix_speedsetting();
+						fixSpeedSetting();
 						setting_1meter = 0;
 						setting_2meter = 0;
 					} else {
@@ -530,7 +530,7 @@ void setup( void )
 		//------------------------------------------------------------------
 		case 0x9:
 			data_tuning ( &pattern_sensor, 1, LR );
-			mode_angle = 0;
+			modeAngle = 0;
 			
 			if ( pattern_sensor == 14 ) pattern_sensor = 1;
 			else if ( pattern_sensor == 0 ) pattern_sensor = 13;
@@ -541,12 +541,12 @@ void setup( void )
 					lcdRowPrintf(UPROW, "LED     ");
 					lcdRowPrintf(LOWROW, "        ");
 					cnt_led = 0x00;
-					if ( tasw_get() == SW_PUSH) {
+					if ( taswGet() == SW_PUSH) {
 						while(1){
 						while( cnt_led <= 0x7 ) {
-							led_out( cnt_led );
+							ledOut( cnt_led );
 							cnt_led++;
-							wait_lcd(200);
+							waitLcd(200);
  						}
 						cnt_led = 0x00;
 						}
@@ -555,10 +555,10 @@ void setup( void )
 					
 				case 2:
 					// ジャイロ
-					if ( tasw_get() == SW_TOP ) PichAngleIMU = 0;
-					if ( tasw_get() == SW_DOWN ) RollAngleIMU = 0;
-					if ( cnt_setup >= 100 ) {
-						cnt_setup = 0;
+					if ( taswGet() == SW_TOP ) PichAngleIMU = 0;
+					if ( taswGet() == SW_DOWN ) RollAngleIMU = 0;
+					if ( cntSetup1 >= 100 ) {
+						cntSetup1 = 0;
 						lcdRowPrintf(UPROW, "Roll%4d", (short)RollAngleIMU);
 						lcdRowPrintf(LOWROW, "Pich%4d",(short)PichAngleIMU);
 					}
@@ -567,8 +567,8 @@ void setup( void )
 				case 3:
 					// エンコーダ
 					lcdRowPrintf(UPROW, "Encoder ");
-					if ( cnt_setup >= 100 ) {
-						cnt_setup = 0;
+					if ( cntSetup1 >= 100 ) {
+						cntSetup1 = 0;
 						// lcdRowPrintf(LOWROW, "   %4.1f",(double)EncoderTotal/PALSE_MILLIMETER);
 						// lcdRowPrintf(LOWROW, "   %5d",EncoderTotal);
 						lcdRowPrintf(LOWROW, "   %5d",Encoder);
@@ -578,16 +578,16 @@ void setup( void )
 				case 4:
 					// ポテンションメーター
 					lcdRowPrintf(UPROW, "Angle   ");
-					if ( cnt_setup >= 100 ) {
-						cnt_setup = 0;
+					if ( cntSetup1 >= 100 ) {
+						cntSetup1 = 0;
 						lcdRowPrintf(LOWROW, "   %5d",getServoAngle());
 					}
 					break;
 					
 				case 5:
 					// アナログセンサ
-					if ( cnt_setup >= 100 ) {
-						cnt_setup = 0;
+					if ( cntSetup1 >= 100 ) {
+						cntSetup1 = 0;
 						lcdRowPrintf(UPROW, "R   %4d",sensorR);
 						lcdRowPrintf(LOWROW, "L   %4d",sensorL);
 					}
@@ -597,8 +597,8 @@ void setup( void )
 					// デジタル風アナログセンサ, ゲートセンサ
 					motor_test = 0;
 					data_tuning ( &sensorG_th, 1, UD );
-					if ( cnt_setup >= 100 ) {
-						cnt_setup = 0;
+					if ( cntSetup1 >= 100 ) {
+						cntSetup1 = 0;
 						startbar_get();
 						lcdRowPrintf(UPROW, "G%3d%4d", sensorG_th, sensorG);
 						lcdRowPrintf(LOWROW, "D    0x%x", sensor_inp());
@@ -634,8 +634,8 @@ void setup( void )
 					lcdRowPrintf(UPROW, "gASensor");
 					
 					motor_test = 0;
-					if ( cnt_setup >= 100 ) {
-						cnt_setup = 0;
+					if ( cntSetup1 >= 100 ) {
+						cntSetup1 = 0;
 						lcdRowPrintf(LOWROW, "   %5d", getAnalogSensor());
 					}
 					break;
@@ -644,14 +644,14 @@ void setup( void )
 					// 旋回角度
 					lcdRowPrintf(UPROW, "IMU %4d", (short)TurningAngleIMU);
 					lcdRowPrintf(LOWROW, "        ");
-					if ( tasw_get() == SW_PUSH ) TurningAngleIMU = 0;
-					if ( tasw_get() == SW_TOP ) caribrateIMU();
+					if ( taswGet() == SW_PUSH ) TurningAngleIMU = 0;
+					if ( taswGet() == SW_TOP ) caribrateIMU();
 					break;
 					
 				case 11:
 					// IMU
-					if ( cnt_setup >= 500 ) {
-						cnt_setup = 0;
+					if ( cntSetup1 >= 500 ) {
+						cntSetup1 = 0;
 						lcdRowPrintf(UPROW, "xa%2.3f",(double)xa / ACCELLSB);
 						lcdRowPrintf(LOWROW, "ya%2.3f",(double)ya / ACCELLSB);
 					}
@@ -659,8 +659,8 @@ void setup( void )
 					
 				case 12:
 					// IMU
-					if ( cnt_setup >= 500 ) {
-						cnt_setup = 0;
+					if ( cntSetup1 >= 500 ) {
+						cntSetup1 = 0;
 						lcdRowPrintf(UPROW, "za%2.3f",(double)za / ACCELLSB);
 						lcdRowPrintf(LOWROW, "xg%2.3f",(double)xg/GYROLSB);
 					}
@@ -668,8 +668,8 @@ void setup( void )
 					
 				case 13:
 					// IMU
-					if ( cnt_setup >= 500 ) {
-						cnt_setup = 0;
+					if ( cntSetup1 >= 500 ) {
+						cntSetup1 = 0;
 						lcdRowPrintf(UPROW, "yg%2.3f",(double)yg/GYROLSB);
 						lcdRowPrintf(LOWROW, "zg%2.3f",(double)zg/GYROLSB);
 					}
@@ -681,8 +681,8 @@ void setup( void )
 		//------------------------------------------------------------------
 		case 0xa:
 			lcdRowPrintf(UPROW, "DEMO%4d",motorPwm);
-			if ( cnt_setup >= 500 ) {
-					cnt_setup = 0;
+			if ( cntSetup1 >= 500 ) {
+					cntSetup1 = 0;
 					printf("DEMO %5d %5d\n",motorPwm, Encoder);
 				}
 			targetSpeed  = 0;
@@ -703,7 +703,7 @@ void setup( void )
 			lcdRowPrintf(UPROW, "MicroSD%d",sd_sw);
 			
 			servo_test = 0;
-			mode_angle = 0;
+			modeAngle = 0;
 			data_tuning ( &pattern_msd, 1, LR );
 			if ( pattern_msd == 13 ) pattern_msd = 1;
 			else if ( pattern_msd == 0 ) pattern_msd = 12;
@@ -726,10 +726,10 @@ void setup( void )
 					} else {
 						lcdRowPrintf(LOWROW, "data%2d  ",pattern_msd);
 					}
-					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
+					if ( taswGet() == SW_PUSH && push1 == 0 ) {
 						push1 = 1;
 						msd_sendToPC();
-					}else if ( tasw_get() == 0x0 ) {
+					}else if ( taswGet() == 0x0 ) {
 						push1 = 0;
 					}
 					break;
@@ -739,16 +739,16 @@ void setup( void )
 					if ( msdFlag == 0 ) { 
 						lcdRowPrintf(LOWROW, "LogWrite");
 					}
-					if ( tasw_get() == SW_TOP && push1 == 0 && msdFlag == 0) {
+					if ( taswGet() == SW_TOP && push1 == 0 && msdFlag == 0) {
 						push1 = 1;
 						readFlashSetup( 0, 0, 1 ,0 ,0 ,0 ,0);
 						init_log();	// ログ記録準備
 						msdFlag = 1;		// データ記録開始
 						lcdRowPrintf(LOWROW, "Logging ");
-					} else if ( tasw_get() == SW_DOWN && push1 == 0 && msdFlag == 1) {
+					} else if ( taswGet() == SW_DOWN && push1 == 0 && msdFlag == 1) {
 						push1 = 1;
 						msdEndLog();		// MicroSDの終了処理
-					} else if ( tasw_get() == 0x0 ) {
+					} else if ( taswGet() == 0x0 ) {
 						push1 = 0;
 					}
 					break;
@@ -758,10 +758,10 @@ void setup( void )
 					if ( msdFlag == 0 ) { 
 						lcdRowPrintf(LOWROW, "LogRead ");
 					}
-					if ( tasw_get() == SW_PUSH && push1 == 0 && msdFlag == 0) {
+					if ( taswGet() == SW_PUSH && push1 == 0 && msdFlag == 0) {
 						//ログ解析
 						msdgetData () ;
-					} else if ( tasw_get() == 0x0 ) {
+					} else if ( taswGet() == 0x0 ) {
 						push1 = 0;
 					}
 					break;
@@ -777,17 +777,17 @@ void setup( void )
 			flashDataBuff[0] = Angle0;
 			data_tuning ( &Angle0, 1, UD );
 			data_select( &servo_test, SW_PUSH );
-			mode_angle = 1;
+			modeAngle = 1;
 			if ( servo_test == 1 ) {
 				SetAngle = 0;
 				servoPwmOut( ServoPwm2 );
 			} else {
 				servoPwmOut( 0 );
 			}
-			if ( tasw_get() == 0x4 && push1 == 0 ) {
+			if ( taswGet() == 0x4 && push1 == 0 ) {
 				push1 = 1;
 				writeFlashData( ANGLE0_STARTAREA, ANGLE0_ENDAREA, ANGLE0_DATA, 1 );
-			} else if ( tasw_get() == 0x0 ) {
+			} else if ( taswGet() == 0x0 ) {
 				push1 = 0;
 			}
 			break;
@@ -830,12 +830,12 @@ void setup( void )
 						eraseE2DataFlash( i );
 						i++;
 					}
-					cnt_setup = 0;
+					cntSetup1 = 0;
 					pattern_flash = 4;
 					break;
 				case 4:
 					lcdRowPrintf(LOWROW, "complete");
-					if ( cnt_setup >= 1500 ) {
+					if ( cntSetup1 >= 1500 ) {
 						pattern_flash = 1;
 						break;
 					}
@@ -843,7 +843,7 @@ void setup( void )
 			}
 			break;
 	default:
-		lcdRowPrintf(UPROW, "%#x     ", dipsw_get());
+		lcdRowPrintf(UPROW, "%#x     ", dipswGet());
 		lcdRowPrintf(LOWROW, "none    ");
 		
 		servo_test = 0;
@@ -858,7 +858,7 @@ void setup( void )
 ///////////////////////////////////////////////////////////////////////////////////////
 void data_select ( char *data , char button )
 {
-	if ( tasw_get() == button ) {
+	if ( taswGet() == button ) {
 		if ( *data == 1 && push == 0) {
 			push = 1;
 			*data = 0;
@@ -882,18 +882,18 @@ void data_tuning ( void *data, char add , char dir )
 	short *data2 = (short*)data;	// short型ポインタにキャスト
 	
 	if ( dir == LR ) { //左右　
-		if ( tasw_get() == SW_RIGHT || tasw_get() == SW_LEFT ) {
-			if ( tasw_get() == SW_RIGHT && pushL == 0 ) {
+		if ( taswGet() == SW_RIGHT || taswGet() == SW_LEFT ) {
+			if ( taswGet() == SW_RIGHT && pushL == 0 ) {
 				pushL = 1;
 				*data2 += add;
-			} else if ( tasw_get() == SW_LEFT && pushL == 0 ) {
+			} else if ( taswGet() == SW_LEFT && pushL == 0 ) {
 				pushL = -1;
 				*data2 -= add;
 			} else if ( pushL != 0 ) {
 				// 長押しモード
 				if ( cnt_swL >= 500 ) {
-					if ( ( cnt_setup3 % 200 ) == 0 ) {
-						cnt_setup3 = 0;
+					if ( ( cntSetup3 % 200 ) == 0 ) {
+						cntSetup3 = 0;
 						if ( pushL == 1) *data2 += add;
 						else *data2 -= add;
 					}
@@ -904,18 +904,18 @@ void data_tuning ( void *data, char add , char dir )
 			cnt_swL = 0;
 		}
 	} else {	// 上下
-		if ( tasw_get() == SW_TOP || tasw_get() == SW_DOWN ) {
-			if ( tasw_get() == SW_TOP && pushR == 0 ) {
+		if ( taswGet() == SW_TOP || taswGet() == SW_DOWN ) {
+			if ( taswGet() == SW_TOP && pushR == 0 ) {
 				pushR = 1;
 				*data2 += add;
-			} else if ( tasw_get() == SW_DOWN && pushR == 0 ) {
+			} else if ( taswGet() == SW_DOWN && pushR == 0 ) {
 				pushR = -1;
 				*data2 -= add;
 			} else if ( pushR != 0 ) {
 				// 長押しモード
 				if ( cnt_swR >= 500 ) {
-					if ( ( cnt_setup3 % 200 ) == 0 ) {
-						cnt_setup3 = 0;
+					if ( ( cntSetup3 % 200 ) == 0 ) {
+						cntSetup3 = 0;
 						if ( pushR == 1) *data2 += add;
 						else *data2 -= add;
 					}
@@ -928,12 +928,12 @@ void data_tuning ( void *data, char add , char dir )
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////
-// モジュール名 fix_speedsetting
+// モジュール名 fixSpeedSetting
 // 処理概要     速度パラメータを固定値にする
 // 引数         なし
 // 戻り値       0: 速度一定にしない　1: 速度一定にする
 /////////////////////////////////////////////////////////////////////////////////
-char fix_speedsetting ( void )
+char fixSpeedSetting ( void )
 {
 	char ret = 0;
 	

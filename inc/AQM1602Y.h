@@ -35,14 +35,14 @@
 // プロトタイプ宣言
 //====================================//
 // LCD関連
-void wait_lcd ( short waitTime );
-void lcdShowProcess( void );
-void lcdPosition( char x ,char y );
-void inti_lcd( void );
-void lcd_CMD( unsigned char cmd );
-void lcd_put( unsigned char data );
-int lcdPrintf( char *format, ... );
+void waitLcd ( short waitTime );
+void lcdShowProcess ( void );
+void lcdPosition ( char x ,char y );
+void intiLcd ( void );
+void lcdCMD ( unsigned char cmd );
+void lcdPut ( unsigned char data );
+int lcdPrintf ( char *format, ... );
 void lcdcursol (void);
-int lcdRowPrintf(char step, char *format, ...);
+int lcdRowPrintf (char step, char *format, ...);
 
 #endif // I2C_LCD_H_
