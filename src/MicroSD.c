@@ -241,7 +241,7 @@ char init_msd ( void )
 					printf("CMD58 send\n");
 					// CSD取得
 					receive = getMicroSD_CSD( response_register );
-					if ( receive == 1 ) {
+					if ( !receive ) {
 						ret = 8;
 						printf("CSD error\n");
 						break;
@@ -280,14 +280,14 @@ char init_msd ( void )
 // モジュール名 getMicroSD_CSD
 // 処理概要     microSD Card Specific Data取得
 // 引数         signed char *読み込み配列(16バイト以上)
-// 戻り値       0:正常 1以上:エラー
+// 戻り値       true:正常 false:エラー
 ///////////////////////////////////////////////////////////////////////////
-char getMicroSD_CSD( volatile unsigned char *p )
+bool getMicroSD_CSD( volatile unsigned char *p )
 {
-	volatile char ret = 0;
+	volatile char ret = true;
 	volatile short receive, i;
 	
-	ret = 0;
+	ret = true;
 	MSD_CS_TERMINAL_LOW			// CS端子をLOWにする
 	
 	// CMD9送信
@@ -298,7 +298,7 @@ char getMicroSD_CSD( volatile unsigned char *p )
 		receive = msd_read();
 		
 		if ( i > 1000 ) {
-			ret = 1;
+			ret = false;
 			break;
 		}
 		i++;

@@ -921,15 +921,20 @@ void main(void){
 			break;
 			
 		case 102:
+			// 車体停止処理
 			servoPwmOut( ServoPwm );
 			motorPwmOut(0, 0, 0, 0);
 			
 			if( Encoder <= 5 && Encoder >= -1 ) {
+				servoPwmOut( 0 );
+				R_PG_IO_PORT_Write_PE6( 0 );	//サーボモータ freeモード
 				if( msdset == 1 ) {
+					// microSDの動作が有効なとき
 					pattern = 103;
 					cnt1 = 0;
 					break;
-				}else{
+				} else {
+					// microSDの動作が無効なとき
 					pattern = 106;
 					break;
 				}
@@ -937,7 +942,6 @@ void main(void){
 			break;
 			
 		case 103:
-			servoPwmOut( 0 );
 			// 最後のデータが書き込まれるまで待つ
 			if ( cnt1 <= 1000 ) {	// 1000ms待つ
 				if( checkMicroSDProcess() == 11 ) {
@@ -947,8 +951,6 @@ void main(void){
 					break;
 				}
 			} else {			// 1000ms以上経過したら書き込みを強制終了
-				servoPwmOut( 0 );
-				R_PG_IO_PORT_Write_PE6( 0 );	//サーボモータ freeモード
 				pattern = 106;
 				break;
 			}
@@ -961,19 +963,18 @@ void main(void){
 				flashDataBuff[ 0 ] = msdWorkaddress >> 16;
 				flashDataBuff[ 1 ] = msdWorkaddress & 0xffff;	// 終了アドレス
 				writeFlashData( MSD_STARTAREA, MSD_ENDAREA, MSD_DATA, 2 );
-				R_PG_IO_PORT_Write_PE6( 0 );	//サーボモータ freeモード
 				pattern = 105;
 				break;
 			}
 			break;
 			
 		case 105:
-			// mMicroSD書き込み成功
+			// microSD書き込み成功
 			// LED点滅処理
 			if( cnt1 >= 200 ) cnt1 = 0;
 			if( cnt1 < 100 ) {
 				LEDB_ON;
-			}else{
+			} else {
 				LEDB_OFF;
 			}
 			break;
@@ -984,7 +985,7 @@ void main(void){
 			if( cnt1 >= 200 ) cnt1 = 0;
 			if( cnt1 < 100 ) {
 				LEDR_ON;
-			}else{
+			} else {
 				LEDR_OFF;
 			}
 			break;

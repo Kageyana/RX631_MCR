@@ -20,7 +20,7 @@
 /******************************************************************************************/
 
 // 緊急停止
-#define	STOPPING_METER		40		// 停止距離
+#define	STOPPING_METER		    40		// 停止距離
 
 // 各セクションでの目標速度　x/10[m/s]
 #define SPEED_STRAIGHT			54	// 通常トレース
@@ -44,13 +44,13 @@
 #define SPEED_LEFTCHANGE_CURVE		46	// 左レーンチェンジ旋回速度
 #define SPEED_LEFTCHANGE_ESCAPE		46	// 左レーンチェンジ復帰速度
 
-#define SPEED_SLOPE_BRAKE		26	// 下り坂終点速度
-#define SPEED_SLOPE_TRACE		36	// 坂読み飛ばし速度
+#define SPEED_SLOPE_BRAKE		26	    // 下り坂終点速度
+#define SPEED_SLOPE_TRACE		36	    // 坂読み飛ばし速度
 // 角度
 #define ANGLE_RIGHTCLANK		-1450	// 右クランク旋回角度
 #define ANGLE_LEFTCLANK		    1450	// 左クランク旋回角度
 #define ANGLE_RIGHTCHANGE		-700	// 右レーンチェンジ旋回角度
-#define ANGLE_LEFTCHANGE		700	// 右レーンチェンジ旋回角度
+#define ANGLE_LEFTCHANGE		700	    // 右レーンチェンジ旋回角度
 
 // カーブ関連
 #define CURVE_R600_START		120		// R600開始AD値
@@ -161,9 +161,9 @@ extern signed char 	ServoPwm2;	// 角度サーボPWM
 // プロトタイプ宣言
 //====================================//
 // マーカー関連
-signed char check_crossline( void );
-signed char check_rightline( void );
-signed char check_leftline( void );
+bool check_crossline( void );
+bool check_rightline( void );
+bool check_leftline( void );
 signed char check_slope( void );
 
 // エンコーダ関連

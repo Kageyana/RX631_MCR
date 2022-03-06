@@ -7,8 +7,8 @@
 //====================================//
 // モード関連
 char 	mode_lcd = 1;		// LCD表示可否		1:表示		0:消灯		
-char 	mode_slope;			// 坂チェック			0:上り坂始め	1:上り坂終わり	2:下り坂始め
-char 	mode_angle;			// サーボPWM変更		0:白線トレース	1:角度制御
+char 	mode_slope;			// 坂チェック		0:上り坂始め	1:上り坂終わり	2:下り坂始め
+char 	mode_angle;			// サーボPWM変更	0:白線トレース	1:角度制御
 char	mode_pushcart;		// 手押しモード可否	0:自動走行	1:手押し
 char	msdset;				// MicroSDが初期化されたか	0:初期化失敗	1:初期化成功
 char	IMUSet = 0;			// IMUが初期化されたか		0: 初期化失敗	1:初期化成功
@@ -43,13 +43,13 @@ short	speed_slope_brake;			// 下り坂終点速度
 short	speed_slope_trace;			// 坂読み飛ばし速度
 
 // サーボ角度
-short	angle_rightclank;			// 右クランク旋回角度
-short	angle_leftclank;			// 左クランク旋回角度
+short	angle_rightclank;		// 右クランク旋回角度
+short	angle_leftclank;		// 左クランク旋回角度
 short	angle_rightchange;		// 右レーンチェンジ旋回角度
 short	angle_leftchange;		// 右レーンチェンジ旋回角度
 
 // タイマ関連
-short		cnt_gyro;				// 角度計算用カウンタ
+short		cnt_gyro;			// 角度計算用カウンタ
 
 // 角度関連
 double 		TurningAngleEnc;	// エンコーダから求めた旋回角度
@@ -58,24 +58,24 @@ double		gyVoltageBefore;
 
 // サーボ関連
 // 白線トレース
-signed char	ServoPwm;	// 白線トレースサーボPWM
+signed char	ServoPwm;		// 白線トレースサーボPWM
 short 		SensorBefore;	// 1ms前のセンサ値
 char		DevBefore;		// I成分リセット用
 double		Int;			// I成分積算値(白線トレース)
 // 角度制御
 signed char	ServoPwm2;		// 角度サーボPWM
 short 		SetAngle;		// 目標角度
-short		SetAngleBefore;		// 1ms前の目標角度
+short		SetAngleBefore;	// 1ms前の目標角度
 short 		AngleBefore2;	// 1ms前の角度
-char		AngleBefore3;		// I成分リセット用
+char		AngleBefore3;	// I成分リセット用
 double		Int2;			// I成分積算値(角度制御)
 
 // モーター関連
-signed char 	motorPwm;	// モーター制御PWM
+signed char 	motorPwm;			// モーター制御PWM
 char 			AccelefBefore;		// I成分リセット用
 short			EncoderBefore;		// 1ms前の速度
 int 			targetSpeedBefore;	// 1ms前の目標速度	
-double 			Int3;			// I成分積算値(速度制御)
+double 			Int3;				// I成分積算値(速度制御)
 short			targetSpeed;		// 目標速度
 
 // デモ関連
@@ -92,10 +92,10 @@ char 	kp3_buff, ki3_buff, kd3_buff;
 // 引数         なし
 // 戻り値       0:クロスラインなし 1:あり
 ///////////////////////////////////////////////////////////////////////////
-signed char check_crossline( void )
+bool check_crossline( void )
 {
-	if ( sensor_inp() == 0x7 ) return 1;
-	else return 0;
+	if ( sensor_inp() == 0x7 ) return true;
+	else return false;
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 check_rightline
@@ -103,10 +103,10 @@ signed char check_crossline( void )
 // 引数         なし
 // 戻り値       0:右ハーフラインなし 1:あり
 ///////////////////////////////////////////////////////////////////////////
-signed char check_rightline( void )
+bool check_rightline( void )
 {
-	if ( sensor_inp() == 0x3 ) return 1;
-	else return 0;
+	if ( sensor_inp() == 0x3 ) return true;
+	else return false;
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 check_leftline
@@ -114,10 +114,10 @@ signed char check_rightline( void )
 // 引数         なし
 // 戻り値       0:左ハーフラインなし 1:あり
 ///////////////////////////////////////////////////////////////////////////
-signed char check_leftline( void )
+bool check_leftline( void )
 {
-	if ( sensor_inp() == 0x6 ) return 1;
-	else return 0;
+	if ( sensor_inp() == 0x6 ) return true;
+	else return false;
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 check_slope
@@ -167,7 +167,7 @@ void servoControl( void )
 	iI = (double)ki_buff * Int;		// 積分
 	iD = (int)kd_buff * Dif;		// 微分
 	iRet = iP + iI + iD;
-	iRet = iRet >> 10;
+	iRet = iRet >> 10;				// PWMを0～100近傍に収める
 
 	// PWMの上限の設定
 	// 出力電圧がVOLTAGELIMとなるDuty比を計算
@@ -213,10 +213,10 @@ void servoControl2( void )
 	Dif = ( Dev - AngleBefore2 ) * 1;		// dゲイン1/1000倍
 
 	iP = (int)kp2_buff * Dev;		// 比例
-	iI = (double)ki2_buff * Int2;		// 積分
+	iI = (double)ki2_buff * Int2;	// 積分
 	iD = (int)kd2_buff * Dif;		// 微分
 	iRet = iP + iI + iD;
-	iRet = iRet >> 4;		// PWMを0～100の間に収める
+	iRet = iRet >> 4;		// PWMを0～100近傍に収める
 
 	// PWMの上限の設定
 	// 出力電圧がVOLTAGELIMとなるDuty比を計算
@@ -228,7 +228,7 @@ void servoControl2( void )
 	if ( iRet <  -100 ) iRet = -100;
 
 	if ( Dev >= 0 ) 	AngleBefore3 = 0;
-	else 			AngleBefore3 = 1;
+	else 				AngleBefore3 = 1;
 	SetAngleBefore = i;
 	ServoPwm2 = iRet;
 	AngleBefore2 = Dev;			// 次回はこの値が1ms前の値となる

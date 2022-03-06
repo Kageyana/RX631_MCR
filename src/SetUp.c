@@ -60,13 +60,13 @@ char ble;
 void setup( void )
 {
 	char cnt_led;
-	short s;
+	short i, j, k;
 	uint8_t sd_sw;
 	
 	// ディップスイッチで項目選択
 	switch ( dipsw_get() ) {
 		//------------------------------------------------------------------
-		// 【0x0】スタート待ち
+		// スタート待ち
 		//------------------------------------------------------------------
 		case 0x0:
 			lcdRowPrintf(UPROW, "START   ");
@@ -95,16 +95,9 @@ void setup( void )
 			
 			break;
 		//------------------------------------------------------------------
-		// 【0x1】電源電圧
+		// パラメータ調整(通常トレース)
 		//------------------------------------------------------------------
 		case 0x1:
-			lcdRowPrintf(UPROW, "Voltage ");
-			lcdRowPrintf(LOWROW, "  %05.2fV",Voltage);
-			break;
-		//------------------------------------------------------------------
-		// 【0x3】パラメータ調整(通常トレース)
-		//------------------------------------------------------------------
-		case 0x2:
 			data_tuning ( &pattern_parameter, 1, LR );
 			
 			if ( pattern_parameter == 6 ) pattern_parameter = 1;
@@ -150,9 +143,9 @@ void setup( void )
 			break;
 			
 		//------------------------------------------------------------------
-		// 【0x4】パラメータ調整(クランク)
+		// パラメータ調整(クランク)
 		//------------------------------------------------------------------
-		case 0x3:
+		case 0x2:
 			data_tuning ( &pattern_parameter2, 1, LR );
 			
 			if ( pattern_parameter2 == 7 ) pattern_parameter2 = 1;
@@ -206,9 +199,9 @@ void setup( void )
 			}
 			break;
 		//------------------------------------------------------------------
-		// 【0x5】パラメータ調整(レーンチェンジ)
+		// パラメータ調整(レーンチェンジ)
 		//------------------------------------------------------------------
-		case 0x4:
+		case 0x3:
 			data_tuning ( &pattern_parameter3, 1, LR );
 			
 			if ( pattern_parameter3 == 8 ) pattern_parameter3 = 1;
@@ -268,9 +261,9 @@ void setup( void )
 			break;
 		
 		//------------------------------------------------------------------
-		// 【0x6】パラメータ調整(坂道、角度)
+		// パラメータ調整(坂道、角度)
 		//------------------------------------------------------------------
-		case 0x5:
+		case 0x4:
 			data_tuning ( &pattern_parameter4, 1, LR );
 			
 			if ( pattern_parameter4 == 7 ) pattern_parameter4 = 1;
@@ -322,9 +315,9 @@ void setup( void )
 			}
 			break;
 		//------------------------------------------------------------------
-		// 【0x7】ゲイン調整(サーボ)
+		// ゲイン調整(サーボ)
 		//------------------------------------------------------------------
-		case 0x6:
+		case 0x5:
 			lcdRowPrintf(UPROW, "kp ki kd");
 			
 			data_select( &servo_test, SW_PUSH );
@@ -376,9 +369,9 @@ void setup( void )
 			}
 			break;
 		//------------------------------------------------------------------
-		// 【0x8】ゲイン調整(角度)
+		// ゲイン調整(角度)
 		//------------------------------------------------------------------
-		case 0x7:
+		case 0x6:
 			lcdRowPrintf(UPROW, "kp ki kd");
 			
 			data_select( &servo_test2, SW_PUSH );
@@ -429,9 +422,9 @@ void setup( void )
 			}
 			break;
 		//------------------------------------------------------------------
-		// 【0x9】ゲイン調整(速度)
+		// ゲイン調整(速度)
 		//------------------------------------------------------------------
-		case 0x8:
+		case 0x7:
 			lcdRowPrintf(UPROW, "kp ki kd");
 			
 			data_tuning ( &pattern_gain3, 1, LR );
@@ -476,9 +469,9 @@ void setup( void )
 			}
 			break;
 		//------------------------------------------------------------------
-		// 【0xa】プリセットパラメータ
+		// プリセットパラメータ
 		//------------------------------------------------------------------
-		case 0x9:
+		case 0x8:
 			lcdRowPrintf(LOWROW, "SETTING ");
 			data_tuning ( &pattern_speedseting, 1, LR );
 				
@@ -533,9 +526,9 @@ void setup( void )
 			}
 			break;
 		//------------------------------------------------------------------
-		// 【0xb】Motor_test
+		// Motor_test
 		//------------------------------------------------------------------
-		case 0xa:
+		case 0x9:
 			data_tuning ( &pattern_sensor, 1, LR );
 			mode_angle = 0;
 			
@@ -601,7 +594,7 @@ void setup( void )
 					break;
 					
 				case 6:
-					// デジタル風センサ, ゲートセンサ
+					// デジタル風アナログセンサ, ゲートセンサ
 					motor_test = 0;
 					data_tuning ( &sensorG_th, 1, UD );
 					if ( cnt_setup >= 100 ) {
@@ -637,7 +630,7 @@ void setup( void )
 					data_select( &motor_test, SW_PUSH );
 					break;
 				case 9:
-					// 関数テスト
+					// ラインセンサ差分
 					lcdRowPrintf(UPROW, "gASensor");
 					
 					motor_test = 0;
@@ -684,9 +677,9 @@ void setup( void )
 			}
 			break;
 		//------------------------------------------------------------------
-		// 【0xc】位置固定デモ
+		// 位置固定デモ
 		//------------------------------------------------------------------
-		case 0xb:
+		case 0xa:
 			lcdRowPrintf(UPROW, "DEMO%4d",motorPwm);
 			if ( cnt_setup >= 500 ) {
 					cnt_setup = 0;
@@ -703,9 +696,9 @@ void setup( void )
 			}
 			break;
 		//------------------------------------------------------------------
-		// 【0xd】MicroSD
+		// MicroSD
 		//------------------------------------------------------------------
-		case 0xc:
+		case 0xb:
 			GET_SDSWITCH;
 			lcdRowPrintf(UPROW, "MicroSD%d",sd_sw);
 			
@@ -717,147 +710,21 @@ void setup( void )
 			
 			switch ( pattern_msd ) {
 				case 1:
-					msdWorkaddress = msdaddrBuff[1];
-					msdWorkaddress2 = msdaddrBuff[0];
-					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
-						lcdRowPrintf(LOWROW, "No data1");
-					} else {
-						lcdRowPrintf(LOWROW, "data1   ");
-					}
-					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
-						push1 = 1;
-						msd_sendToPC();
-					} else if ( tasw_get() == 0x0 ) {
-						push1 = 0;
-					}
-					break;
 				case 2:
-					msdWorkaddress = msdaddrBuff[3];
-					msdWorkaddress2 = msdaddrBuff[2];
-					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
-						lcdRowPrintf(LOWROW, "No data2");
-					} else {
-						lcdRowPrintf(LOWROW, "data2   ");
-					}
-					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
-						push1 = 1;
-						msd_sendToPC();
-					}else if ( tasw_get() == 0x0 ) {
-						push1 = 0;
-					}
-					break;
 				case 3:
-					msdWorkaddress = msdaddrBuff[5];
-					msdWorkaddress2 = msdaddrBuff[4];
-					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
-						lcdRowPrintf(LOWROW, "No data3");
-					} else {
-						lcdRowPrintf(LOWROW, "data3   ");
-					}
-					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
-						push1 = 1;
-						msd_sendToPC();
-					}else if ( tasw_get() == 0x0 ) {
-						push1 = 0;
-					}
-					break;
 				case 4:
-					msdWorkaddress = msdaddrBuff[7];
-					msdWorkaddress2 = msdaddrBuff[6];
-					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
-						lcdRowPrintf(LOWROW, "No data4");
-					} else {
-						lcdRowPrintf(LOWROW, "data4   ");
-					}
-					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
-						push1 = 1;
-						msd_sendToPC();
-					}else if ( tasw_get() == 0x0 ) {
-						push1 = 0;
-					}
-					break;
 				case 5:
-					msdWorkaddress = msdaddrBuff[9];
-					msdWorkaddress2 = msdaddrBuff[8];
-					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
-						lcdRowPrintf(LOWROW, "No data5");
-					} else {
-						lcdRowPrintf(LOWROW, "data5   ");
-					}
-					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
-						push1 = 1;
-						msd_sendToPC();
-					}else if ( tasw_get() == 0x0 ) {
-						push1 = 0;
-					}
-					break;
 				case 6:
-					msdWorkaddress = msdaddrBuff[11];
-					msdWorkaddress2 = msdaddrBuff[10];
-					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
-						lcdRowPrintf(LOWROW, "No data6");
-					} else {
-						lcdRowPrintf(LOWROW, "data6   ");
-					}
-					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
-						push1 = 1;
-						msd_sendToPC();
-					}else if ( tasw_get() == 0x0 ) {
-						push1 = 0;
-					}
-					break;
 				case 7:
-					msdWorkaddress = msdaddrBuff[13];
-					msdWorkaddress2 = msdaddrBuff[12];
-					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
-						lcdRowPrintf(LOWROW, "No data7");
-					} else {
-						lcdRowPrintf(LOWROW, "data7   ");
-					}
-					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
-						push1 = 1;
-						msd_sendToPC();
-					}else if ( tasw_get() == 0x0 ) {
-						push1 = 0;
-					}
-					break;
 				case 8:
-					msdWorkaddress = msdaddrBuff[15];
-					msdWorkaddress2 = msdaddrBuff[14];
-					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
-						lcdRowPrintf(LOWROW, "No data8");
-					} else {
-						lcdRowPrintf(LOWROW, "data8   ");
-					}
-					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
-						push1 = 1;
-						msd_sendToPC();
-					}else if ( tasw_get() == 0x0 ) {
-						push1 = 0;
-					}
-					break;
 				case 9:
-					msdWorkaddress = msdaddrBuff[17];
-					msdWorkaddress2 = msdaddrBuff[16];
-					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
-						lcdRowPrintf(LOWROW, "No data9");
-					} else {
-						lcdRowPrintf(LOWROW, "data9   ");
-					}
-					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
-						push1 = 1;
-						msd_sendToPC();
-					}else if ( tasw_get() == 0x0 ) {
-						push1 = 0;
-					}
-					break;
 				case 10:
-					msdWorkaddress = msdaddrBuff[19];
-					msdWorkaddress2 = msdaddrBuff[18];
+					msdWorkaddress = msdaddrBuff[pattern_msd*2-1];
+					msdWorkaddress2 = msdaddrBuff[pattern_msd*2-2];
 					if ( msdWorkaddress == 0 && msdWorkaddress2 == 0 ) {
-						lcdRowPrintf(LOWROW, "Nodata10");
+						lcdRowPrintf(LOWROW, "Nodata%2d",pattern_msd);
 					} else {
-						lcdRowPrintf(LOWROW, "data10  ");
+						lcdRowPrintf(LOWROW, "data%2d  ",pattern_msd);
 					}
 					if ( tasw_get() == SW_PUSH && push1 == 0 ) {
 						push1 = 1;
@@ -901,9 +768,9 @@ void setup( void )
 			}
 			break;
 		//------------------------------------------------------------------
-		// 【0xe】キャリブレーション
+		// キャリブレーション
 		//------------------------------------------------------------------
-		case 0xd:
+		case 0xc:
 			lcdRowPrintf(UPROW, "Angle0  ");
 			lcdRowPrintf(LOWROW, "    %4d", Angle0);
 			
@@ -925,46 +792,44 @@ void setup( void )
 			}
 			break;
 		//------------------------------------------------------------------
-		// 【0xf】フラッシュ
+		// フラッシュ
 		//------------------------------------------------------------------
-		case 0xe:
+		case 0xd:
 			switch( pattern_flash ) {
 				case 1:
 					lcdRowPrintf(UPROW, "Flash   ");
 					lcdRowPrintf(LOWROW, "AllErase");
 					
-					if ( tasw_get() == 1 && push1 == 0 ) {
-						push1 = 1;
+					i = 0;
+					data_select( &i, SW_PUSH );
+					if ( i ) {
 						pattern_flash = 2;
 						break;
-					} else if ( tasw_get() == 8 && push1 == 0 ) {
-						push1 = 1;
-						ble = 1;
-						break;
-					} else {
-						push1 = 0;
 					}
 					break;
 				case 2:
 					lcdRowPrintf(UPROW, "Really? ");
-					lcdRowPrintf(LOWROW, "c:Y 2:N ");
-					
-					if ( tasw_get() == 2 ) {
+					lcdRowPrintf(LOWROW, "Y:<  N:>");
+
+					i = 0;
+					data_tuning ( &i, 1, LR );
+					if ( i > 0 ) {
 						pattern_flash = 1;
 						break;
 					}
-					if ( tasw_get() == 0xc ) {
+					if ( i < 0 ) {
 						pattern_flash = 3;
 						break;
 					}
 					break;
 				case 3:
 					lcdRowPrintf(UPROW, "AllErase");
-					lcdRowPrintf(LOWROW, "     Now");
-					s = 0;
-					while ( s <= 1023 ) {
-						eraseE2DataFlash( s );
-						s++;
+					
+					i = 0;
+					while ( i <= 1023 ) {
+						lcdRowPrintf(LOWROW, "    %4d", i);
+						eraseE2DataFlash( i );
+						i++;
 					}
 					cnt_setup = 0;
 					pattern_flash = 4;
@@ -979,7 +844,7 @@ void setup( void )
 			}
 			break;
 	default:
-		lcdRowPrintf(UPROW, "       ");
+		lcdRowPrintf(UPROW, "%#x     ", dipsw_get());
 		lcdRowPrintf(LOWROW, "none    ");
 		
 		servo_test = 0;
