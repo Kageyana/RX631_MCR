@@ -199,9 +199,9 @@ char initMicroSD ( void )
 						receive = msd_CMD( 0x69, 0x40, 0x00, 0x00, 0x00, 0x77 );
 						
 						i++;
-						if ( i > 1000 ) {
+						if ( i > 2000 ) {
 							ret = 6;
-							printf("ACMD41 error\n");
+							printf("CMD41 error\n");
 							break;
 						}
 					} while ( receive != 0x00 );
@@ -210,7 +210,7 @@ char initMicroSD ( void )
 					break;
 						
 				case 6:
-					printf("ACMD41 send\n");
+					printf("CMD41 send\n");
 					i = 0;
 					do {
 						// CMD58ëóêM
@@ -1052,7 +1052,8 @@ void msd_sendToPC ( void )
 				printf(	"SetAngle,"		);
 				printf(	"getAnalogSensor,"	);
 				printf(	"Voltage,"	);
-				
+				printf(	"targetSpeed,"	);
+
 				printf(	"EncoderTotal,"		);
 				printf(	"enc1,"			);
 				printf(	"cnt_log[ms]"		);
@@ -1108,10 +1109,11 @@ void msd_sendToPC ( void )
 				printf("%5d,", CharToShort(18) );				// SetAngle
 				printf("%5d,", CharToShort(20) );				// getAnalogSensor()
 				printf("%2.2f,", (double)CharToShort(22) / 100);
+				printf("%4d,", CharToShort(24));
 				
-				printf("%6d,", CharTouInt (24) );		// EncoderTotal
-				printf("%6d,", CharTouInt (28) );		// enc1
-				printf("%6d", CharTouInt (32) );		// cnt_log
+				printf("%6d,", CharTouInt (26) );		// EncoderTotal
+				printf("%6d,", CharTouInt (30) );		// enc1
+				printf("%6d", CharTouInt (34) );		// cnt_log
 				printf("\n");
 				i += WRITINGTIME;
 				msdBuffaddress += DATA_BYTE;

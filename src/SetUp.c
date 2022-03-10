@@ -608,13 +608,16 @@ void setup( void )
 					
 				case 7:
 					// モーターテスト
-					lcdRowPrintf(UPROW, "Motortes");
+					// lcdRowPrintf(UPROW, "Motortes");
 					lcdRowPrintf(LOWROW, "    %3d%%",motorTestPwm);
 					demo = 0;
 					data_tuningUD ( &motorTestPwm, 1 );
 					if ( motor_test == 1 ) {
-						//diff( 10 );
-						motorPwmOut(motorTestPwm, motorTestPwm, motorTestPwm, motorTestPwm);
+						// if ( cntSetup1 >= 500 ) {
+							// cntSetup1 = 0;
+							diff( motorTestPwm );
+						// }
+						// motorPwmOut(motorTestPwm, motorTestPwm, motorTestPwm, motorTestPwm);
 					} else {
 						motorPwmOut(0, 0, 0, 0);
 					}
@@ -682,10 +685,6 @@ void setup( void )
 		//------------------------------------------------------------------
 		case 0xa:
 			lcdRowPrintf(UPROW, "DEMO%4d",motorPwm);
-			if ( cntSetup1 >= 500 ) {
-					cntSetup1 = 0;
-					printf("DEMO %5d %5d\n",motorPwm, Encoder);
-				}
 			targetSpeed  = 0;
 			
 			data_select ( &demo, 1 );

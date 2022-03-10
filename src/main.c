@@ -43,12 +43,14 @@ void initParameter ( bool lcd );
 //====================================//
 void main(void){
 	short i, j;
+	double radius;
 	unsigned int ui;
 	
 	//=================================//
 	// 初期化
 	//=================================//
-	L_Sen_ON;		//センサ点灯
+	ledOut(0); 		// LED消灯
+	L_Sen_ON;		// センサ点灯
 	intiLcd();		// LCD初期化
 	
 	motorPwmOut(0, 0, 0, 0);	// モーター停止
@@ -71,10 +73,13 @@ void main(void){
 
 	// 電源電圧の確認
 	if (Voltage < LOWVOLTAGE ) {
-		lcdRowPrintf(UPROW, "LOW BAT ");
-		lcdRowPrintf(LOWROW, "  %05.2fV",Voltage);
-		ledOut(LED_R);
-		while(1);
+		cnt1=0;
+		while( cnt1 < 1500){
+			lcdRowPrintf(UPROW, "LOW BAT ");
+			lcdRowPrintf(LOWROW, "  %05.2fV",Voltage);
+			ledOut(LED_R);
+			// while(1);
+		}
 	} else {
 		cnt1=0;
 		while( cnt1 < 1500){
@@ -89,7 +94,6 @@ void main(void){
 		lcdRowPrintf(LOWROW, "ALLGREEN");
 		ledOut(LED_G);
 	}
-	ledOut(0);
 	
 	while(1){
 		__setpsw_i();
@@ -113,9 +117,9 @@ void main(void){
 					// 	modeError = 6;
 					// }
 					// 一定時間で停止
-					if( cnt1 >= STOP_COUNT ) {
-						modeError = 7;
-					}
+					// if( cntStable >= STOP_COUNT ) {
+					// 	modeError = 7;
+					// }
 					if (modeError > 0) {
 						pattern = 101;
 						modeAutoMotor = 0;
@@ -127,10 +131,13 @@ void main(void){
 				}
 			} else {			
 				// 手押しモードON
-				lcdPosition( 0, 0 );
-				lcdPrintf("now %3d", pattern);
-				lcdPosition( 0, 1 );
-				lcdPrintf("log %3d", logmeter());
+
+				// 距離測定
+				// lcdRowPrintf(UPROW, "mm%4.1f", (double)EncoderTotal/PALSE_MILLIMETER);
+				// lcdRowPrintf(LOWROW, " %7d", EncoderTotal);
+
+				lcdRowPrintf(UPROW, "now  %3d", pattern);
+				lcdRowPrintf(LOWROW, " %7d", enc1);
 			}
 			// スイッチで停止
 			if ( cnt1 >= 1000 && taswGet() == SW_PUSH ) {
@@ -138,11 +145,14 @@ void main(void){
 				pattern = 101;
 			}
 		} else if ( pattern >= 100 ) {
-			mode_lcd = 1;
-			lcdPosition( 0, 0 );
-			lcdPrintf("TIME  %d", modeError);
-			lcdPosition( 0, 1 );
-			lcdPrintf(" %5dms", ui);
+			modeLCD = 1;
+			// 速度ゲイン調整用
+			// lcdRowPrintf(UPROW, "TIME%4d", cntStable);
+			// lcdRowPrintf(LOWROW, "%6.1f", (double)encStable/PALSE_MILLIMETER);
+
+			// エラーモード確認
+			lcdRowPrintf(UPROW, "MODE   %1d", modeError);
+			lcdRowPrintf(LOWROW, "  %4.1f",radius);
 		}
 		
 	switch( pattern ) {
@@ -484,14 +494,14 @@ void main(void){
 		case 31:
 			SetAngle = angle_rightclank;
 			targetSpeed = speed_rightclank_curve * SPEED_CURRENT;
-			i = -TurningAngleIMU;
-			j = getAnalogSensor();
 			
-			if (sensor_inp() == 0x2) {
+			if (sensor_inp() == 0x2 && enc1 >= encMM( 50 ) ) {
+				radius = getLinePositionNow( getServoAngle() );
 				enc1 = 0;
 				modeAngle = 0;
 				Int = 0;			// 積分リセット
-				pattern = 36;
+				i = -TurningAngleIMU;
+				pattern = 34;
 				break;
 			}
 			break;
@@ -517,12 +527,12 @@ void main(void){
 		case 34:
 			// 角度維持
 			// sensor_inp() == 2を読んだあとに実行
-			SetAngle = -( 90 - 10 - i ) * DEGPERAD;	// ラインからの角度10°
+			SetAngle = -( 16 * DEG2AD);	// ラインからの角度10°
 			//SetAngle = angle_rightclank + 160;
 			targetSpeed = speed_rightclank_escape * SPEED_CURRENT;
 			j = getAnalogSensor();
 			
-			if( sensor_inp() == 0x2 && j >= -1800 ) {
+			if( sensor_inp() == 0x2 && enc1 >= encMM( 50 ) ) {
 				enc1 = 0;
 				modeAngle = 0;
 				Int = 0;			// 積分リセット
@@ -580,7 +590,7 @@ void main(void){
 		case 44:
 			// 角度維持
 			// sensor_inp() == 2を読んだあとに実行
-			SetAngle = ( 90 - 10 - i ) * DEGPERAD;	// ラインからの角度10°
+			SetAngle = ( 90 - 10 - i ) * DEG2AD;	// ラインからの角度10°
 			//SetAngle = angle_leftclank - 160;
 			targetSpeed = speed_leftclank_escape * SPEED_CURRENT;
 			j = getAnalogSensor();
@@ -1033,10 +1043,12 @@ void Timer (void) {
 	cntGyro++;
 			
 	// LCD表示
-	if ( mode_lcd ) lcdShowProcess();
+	if ( modeLCD ) lcdShowProcess();
 
 	// エンコーダカウント取得
 	getEncoder();
+	// 速度ゲイン調整用
+	// if (pattern > 10 && pattern < 100) stableSpeedDistance();
 
 	// PID制御値算出
 	if ( modeAngle ) servoControlAngle();	// 角度
@@ -1054,7 +1066,7 @@ void Timer (void) {
 	
 	// MicroSD書き込み
 	microSDProcess();
-	if ( msdFlag ) sendLog( 8, 8, 3
+	if ( msdFlag ) sendLog( 8, 9, 3
 					// char
 					, pattern
 					, motorPwm
@@ -1073,9 +1085,10 @@ void Timer (void) {
 					, SetAngle
 					, getAnalogSensor()
 					, (short)(Voltage*100)
+					, targetSpeed
 					// unsigned int
 					, EncoderTotal
-					, enc1
+					, encStable
 					, cnt_log
 					);
 	
@@ -1134,7 +1147,7 @@ void initParameter ( bool lcd ) {
 	EncoderTotal = 10;	// 総走行距離
 	cnt1 = 0;			// タイマリセット
 	enc1 = 0;			// 区間距離リセット
-	mode_lcd = lcd;		// LCD表示OFF
+	modeLCD = lcd;		// LCD表示OFF
 	modeAutoMotor = 1; // PWM出力
 	msdFlag = 1;		// データ記録開始
 	targetSpeed = speed_straight * SPEED_CURRENT; // 目標速度設定

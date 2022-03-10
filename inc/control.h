@@ -8,6 +8,7 @@
 #include "ADconverter.h"
 #include "control.h"
 #include "ICM20648.h"
+#include "AQM1602Y.h"
 #include <math.h>
 //====================================//
 // シンボル定義
@@ -18,7 +19,12 @@
 #define START_CMT_C0	R_PG_Timer_StartCount_CMT_U0_C0();	// カウントスタート(ch0)
 #define STOP_CMT_C0	    R_PG_Timer_HaltCount_CMT_U0_C0();	// カウント一時停止(ch0)
 /******************************************************************************************/
+// 機体諸元
+#define WHELLBASE   149
+#define TREAD       143
+#define SENSORBAR   307
 
+#define M_PI        3.141592
 // 緊急停止
 #define	STOPPING_METER		    40		// 停止距離
 
@@ -75,8 +81,8 @@
 #define KD2		90
 
 // 速度制御
-#define KP3		4
-#define KI3		0
+#define KP3		10
+#define KI3		4
 #define KD3		0
 
 // 緊急停止関連
@@ -90,7 +96,7 @@
 //====================================//
 // パターン、モード関連
 extern char pattern;		// パターン番号
-extern char mode_lcd;		// LCD表示選択
+extern char modeLCD;		// LCD表示選択
 extern char modeSlope;		// 坂チェック		0:上り坂始め	1:上り坂終わり	2:下り坂始め	3:下り坂終わり
 extern char	modeAngle;		// サーボPWM変更	0:白線トレース	1:角度制御
 extern char	modePushcart;	// 手押しモード可否	0:自動走行	1:手押し
@@ -142,6 +148,8 @@ extern double	PichAngleAD;		// アナログジャイロから求めたピッチ角度
 // モーター関連
 extern signed char 	motorPwm;	    // モーター制御PWM
 extern short		targetSpeed;	// 目標速度
+extern unsigned int encStable;
+extern short        cntStable;
 
 // ゲイン関連
 extern char	    kp_buff, ki_buff, kd_buff;
@@ -168,12 +176,15 @@ signed char checkSlope( void );
 
 // エンコーダ関連
 unsigned int encMM( short mm );
+unsigned int stableSpeedDistance( void );
 
 // モーター関連
 void motorControl( void );
 
-// 内輪差関連
+// 機体制御関連
 void diff ( signed char pwm );
+double getLinePositionNow( short angleAD);
+double getLinePositionAfter (short angle);
 
 // サーボ関連
 void servoControlTrace( void );
