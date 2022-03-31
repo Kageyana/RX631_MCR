@@ -18,8 +18,6 @@
 //====================================//
 // 走行パターン関連
 char		pattern = 0;	// パターン番号
-char		countdown = 0x0;
-short 		angleCenter;
 
 // モード関連
 char		modeCurve;		// カーブ判定	0:カーブ以外	1:カーブ走行中
@@ -42,8 +40,9 @@ void initParameter ( bool lcd );
 // メインプログラム
 //====================================//
 void main(void){
-	short i, j;
-	double radius;
+	char		countdown = 0x0;
+	short i, j, angleAfter, angleCenter;
+	double y1;
 	unsigned int ui;
 	
 	//=================================//
@@ -152,7 +151,7 @@ void main(void){
 
 			// エラーモード確認
 			lcdRowPrintf(UPROW, "MODE   %1d", modeError);
-			lcdRowPrintf(LOWROW, "  %4.1f",radius);
+			lcdRowPrintf(LOWROW, "    %4d",angleAfter);
 		}
 		
 	switch( pattern ) {
@@ -496,52 +495,41 @@ void main(void){
 			targetSpeed = speed_rightclank_curve * SPEED_CURRENT;
 			
 			if (sensor_inp() == 0x2 && enc1 >= encMM( 50 ) ) {
-				radius = getLinePositionNow( getServoAngle() );
+				y1 = getLinePositionNow( getServoAngle(), TurningAngleIMU);
 				enc1 = 0;
-				modeAngle = 0;
 				Int = 0;			// 積分リセット
-				i = -TurningAngleIMU;
+				pattern = 33;
+				break;
+			}
+			break;
+			
+		case 33:
+			SetAngle = angle_rightclank;
+			targetSpeed = speed_rightclank_curve * SPEED_CURRENT;
+			
+			if( sensor_inp() == 0x4 ) {
+				angleAfter = getReturnAngle( TurningAngleIMU, y1);
+				enc1 = 0;
 				pattern = 34;
 				break;
 			}
 			break;
 			
-		case 32:
-			// 外線読み飛ばし
-			SetAngle = angle_rightclank;
-			targetSpeed = speed_rightclank_curve * SPEED_CURRENT;
-			j = getAnalogSensor();
-			
-			if( -TurningAngleIMU <= 90 && -TurningAngleIMU >= 40) {
-				if( j <= -1800 && sensor_inp() == 0x2 ) {
-					enc1 = 0;
-					i = (short)TurningAngleIMU;
-					i = -i;
-					j = getServoAngle();
-					pattern = 36;
-					break;
-				}
-			}
-			break;
-			
 		case 34:
 			// 角度維持
-			// sensor_inp() == 2を読んだあとに実行
-			SetAngle = -( 16 * DEG2AD);	// ラインからの角度10°
-			//SetAngle = angle_rightclank + 160;
-			targetSpeed = speed_rightclank_escape * SPEED_CURRENT;
-			j = getAnalogSensor();
+			SetAngle = -angleAfter * DEG2AD;	// ラインからの角度10°
+			targetSpeed = speed_rightclank_curve * SPEED_CURRENT;
 			
-			if( sensor_inp() == 0x2 && enc1 >= encMM( 50 ) ) {
+			if( sensor_inp() == 0x2 && enc1 >= encMM( 100 ) ) {
 				enc1 = 0;
 				modeAngle = 0;
 				Int = 0;			// 積分リセット
-				pattern = 36;
+				pattern = 35;
 				break;
 			}
 			break;
 			
-		case 36:
+		case 35:
 			// 復帰
 			targetSpeed = speed_rightclank_escape * SPEED_CURRENT;
 
@@ -558,56 +546,46 @@ void main(void){
 		case 41:
 			SetAngle = angle_leftclank;
 			targetSpeed = speed_leftclank_curve * SPEED_CURRENT;
-			i = -TurningAngleIMU;
-			j = getAnalogSensor();
 			
-			if ( i >= 20 ) {
-				if( j >= 1800 && sensor_inp() == 0x2 ) {
-					enc1 = 0;
-					i = TurningAngleIMU;
-					pattern = 44;
-					break;
-				}
+			if (sensor_inp() == 0x2 && enc1 >= encMM( 50 ) ) {
+				y1 = getLinePositionNow( getServoAngle(), TurningAngleIMU);
+				enc1 = 0;
+				Int = 0;			// 積分リセット
+				pattern = 43;
+				break;
 			}
 			break;
 			
-		case 42:
-			// 外線読み飛ばし
+		case 43:
 			SetAngle = angle_leftclank;
 			targetSpeed = speed_leftclank_curve * SPEED_CURRENT;
-			j = getAnalogSensor();
 			
-			if( TurningAngleIMU <= 90 && TurningAngleIMU >= 40) {
-				if( j >= 1800 && sensor_inp() == 0x2 ) {
-					enc1 = 0;
-					i = TurningAngleIMU;
-					pattern = 46;
-					break;
-				}
+			if( sensor_inp() == 0x1 ) {
+				angleAfter = getReturnAngle( TurningAngleIMU, y1);
+				enc1 = 0;
+				pattern = 44;
+				break;
 			}
 			break;
 			
 		case 44:
 			// 角度維持
-			// sensor_inp() == 2を読んだあとに実行
-			SetAngle = ( 90 - 10 - i ) * DEG2AD;	// ラインからの角度10°
-			//SetAngle = angle_leftclank - 160;
-			targetSpeed = speed_leftclank_escape * SPEED_CURRENT;
-			j = getAnalogSensor();
+			SetAngle = angleAfter * DEG2AD;	// ラインからの角度10°
+			targetSpeed = speed_leftclank_curve * SPEED_CURRENT;
 			
-			if( sensor_inp() == 0x2 && j <= 1800) {
+			if( sensor_inp() == 0x2 && enc1 >= encMM( 100 ) ) {
 				enc1 = 0;
 				modeAngle = 0;
 				Int = 0;			// 積分リセット
-				pattern = 46;
+				pattern = 45;
 				break;
 			}
 			break;
 			
-		case 46:
+		case 45:
 			// 復帰
 			targetSpeed = speed_leftclank_escape * SPEED_CURRENT;
-			
+
 			if( enc1 >= encMM( 600 ) ) {		// 安定するまで待つ(600mm)
 				enc1 = 0;
 				ledOut( 0x0 );

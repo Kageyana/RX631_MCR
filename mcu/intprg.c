@@ -605,7 +605,7 @@ void Excep_SCI5_TXI5(void){ }
 void Excep_SCI5_TEI5(void){ }
 
 // SCI6 RXI6
-void Excep_SCI6_RXI6(void){ }
+//void Excep_SCI6_RXI6(void){ }
 
 // SCI6 TXI6
 void Excep_SCI6_TXI6(void){ }

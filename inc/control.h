@@ -10,6 +10,7 @@
 #include "ICM20648.h"
 #include "AQM1602Y.h"
 #include <math.h>
+#include <stdint.h>
 //====================================//
 // シンボル定義
 //====================================//
@@ -23,10 +24,11 @@
 #define WHELLBASE   149
 #define TREAD       143
 #define SENSORBAR   307
+#define MAXDEG      42
 
 #define M_PI        3.141592
 // 緊急停止
-#define	STOPPING_METER		    40		// 停止距離
+#define	STOPPING_METER		   3		// 停止距離
 
 // 各セクションでの目標速度　x/10[m/s]
 #define SPEED_STRAIGHT			54	// 通常トレース
@@ -71,14 +73,14 @@
 #define VOLTAGELIM 10.5 // 出力最大電圧
 #define VOLTAGELIMTRACE 7.0 // 出力最大電圧
 //白線トレース
-#define KP		14
+#define KP		12
 #define KI		0
 #define KD		53
 
 // 角度制御
-#define KP2		9
-#define KI2		90
-#define KD2		90
+#define KP2		2
+#define KI2		5
+#define KD2		10
 
 // 速度制御
 #define KP3		10
@@ -88,10 +90,10 @@
 // 緊急停止関連
 #define STOP_SENSOR1	60		// センサ全灯
 #define STOP_SENSOR2	800		// センサ全消灯
-#define STOP_ENCODER	100		// エンコーダ停止(ひっくり返った？)
-#define STOP_GYRO		100		// マイナスの加速度検知(コースから落ちた？)
+#define STOP_ENCODER	100		// エンコナスの加速度検知(コースから落ちた？)
 #define STOP_COUNT		1000	// 時間停止
-//====================================//
+//===================================ーダ停止(ひっくり返った？)
+#define STOP_GYRO		100		// マイ=//
 // グローバル変数の宣言
 //====================================//
 // パターン、モード関連
@@ -183,8 +185,9 @@ void motorControl( void );
 
 // 機体制御関連
 void diff ( signed char pwm );
-double getLinePositionNow( short angleAD);
-double getLinePositionAfter (short angle);
+double getLinePositionNow( short angleAD, double angleIMU );
+double getLinePositionAfter ( short angle, double angleIMU );
+short getReturnAngle( double angleIMU, double y1);
 
 // サーボ関連
 void servoControlTrace( void );

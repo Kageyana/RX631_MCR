@@ -11,17 +11,17 @@ char		revErr = 0;			// 通信エラー番号
 char		modeSCI1;			// 通信方式
 char		txtCommand[128];	// コマンド格納
 char		txtData[128];		// データ格納
-char*	txt;					// 受信データ格納
+char*		txt = txtData;					// 受信データ格納
 char		cmmandMode = 0;		// コマンド選択
 char		stopWord = 0;		// 0: 停止ワード未受信 1:停止ワード受信
-short 	cntByte = 0;			// 受信したバイト数
+short 		cntByte = 0;			// 受信したバイト数
 char 		command = 0;		// 0:コマンド受信待ち 1:コマンド入力中 2:コマンド判定中
 
 char		SCI1_Req_mode;		// 0:スタート 1:ストップ 2:データ送受信中
 char		SCI1_RW_mode;		// 0:送信 1:受信
 char		SCI1_Slaveaddr;		// スレーブアドレス
 char		SCI1_NumData;		// 送信データ数
-char*	SCI1_DataArry;			// 送信データ配列
+char*		SCI1_DataArry;			// 送信データ配列
 char		SCI1_DataBuff[255];	// 送信データバッファ
 
 // SCI12関連
@@ -32,6 +32,11 @@ char		SCI1_NumData2;			// 送信データ数2
 char*		SCI12_DataArry;			// データ配列
 char*		SCI1_DataArry2;			// 送信データ配列2
 char		SCI12_DataBuff[255];	// 送信データバッファ
+
+#pragma interrupt Excep_SCI6_RXI6 (vect = VECT_SCI6_RXI6, enable)	// RXI1割り込み関数定義
+#pragma interrupt Excep_SCI6_TXI6 (vect = VECT_SCI6_TXI6, enable)	// TXI1割り込み関数定義
+#pragma interrupt Excep_SCI6_TEI6 (vect = VECT_SCI6_TEI6, enable)	// TEI1割り込み関数定義
+
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 initSCI1
 // 処理概要     SCI1の初期化
@@ -128,7 +133,7 @@ void initSCI1( char rate )
 }
 ///////////////////////////////////////////////////////////////////////////
 // モジュール名 initSCI6
-// 処理概要     SCI1の初期化
+// 処理概要     SCI6の初期化
 // 引数         mode: 通信方式 rate:ボーレートをbpsで入力
 // 戻り値       なし
 ///////////////////////////////////////////////////////////////////////////
@@ -184,8 +189,9 @@ void initSCI6( char rate )
 	
 	//__set_fintv((unsigned int*)FastInterupt);
 	 
-	//ICU.IER[IER_SCI6_RXI1].BIT.IEN_SCI6_RXI1 = 1;	// RXI??????J?n
-	//ICU.IPR[VECT_SCI6_RXI1].BIT.IPR = 15;		// RXI?????????
+	ICU.IER[IER_SCI6_RXI6].BIT.IEN_SCI6_RXI6 = 1;	// RXI??????J?n
+	ICU.IPR[VECT_SCI6_RXI6].BIT.IPR = 15;		// RXI?????????
+	IEN( SCI6, RXI6 ) = 1;	// RXI割り込み開始
 	
 	// Set MPC
 	PORT3.PMR.BIT.B3 = 1;			// Disable P33: peripheral
@@ -215,7 +221,7 @@ void initSCI6( char rate )
 	SCI6.SMR.BIT.PM = 0;			// none parity
 	SCI6.SMR.BIT.CHR = 0;			// 8bit data length
 	SCI6.SMR.BIT.CM = 0;			// ??????????
-	SCI6.BRR = brr;				// 12: 115200bps 1:750000bps 0:1500000bps
+	SCI6.BRR = brr;					// 12: 115200bps 1:750000bps 0:1500000bps
 	SCI6.SCR.BIT.RIE = 1;			// RXI??????v??
 	SCI6.SCR.BIT.TE = 1;			// Enable TX
 	SCI6.SCR.BIT.RE = 1;			// Enable RX
@@ -238,8 +244,26 @@ void charput( uint8_t data )
 // 引数         なし
 // 戻り値       data:入力した一文字
 ///////////////////////////////////////////////////////////////////////////
-char charget(void)
+unsigned char charget(void)
 {
 	uint8_t data;
+	data = SCI6.RDR;
 	return data;
+}
+///////////////////////////////////////////////////////////////////////////
+// モジュール名 Excep_SCI1_RXI1
+// 処理概要     UART受信時に割り込みで実行される
+// 引数         なし
+// 戻り値       なし
+///////////////////////////////////////////////////////////////////////////
+void Excep_SCI6_RXI6(void)
+{
+	char c;
+	c = SCI6.RDR;
+	
+	*txt++ = c;
+	if ( c == 0xA) {	// 改行コードで文字列リセット
+		memset(txtData, 0, strlen(txtData));
+		txt = txtData;	// アドレスリセット
+	}
 }

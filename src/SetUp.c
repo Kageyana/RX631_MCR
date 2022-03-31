@@ -32,6 +32,9 @@ char pattern_gain3 = 1;
 char pattern_speedseting = 1;
 char pattern_msd = 1;
 char pattern_flash = 1;
+char pattern_scanf = 0;
+
+// フラグ関連
 char setting_1meter;
 char setting_2meter;
 char setting_3meter;
@@ -39,6 +42,7 @@ char motor_test = 0;
 char servo_test = 0;
 char servo_test2 = 0;
 char fixSpeed = 0;
+char str[8];
 
 // パラメータ関連
 char motorTestPwm = 10;
@@ -608,7 +612,7 @@ void setup( void )
 					
 				case 7:
 					// モーターテスト
-					// lcdRowPrintf(UPROW, "Motortes");
+					lcdRowPrintf(UPROW, "Motortes");
 					lcdRowPrintf(LOWROW, "    %3d%%",motorTestPwm);
 					demo = 0;
 					data_tuningUD ( &motorTestPwm, 1 );
@@ -725,13 +729,19 @@ void setup( void )
 						lcdRowPrintf(LOWROW, "Nodata%2d",pattern_msd);
 					} else {
 						lcdRowPrintf(LOWROW, "data%2d  ",pattern_msd);
+						if ( strcmp(txtData, "start") == 0 ) {
+							ledOut(LED_R);	// ログ送信終了通知(赤LED点灯)
+							msd_sendToPC();	
+							ledOut(LED_G);	// ログ送信終了通知(緑LED点灯)
+							i = 1;
+							cntSetup1 = 0;
+						}
+						
+						if ( i = 1 && cntSetup1 >= 1500 ) {
+							ledOut(0);	// 1.5秒で終了通知を終わる
+						}
 					}
-					if ( taswGet() == SW_PUSH && push1 == 0 ) {
-						push1 = 1;
-						msd_sendToPC();
-					}else if ( taswGet() == 0x0 ) {
-						push1 = 0;
-					}
+					
 					break;
 					
 				case 11:
@@ -842,6 +852,7 @@ void setup( void )
 					break;
 			}
 			break;
+
 	default:
 		lcdRowPrintf(UPROW, "%#x     ", dipswGet());
 		lcdRowPrintf(LOWROW, "none    ");

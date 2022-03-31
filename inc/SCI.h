@@ -8,8 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "R_PG_IGC-P8080_v1.h"
-//#include "vect.h"
-//#include "PeripheralFunctions.h"
+#include "io.h"
 //======================================//
 // ƒVƒ“ƒ{ƒ‹’è‹`
 //======================================//
@@ -90,6 +89,5 @@ extern char	    ascii_num[];
 //====================================//
 void initSCI1( char rate );
 void initSCI6( char rate );
-
 
 #endif /* SCI_H_ */

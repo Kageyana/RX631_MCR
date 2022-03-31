@@ -916,7 +916,7 @@ void Interrupt_SCI5_RXI5(void)
 #if FAST_INTC_VECTOR == VECT_SCI6_RXI6
 #pragma interrupt Interrupt_SCI6_RXI6(vect=VECT_SCI6_RXI6, fint)
 #else
-#pragma interrupt Interrupt_SCI6_RXI6(vect=VECT_SCI6_RXI6)
+// #pragma interrupt Interrupt_SCI6_RXI6(vect=VECT_SCI6_RXI6)
 #endif
 void Interrupt_SCI6_RXI6(void)
 {
