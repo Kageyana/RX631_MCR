@@ -199,7 +199,7 @@ void Interrupt_SCI0_RXI0(void)
 #if FAST_INTC_VECTOR == VECT_SCI1_RXI1
 #pragma interrupt Interrupt_SCI1_RXI1(vect=VECT_SCI1_RXI1, fint)
 #else
-//#pragma interrupt Interrupt_SCI1_RXI1(vect=VECT_SCI1_RXI1)
+#pragma interrupt Interrupt_SCI1_RXI1(vect=VECT_SCI1_RXI1)
 #endif
 void Interrupt_SCI1_RXI1(void)
 {
@@ -916,7 +916,7 @@ void Interrupt_SCI5_RXI5(void)
 #if FAST_INTC_VECTOR == VECT_SCI6_RXI6
 #pragma interrupt Interrupt_SCI6_RXI6(vect=VECT_SCI6_RXI6, fint)
 #else
-// #pragma interrupt Interrupt_SCI6_RXI6(vect=VECT_SCI6_RXI6)
+#pragma interrupt Interrupt_SCI6_RXI6(vect=VECT_SCI6_RXI6)
 #endif
 void Interrupt_SCI6_RXI6(void)
 {

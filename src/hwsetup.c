@@ -21,7 +21,7 @@
 #include "ADconverter.h"
 #include "control.h"
 #include "microSD.h"
-#include "AQM1602Y.h"
+#include "AQM0802A.h"
 #include "ICM20648.h"
 #include "sci.h"
 

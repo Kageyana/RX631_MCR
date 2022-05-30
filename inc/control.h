@@ -8,7 +8,7 @@
 #include "ADconverter.h"
 #include "control.h"
 #include "ICM20648.h"
-#include "AQM1602Y.h"
+#include "AQM0802A.h"
 #include <math.h>
 #include <stdint.h>
 //====================================//

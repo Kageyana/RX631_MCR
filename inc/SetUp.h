@@ -8,7 +8,7 @@
 #include "ADconverter.h"
 #include "control.h"
 #include "E2dataFlash.h"
-#include "AQM1602Y.h"
+#include "AQM0802A.h"
 #include "MicroSD.h"
 #include "sci.h"
 #include "ICM20648.h"

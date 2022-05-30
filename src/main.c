@@ -4,12 +4,11 @@
 #include "io.h"
 #include "mtu.h"
 #include "ADconverter.h"
-
 #include "control.h"
 #include "setup.h"
 #include "sci.h"
 #include "E2dataFlash.h"
-#include "AQM1602Y.h"
+#include "AQM0802A.h"
 #include "microSD.h"
 #include "ICM20648.h"
 #include "MemorryTrace.h"
