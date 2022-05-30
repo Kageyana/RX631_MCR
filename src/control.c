@@ -169,7 +169,7 @@ unsigned int stableSpeedDistance( void )
 ///////////////////////////////////////////////////////////////////////////
 void servoControlTrace( void )
 {
-	int iP, iD, iI, iRet, maxpwm;
+	int iP, iD, iI, iRet;
 	short Dev, Dif;
 	
 	//サーボモータ用PWM値計算
@@ -187,12 +187,6 @@ void servoControlTrace( void )
 	iRet = iRet >> 10;				// PWMを0～100近傍に収める
 
 	// PWMの上限の設定
-	// 出力電圧がVOLTAGELIMとなるDuty比を計算
-	maxpwm = (int8_t)(VOLTAGELIMTRACE / Voltage *100);
-
-	if ( iRet > maxpwm ) iRet =  maxpwm;
-	if ( iRet < -maxpwm ) iRet = -maxpwm;
-
 	if ( iRet >  100 ) iRet =  100;
 	if ( iRet <  -100 ) iRet = -100;
 	
@@ -210,7 +204,7 @@ void servoControlTrace( void )
 void servoControlAngle( void )
 {
 	short i, j, Dev, Dif;
-	int iP, iD, iI, iRet, maxpwm;
+	int iP, iD, iI, iRet;
 	
 	// 目標値、現在値取得
 	i = SetAngle;
@@ -236,11 +230,6 @@ void servoControlAngle( void )
 	iRet = iRet >> 4;		// PWMを0～100近傍に収める
 
 	// PWMの上限の設定
-	// 出力電圧がVOLTAGELIMとなるDuty比を計算
-	maxpwm = (int8_t)(VOLTAGELIMTRACE / Voltage *100);
-
-	if ( iRet > maxpwm ) iRet =  maxpwm;
-	if ( iRet < -maxpwm ) iRet = -maxpwm;
 	if ( iRet >  100 ) iRet =  100;
 	if ( iRet <  -100 ) iRet = -100;
 
@@ -317,7 +306,7 @@ void diff ( signed char pwm )
 ///////////////////////////////////////////////////////////////////////////
 void motorControl( void )
 {
-	int i, j, iRet, Dif, iP, iI, iD, Dev, maxpwm;
+	int i, j, iRet, Dif, iP, iI, iD, Dev;
 	char kp3, ki3, kd3;
 	
 	i = targetSpeed;		// 目標値
@@ -350,11 +339,6 @@ void motorControl( void )
 	iRet = iRet >> 4;
 	
 	// PWMの上限の設定
-	// 出力電圧がVOLTAGELIMとなるDuty比を計算
-	maxpwm = (int8_t)(VOLTAGELIM / Voltage *100);
-
-	// if ( iRet > maxpwm ) iRet =  maxpwm;
-	// if ( iRet < -maxpwm ) iRet = -maxpwm;
 	if ( iRet >  100 ) iRet = 100;
 	if ( iRet <  -100 ) iRet = -100;
 	
