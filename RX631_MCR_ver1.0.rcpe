@@ -22,7 +22,7 @@
       <Category Name="src">
         <Path>src\E2dataFlash.c</Path>
         <Path>src\hwsetup.c</Path>
-        <Path>src\AQM1602Y.c</Path>
+        <Path>src\AQM0802A.c</Path>
         <Path>src\ICM20648.c</Path>
         <Path>src\control.c</Path>
         <Path>src\main.c</Path>
@@ -36,7 +36,7 @@
       </Category>
       <Category Name="inc">
         <Path>inc\E2dataFlash.h</Path>
-        <Path>inc\AQM1602Y.h</Path>
+        <Path>inc\AQM0802A.h</Path>
         <Path>inc\ICM20648.h</Path>
         <Path>inc\control.h</Path>
         <Path>inc\memorrytrace.h</Path>
@@ -249,7 +249,7 @@
           <Path>DefaultBuild\sbrk.obj</Path>
           <Path>DefaultBuild\E2dataFlash.obj</Path>
           <Path>DefaultBuild\hwsetup.obj</Path>
-          <Path>DefaultBuild\AQM1602Y.obj</Path>
+          <Path>DefaultBuild\AQM0802A.obj</Path>
           <Path>DefaultBuild\control.obj</Path>
           <Path>DefaultBuild\main.obj</Path>
           <Path>DefaultBuild\ICM20648.obj</Path>

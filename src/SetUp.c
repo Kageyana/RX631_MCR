@@ -729,7 +729,7 @@ void setup( void )
 						lcdRowPrintf(LOWROW, "Nodata%2d",pattern_msd);
 					} else {
 						lcdRowPrintf(LOWROW, "data%2d  ",pattern_msd);
-						if ( strcmp(txtData, "start") == 0 ) {
+						if ( taswGet() == SW_PUSH ) {
 							ledOut(LED_R);	// ログ送信終了通知(赤LED点灯)
 							msd_sendToPC();	
 							ledOut(LED_G);	// ログ送信終了通知(緑LED点灯)
