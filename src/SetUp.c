@@ -537,8 +537,8 @@ void setup( void )
 			data_tuningLR( &pattern_sensor, 1 );
 			modeAngle = 0;
 			
-			if ( pattern_sensor == 14 ) pattern_sensor = 1;
-			else if ( pattern_sensor == 0 ) pattern_sensor = 13;
+			if ( pattern_sensor == 16 ) pattern_sensor = 1;
+			else if ( pattern_sensor == 0 ) pattern_sensor = 15;
 			
 			switch( pattern_sensor ) {
 				case 1:
@@ -588,7 +588,7 @@ void setup( void )
 						lcdRowPrintf(LOWROW, "   %5d",getServoAngle());
 					}
 					break;
-					
+
 				case 5:
 					// アナログセンサ
 					if ( cntSetup1 >= 100 ) {
@@ -599,6 +599,24 @@ void setup( void )
 					break;
 					
 				case 6:
+					// アナログセンサ
+					if ( cntSetup1 >= 100 ) {
+						cntSetup1 = 0;
+						lcdRowPrintf(UPROW, "RR  %4d",sensorRR);
+						lcdRowPrintf(LOWROW, "LL  %4d",sensorLL);
+					}
+					break;
+
+				case 7:
+					// アナログセンサ
+					if ( cntSetup1 >= 100 ) {
+						cntSetup1 = 0;
+						lcdRowPrintf(UPROW, "C   %4d",sensorC);
+						lcdRowPrintf(LOWROW, "        ");
+					}
+					break;
+					
+				case 8:
 					// デジタル風アナログセンサ, ゲートセンサ
 					motor_test = 0;
 					data_tuningUD ( &sensorG_th, 1 );
@@ -610,7 +628,7 @@ void setup( void )
 					}
 					break;
 					
-				case 7:
+				case 9:
 					// モーターテスト
 					lcdRowPrintf(UPROW, "Motortes");
 					lcdRowPrintf(LOWROW, "    %3d%%",motorTestPwm);
@@ -628,7 +646,7 @@ void setup( void )
 					
 					data_select( &motor_test, SW_PUSH );
 					break;
-				case 8:
+				case 10:
 					// サーボテスト
 					lcdRowPrintf(UPROW, "Servo   ");
 					lcdRowPrintf(LOWROW, "        ");
@@ -637,7 +655,7 @@ void setup( void )
 					
 					data_select( &motor_test, SW_PUSH );
 					break;
-				case 9:
+				case 11:
 					// ラインセンサ差分
 					lcdRowPrintf(UPROW, "gASensor");
 					
@@ -648,7 +666,7 @@ void setup( void )
 					}
 					break;
 					
-				case 10:
+				case 12:
 					// 旋回角度
 					lcdRowPrintf(UPROW, "IMU %4d", (short)TurningAngleIMU);
 					lcdRowPrintf(LOWROW, "        ");
@@ -656,7 +674,7 @@ void setup( void )
 					if ( taswGet() == SW_TOP ) caribrateIMU();
 					break;
 					
-				case 11:
+				case 13:
 					// IMU
 					if ( cntSetup1 >= 500 ) {
 						cntSetup1 = 0;
@@ -665,7 +683,7 @@ void setup( void )
 					}
 					break;
 					
-				case 12:
+				case 14:
 					// IMU
 					if ( cntSetup1 >= 500 ) {
 						cntSetup1 = 0;
@@ -674,7 +692,7 @@ void setup( void )
 					}
 					break;
 					
-				case 13:
+				case 15:
 					// IMU
 					if ( cntSetup1 >= 500 ) {
 						cntSetup1 = 0;

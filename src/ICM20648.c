@@ -140,13 +140,13 @@ void readGyroData() {
 	xg = (int16_t)((val[0] << 8 & 0xff00 ) | val[1]);
 	yg = (int16_t)((val[2] << 8 & 0xff00 ) | val[3]);
 	zg = (int16_t)((val[4] << 8 & 0xff00 ) | val[5]);
-	/*
+	
 	if ( xg < 0 ) xg += offset[0];
 	else		xg -= offset[0];
 	if ( yg < 0 ) yg += offset[1];
 	else		yg -= offset[1];
 	if ( zg < 0 ) zg += offset[2];
-	else		zg -= offset[2];*/
+	else		zg -= offset[2];
 }
 /////////////////////////////////////////////////////////////////////
 // ƒ‚ƒWƒ…[ƒ‹–¼ checkCrossLine

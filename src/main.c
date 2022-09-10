@@ -172,7 +172,7 @@ void main(void){
 				if ( !fixSpeed ) writeFlashBeforeStart(1, 0, 1, 1, 1, 1);	// 速度パラメータをデータフラッシュに保存
 				else writeFlashBeforeStart(0, 0, 1, 1, 1, 1);		// 速度パラメータ以外を保存
 				
-				//if (IMUSet) caribrateIMU();
+				if (IMUSet) caribrateIMU();
 				
 				waitLcd(500);		// 500ms待つ
 				cnt1 = 0;
@@ -493,7 +493,7 @@ void main(void){
 			SetAngle = angle_rightclank;
 			targetSpeed = speed_rightclank_curve * SPEED_CURRENT;
 			
-			if (sensor_inp() == 0x2 && enc1 >= encMM( 50 ) ) {
+			if (sensor_inp() == 0x2 ) {
 				y1 = getLinePositionNow( getServoAngle(), TurningAngleIMU);
 				enc1 = 0;
 				Int = 0;			// 積分リセット
@@ -516,19 +516,40 @@ void main(void){
 			
 		case 34:
 			// 角度維持
-			SetAngle = -angleAfter * DEG2AD;	// ラインからの角度10°
+			// SetAngle = -angleAfter * DEG2AD;	// ラインからの角度10°
+			servoPwmOut( 90 );
 			targetSpeed = speed_rightclank_curve * SPEED_CURRENT;
 			
-			if( sensor_inp() == 0x2 && enc1 >= encMM( 100 ) ) {
+			// if ( sensor_inp() == 0x4 ) {
+			// 	angleAfter = getServoAngle();
+			// 	enc1 = 0;
+			// 	pattern = 35;
+			// 	break;
+			// }
+			if( sensor_inp() == 0x2 ) {
 				enc1 = 0;
 				modeAngle = 0;
 				Int = 0;			// 積分リセット
-				pattern = 35;
+				pattern = 36;
+				break;
+			}
+			break;
+
+		case 35:
+			// 角度維持
+			SetAngle = angleAfter;
+			targetSpeed = speed_rightclank_curve * SPEED_CURRENT;
+			
+			if( sensor_inp() == 0x2 ) {
+				enc1 = 0;
+				modeAngle = 0;
+				Int = 0;			// 積分リセット
+				pattern = 36;
 				break;
 			}
 			break;
 			
-		case 35:
+		case 36:
 			// 復帰
 			targetSpeed = speed_rightclank_escape * SPEED_CURRENT;
 
@@ -546,7 +567,7 @@ void main(void){
 			SetAngle = angle_leftclank;
 			targetSpeed = speed_leftclank_curve * SPEED_CURRENT;
 			
-			if (sensor_inp() == 0x2 && enc1 >= encMM( 50 ) ) {
+			if (sensor_inp() == 0x2 ) {
 				y1 = getLinePositionNow( getServoAngle(), TurningAngleIMU);
 				enc1 = 0;
 				Int = 0;			// 積分リセット
@@ -569,19 +590,40 @@ void main(void){
 			
 		case 44:
 			// 角度維持
-			SetAngle = angleAfter * DEG2AD;	// ラインからの角度10°
+			// SetAngle = angleAfter * DEG2AD;	// ラインからの角度10°
+			servoPwmOut( -90 );
 			targetSpeed = speed_leftclank_curve * SPEED_CURRENT;
 			
-			if( sensor_inp() == 0x2 && enc1 >= encMM( 100 ) ) {
+			// if ( sensor_inp() == 0x1 ) {
+			// 	angleAfter = getServoAngle();
+			// 	enc1 = 0;
+			// 	pattern = 45;
+			// 	break;
+			// }
+			if( sensor_inp() == 0x2 ) {
 				enc1 = 0;
 				modeAngle = 0;
 				Int = 0;			// 積分リセット
-				pattern = 45;
+				pattern = 46;
+				break;
+			}
+			break;
+
+		case 45:
+			// 角度維持
+			SetAngle = angleAfter;
+			targetSpeed = speed_leftclank_curve * SPEED_CURRENT;
+			
+			if( sensor_inp() == 0x2 ) {
+				enc1 = 0;
+				modeAngle = 0;
+				Int = 0;			// 積分リセット
+				pattern = 46;
 				break;
 			}
 			break;
 			
-		case 45:
+		case 46:
 			// 復帰
 			targetSpeed = speed_leftclank_escape * SPEED_CURRENT;
 
@@ -640,7 +682,7 @@ void main(void){
 			SetAngle = 0;
 			targetSpeed = speed_rightchange_curve * SPEED_CURRENT;
 			
-			if( sensor_inp() == 0x4 ) {
+			if( sensor_inp() == 0x4 && enc1 >= encMM(60)) {
 				enc1 = 0;
 				modeAngle = 0;
 				modeAutoMotor = 0;
@@ -720,7 +762,7 @@ void main(void){
 			SetAngle = 0;
 			targetSpeed = speed_leftchange_curve * SPEED_CURRENT;
 
-			if( sensor_inp() == 0x1 ) {
+			if( sensor_inp() == 0x1 && enc1 >= encMM(60) ) {
 				enc1 = 0;
 				modeAngle = 0;
 				modeAutoMotor = 0;
@@ -1007,7 +1049,7 @@ void Timer (void) {
 			else cntOut2 = 0;
 			if ( Encoder <= 1 && Encoder >= -1 ) cntOut3++;		// エンコーダ停止(ひっくり返った？)
 			else cntOut3 = 0;
-			if ( (short)RollAngleIMU >= 5 || (short)RollAngleIMU <= -5 ) cntOut4++;
+			if ( (short)RollAngleIMU >= 10 || (short)RollAngleIMU <= -10 ) cntOut4++;
 			else	cntOut4 = 0;
 		}
 	} else if ( pattern < 11 ) {

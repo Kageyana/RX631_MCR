@@ -28,7 +28,7 @@
 
 #define M_PI        3.141592
 // 緊急停止
-#define	STOPPING_METER		   3		// 停止距離
+#define	STOPPING_METER		   36		// 停止距離
 
 // 各セクションでの目標速度　x/10[m/s]
 #define SPEED_STRAIGHT			54	// 通常トレース
@@ -73,7 +73,7 @@
 #define VOLTAGELIM 10.5 // 出力最大電圧
 #define VOLTAGELIMTRACE 7.0 // 出力最大電圧
 //白線トレース
-#define KP		12
+#define KP		21
 #define KI		0
 #define KD		53
 

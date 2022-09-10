@@ -119,11 +119,11 @@ unsigned char sensor_inp(void)
 {
 	char l, c, r;
 	
-	if (sensorRR < 500 ) r = 0x1;
+	if (sensorRR < 350 ) r = 0x1;
 	else r = 0;
-	if (sensorC < 500 ) c = 0x2;
+	if (sensorC < 200 ) c = 0x2;
 	else c = 0;
-	if (sensorLL < 500 ) l = 0x4;
+	if (sensorLL < 350 ) l = 0x4;
 	else l = 0;
 	
 	return l+c+r;
