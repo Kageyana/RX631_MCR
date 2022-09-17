@@ -1,7 +1,7 @@
-#ifndef LINECHASE_H_
+ï»¿#ifndef LINECHASE_H_
 #define LINECHASE_H_
 //====================================//
-// ƒCƒ“ƒNƒ‹[ƒh
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //====================================//
 #include "io.h"
 #include "mtu.h"
@@ -12,184 +12,184 @@
 #include <math.h>
 #include <stdint.h>
 //====================================//
-// ƒVƒ“ƒ{ƒ‹’è‹`
+// ã‚·ãƒ³ãƒœãƒ«å®šç¾©
 //====================================//
-/*************************************** ©“®¶¬ŠÖ” *************************************/
-// ƒ^ƒCƒ}Š„‚è‚İ
-#define SET_CMT_C0		R_PG_Timer_Set_CMT_U0_C0();			// ƒRƒ“ƒyƒAƒ}ƒbƒ`ƒ^ƒCƒ}‰Šú‰»(ch0)
-#define START_CMT_C0	R_PG_Timer_StartCount_CMT_U0_C0();	// ƒJƒEƒ“ƒgƒXƒ^[ƒg(ch0)
-#define STOP_CMT_C0	    R_PG_Timer_HaltCount_CMT_U0_C0();	// ƒJƒEƒ“ƒgˆê’â~(ch0)
+/*************************************** è‡ªå‹•ç”Ÿæˆé–¢æ•° *************************************/
+// ã‚¿ã‚¤ãƒå‰²ã‚Šè¾¼ã¿
+#define SET_CMT_C0		R_PG_Timer_Set_CMT_U0_C0();			// ã‚³ãƒ³ãƒšã‚¢ãƒãƒƒãƒã‚¿ã‚¤ãƒåˆæœŸåŒ–(ch0)
+#define START_CMT_C0	R_PG_Timer_StartCount_CMT_U0_C0();	// ã‚«ã‚¦ãƒ³ãƒˆã‚¹ã‚¿ãƒ¼ãƒˆ(ch0)
+#define STOP_CMT_C0	    R_PG_Timer_HaltCount_CMT_U0_C0();	// ã‚«ã‚¦ãƒ³ãƒˆä¸€æ™‚åœæ­¢(ch0)
 /******************************************************************************************/
-// ‹@‘Ì”Œ³
+// æ©Ÿä½“è«¸å…ƒ
 #define WHELLBASE   149
 #define TREAD       143
 #define SENSORBAR   307
 #define MAXDEG      42
 
 #define M_PI        3.141592
-// ‹Ù‹}’â~
-#define	STOPPING_METER		   3		// ’â~‹——£
+// ç·Šæ€¥åœæ­¢
+#define	STOPPING_METER		   3		// åœæ­¢è·é›¢
 
-// ŠeƒZƒNƒVƒ‡ƒ“‚Å‚Ì–Ú•W‘¬“x@x/10[m/s]
-#define SPEED_STRAIGHT			54	// ’ÊíƒgƒŒ[ƒX
-#define SPEED_CURVE_BRAKE		30	// ƒJ[ƒuƒuƒŒ[ƒL
-#define SPEED_CURVE_R600		46	// R600ƒJ[ƒu‘¬“x
-#define SPEED_CURVE_R450		40	// R450ƒJ[ƒu‘¬“x
-#define SPEED_CURVE_STRAIGHT	42	// SšƒJ[ƒu’¼ü‘¬“x
+// å„ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã§ã®ç›®æ¨™é€Ÿåº¦ã€€x/10[m/s]
+#define SPEED_STRAIGHT			54	// é€šå¸¸ãƒˆãƒ¬ãƒ¼ã‚¹
+#define SPEED_CURVE_BRAKE		30	// ã‚«ãƒ¼ãƒ–ãƒ–ãƒ¬ãƒ¼ã‚­
+#define SPEED_CURVE_R600		46	// R600ã‚«ãƒ¼ãƒ–é€Ÿåº¦
+#define SPEED_CURVE_R450		40	// R450ã‚«ãƒ¼ãƒ–é€Ÿåº¦
+#define SPEED_CURVE_STRAIGHT	42	// Så­—ã‚«ãƒ¼ãƒ–ç›´ç·šé€Ÿåº¦
 
-#define SPEED_CROSSLINE			    28	// ƒNƒƒXƒ‰ƒCƒ“i“ü‘¬“x
-#define SPEED_CLANK_TRACE			32	// ƒNƒ‰ƒ“ƒNi“ü‘¬“x
-#define SPEED_RIGHTCLANK_CURVE		22	// ‰EƒNƒ‰ƒ“ƒNù‰ñ‘¬“x
-#define SPEED_RIGHTCLANK_ESCAPE		40	// ‰EƒNƒ‰ƒ“ƒN•œ‹A‘¬“x
-#define SPEED_LEFTCLANK_CURVE		22	// ¶ƒNƒ‰ƒ“ƒNù‰ñ‘¬“x
-#define SPEED_LEFTCLANK_ESCAPE		40	// ¶ƒNƒ‰ƒ“ƒN•œ‹A‘¬“x
+#define SPEED_CROSSLINE			    28	// ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³é€²å…¥é€Ÿåº¦
+#define SPEED_CLANK_TRACE			32	// ã‚¯ãƒ©ãƒ³ã‚¯é€²å…¥é€Ÿåº¦
+#define SPEED_RIGHTCLANK_CURVE		22	// å³ã‚¯ãƒ©ãƒ³ã‚¯æ—‹å›é€Ÿåº¦
+#define SPEED_RIGHTCLANK_ESCAPE		40	// å³ã‚¯ãƒ©ãƒ³ã‚¯å¾©å¸°é€Ÿåº¦
+#define SPEED_LEFTCLANK_CURVE		22	// å·¦ã‚¯ãƒ©ãƒ³ã‚¯æ—‹å›é€Ÿåº¦
+#define SPEED_LEFTCLANK_ESCAPE		40	// å·¦ã‚¯ãƒ©ãƒ³ã‚¯å¾©å¸°é€Ÿåº¦
 
-#define SPEED_HALFLINE				30	// ƒn[ƒtƒ‰ƒCƒ“i“ü‘¬“x
-#define SPEED_RIGHTCHANGE_TRACE	    46	// ‰EƒŒ[ƒ“ƒ`ƒFƒ“ƒWi“ü‘¬“x
-#define SPEED_RIGHTCHANGE_CURVE	    46	// ‰EƒŒ[ƒ“ƒ`ƒFƒ“ƒWù‰ñ‘¬“x
-#define SPEED_RIGHTCHANGE_ESCAPE	46	// ‰EƒŒ[ƒ“ƒ`ƒFƒ“ƒW•œ‹A‘¬“x
-#define SPEED_LEFTCHANGE_TRACE		46	// ¶ƒŒ[ƒ“ƒ`ƒFƒ“ƒWi“ü‘¬“x
-#define SPEED_LEFTCHANGE_CURVE		46	// ¶ƒŒ[ƒ“ƒ`ƒFƒ“ƒWù‰ñ‘¬“x
-#define SPEED_LEFTCHANGE_ESCAPE		46	// ¶ƒŒ[ƒ“ƒ`ƒFƒ“ƒW•œ‹A‘¬“x
+#define SPEED_HALFLINE				30	// ãƒãƒ¼ãƒ•ãƒ©ã‚¤ãƒ³é€²å…¥é€Ÿåº¦
+#define SPEED_RIGHTCHANGE_TRACE	    46	// å³ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸é€²å…¥é€Ÿåº¦
+#define SPEED_RIGHTCHANGE_CURVE	    46	// å³ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸æ—‹å›é€Ÿåº¦
+#define SPEED_RIGHTCHANGE_ESCAPE	46	// å³ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸å¾©å¸°é€Ÿåº¦
+#define SPEED_LEFTCHANGE_TRACE		46	// å·¦ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸é€²å…¥é€Ÿåº¦
+#define SPEED_LEFTCHANGE_CURVE		46	// å·¦ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸æ—‹å›é€Ÿåº¦
+#define SPEED_LEFTCHANGE_ESCAPE		46	// å·¦ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸å¾©å¸°é€Ÿåº¦
 
-#define SPEED_SLOPE_BRAKE		26	    // ‰º‚èâI“_‘¬“x
-#define SPEED_SLOPE_TRACE		36	    // â“Ç‚İ”ò‚Î‚µ‘¬“x
-// Šp“x
-#define ANGLE_RIGHTCLANK		-1450	// ‰EƒNƒ‰ƒ“ƒNù‰ñŠp“x
-#define ANGLE_LEFTCLANK		    1450	// ¶ƒNƒ‰ƒ“ƒNù‰ñŠp“x
-#define ANGLE_RIGHTCHANGE		-700	// ‰EƒŒ[ƒ“ƒ`ƒFƒ“ƒWù‰ñŠp“x
-#define ANGLE_LEFTCHANGE		700	    // ‰EƒŒ[ƒ“ƒ`ƒFƒ“ƒWù‰ñŠp“x
+#define SPEED_SLOPE_BRAKE		26	    // ä¸‹ã‚Šå‚çµ‚ç‚¹é€Ÿåº¦
+#define SPEED_SLOPE_TRACE		36	    // å‚èª­ã¿é£›ã°ã—é€Ÿåº¦
+// è§’åº¦
+#define ANGLE_RIGHTCLANK		-1450	// å³ã‚¯ãƒ©ãƒ³ã‚¯æ—‹å›è§’åº¦
+#define ANGLE_LEFTCLANK		    1450	// å·¦ã‚¯ãƒ©ãƒ³ã‚¯æ—‹å›è§’åº¦
+#define ANGLE_RIGHTCHANGE		-700	// å³ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸æ—‹å›è§’åº¦
+#define ANGLE_LEFTCHANGE		700	    // å³ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸æ—‹å›è§’åº¦
 
-// ƒJ[ƒuŠÖ˜A
-#define CURVE_R600_START		120		// R600ŠJnAD’l
-#define CURVE_R450_START		600		// R450ŠJnAD’l
+// ã‚«ãƒ¼ãƒ–é–¢é€£
+#define CURVE_R600_START		120		// R600é–‹å§‹ADå€¤
+#define CURVE_R450_START		600		// R450é–‹å§‹ADå€¤
 
-// ƒWƒƒƒCƒŠÖ˜A
-#define SLOPE_UPPERLINE_IMU		4		// ã‚èâŒŸoŠp“x
-#define SLOPE_LOWERLINE_IMU	    -4		// ‰º‚èâŒŸoŠp“x
-#define INTEGRAL_LIMIT			200		// Šp‘¬“xÏZŠÔ
+// ã‚¸ãƒ£ã‚¤ãƒ­é–¢é€£
+#define SLOPE_UPPERLINE_IMU		4		// ä¸Šã‚Šå‚æ¤œå‡ºè§’åº¦
+#define SLOPE_LOWERLINE_IMU	    -4		// ä¸‹ã‚Šå‚æ¤œå‡ºè§’åº¦
+#define INTEGRAL_LIMIT			200		// è§’é€Ÿåº¦ç©ç®—æ™‚é–“
 
-// PIDƒQƒCƒ“ŠÖ˜A
-#define VOLTAGELIM 10.5 // o—ÍÅ‘å“dˆ³
-#define VOLTAGELIMTRACE 7.0 // o—ÍÅ‘å“dˆ³
-//”’üƒgƒŒ[ƒX
+// PIDã‚²ã‚¤ãƒ³é–¢é€£
+#define VOLTAGELIM 10.5 // å‡ºåŠ›æœ€å¤§é›»åœ§
+#define VOLTAGELIMTRACE 7.0 // å‡ºåŠ›æœ€å¤§é›»åœ§
+//ç™½ç·šãƒˆãƒ¬ãƒ¼ã‚¹
 #define KP		12
 #define KI		0
 #define KD		53
 
-// Šp“x§Œä
+// è§’åº¦åˆ¶å¾¡
 #define KP2		2
 #define KI2		5
 #define KD2		10
 
-// ‘¬“x§Œä
+// é€Ÿåº¦åˆ¶å¾¡
 #define KP3		10
 #define KI3		4
 #define KD3		0
 
-// ‹Ù‹}’â~ŠÖ˜A
-#define STOP_SENSOR1	60		// ƒZƒ“ƒT‘S“”
-#define STOP_SENSOR2	800		// ƒZƒ“ƒT‘SÁ“”
-#define STOP_ENCODER	100		// ƒGƒ“ƒRƒiƒX‚Ì‰Á‘¬“xŒŸ’m(ƒR[ƒX‚©‚ç—‚¿‚½H)
-#define STOP_COUNT		1000	// ŠÔ’â~
-//===================================[ƒ_’â~(‚Ğ‚Á‚­‚è•Ô‚Á‚½H)
-#define STOP_GYRO		100		// ƒ}ƒC=//
-// ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾
+// ç·Šæ€¥åœæ­¢é–¢é€£
+#define STOP_SENSOR1	60		// ã‚»ãƒ³ã‚µå…¨ç¯
+#define STOP_SENSOR2	800		// ã‚»ãƒ³ã‚µå…¨æ¶ˆç¯
+#define STOP_ENCODER	100		// ã‚¨ãƒ³ã‚³ãƒŠã‚¹ã®åŠ é€Ÿåº¦æ¤œçŸ¥(ã‚³ãƒ¼ã‚¹ã‹ã‚‰è½ã¡ãŸï¼Ÿ)
+#define STOP_COUNT		1000	// æ™‚é–“åœæ­¢
+//===================================ãƒ¼ãƒ€åœæ­¢(ã²ã£ãã‚Šè¿”ã£ãŸï¼Ÿ)
+#define STOP_GYRO		100		// ãƒã‚¤=//
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€
 //====================================//
-// ƒpƒ^[ƒ“Aƒ‚[ƒhŠÖ˜A
-extern char pattern;		// ƒpƒ^[ƒ“”Ô†
-extern char modeLCD;		// LCD•\¦‘I‘ğ
-extern char modeSlope;		// âƒ`ƒFƒbƒN		0:ã‚èân‚ß	1:ã‚èâI‚í‚è	2:‰º‚èân‚ß	3:‰º‚èâI‚í‚è
-extern char	modeAngle;		// ƒT[ƒ{PWM•ÏX	0:”’üƒgƒŒ[ƒX	1:Šp“x§Œä
-extern char	modePushcart;	// è‰Ÿ‚µƒ‚[ƒh‰Â”Û	0:©“®‘–s	1:è‰Ÿ‚µ
-extern char	msdset;			// MicroSD‚ª‰Šú‰»‚³‚ê‚½‚©	0:‰Šú‰»¸”s	1:‰Šú‰»¬Œ÷
-extern char	IMUSet;			// IMU‚ª‰Šú‰»‚³‚ê‚½‚©	0: ‰Šú‰»¸”s	1:‰Šú‰»¬Œ÷
+// ãƒ‘ã‚¿ãƒ¼ãƒ³ã€ãƒ¢ãƒ¼ãƒ‰é–¢é€£
+extern char pattern;		// ãƒ‘ã‚¿ãƒ¼ãƒ³ç•ªå·
+extern char modeLCD;		// LCDè¡¨ç¤ºé¸æŠ
+extern char modeSlope;		// å‚ãƒã‚§ãƒƒã‚¯		0:ä¸Šã‚Šå‚å§‹ã‚	1:ä¸Šã‚Šå‚çµ‚ã‚ã‚Š	2:ä¸‹ã‚Šå‚å§‹ã‚	3:ä¸‹ã‚Šå‚çµ‚ã‚ã‚Š
+extern char	modeAngle;		// ã‚µãƒ¼ãƒœPWMå¤‰æ›´	0:ç™½ç·šãƒˆãƒ¬ãƒ¼ã‚¹	1:è§’åº¦åˆ¶å¾¡
+extern char	modePushcart;	// æ‰‹æŠ¼ã—ãƒ¢ãƒ¼ãƒ‰å¯å¦	0:è‡ªå‹•èµ°è¡Œ	1:æ‰‹æŠ¼ã—
+extern char	msdset;			// MicroSDãŒåˆæœŸåŒ–ã•ã‚ŒãŸã‹	0:åˆæœŸåŒ–å¤±æ•—	1:åˆæœŸåŒ–æˆåŠŸ
+extern char	IMUSet;			// IMUãŒåˆæœŸåŒ–ã•ã‚ŒãŸã‹	0: åˆæœŸåŒ–å¤±æ•—	1:åˆæœŸåŒ–æˆåŠŸ
 
-// ƒpƒ‰ƒ[ƒ^ŠÖ˜A
-// ‹——£
-extern short	stopping_meter;			    // ’â~‹——£
-// ‘¬“x
-extern short	speed_straight;			    // ’ÊíƒgƒŒ[ƒX
-extern short	speed_curve_brake;		    // ƒJ[ƒuƒuƒŒ[ƒL
-extern short	speed_curve_r600;		    // R600ƒJ[ƒu‘¬“x
-extern short	speed_curve_r450;		    // R450ƒJ[ƒu‘¬“x
-extern short	speed_curve_straight;	    // SšƒJ[ƒu’¼ü‘¬“x
+// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿é–¢é€£
+// è·é›¢
+extern short	stopping_meter;			    // åœæ­¢è·é›¢
+// é€Ÿåº¦
+extern short	speed_straight;			    // é€šå¸¸ãƒˆãƒ¬ãƒ¼ã‚¹
+extern short	speed_curve_brake;		    // ã‚«ãƒ¼ãƒ–ãƒ–ãƒ¬ãƒ¼ã‚­
+extern short	speed_curve_r600;		    // R600ã‚«ãƒ¼ãƒ–é€Ÿåº¦
+extern short	speed_curve_r450;		    // R450ã‚«ãƒ¼ãƒ–é€Ÿåº¦
+extern short	speed_curve_straight;	    // Så­—ã‚«ãƒ¼ãƒ–ç›´ç·šé€Ÿåº¦
 
-extern short	speed_crossline;			// ƒNƒƒXƒ‰ƒCƒ“i“ü‘¬“x
-extern short	speed_ckank_trace;		    // ƒNƒ‰ƒ“ƒNi“ü‘¬“x
-extern short	speed_rightclank_curve;	    // ‰EƒNƒ‰ƒ“ƒNù‰ñ‘¬“x
-extern short	speed_rightclank_escape;	// ‰EƒNƒ‰ƒ“ƒN•œ‹A‘¬“x
-extern short	speed_leftclank_curve;	    // ¶ƒNƒ‰ƒ“ƒNù‰ñ‘¬“x
-extern short	speed_leftclank_escape;	    // ¶ƒNƒ‰ƒ“ƒN•œ‹A‘¬“x
+extern short	speed_crossline;			// ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³é€²å…¥é€Ÿåº¦
+extern short	speed_ckank_trace;		    // ã‚¯ãƒ©ãƒ³ã‚¯é€²å…¥é€Ÿåº¦
+extern short	speed_rightclank_curve;	    // å³ã‚¯ãƒ©ãƒ³ã‚¯æ—‹å›é€Ÿåº¦
+extern short	speed_rightclank_escape;	// å³ã‚¯ãƒ©ãƒ³ã‚¯å¾©å¸°é€Ÿåº¦
+extern short	speed_leftclank_curve;	    // å·¦ã‚¯ãƒ©ãƒ³ã‚¯æ—‹å›é€Ÿåº¦
+extern short	speed_leftclank_escape;	    // å·¦ã‚¯ãƒ©ãƒ³ã‚¯å¾©å¸°é€Ÿåº¦
 
-extern short	speed_halfine;			    // ƒn[ƒtƒ‰ƒCƒ“i“ü‘¬“x
-extern short	speed_rightchange_trace;	// ‰EƒŒ[ƒ“ƒ`ƒFƒ“ƒWi“ü‘¬“x
-extern short	speed_rightchange_curve;	// ‰EƒŒ[ƒ“ƒ`ƒFƒ“ƒWù‰ñ‘¬“x
-extern short	speed_rightchange_escape;   // ‰EƒŒ[ƒ“ƒ`ƒFƒ“ƒW•œ‹A‘¬“x
+extern short	speed_halfine;			    // ãƒãƒ¼ãƒ•ãƒ©ã‚¤ãƒ³é€²å…¥é€Ÿåº¦
+extern short	speed_rightchange_trace;	// å³ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸é€²å…¥é€Ÿåº¦
+extern short	speed_rightchange_curve;	// å³ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸æ—‹å›é€Ÿåº¦
+extern short	speed_rightchange_escape;   // å³ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸å¾©å¸°é€Ÿåº¦
 
-extern short	speed_leftchange_trace;	    // ¶ƒŒ[ƒ“ƒ`ƒFƒ“ƒWi“ü‘¬“x
-extern short	speed_leftchange_curve;	    // ¶ƒŒ[ƒ“ƒ`ƒFƒ“ƒWù‰ñ‘¬“x
-extern short	speed_leftchange_escape;	// ¶ƒŒ[ƒ“ƒ`ƒFƒ“ƒWù‰ñ‘¬“x
+extern short	speed_leftchange_trace;	    // å·¦ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸é€²å…¥é€Ÿåº¦
+extern short	speed_leftchange_curve;	    // å·¦ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸æ—‹å›é€Ÿåº¦
+extern short	speed_leftchange_escape;	// å·¦ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸æ—‹å›é€Ÿåº¦
 
-extern short	speed_slope_brake;		    // ‰º‚èâI“_‘¬“x
-extern short	speed_slope_trace;		    // â“Ç‚İ”ò‚Î‚µ‘¬“x
+extern short	speed_slope_brake;		    // ä¸‹ã‚Šå‚çµ‚ç‚¹é€Ÿåº¦
+extern short	speed_slope_trace;		    // å‚èª­ã¿é£›ã°ã—é€Ÿåº¦
 
-// ƒT[ƒ{Šp“x
-extern short	angle_rightclank;		    // ‰EƒNƒ‰ƒ“ƒNù‰ñŠp“x
-extern short	angle_leftclank;			// ¶ƒNƒ‰ƒ“ƒNù‰ñŠp“x
-extern short	angle_rightchange;		    // ‰EƒŒ[ƒ“ƒ`ƒFƒ“ƒWù‰ñŠp“x
-extern short	angle_leftchange;		    // ‰EƒŒ[ƒ“ƒ`ƒFƒ“ƒWù‰ñŠp“x
+// ã‚µãƒ¼ãƒœè§’åº¦
+extern short	angle_rightclank;		    // å³ã‚¯ãƒ©ãƒ³ã‚¯æ—‹å›è§’åº¦
+extern short	angle_leftclank;			// å·¦ã‚¯ãƒ©ãƒ³ã‚¯æ—‹å›è§’åº¦
+extern short	angle_rightchange;		    // å³ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸æ—‹å›è§’åº¦
+extern short	angle_leftchange;		    // å³ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸æ—‹å›è§’åº¦
 
-// ƒ^ƒCƒ}ŠÖ˜A
-extern short	cntGyro;			// Šp“xŒvZ—pƒJƒEƒ“ƒ^
+// ã‚¿ã‚¤ãƒé–¢é€£
+extern short	cntGyro;			// è§’åº¦è¨ˆç®—ç”¨ã‚«ã‚¦ãƒ³ã‚¿
 
-// Šp“xŠÖ˜A
-extern double 	TurningAngleEnc;	// ƒGƒ“ƒR[ƒ_‚©‚ç‹‚ß‚½ù‰ñŠp“x
-extern double	PichAngleAD;		// ƒAƒiƒƒOƒWƒƒƒCƒ‚©‚ç‹‚ß‚½ƒsƒbƒ`Šp“x
+// è§’åº¦é–¢é€£
+extern double 	TurningAngleEnc;	// ã‚¨ãƒ³ã‚³ãƒ¼ãƒ€ã‹ã‚‰æ±‚ã‚ãŸæ—‹å›è§’åº¦
+extern double	PichAngleAD;		// ã‚¢ãƒŠãƒ­ã‚°ã‚¸ãƒ£ã‚¤ãƒ­ã‹ã‚‰æ±‚ã‚ãŸãƒ”ãƒƒãƒè§’åº¦
 
-// ƒ‚[ƒ^[ŠÖ˜A
-extern signed char 	motorPwm;	    // ƒ‚[ƒ^[§ŒäPWM
-extern short		targetSpeed;	// –Ú•W‘¬“x
+// ãƒ¢ãƒ¼ã‚¿ãƒ¼é–¢é€£
+extern signed char 	motorPwm;	    // ãƒ¢ãƒ¼ã‚¿ãƒ¼åˆ¶å¾¡PWM
+extern short		targetSpeed;	// ç›®æ¨™é€Ÿåº¦
 extern unsigned int encStable;
 extern short        cntStable;
 
-// ƒQƒCƒ“ŠÖ˜A
+// ã‚²ã‚¤ãƒ³é–¢é€£
 extern char	    kp_buff, ki_buff, kd_buff;
 extern char	    kp2_buff, ki2_buff, kd2_buff;
 extern char 	kp3_buff, ki3_buff, kd3_buff;
 
-// ƒfƒ‚ŠÖ˜A
+// ãƒ‡ãƒ¢é–¢é€£
 extern char demo;
 
-// ƒT[ƒ{ŠÖ˜A
-extern double		Int;		// I¬•ªÏZ’l(”’üƒgƒŒ[ƒX)
-extern short 		SetAngle;	// –Ú•WŠp“x
-extern signed char 	ServoPwm;	// ”’üƒgƒŒ[ƒXƒT[ƒ{PWM
-extern signed char 	ServoPwm2;	// Šp“xƒT[ƒ{PWM
+// ã‚µãƒ¼ãƒœé–¢é€£
+extern double		Int;		// Iæˆåˆ†ç©ç®—å€¤(ç™½ç·šãƒˆãƒ¬ãƒ¼ã‚¹)
+extern short 		SetAngle;	// ç›®æ¨™è§’åº¦
+extern signed char 	ServoPwm;	// ç™½ç·šãƒˆãƒ¬ãƒ¼ã‚¹ã‚µãƒ¼ãƒœPWM
+extern signed char 	ServoPwm2;	// è§’åº¦ã‚µãƒ¼ãƒœPWM
 
 //====================================//
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //====================================//
-// ƒ}[ƒJ[ŠÖ˜A
+// ãƒãƒ¼ã‚«ãƒ¼é–¢é€£
 bool checkCrossLine( void );
 bool checkRightLine( void );
 bool checkLeftLine( void );
 signed char checkSlope( void );
 
-// ƒGƒ“ƒR[ƒ_ŠÖ˜A
+// ã‚¨ãƒ³ã‚³ãƒ¼ãƒ€é–¢é€£
 unsigned int encMM( short mm );
 unsigned int stableSpeedDistance( void );
 
-// ƒ‚[ƒ^[ŠÖ˜A
+// ãƒ¢ãƒ¼ã‚¿ãƒ¼é–¢é€£
 void motorControl( void );
 
-// ‹@‘Ì§ŒäŠÖ˜A
+// æ©Ÿä½“åˆ¶å¾¡é–¢é€£
 void diff ( signed char pwm );
 double getLinePositionNow( short angleAD, double angleIMU );
 double getLinePositionAfter ( short angle, double angleIMU );
 short getReturnAngle( double angleIMU, double y1);
 
-// ƒT[ƒ{ŠÖ˜A
+// ã‚µãƒ¼ãƒœé–¢é€£
 void servoControlTrace( void );
 void servoControlAngle( void );
 

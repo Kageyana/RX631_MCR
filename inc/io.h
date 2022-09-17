@@ -1,11 +1,11 @@
-#ifndef IO_H_
+ï»¿#ifndef IO_H_
 #define IO_H_
 //====================================//
-// ƒCƒ“ƒNƒ‹[ƒh
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //====================================//
 #include "R_PG_IGC-P8080_v1.h"
 //====================================//
-// ƒVƒ“ƒ{ƒ‹’è‹`
+// ã‚·ãƒ³ãƒœãƒ«å®šç¾©
 //====================================//
 #define SW_LEFT     0x1
 #define SW_TOP      0x2
@@ -17,8 +17,8 @@
 #define LED_G       0x2
 #define LED_B       0x1
 
-/*************************************** ©“®¶¬ŠÖ” *************************************/
-// ƒtƒ‹ƒJƒ‰[LED
+/*************************************** è‡ªå‹•ç”Ÿæˆé–¢æ•° *************************************/
+// ãƒ•ãƒ«ã‚«ãƒ©ãƒ¼LED
 #define LEDR_ON		R_PG_IO_PORT_Write_PB0( 0 );
 #define LEDR_OFF	R_PG_IO_PORT_Write_PB0( 1 );
 
@@ -28,14 +28,14 @@
 #define LEDB_ON		R_PG_IO_PORT_Write_PA6( 0 );
 #define LEDB_OFF	R_PG_IO_PORT_Write_PA6( 1 );
 
-// ƒ^ƒNƒgƒXƒCƒbƒ`
-// ƒfƒWƒ^ƒ‹ƒCƒ“ƒvƒbƒg
-#define TACTSWITCH2	R_PG_IO_PORT_Read_P13(&tasw_d[0]);		// ¶
-#define TACTSWITCH1	R_PG_IO_PORT_Read_P54(&tasw_d[1]);		// ã
-#define TACTSWITCH3	R_PG_IO_PORT_Read_P53(&tasw_d[2]);		// ‰E
-#define TACTSWITCH4	R_PG_IO_PORT_Read_P55(&tasw_d[3]);		// ‰º
-#define TACTSWITCH5	R_PG_IO_PORT_Read_P12(&tasw_d[4]);		// ‰Ÿ‚µ‚İ
-// ƒ[ƒ^ƒŠ[ƒR[ƒhƒXƒCƒbƒ`
+// ã‚¿ã‚¯ãƒˆã‚¹ã‚¤ãƒƒãƒ
+// ãƒ‡ã‚¸ã‚¿ãƒ«ã‚¤ãƒ³ãƒ—ãƒƒãƒˆ
+#define TACTSWITCH2	R_PG_IO_PORT_Read_P13(&tasw_d[0]);		// å·¦
+#define TACTSWITCH1	R_PG_IO_PORT_Read_P54(&tasw_d[1]);		// ä¸Š
+#define TACTSWITCH3	R_PG_IO_PORT_Read_P53(&tasw_d[2]);		// å³
+#define TACTSWITCH4	R_PG_IO_PORT_Read_P55(&tasw_d[3]);		// ä¸‹
+#define TACTSWITCH5	R_PG_IO_PORT_Read_P12(&tasw_d[4]);		// æŠ¼ã—è¾¼ã¿
+// ãƒ­ãƒ¼ã‚¿ãƒªãƒ¼ã‚³ãƒ¼ãƒ‰ã‚¹ã‚¤ãƒƒãƒ
 #define DIPSWITCH1	R_PG_IO_PORT_Read_P27(&dpsw_d[0]);
 #define DIPSWITCH2	R_PG_IO_PORT_Read_P17(&dpsw_d[1]);
 #define DIPSWITCH3	R_PG_IO_PORT_Read_P22(&dpsw_d[2]);
@@ -43,19 +43,19 @@
 /******************************************************************************************/
 
 //====================================//
-// ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€
 //====================================//
 
 //====================================//
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //====================================//
-// IOƒ|[ƒg
+// IOãƒãƒ¼ãƒˆ
 void initIO(void);
 
-// LEDŠÖ˜A
+// LEDé–¢é€£
 void ledOut ( char rgb );
 
-// ƒXƒCƒbƒ`ŠÖ˜A
+// ã‚¹ã‚¤ãƒƒãƒé–¢é€£
 void getSwitch(void);
 unsigned char taswGet ( void );
 unsigned char dipswGet( void );

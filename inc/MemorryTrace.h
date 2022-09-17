@@ -1,26 +1,26 @@
-#ifndef MEMMORYTRACE_H_
+ï»¿#ifndef MEMMORYTRACE_H_
 #define MEMMORYTRACE_H_
 //====================================//
-// ƒCƒ“ƒNƒ‹[ƒh
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //==================================~=//
 #include "microSD.h"
 //====================================//
-// ƒVƒ“ƒ{ƒ‹’è‹`
+// ã‚·ãƒ³ãƒœãƒ«å®šç¾©
 //====================================//
-// ƒƒO‰ğÍŠÖ˜A
-#define STRAIGHT		1		// ’¼ü‰Á‘¬
-#define CROSSLINE		2		// ƒNƒƒXƒ‰ƒCƒ“Œ¸‘¬
-#define RC			    3		// ‰EƒNƒ‰ƒ“ƒN
-#define LC				4		// ¶ƒNƒ‰ƒ“ƒN
-#define RLC			    5		// ‰EƒŒ[ƒ“ƒ`ƒFƒ“ƒW
-#define LLC			    6		// ¶ƒŒ[ƒ“ƒ`ƒFƒ“ƒW
-#define SLUP			7		// ã‚èn‚ß
-#define SLDOWN		    8		// ‰º‚èI‚í‚è
-#define SLMIDDLE		9		// ã‚èI‚í‚è¤‰º‚èn‚ß
+// ãƒ­ã‚°è§£æé–¢é€£
+#define STRAIGHT		1		// ç›´ç·šåŠ é€Ÿ
+#define CROSSLINE		2		// ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³æ¸›é€Ÿ
+#define RC			    3		// å³ã‚¯ãƒ©ãƒ³ã‚¯
+#define LC				4		// å·¦ã‚¯ãƒ©ãƒ³ã‚¯
+#define RLC			    5		// å³ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸
+#define LLC			    6		// å·¦ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸
+#define SLUP			7		// ä¸Šã‚Šå§‹ã‚
+#define SLDOWN		    8		// ä¸‹ã‚Šçµ‚ã‚ã‚Š
+#define SLMIDDLE		9		// ä¸Šã‚Šçµ‚ã‚ã‚Šï½¤ä¸‹ã‚Šå§‹ã‚
 //====================================//
-// ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€
 //====================================//
-// ƒƒO‰ğÍŠÖ˜A
+// ãƒ­ã‚°è§£æé–¢é€£
 extern char		comp_char[10][100];
 extern short		comp_short[10][100];
 extern unsigned int	comp_uint[10][100];
@@ -28,7 +28,7 @@ extern unsigned int	comp_uint[10][100];
 extern short		cntmpattern2;
 extern char		memory_mode;
 //====================================//
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //====================================//
 bool serchPattern ( char process, char spattern );
 char logmeter( void );

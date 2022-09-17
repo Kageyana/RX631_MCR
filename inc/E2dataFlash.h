@@ -1,29 +1,29 @@
-///////////////////////////////ƒƒ‚///////////////////////////////////////
-// 	‘‚«ž‚ÝƒAƒhƒŒƒX‹L˜^—Ìˆæ1	0`10ƒuƒƒbƒN
-//	ƒpƒ‰ƒ[ƒ^•Û‘¶—Ìˆæ		    11`879ƒuƒƒbƒN
+ï»¿///////////////////////////////ãƒ¡ãƒ¢///////////////////////////////////////
+// 	æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹è¨˜éŒ²é ˜åŸŸ1	0ï½ž10ãƒ–ãƒ­ãƒƒã‚¯
+//	ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ä¿å­˜é ˜åŸŸ		    11ï½ž879ãƒ–ãƒ­ãƒƒã‚¯
 //	
-//	‘‚«ž‚ÝƒAƒhƒŒƒX‹L˜^—Ìˆæ2	1022~1023ƒuƒƒbƒN
-//	Angle0•Û‘¶—Ìˆæ			    1019~1021ƒuƒƒbƒN
+//	æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹è¨˜éŒ²é ˜åŸŸ2	1022~1023ãƒ–ãƒ­ãƒƒã‚¯
+//	Angle0ä¿å­˜é ˜åŸŸ			    1019~1021ãƒ–ãƒ­ãƒƒã‚¯
 //	
-//	‘‚«ž‚ÝƒAƒhƒŒƒX‹L˜^—Ìˆæ3	    997`1007ƒuƒƒbƒN
-//	msdWorkAddress•Û‘¶—Ìˆæ          1008`1018ƒuƒƒbƒN
+//	æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹è¨˜éŒ²é ˜åŸŸ3	    997ï½ž1007ãƒ–ãƒ­ãƒƒã‚¯
+//	msdWorkAddressä¿å­˜é ˜åŸŸ          1008ï½ž1018ãƒ–ãƒ­ãƒƒã‚¯
 //	
-//	‘‚«ž‚ÝƒAƒhƒŒƒX‹L˜^—Ìˆæ4	    967`976ƒuƒƒbƒN
-//	”’üƒgƒŒ[ƒX—pPIDƒQƒCƒ“•Û‘¶—Ìˆæ	977`996	ƒuƒƒbƒN
+//	æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹è¨˜éŒ²é ˜åŸŸ4	    967ï½ž976ãƒ–ãƒ­ãƒƒã‚¯
+//	ç™½ç·šãƒˆãƒ¬ãƒ¼ã‚¹ç”¨PIDã‚²ã‚¤ãƒ³ä¿å­˜é ˜åŸŸ	977ï½ž996	ãƒ–ãƒ­ãƒƒã‚¯
 //	
-//	‘‚«ž‚ÝƒAƒhƒŒƒX‹L˜^—Ìˆæ5	937`946ƒuƒƒbƒN
-//	Šp“x§Œä—pPIDƒQƒCƒ“•Û‘¶—Ìˆæ	947`966ƒuƒƒbƒN
+//	æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹è¨˜éŒ²é ˜åŸŸ5	937ï½ž946ãƒ–ãƒ­ãƒƒã‚¯
+//	è§’åº¦åˆ¶å¾¡ç”¨PIDã‚²ã‚¤ãƒ³ä¿å­˜é ˜åŸŸ	947ï½ž966ãƒ–ãƒ­ãƒƒã‚¯
 //	
-//	‘‚«ž‚ÝƒAƒhƒŒƒX‹L˜^—Ìˆæ6	907`916ƒuƒƒb
-//	‘¬“x§Œä—pPIDƒQƒCƒ“•Û‘¶—Ìˆæ	917`936ƒuƒƒbƒN
+//	æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹è¨˜éŒ²é ˜åŸŸ6	907ï½ž916ãƒ–ãƒ­ãƒƒ
+//	é€Ÿåº¦åˆ¶å¾¡ç”¨PIDã‚²ã‚¤ãƒ³ä¿å­˜é ˜åŸŸ	917ï½ž936ãƒ–ãƒ­ãƒƒã‚¯
 //	
-//	‘‚«ž‚ÝƒAƒhƒŒƒX‹L˜^—Ìˆæ7	877`886ƒuƒƒbƒN
-//	’âŽ~‹——£•Û‘¶—Ìˆæ			887`906ƒuƒƒbƒN
+//	æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹è¨˜éŒ²é ˜åŸŸ7	877ï½ž886ãƒ–ãƒ­ãƒƒã‚¯
+//	åœæ­¢è·é›¢ä¿å­˜é ˜åŸŸ			887ï½ž906ãƒ–ãƒ­ãƒƒã‚¯
 //////////////////////////////////////////////////////////////////////////
 #ifndef E2DATAFLASH_H_
 #define E2DATAFLASH_H_
 //======================================//
-// ƒCƒ“ƒNƒ‹[ƒh
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //======================================//
 #include "iodefine.h"
 #include "io.h"
@@ -34,53 +34,53 @@
 #include "microSD.h"
 #include <stdio.h>
 //======================================//
-// ƒVƒ“ƒ{ƒ‹’è‹`
+// ã‚·ãƒ³ãƒœãƒ«å®šç¾©
 //======================================//
-#define NUMDATA		24				// —v‘f”
-#define DATASIZE		( 2 * NUMDATA ) + 2	// ( 2ƒoƒCƒg@* —v‘f” ) + 2ƒoƒCƒg
-#define DATA			2				// 1‰ñ‚Ì‘‚«ž‚ÝƒTƒCƒY2byte
-#define CLOCK			96				// “®ìŽü”g”[MHz]
-#define FLASHSTARTADDR	0x00100000		// ƒtƒ‰ƒbƒVƒ…ŠJŽnƒAƒhƒŒƒX
+#define NUMDATA		24				// è¦ç´ æ•°
+#define DATASIZE		( 2 * NUMDATA ) + 2	// ( 2ãƒã‚¤ãƒˆã€€* è¦ç´ æ•° ) + 2ãƒã‚¤ãƒˆ
+#define DATA			2				// 1å›žã®æ›¸ãè¾¼ã¿ã‚µã‚¤ã‚º2byte
+#define CLOCK			96				// å‹•ä½œå‘¨æ³¢æ•°[MHz]
+#define FLASHSTARTADDR	0x00100000		// ãƒ•ãƒ©ãƒƒã‚·ãƒ¥é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹
 
-// ‹L˜^—Ìˆæ
-#define PARAMETER_AREA			879		// ƒpƒ‰ƒ[ƒ^•Û‘¶—Ìˆæ
-#define PARAMETER_STARTAREA	    0		// ƒpƒ‰ƒ[ƒ^‘‚«ž‚ÝƒAƒhƒŒƒX‹L˜^—Ìˆæ1
-#define PARAMETER_ENDAREA		10		// ƒpƒ‰ƒ[ƒ^‘‚«ž‚ÝƒAƒhƒŒƒX‹L˜^—Ìˆæ2
+// è¨˜éŒ²é ˜åŸŸ
+#define PARAMETER_AREA			879		// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ä¿å­˜é ˜åŸŸ
+#define PARAMETER_STARTAREA	    0		// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹è¨˜éŒ²é ˜åŸŸ1
+#define PARAMETER_ENDAREA		10		// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹è¨˜éŒ²é ˜åŸŸ2
 
-#define ANGLE0_DATA		    1023			// Angle0•Û‘¶—Ìˆæ
-#define ANGLE0_STARTAREA	1019			// Angle0‘‚«ž‚ÝƒAƒhƒŒƒX‹L˜^—Ìˆæ1
-#define ANGLE0_ENDAREA		1021			// Angle0‘‚«ž‚ÝƒAƒhƒŒƒX‹L˜^—Ìˆæ2
+#define ANGLE0_DATA		    1023			// Angle0ä¿å­˜é ˜åŸŸ
+#define ANGLE0_STARTAREA	1019			// Angle0æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹è¨˜éŒ²é ˜åŸŸ1
+#define ANGLE0_ENDAREA		1021			// Angle0æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹è¨˜éŒ²é ˜åŸŸ2
 
-#define MSD_DATA			1018			// msdWorkAddress•Û‘¶—Ìˆæ
-#define MSD_STARTAREA		997			// msdWorkAddress‘‚«ž‚ÝƒAƒhƒŒƒX‹L˜^—Ìˆæ1
-#define MSD_ENDAREA		    1007			// msdWorkAddress‘‚«ž‚ÝƒAƒhƒŒƒX‹L˜^—Ìˆæ2
+#define MSD_DATA			1018			// msdWorkAddressä¿å­˜é ˜åŸŸ
+#define MSD_STARTAREA		997			// msdWorkAddressæ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹è¨˜éŒ²é ˜åŸŸ1
+#define MSD_ENDAREA		    1007			// msdWorkAddressæ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹è¨˜éŒ²é ˜åŸŸ2
 
-#define PID_DATA			996			// ”’üƒgƒŒ[ƒX—pPIDƒQƒCƒ“•Û‘¶—Ìˆæ
-#define PID_STARTAREA		967			// ”’üƒgƒŒ[ƒX—pPIDƒQƒCƒ“‘‚«ž‚ÝƒAƒhƒŒƒX‹L˜^—Ìˆæ1
-#define PID_ENDAREA		    976			// ”’üƒgƒŒ[ƒX—pPIDƒQƒCƒ“‘‚«ž‚ÝƒAƒhƒŒƒX‹L˜^—Ìˆæ2
+#define PID_DATA			996			// ç™½ç·šãƒˆãƒ¬ãƒ¼ã‚¹ç”¨PIDã‚²ã‚¤ãƒ³ä¿å­˜é ˜åŸŸ
+#define PID_STARTAREA		967			// ç™½ç·šãƒˆãƒ¬ãƒ¼ã‚¹ç”¨PIDã‚²ã‚¤ãƒ³æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹è¨˜éŒ²é ˜åŸŸ1
+#define PID_ENDAREA		    976			// ç™½ç·šãƒˆãƒ¬ãƒ¼ã‚¹ç”¨PIDã‚²ã‚¤ãƒ³æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹è¨˜éŒ²é ˜åŸŸ2
 
-#define PID2_DATA			966			// Šp“x§Œä—pPIDƒQƒCƒ“•Û‘¶—Ìˆæ
-#define PID2_STARTAREA		937			// Šp“x§Œä—pPIDƒQƒCƒ“‘‚«ž‚ÝƒAƒhƒŒƒX‹L˜^—Ìˆæ1
-#define PID2_ENDAREA		946			// Šp“x§Œä—pPIDƒQƒCƒ“‘‚«ž‚ÝƒAƒhƒŒƒX‹L˜^—Ìˆæ2
+#define PID2_DATA			966			// è§’åº¦åˆ¶å¾¡ç”¨PIDã‚²ã‚¤ãƒ³ä¿å­˜é ˜åŸŸ
+#define PID2_STARTAREA		937			// è§’åº¦åˆ¶å¾¡ç”¨PIDã‚²ã‚¤ãƒ³æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹è¨˜éŒ²é ˜åŸŸ1
+#define PID2_ENDAREA		946			// è§’åº¦åˆ¶å¾¡ç”¨PIDã‚²ã‚¤ãƒ³æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹è¨˜éŒ²é ˜åŸŸ2
 
-#define PID3_DATA			936			// ‘¬“x§Œä—pPIDƒQƒCƒ“•Û‘¶—Ìˆæ
-#define PID3_STARTAREA		907			// ‘¬“x§Œä—pPIDƒQƒCƒ“‘‚«ž‚ÝƒAƒhƒŒƒX‹L˜^—Ìˆæ1
-#define PID3_ENDAREA		916			// ‘¬“x§Œä—pPIDƒQƒCƒ“‘‚«ž‚ÝƒAƒhƒŒƒX‹L˜^—Ìˆæ2
+#define PID3_DATA			936			// é€Ÿåº¦åˆ¶å¾¡ç”¨PIDã‚²ã‚¤ãƒ³ä¿å­˜é ˜åŸŸ
+#define PID3_STARTAREA		907			// é€Ÿåº¦åˆ¶å¾¡ç”¨PIDã‚²ã‚¤ãƒ³æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹è¨˜éŒ²é ˜åŸŸ1
+#define PID3_ENDAREA		916			// é€Ÿåº¦åˆ¶å¾¡ç”¨PIDã‚²ã‚¤ãƒ³æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹è¨˜éŒ²é ˜åŸŸ2
 
-#define STOPMETER_DATA			906		// ‘¬“x§Œä—pPIDƒQƒCƒ“•Û‘¶—Ìˆæ
-#define STOPMETER_STARTAREA	    877		// ‘¬“x§Œä—pPIDƒQƒCƒ“‘‚«ž‚ÝƒAƒhƒŒƒX‹L˜^—Ìˆæ1
-#define STOPMETER_ENDAREA		886		// ‘¬“x§Œä—pPIDƒQƒCƒ“‘‚«ž‚ÝƒAƒhƒŒƒX‹L˜^—Ìˆæ2
+#define STOPMETER_DATA			906		// é€Ÿåº¦åˆ¶å¾¡ç”¨PIDã‚²ã‚¤ãƒ³ä¿å­˜é ˜åŸŸ
+#define STOPMETER_STARTAREA	    877		// é€Ÿåº¦åˆ¶å¾¡ç”¨PIDã‚²ã‚¤ãƒ³æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹è¨˜éŒ²é ˜åŸŸ1
+#define STOPMETER_ENDAREA		886		// é€Ÿåº¦åˆ¶å¾¡ç”¨PIDã‚²ã‚¤ãƒ³æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹è¨˜éŒ²é ˜åŸŸ2
 //======================================//
-// ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€
 //======================================//
-// ƒ^ƒCƒ}ŠÖ˜A
-extern unsigned short		cnt_flash;	// ƒtƒ‰ƒbƒVƒ…—pƒJƒEƒ“ƒg
+// ã‚¿ã‚¤ãƒžé–¢é€£
+extern unsigned short		cnt_flash;	// ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ç”¨ã‚«ã‚¦ãƒ³ãƒˆ
 
-extern short			flashDataBuff[45];	// ˆêŽž•Û‘¶ƒoƒbƒtƒ@
+extern short			flashDataBuff[45];	// ä¸€æ™‚ä¿å­˜ãƒãƒƒãƒ•ã‚¡
 
-extern volatile unsigned int 		beforeAddr;	// ‘O‰ñ•Û‘¶Žž‚ÌƒuƒƒbƒN”Ô†
+extern volatile unsigned int 		beforeAddr;	// å‰å›žä¿å­˜æ™‚ã®ãƒ–ãƒ­ãƒƒã‚¯ç•ªå·
 //======================================//
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //======================================//
 void wait_flash ( short waitTime );
 void FirmWareCopy ( void );

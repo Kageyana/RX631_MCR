@@ -1,7 +1,7 @@
-#ifndef SCI_H_
+ï»¿#ifndef SCI_H_
 #define SCI_H_
 //======================================//
-// ƒCƒ“ƒNƒ‹[ƒh
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //======================================//
 #include "iodefine.h"
 #include <machine.h>
@@ -10,7 +10,7 @@
 #include "R_PG_IGC-P8080_v1.h"
 #include "io.h"
 //======================================//
-// ƒVƒ“ƒ{ƒ‹’è‹`
+// ã‚·ãƒ³ãƒœãƒ«å®šç¾©
 //======================================//
 #define	RATE_9600	    0x0
 #define	RATE_14400	    0x1
@@ -25,10 +25,10 @@
 #define	RATE_1500000	0xa
 #define	RATE_3000000	0xb
 
-#define	COMMAND1	"$br,"		// ƒ{[ƒŒ[ƒgİ’è
+#define	COMMAND1	"$br,"		// ãƒœãƒ¼ãƒ¬ãƒ¼ãƒˆè¨­å®š
 #define	STOPWORD	"stop"
 
-// Š„‚è‚İ—Dæ“x
+// å‰²ã‚Šè¾¼ã¿å„ªå…ˆåº¦
 #define	IPR_RXI1		14
 #define	IPR_TXI1		13
 #define	IPR_TEI1		12
@@ -53,39 +53,39 @@
 #define	PRINT_ON	1
 #define	PRINT_OFF	0
 //====================================//
-// ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€
 //====================================//
 extern char revErr;
 
-// SCI1ŠÖ˜A
-extern char	    modeSCI1;		    // ’ÊM•û®
-extern char     txtCommand[128];	// ƒRƒ}ƒ“ƒhŠi”[
-extern char     txtData[128];		// ƒf[ƒ^Ši”[
-extern char*    txt;				// óMƒf[ƒ^Ši”[—pƒ|ƒCƒ“ƒ^
-extern char	    cmmandMode;		    // ƒRƒ}ƒ“ƒh‘I‘ğ
-extern char	    stopWord;			// 0: ’â~ƒ[ƒh–¢óM 1:’â~ƒ[ƒhóM
-extern short    cntByte;			// óM‚µ‚½ƒoƒCƒg”
-extern char	    command;			// 0:ƒRƒ}ƒ“ƒhóM‘Ò‚¿ 1:ƒRƒ}ƒ“ƒh“ü—Í’† 2:ƒRƒ}ƒ“ƒh”»’è’†
+// SCI1é–¢é€£
+extern char	    modeSCI1;		    // é€šä¿¡æ–¹å¼
+extern char     txtCommand[128];	// ã‚³ãƒãƒ³ãƒ‰æ ¼ç´
+extern char     txtData[128];		// ãƒ‡ãƒ¼ã‚¿æ ¼ç´
+extern char*    txt;				// å—ä¿¡ãƒ‡ãƒ¼ã‚¿æ ¼ç´ç”¨ãƒã‚¤ãƒ³ã‚¿
+extern char	    cmmandMode;		    // ã‚³ãƒãƒ³ãƒ‰é¸æŠ
+extern char	    stopWord;			// 0: åœæ­¢ãƒ¯ãƒ¼ãƒ‰æœªå—ä¿¡ 1:åœæ­¢ãƒ¯ãƒ¼ãƒ‰å—ä¿¡
+extern short    cntByte;			// å—ä¿¡ã—ãŸãƒã‚¤ãƒˆæ•°
+extern char	    command;			// 0:ã‚³ãƒãƒ³ãƒ‰å—ä¿¡å¾…ã¡ 1:ã‚³ãƒãƒ³ãƒ‰å…¥åŠ›ä¸­ 2:ã‚³ãƒãƒ³ãƒ‰åˆ¤å®šä¸­
 
-extern char	    SCI1_Req_mode;	    // 0:ƒXƒ^[ƒg 1:ƒXƒgƒbƒv 2;ƒŠƒXƒ^[ƒg 3:ƒf[ƒ^‘—óM’†
-extern char	    SCI1_RW_mode;	    // 0:óM 1:‘—M 2:ƒŒƒWƒXƒ^“Ç‚İ‚İ
-extern char	    SCI1_Slaveaddr;	    // ƒXƒŒ[ƒuƒAƒhƒŒƒX
-extern char	    SCI1_NumData;		// ‘—Mƒf[ƒ^”
-extern char	    SCI1_NumData2;	    // ‘—Mƒf[ƒ^”2
-extern char*    SCI1_DataArry;		// ‘—Mƒf[ƒ^”z—ñ
-extern char*	SCI1_DataArry2; 	// ‘—Mƒf[ƒ^”z—ñ2
-extern char	    SCI1_DataBuff[255];	// ‘—Mƒf[ƒ^ƒoƒbƒtƒ@
+extern char	    SCI1_Req_mode;	    // 0:ã‚¹ã‚¿ãƒ¼ãƒˆ 1:ã‚¹ãƒˆãƒƒãƒ— 2;ãƒªã‚¹ã‚¿ãƒ¼ãƒˆ 3:ãƒ‡ãƒ¼ã‚¿é€å—ä¿¡ä¸­
+extern char	    SCI1_RW_mode;	    // 0:å—ä¿¡ 1:é€ä¿¡ 2:ãƒ¬ã‚¸ã‚¹ã‚¿èª­ã¿è¾¼ã¿
+extern char	    SCI1_Slaveaddr;	    // ã‚¹ãƒ¬ãƒ¼ãƒ–ã‚¢ãƒ‰ãƒ¬ã‚¹
+extern char	    SCI1_NumData;		// é€ä¿¡ãƒ‡ãƒ¼ã‚¿æ•°
+extern char	    SCI1_NumData2;	    // é€ä¿¡ãƒ‡ãƒ¼ã‚¿æ•°2
+extern char*    SCI1_DataArry;		// é€ä¿¡ãƒ‡ãƒ¼ã‚¿é…åˆ—
+extern char*	SCI1_DataArry2; 	// é€ä¿¡ãƒ‡ãƒ¼ã‚¿é…åˆ—2
+extern char	    SCI1_DataBuff[255];	// é€ä¿¡ãƒ‡ãƒ¼ã‚¿ãƒãƒƒãƒ•ã‚¡
 
-// SCI12ŠÖ˜A
-extern char	    SCI12_Req_mode;		    // 0:ƒXƒ^[ƒg 1:ƒXƒgƒbƒv 2;ƒŠƒXƒ^[ƒg 3:ƒf[ƒ^‘—óM’†
-extern char	    SCI12_Slaveaddr;		// ƒXƒŒ[ƒuƒAƒhƒŒƒX
-extern char	    SCI12_NumData;		    // ‘—Mƒf[ƒ^”
-extern char*	SCI12_DataArry;		    // ‘—Mƒf[ƒ^”z—ñ
-extern char	    SCI12_DataBuff[255];	// ‘—Mƒf[ƒ^ƒoƒbƒtƒ@
+// SCI12é–¢é€£
+extern char	    SCI12_Req_mode;		    // 0:ã‚¹ã‚¿ãƒ¼ãƒˆ 1:ã‚¹ãƒˆãƒƒãƒ— 2;ãƒªã‚¹ã‚¿ãƒ¼ãƒˆ 3:ãƒ‡ãƒ¼ã‚¿é€å—ä¿¡ä¸­
+extern char	    SCI12_Slaveaddr;		// ã‚¹ãƒ¬ãƒ¼ãƒ–ã‚¢ãƒ‰ãƒ¬ã‚¹
+extern char	    SCI12_NumData;		    // é€ä¿¡ãƒ‡ãƒ¼ã‚¿æ•°
+extern char*	SCI12_DataArry;		    // é€ä¿¡ãƒ‡ãƒ¼ã‚¿é…åˆ—
+extern char	    SCI12_DataBuff[255];	// é€ä¿¡ãƒ‡ãƒ¼ã‚¿ãƒãƒƒãƒ•ã‚¡
 
 extern char	    ascii_num[];
 //====================================//
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //====================================//
 void initSCI1( char rate );
 void initSCI6( char rate );

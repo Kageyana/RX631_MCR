@@ -209,6 +209,7 @@
           <Option>-debug</Option>
           <Option>-g_line</Option>
           <Option>-nologo</Option>
+          <Option>-utf8</Option>
         </CompileOptions>
         <AssembleOptions>
           <Option>-isa=rxv1</Option>

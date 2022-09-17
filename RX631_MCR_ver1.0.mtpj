@@ -1161,6 +1161,32 @@
       <COptionCommandLine-DefaultValue>-isa=rxv1
 -fpu
 -dbl_size=8
+-include=IGC-P8080_v1
+-include=IGC-P8080_v1\i_src
+-include=IGC-P8080_v1\AD_12
+-include=IGC-P8080_v1\SCI
+-include=IGC-P8080_v1\CMT
+-include=IGC-P8080_v1\MTU
+-include=IGC-P8080_v1\IO
+-include=IGC-P8080_v1\SYSTEM
+-include=inc
+-include=RX631_mcr_ver3.0\IWDT
+-include=RX631_mcr_ver3.0
+-include=RX631_mcr_ver3.0\i_src
+-include=RX631_mcr_ver3.0\AD_12
+-include=RX631_mcr_ver3.0\SCI
+-include=RX631_mcr_ver3.0\CMT
+-include=RX631_mcr_ver3.0\MTU
+-include=RX631_mcr_ver3.0\IO
+-include=RX631_mcr_ver3.0\SYSTEM
+-include=..\RX631_mcr_ver2.3
+-include=..\RX631_mcr_ver2.3\i_src
+-include=..\RX631_mcr_ver2.3\AD_12
+-include=..\RX631_mcr_ver2.3\SCI
+-include=..\RX631_mcr_ver2.3\CMT
+-include=..\RX631_mcr_ver2.3\MTU
+-include=..\RX631_mcr_ver2.3\IO
+-include=..\RX631_mcr_ver2.3\SYSTEM
 -include=..\RX631_mcr_ver2.2
 -include=..\RX631_mcr_ver2.2\i_src
 -include=..\RX631_mcr_ver2.2\AD_12
@@ -1187,8 +1213,11 @@
 -output=obj
 -obj_path=%BuildModeName%
 -debug
--speed
+-g_line
 -nologo
+-utf8
+-exec_time
+-MAKEUD
 </COptionCommandLine-DefaultValue>
       <COptionDefine-DefaultValue />
       <COptionInline-DefaultValue>Auto</COptionInline-DefaultValue>
@@ -1258,7 +1287,7 @@
       <COptionIncode-DefaultValue>Sjis</COptionIncode-DefaultValue>
       <COptionBranchChaining-DefaultValue>None</COptionBranchChaining-DefaultValue>
       <IsLockedByUser>False</IsLockedByUser>
-      <TimeTagModified--0>-8586199067434231325</TimeTagModified--0>
+      <TimeTagModified--0>-8585382269318115779</TimeTagModified--0>
       <COptionLangC-0>C</COptionLangC-0>
       <COptionListfile-0>False</COptionListfile-0>
       <COptionLogo-0>False</COptionLogo-0>
@@ -1339,13 +1368,39 @@ SmartManual Docs\RX631
       <COptionSystemInclude-0 />
       <COptionLoopValue-0>2</COptionLoopValue-0>
       <COptionMisra2004RuleNumberIgnore-0 />
-      <COptionOtherAdditionalOptions-0 />
+      <COptionOtherAdditionalOptions-0>-utf8</COptionOtherAdditionalOptions-0>
       <COptionPreinclude-0 />
       <COptionSectionP-0>P</COptionSectionP-0>
       <COptionShowExpansions-0>False</COptionShowExpansions-0>
       <COptionCommandLine-0>-isa=rxv1
 -fpu
 -dbl_size=8
+-include=IGC-P8080_v1
+-include=IGC-P8080_v1\i_src
+-include=IGC-P8080_v1\AD_12
+-include=IGC-P8080_v1\SCI
+-include=IGC-P8080_v1\CMT
+-include=IGC-P8080_v1\MTU
+-include=IGC-P8080_v1\IO
+-include=IGC-P8080_v1\SYSTEM
+-include=inc
+-include=RX631_mcr_ver3.0\IWDT
+-include=RX631_mcr_ver3.0
+-include=RX631_mcr_ver3.0\i_src
+-include=RX631_mcr_ver3.0\AD_12
+-include=RX631_mcr_ver3.0\SCI
+-include=RX631_mcr_ver3.0\CMT
+-include=RX631_mcr_ver3.0\MTU
+-include=RX631_mcr_ver3.0\IO
+-include=RX631_mcr_ver3.0\SYSTEM
+-include=..\RX631_mcr_ver2.3
+-include=..\RX631_mcr_ver2.3\i_src
+-include=..\RX631_mcr_ver2.3\AD_12
+-include=..\RX631_mcr_ver2.3\SCI
+-include=..\RX631_mcr_ver2.3\CMT
+-include=..\RX631_mcr_ver2.3\MTU
+-include=..\RX631_mcr_ver2.3\IO
+-include=..\RX631_mcr_ver2.3\SYSTEM
 -include=..\RX631_mcr_ver2.2
 -include=..\RX631_mcr_ver2.2\i_src
 -include=..\RX631_mcr_ver2.2\AD_12
@@ -1372,8 +1427,11 @@ SmartManual Docs\RX631
 -output=obj
 -obj_path=%BuildModeName%
 -debug
--speed
+-g_line
 -nologo
+-utf8
+-exec_time
+-MAKEUD
 </COptionCommandLine-0>
       <COptionDefine-0 />
       <COptionInline-0>Auto</COptionInline-0>

@@ -1,22 +1,22 @@
-//====================================//
-// ƒCƒ“ƒNƒ‹[ƒh
+ï»¿//====================================//
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //====================================//
 #include "io.h"
 //====================================//
-// ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€
 //====================================//
-// ƒXƒCƒbƒ`ŠÖ˜A
-static unsigned char 	dpsw_d[4];	// ƒfƒBƒbƒvƒXƒCƒbƒ`‚ÌŠi”[æ
-static unsigned char	tasw_d[5];	// ƒXƒCƒbƒ`’l‚ÌŠi”[æ
+// ï¿½Xï¿½Cï¿½bï¿½`ï¿½Ö˜A
+static unsigned char 	dpsw_d[4];	// ãƒ‡ã‚£ãƒƒãƒ—ã‚¹ã‚¤ãƒƒãƒã®æ ¼ç´å…ˆ
+static unsigned char	tasw_d[5];	// ã‚¹ã‚¤ãƒƒãƒå€¤ã®æ ¼ç´å…ˆ
 /////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ initIO
-// ˆ—ŠT—v     IOƒ|[ƒg‚Ì‰Šú‰»
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ‚È‚µ
+//ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å initIO
+// å‡¦ç†æ¦‚è¦     IOãƒãƒ¼ãƒˆã®åˆæœŸåŒ–
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
 /////////////////////////////////////////////////////////////////////
 void initIO(void)
 {
-	// I/Oƒ|[ƒg‚ðÝ’è
+	// I/Oãƒãƒ¼ãƒˆã‚’è¨­å®š
 	R_PG_IO_PORT_Set_P1();
 	R_PG_IO_PORT_Set_P2();
 	R_PG_IO_PORT_Set_P3();
@@ -26,7 +26,7 @@ void initIO(void)
 	R_PG_IO_PORT_Set_PC();
 	R_PG_IO_PORT_Set_PE();
 	
-	// ‚·‚×‚Ä‚ÌIOƒ|[ƒg‚ðLOW‚É‚·‚é
+	// ã™ã¹ã¦ã®IOãƒãƒ¼ãƒˆã‚’LOWã«ã™ã‚‹
 	R_PG_IO_PORT_Write_P1(0);
 	R_PG_IO_PORT_Write_P2(0);
 	R_PG_IO_PORT_Write_P3(0);
@@ -37,10 +37,10 @@ void initIO(void)
 	R_PG_IO_PORT_Write_PE(0);
 }
 /////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ ledOut
-// ˆ—ŠT—v     LED‚Ì“_“”
-// ˆø”         rgb 	0x1:Â 0x2—Î 0x4
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å ledOut
+// å‡¦ç†æ¦‚è¦     LEDã®ç‚¹ç¯
+// å¼•æ•°         rgb 	0x1:é’ 0x2ç·‘ 0x4
+// æˆ»ã‚Šå€¤       ãªã—
 /////////////////////////////////////////////////////////////////////
 void ledOut ( char rgb )
 {
@@ -54,31 +54,31 @@ void ledOut ( char rgb )
 	else LEDB_OFF
 }
 /////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ getSwitch
-// ˆ—ŠT—v     ƒXƒCƒbƒ`‚Ì“Ç‚Ýž‚Ý(10ms‚²‚Æ‚ÉŽÀs)
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å getSwitch
+// å‡¦ç†æ¦‚è¦     ã‚¹ã‚¤ãƒƒãƒã®èª­ã¿è¾¼ã¿(10msã”ã¨ã«å®Ÿè¡Œ)
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
 /////////////////////////////////////////////////////////////////////
 void getSwitch(void)
 {
-	// ƒ^ƒNƒgƒXƒCƒbƒ`“Ç‚Ýž‚Ý
-	TACTSWITCH1	// ƒ^ƒNƒgƒXƒCƒbƒ`ã
-	TACTSWITCH2	// ƒ^ƒNƒgƒXƒCƒbƒ`¶
-	TACTSWITCH3	// ƒ^ƒNƒgƒXƒCƒbƒ`‰E
-	TACTSWITCH4	// ƒ^ƒNƒgƒXƒCƒbƒ`‰º
-	TACTSWITCH5	// ƒ^ƒNƒgƒXƒCƒbƒ`‰Ÿ‚µž‚Ý
+	// ã‚¿ã‚¯ãƒˆã‚¹ã‚¤ãƒƒãƒèª­ã¿è¾¼ã¿
+	TACTSWITCH1	// ã‚¿ã‚¯ãƒˆã‚¹ã‚¤ãƒƒãƒä¸Š
+	TACTSWITCH2	// ã‚¿ã‚¯ãƒˆã‚¹ã‚¤ãƒƒãƒå·¦
+	TACTSWITCH3	// ã‚¿ã‚¯ãƒˆã‚¹ã‚¤ãƒƒãƒå³
+	TACTSWITCH4	// ã‚¿ã‚¯ãƒˆã‚¹ã‚¤ãƒƒãƒä¸‹
+	TACTSWITCH5	// ã‚¿ã‚¯ãƒˆã‚¹ã‚¤ãƒƒãƒæŠ¼ã—è¾¼ã¿
 	
-	// ƒfƒBƒbƒvƒXƒCƒbƒ`“Ç‚Ýž‚Ý
+	// ãƒ‡ã‚£ãƒƒãƒ—ã‚¹ã‚¤ãƒƒãƒèª­ã¿è¾¼ã¿
 	DIPSWITCH1
 	DIPSWITCH2
 	DIPSWITCH3
 	DIPSWITCH4
 }
 /////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ dipswGet
-// ˆ—ŠT—v     ƒfƒBƒbƒvƒXƒCƒbƒ`’l‚ð16i”‚ÅŽæ“¾
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ƒXƒCƒbƒ`’l 0`15
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å dipswGet
+// å‡¦ç†æ¦‚è¦     ãƒ‡ã‚£ãƒƒãƒ—ã‚¹ã‚¤ãƒƒãƒå€¤ã‚’16é€²æ•°ã§å–å¾—
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ã‚¹ã‚¤ãƒƒãƒå€¤ 0ï½ž15
 /////////////////////////////////////////////////////////////////////
 unsigned char dipswGet(void) 
 {
@@ -99,10 +99,10 @@ unsigned char dipswGet(void)
 	return ( dpsw[0] + dpsw[1] + dpsw[2] + dpsw[3] );
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ taswGet
-// ˆ—ŠT—v     ƒ^ƒNƒgƒXƒCƒbƒ`’l‚ð16i”‚ÅŽæ“¾
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ƒXƒCƒbƒ`’l 0`7
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å taswGet
+// å‡¦ç†æ¦‚è¦     ã‚¿ã‚¯ãƒˆã‚¹ã‚¤ãƒƒãƒå€¤ã‚’16é€²æ•°ã§å–å¾—
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ã‚¹ã‚¤ãƒƒãƒå€¤ 0ï½ž7
 ///////////////////////////////////////////////////////////////////////////
 unsigned char taswGet(void) 
 {

@@ -1,12 +1,12 @@
-#ifndef SPI_ICM20648_H_
+ï»¿#ifndef SPI_ICM20648_H_
 #define SPI_ICM20648_H_
 //==========================//
-// ƒCƒ“ƒNƒ‹[ƒh
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //==========================//
 #include "R_PG_IGC-P8080_v1.h"
 #include <math.h>
 //==========================//
-// ƒVƒ“ƒ{ƒ‹’è‹`
+// ã‚·ãƒ³ãƒœãƒ«å®šç¾©
 //==========================//
 // USER BANK 0
 #define WHO_AM_I			0x00
@@ -95,41 +95,41 @@
 #define TEMP_CONFIG			    0x53
 #define MOD_CTRL_USR			0x54
 
-/*************************************** ©“®¶¬ŠÖ” *************************************/
+/*************************************** è‡ªå‹•ç”Ÿæˆé–¢æ•° *************************************/
 #define CS_RESET 		R_PG_IO_PORT_Write_PC6( 0x0 );
 #define CS_SET   		R_PG_IO_PORT_Write_PC6( 0x1 );
-#define SET_SCI_C2		R_PG_SCI_Set_C2();		// ƒVƒŠƒAƒ‹I/Oƒ`ƒƒƒlƒ‹‚ğİ’è(SPI)
+#define SET_SCI_C2		R_PG_SCI_Set_C2();		// ã‚·ãƒªã‚¢ãƒ«I/Oãƒãƒ£ãƒãƒ«ã‚’è¨­å®š(SPI)
 #define SPITRANSFER1	R_PG_SCI_SPIMode_Transfer_C2( ret, dummy, 1);
 #define SPITRANSFER2	R_PG_SCI_SPIMode_Transfer_C2( dummy, val, 1);
 #define SPITRANSFER3	R_PG_SCI_SPIMode_Transfer_C2( ret, dummy, 1);
 #define SPITRANSFER4	R_PG_SCI_SPIMode_Transfer_C2( val2, dummy, 1);
-/******************************************************************************************/
+/*****************************************************************************************/
 #define ACCELLSB			4096		// 16[g]
 #define GYROLSB			    32.8		// 2000[deg/s]
-#define TEMP_LSB			333.87	// LSB/‹C
-#define ROOMTEMPOFFSET	    0		// 21‹C‚Ì‚Æ‚«0
-// ƒf[ƒ^ˆ—ŠÖ˜A
-#define CLOCK				96		// “®ìü”g”[MHz]
+#define TEMP_LSB			333.87	// LSB/Â°C
+#define ROOMTEMPOFFSET	    0		// 21Â°Cã®ã¨ã0
+// ãƒ‡ãƒ¼ã‚¿å‡¦ç†é–¢é€£
+#define CLOCK				96		// å‹•ä½œå‘¨æ³¢æ•°[MHz]
 
-#define MAXDATA_RANGE		32764	// 16bitƒf[ƒ^‚ÌÅ‘å’l
-#define G_ACCELERATION		9.81		// d—Í‰Á‘¬“x
-#define DELTATIMU			0.01F	// æ“¾üŠú
-#define SAMPLE				5000		// ƒLƒƒƒŠƒuƒŒ[ƒVƒ‡ƒ“‰ñ”
+#define MAXDATA_RANGE		32764	// 16bitãƒ‡ãƒ¼ã‚¿ã®æœ€å¤§å€¤
+#define G_ACCELERATION		9.81		// é‡åŠ›åŠ é€Ÿåº¦
+#define DELTATIMU			0.01F	// å–å¾—å‘¨æœŸ
+#define SAMPLE				5000		// ã‚­ãƒ£ãƒªãƒ–ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³å›æ•°
 //==========================//
-// ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€
 //==========================//
-// IMU‚©‚çæ“¾‚µ‚½ƒf[ƒ^
-extern volatile int16_t 	xa, ya, za; // ‰Á‘¬“x(16bitƒf[ƒ^)
-extern volatile int16_t 	xg, yg, zg;	// Šp‰Á‘¬“x(16bitƒf[ƒ^)
+// IMUã‹ã‚‰å–å¾—ã—ãŸãƒ‡ãƒ¼ã‚¿
+extern volatile int16_t 	xa, ya, za; // åŠ é€Ÿåº¦(16bitãƒ‡ãƒ¼ã‚¿)
+extern volatile int16_t 	xg, yg, zg;	// è§’åŠ é€Ÿåº¦(16bitãƒ‡ãƒ¼ã‚¿)
 extern volatile uint8_t		who_am_i,ret,imuflag;
-extern volatile int16_t		offset[3];	// ƒIƒtƒZƒbƒg’l
+extern volatile int16_t		offset[3];	// ã‚ªãƒ•ã‚»ãƒƒãƒˆå€¤
 extern volatile char 		caribration;
 
-extern double 		TurningAngleIMU;	// yaw²Šp“x
-extern double		RollAngleIMU;		// RollŠp“x
-extern double 		PichAngleIMU;		// PichŠp“x
+extern double 		TurningAngleIMU;	// yawè»¸è§’åº¦
+extern double		RollAngleIMU;		// Rollè§’åº¦
+extern double 		PichAngleIMU;		// Pichè§’åº¦
 //==========================//
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //==========================//
 uint8_t readByte( uint8_t );
 void writeByte( uint8_t, uint8_t);

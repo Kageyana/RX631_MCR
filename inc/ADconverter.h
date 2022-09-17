@@ -1,44 +1,44 @@
-#ifndef ADCONVERTER_H_
+ï»¿#ifndef ADCONVERTER_H_
 #define ADCONVERTER_H_
 //====================================//
-// ƒCƒ“ƒNƒ‹[ƒh
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //====================================//
 #include "R_PG_IGC-P8080_v1.h"
 //====================================//
-// ƒVƒ“ƒ{ƒ‹’è‹`
+// ã‚·ãƒ³ãƒœãƒ«å®šç¾©
 //====================================//
-#define GATE_VAL			190		    // ƒQ[ƒgƒZƒ“ƒT‚µ‚«‚¢’l
-#define DEG2AD              41          // 1“x‚ ‚½‚è‚ÌAD’l ƒT[ƒ{Å‘åØ‚êŠp‚ÌAD’l[]/ƒT[ƒ{Å‘åØ‚êŠp[‹]
-#define AD2DEG              0.0247F     // 1AD‚ ‚½‚è‚ÌŠp“x ƒT[ƒ{Å‘åØ‚êŠp[‹]/ƒT[ƒ{Å‘åØ‚êŠp‚ÌAD’l[]
-#define LOWVOLTAGE          10.5        // Å’á“®ì“dˆ³
-/*************************************** ©“®¶¬ŠÖ” *************************************/
-// ADƒRƒ“ƒo[ƒ^
-#define SET_ADC		R_PG_ADC_12_Set_S12AD0(); 				// 12ƒrƒbƒgA/DƒRƒ“ƒo[ƒ^(S12AD0)‚ğİ’è
-#define START_ADC	R_PG_ADC_12_StartConversionSW_S12AD0();	// A/D•ÏŠ·ŠJn
-#define GET_ADC		R_PG_ADC_12_GetResult_S12AD0( result );	// AD’l‚ğæ“¾
+#define GATE_VAL			190		    // ã‚²ãƒ¼ãƒˆã‚»ãƒ³ã‚µã—ãã„å€¤
+#define DEG2AD              41          // 1åº¦ã‚ãŸã‚Šã®ADå€¤ ã‚µãƒ¼ãƒœæœ€å¤§åˆ‡ã‚Œè§’æ™‚ã®ADå€¤[]/ã‚µãƒ¼ãƒœæœ€å¤§åˆ‡ã‚Œè§’[Â°]
+#define AD2DEG              0.0247F     // 1ADã‚ãŸã‚Šã®è§’åº¦ ã‚µãƒ¼ãƒœæœ€å¤§åˆ‡ã‚Œè§’[Â°]/ã‚µãƒ¼ãƒœæœ€å¤§åˆ‡ã‚Œè§’æ™‚ã®ADå€¤[]
+#define LOWVOLTAGE          10.5        // æœ€ä½å‹•ä½œé›»åœ§
+/*************************************** è‡ªå‹•ç”Ÿæˆé–¢æ•° *************************************/
+// ADã‚³ãƒ³ãƒãƒ¼ã‚¿
+#define SET_ADC		R_PG_ADC_12_Set_S12AD0(); 				// 12ãƒ“ãƒƒãƒˆA/Dã‚³ãƒ³ãƒãƒ¼ã‚¿(S12AD0)ã‚’è¨­å®š
+#define START_ADC	R_PG_ADC_12_StartConversionSW_S12AD0();	// A/Då¤‰æ›é–‹å§‹
+#define GET_ADC		R_PG_ADC_12_GetResult_S12AD0( result );	// ADå€¤ã‚’å–å¾—
 /******************************************************************************************/
 
 //====================================//
-// ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€
 //====================================//
-// ƒZƒ“ƒTŠÖ˜A
-extern short		sensorR;		// ‰EƒAƒiƒƒOƒZƒ“ƒT
-extern short		sensorL;		// ¶ƒAƒiƒƒOƒZƒ“ƒT
-extern short		sensorG;		// ƒQ[ƒgƒZƒ“ƒT
-extern short		sensorG_th;	// ƒQ[ƒgƒZƒ“ƒT
-extern short		sensorC;		// ’†SƒAƒiƒƒOƒZƒ“ƒT
-extern short		sensorLL;		// Å¶’[ƒAƒiƒƒOƒZƒ“ƒT
-extern short		sensorRR;		// Å‰E’[ƒAƒiƒƒOƒZƒ“ƒT
+// ã‚»ãƒ³ã‚µé–¢é€£
+extern short		sensorR;		// å³ã‚¢ãƒŠãƒ­ã‚°ã‚»ãƒ³ã‚µ
+extern short		sensorL;		// å·¦ã‚¢ãƒŠãƒ­ã‚°ã‚»ãƒ³ã‚µ
+extern short		sensorG;		// ã‚²ãƒ¼ãƒˆã‚»ãƒ³ã‚µ
+extern short		sensorG_th;	// ã‚²ãƒ¼ãƒˆã‚»ãƒ³ã‚µ
+extern short		sensorC;		// ä¸­å¿ƒã‚¢ãƒŠãƒ­ã‚°ã‚»ãƒ³ã‚µ
+extern short		sensorLL;		// æœ€å·¦ç«¯ã‚¢ãƒŠãƒ­ã‚°ã‚»ãƒ³ã‚µ
+extern short		sensorRR;		// æœ€å³ç«¯ã‚¢ãƒŠãƒ­ã‚°ã‚»ãƒ³ã‚µ
 
 extern short		L_sencnt;
 
-extern double		Voltage;        //“dˆ³ƒ`ƒFƒbƒJ[
+extern double		Voltage;        //é›»åœ§ãƒã‚§ãƒƒã‚«ãƒ¼
 
-extern short		Angle0;		    // ƒT[ƒ{ƒZƒ“ƒ^[’l
+extern short		Angle0;		    // ã‚µãƒ¼ãƒœã‚»ãƒ³ã‚¿ãƒ¼å€¤
 //====================================//
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //====================================//
-// ƒZƒ“ƒTŠÖ˜A
+// ã‚»ãƒ³ã‚µé–¢é€£
 short getServoAngle(void);
 short getAnalogSensor( void );
 unsigned char sensor_inp( void );

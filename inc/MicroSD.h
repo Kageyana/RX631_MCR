@@ -1,61 +1,61 @@
-#ifndef MICROSD_H_
+ï»¿#ifndef MICROSD_H_
 #define MICROSD_H_
 //======================================//
-// ƒCƒ“ƒNƒ‹[ƒh
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //======================================//
 //#include "PeripheralFunctions.h"
 #include "E2dataFlash.h"
 #include <string.h>
 #include <stdarg.h>
 //========================================//
-// ƒVƒ“ƒ{ƒ‹’è‹`
+// ã‚·ãƒ³ãƒœãƒ«å®šç¾©
 //=======================================//
-#define WRITINGTIME			2		// ƒƒOæ“¾üŠú(ms)
-#define DATA_BYTE			38		// ˆê‰ñ‚É•Û‘¶‚·‚éƒf[ƒ^”(byte)
-#define RECODTIME			30000	// ‹L˜^ŠÔ(ms)
-#define MSD_STARTADDRESS	0		// ŠJnƒAƒhƒŒƒX
-#define MSD_ENDADDRESS		960000	// I—¹ƒAƒhƒŒƒX@RECODTIME * DATA_BYTE / WRITINGTIME
+#define WRITINGTIME			2		// ãƒ­ã‚°å–å¾—å‘¨æœŸ(ms)
+#define DATA_BYTE			38		// ä¸€å›ã«ä¿å­˜ã™ã‚‹ãƒ‡ãƒ¼ã‚¿æ•°(byte)
+#define RECODTIME			30000	// è¨˜éŒ²æ™‚é–“(ms)
+#define MSD_STARTADDRESS	0		// é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹
+#define MSD_ENDADDRESS		960000	// çµ‚äº†ã‚¢ãƒ‰ãƒ¬ã‚¹ã€€RECODTIME * DATA_BYTE / WRITINGTIME
 
-/******************************************** ©“®¶¬ŠÖ” *****************************************/
-#define SET_SCI_MSD		R_PG_SCI_Set_C5();		// ƒVƒŠƒAƒ‹I/Oƒ`ƒƒƒlƒ‹‚ğİ’è(SPI)
-#define SET_CMT_MSD		R_PG_Timer_Set_CMT_U1_C2();	// ƒRƒ“ƒyƒAƒ}ƒbƒ`ƒ^ƒCƒ}‰Šú‰»(ch2)
-#define START_CMT_MSD	R_PG_Timer_StartCount_CMT_U1_C2();	// ƒJƒEƒ“ƒgƒXƒ^[ƒg(ch2)
+/******************************************** è‡ªå‹•ç”Ÿæˆé–¢æ•° *****************************************/
+#define SET_SCI_MSD		R_PG_SCI_Set_C5();		// ã‚·ãƒªã‚¢ãƒ«I/Oãƒãƒ£ãƒãƒ«ã‚’è¨­å®š(SPI)
+#define SET_CMT_MSD		R_PG_Timer_Set_CMT_U1_C2();	// ã‚³ãƒ³ãƒšã‚¢ãƒãƒƒãƒã‚¿ã‚¤ãƒåˆæœŸåŒ–(ch2)
+#define START_CMT_MSD	R_PG_Timer_StartCount_CMT_U1_C2();	// ã‚«ã‚¦ãƒ³ãƒˆã‚¹ã‚¿ãƒ¼ãƒˆ(ch2)
 
-// CS’[q
+// CSç«¯å­
 #define MSD_CS_TERMINAL_HIGH	R_PG_IO_PORT_Write_PA3( 1 );	// HIGHT
 #define MSD_CS_TERMINAL_LOW		R_PG_IO_PORT_Write_PA3( 0 );	// LOW
 
 // SPI
 #define SPI_SEND			R_PG_SCI_SPIMode_Transfer_C5( data_tr, data_re, 1);
 
-// SDƒXƒCƒbƒ`
+// SDã‚¹ã‚¤ãƒƒãƒ
 #define GET_SDSWITCH		R_PG_IO_PORT_Read_PA5(&sd_sw)
 
 /****************************************************************************************************/
 //========================================//
-// ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€
 //=======================================//
-// ƒ^ƒCƒ}ŠÖ˜A
-extern unsigned int		cnt_log;		// ƒƒO˜R‚êŠm”F—pƒJƒEƒ“ƒg
+// ã‚¿ã‚¤ãƒé–¢é€£
+extern unsigned int		cnt_log;		// ãƒ­ã‚°æ¼ã‚Œç¢ºèªç”¨ã‚«ã‚¦ãƒ³ãƒˆ
 
-// microSDŠÖ˜A
-extern signed char		msdBuff[ 512 ];     // ˆê•Û‘¶ƒoƒbƒtƒ@
-extern short			msdBuffaddress;     // ˆê‹L˜^ƒoƒbƒtƒ@‘ƒAƒhƒŒƒX
-extern short			msdFlag;            // 1:ƒf[ƒ^‹L˜^ 0:‹L˜^‚µ‚È‚¢
-extern short			msdTimer;           // æ“¾ŠÔŠuŒvZ—p
-extern unsigned int		msdStartaddress;    // ‹L˜^ŠJnƒAƒhƒŒƒX
-extern unsigned int		msdEndaddress;      // ‹L˜^I—¹ƒAƒhƒŒƒX
-extern unsigned int		msdWorkaddress;     // ì‹Æ—pƒAƒhƒŒƒX
-extern unsigned int		msdWorkaddress2;	// ì‹Æ—pƒAƒhƒŒƒX2
-extern volatile char	msdlibError;		// ƒGƒ‰[”Ô†
-extern signed char 		*msdBuffPointa;		// RAM•Û‘¶ƒoƒbƒtƒ@—pƒ|ƒCƒ“ƒ^
+// microSDé–¢é€£
+extern signed char		msdBuff[ 512 ];     // ä¸€æ™‚ä¿å­˜ãƒãƒƒãƒ•ã‚¡
+extern short			msdBuffaddress;     // ä¸€æ™‚è¨˜éŒ²ãƒãƒƒãƒ•ã‚¡æ›¸è¾¼ã‚¢ãƒ‰ãƒ¬ã‚¹
+extern short			msdFlag;            // 1:ãƒ‡ãƒ¼ã‚¿è¨˜éŒ² 0:è¨˜éŒ²ã—ãªã„
+extern short			msdTimer;           // å–å¾—é–“éš”è¨ˆç®—ç”¨
+extern unsigned int		msdStartaddress;    // è¨˜éŒ²é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹
+extern unsigned int		msdEndaddress;      // è¨˜éŒ²çµ‚äº†ã‚¢ãƒ‰ãƒ¬ã‚¹
+extern unsigned int		msdWorkaddress;     // ä½œæ¥­ç”¨ã‚¢ãƒ‰ãƒ¬ã‚¹
+extern unsigned int		msdWorkaddress2;	// ä½œæ¥­ç”¨ã‚¢ãƒ‰ãƒ¬ã‚¹2
+extern volatile char	msdlibError;		// ã‚¨ãƒ©ãƒ¼ç•ªå·
+extern signed char 		*msdBuffPointa;		// RAMä¿å­˜ãƒãƒƒãƒ•ã‚¡ç”¨ãƒã‚¤ãƒ³ã‚¿
 
 extern volatile short			msdlibCnt;
-extern volatile unsigned char	interrupt_msd_send_data;	// ‘—Mƒtƒ‰ƒO
+extern volatile unsigned char	interrupt_msd_send_data;	// é€ä¿¡ãƒ•ãƒ©ã‚°
 
-extern unsigned int 			msdaddrBuff[25];	// MicroSDƒJ[ƒh‚ÌÅI‘‚«‚İƒAƒhƒŒƒX•Û‘¶—p
+extern unsigned int 			msdaddrBuff[25];	// MicroSDã‚«ãƒ¼ãƒ‰ã®æœ€çµ‚æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹ä¿å­˜ç”¨
 //========================================//
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //=======================================//
 void msd_write( unsigned char data );
 unsigned char msd_read( void );

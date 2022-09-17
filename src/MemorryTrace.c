@@ -1,11 +1,11 @@
-//====================================//
-// ƒCƒ“ƒNƒ‹[ƒh
+ï»¿//====================================//
+// // ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //====================================//
 #include "MemorryTrace.h"
 //====================================//
-// ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€
 //====================================//
-// ƒƒO‰ğÍŠÖ˜A
+// ï¿½ï¿½ï¿½Oï¿½ï¿½ÍŠÖ˜A
 char			comp_char[10][100];
 short			comp_short[10][100];
 unsigned int	comp_uint[10][100];
@@ -17,10 +17,10 @@ short			cntmpattern2;
 char			mpattern = 11;
 char			memory_mode = 0;
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ msdgetData
-// ˆ—ŠT—v     ƒƒO‚©‚çŠpŠeˆ—ŠJn‚ÌˆÊ’u‚ğŒ©‚Â‚¯‚é
-// ˆø”         ‚È‚µ
-// –ß‚è’l       0:³í‚ÉI—¹ 1:ˆÙíI—¹
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å msdgetData
+// å‡¦ç†æ¦‚è¦     ãƒ­ã‚°ã‹ã‚‰è§’å„å‡¦ç†é–‹å§‹æ™‚ã®ä½ç½®ã‚’è¦‹ã¤ã‘ã‚‹
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       0:æ­£å¸¸ã«çµ‚äº† 1:ç•°å¸¸çµ‚äº†
 ///////////////////////////////////////////////////////////////////////////
 void msdgetData () 
 {
@@ -31,8 +31,8 @@ void msdgetData ()
 	mpattern = 11;
 	cntmpattern2 = 0;
 	
-	msdEndaddress = msdWorkaddress2;	// “Ç‚İ‚İI—¹ƒAƒhƒŒƒX
-	msdWorkaddress = msdWorkaddress;	// “Ç‚İ‚İŠJnƒAƒhƒŒƒX
+	msdEndaddress = msdWorkaddress2;	// èª­ã¿è¾¼ã¿çµ‚äº†ã‚¢ãƒ‰ãƒ¬ã‚¹
+	msdWorkaddress = msdWorkaddress;	// èª­ã¿è¾¼ã¿é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹
 	
 	for ( j = 0;j < 10; j++ ) {
 		for ( k = 0;k < 100; k++ ) {
@@ -46,9 +46,9 @@ void msdgetData ()
 	while ( pattern_send < 4 ) {
 		switch ( pattern_send ) {			
 			case 1:
-				// microSD‚æ‚èƒf[ƒ^“Ç‚İ‚İ
+				// microSDã‚ˆã‚Šãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿
 				if( msdWorkaddress >= msdEndaddress ) {
-					// ‘‚«‚İI—¹ƒAƒhƒŒƒX‚É‚È‚Á‚½‚çAI‚í‚è
+					// æ›¸ãè¾¼ã¿çµ‚äº†ã‚¢ãƒ‰ãƒ¬ã‚¹ã«ãªã£ãŸã‚‰ã€çµ‚ã‚ã‚Š
 					cntmpattern2 = 0;
 					memory_mode = 1;
 					pattern_send = 4;
@@ -57,14 +57,14 @@ void msdgetData ()
 				ret = readMicroSD( msdWorkaddress , msdBuff );
 				
 				if( ret != 0x00 ) {
-					// “Ç‚İ‚İƒGƒ‰[
+					// èª­ã¿è¾¼ã¿ã‚¨ãƒ©ãƒ¼
 					printf( "\nmicroSD Read Error!!\n" );
 					pattern_send = 4;
 					break;
 				} else {
-					// ƒGƒ‰[‚È‚µ
-					msdWorkaddress += 512;	// microSD‚ÌƒAƒhƒŒƒX‚ğ+512‚·‚é
-					msdBuffaddress = 0;		// ”z—ñ‚©‚ç‚Ì“Ç‚İ‚İˆÊ’u‚ğ0‚É
+					// ã‚¨ãƒ©ãƒ¼ãªã—
+					msdWorkaddress += 512;	// microSDã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’+512ã™ã‚‹
+					msdBuffaddress = 0;		// é…åˆ—ã‹ã‚‰ã®èª­ã¿è¾¼ã¿ä½ç½®ã‚’0ã«
 					pattern_send = 2;
 					break;
 				}
@@ -183,27 +183,27 @@ void msdgetData ()
 	}
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ serchPattern
-// ˆ—ŠT—v     ƒƒO‚©‚çŠeˆ—ŠJn‚ÌˆÊ’u‚ğŒ©‚Â‚¯‚é
-// ˆø”         ‚È‚µ
-// –ß‚è’l       0:³í‚ÉI—¹ 1:ˆÙíI—¹
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å serchPattern
+// å‡¦ç†æ¦‚è¦     ãƒ­ã‚°ã‹ã‚‰å„å‡¦ç†é–‹å§‹æ™‚ã®ä½ç½®ã‚’è¦‹ã¤ã‘ã‚‹
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       0:æ­£å¸¸ã«çµ‚äº† 1:ç•°å¸¸çµ‚äº†
 ///////////////////////////////////////////////////////////////////////////
 bool serchPattern ( char process, char spattern )
 {
-	// flag[ STRAIGHT ][0]	0:“Ë“üˆÊ’u 		1: ’EoˆÊ’u
-	// flag[ STRAIGHT ][ 1 ]	ŒJ‚è•Ô‚µ‰ñ”
-	// cnt[ STRAIGHT ][0] 	ƒJ[ƒu“Ë“ü¤’EoˆÊ’u‚Ì”
-	// comp_uint[ STRAIGHT ][ cnt[ STRAIGHT ][ 0 ] ]	EncoderTotal‚ğŠi”[‚·‚é
-	// ƒJ[ƒu‚ğ’Eo‚·‚éˆÊ’u‚ğ’T‚·
-	// spattern ‚ğ3‚ÂŒ©‚Â‚¯‚é
+	// flag[ STRAIGHT ][0]	0:çªå…¥ä½ç½® 		1: è„±å‡ºä½ç½®
+	// flag[ STRAIGHT ][ 1 ]	ç¹°ã‚Šè¿”ã—å›æ•°
+	// cnt[ STRAIGHT ][0] 	ã‚«ãƒ¼ãƒ–çªå…¥ï½¤è„±å‡ºä½ç½®ã®æ•°
+	// comp_uint[ STRAIGHT ][ cnt[ STRAIGHT ][ 0 ] ]	EncoderTotalã‚’æ ¼ç´ã™ã‚‹
+	// ã‚«ãƒ¼ãƒ–ã‚’è„±å‡ºã™ã‚‹ä½ç½®ã‚’æ¢ã™
+	// spattern ã‚’3ã¤è¦‹ã¤ã‘ã‚‹
 	if ( msdBuff[ msdBuffaddress + 0 ] == spattern ) flag[ process ][ spattern ]++;
 	else		flag[ process ][ spattern ] = 0;
 	
-	// 3‚ÂˆÈã‚ ‚ê‚ÎƒJ[ƒu‚ğ’Eo‚µ‚½‚Æ”»’f‚·‚é
+	// 3ã¤ä»¥ä¸Šã‚ã‚Œã°ã‚«ãƒ¼ãƒ–ã‚’è„±å‡ºã—ãŸã¨åˆ¤æ–­ã™ã‚‹
 	if ( flag[ process ][ spattern ] >= 3 ) {
-		cntmpattern[ cntmpattern2 ] = spattern;	// pattern‚ğ‹L˜^ 
-		comp_uint[ process ][ cntmpattern2++ ] = CharTouInt (22);		// ‹——£æ“¾
-		flag[ process ][ spattern ] = 0;	// ŒJ‚è•Ô‚µƒJƒEƒ“ƒg‚ğƒŠƒZƒbƒg
+		cntmpattern[ cntmpattern2 ] = spattern;	// patternã‚’è¨˜éŒ² 
+		comp_uint[ process ][ cntmpattern2++ ] = CharTouInt (22);		// è·é›¢å–å¾—
+		flag[ process ][ spattern ] = 0;	// ç¹°ã‚Šè¿”ã—ã‚«ã‚¦ãƒ³ãƒˆã‚’ãƒªã‚»ãƒƒãƒˆ
 		printf("cntmpattern[ %d ] = %d\n", cntmpattern2 - 1, cntmpattern[ cntmpattern2 - 1 ]);	
 		printf("comp_uint[%d][%d] = %d\n", process, cntmpattern2 - 1, comp_uint[ process ][ cntmpattern2 - 1 ] );
 		printf("logpattern = %d\n",cntmpattern[ cntmpattern2-1 ] / 10);
@@ -213,16 +213,16 @@ bool serchPattern ( char process, char spattern )
 	}
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ logmeter
-// ˆ—ŠT—v     ƒƒO‚©‚ç‘O‰ñ‚ÌˆÊ’u‚Å‚Ìpattern‚ğ•\¦‚·‚é
-// ˆø”         ‚È‚µ
-// –ß‚è’l       0:³í‚ÉI—¹ 1:ˆÙíI—¹
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å logmeter
+// å‡¦ç†æ¦‚è¦     ãƒ­ã‚°ã‹ã‚‰å‰å›ã®ä½ç½®ã§ã®patternã‚’è¡¨ç¤ºã™ã‚‹
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       0:æ­£å¸¸ã«çµ‚äº† 1:ç•°å¸¸çµ‚äº†
 ///////////////////////////////////////////////////////////////////////////
 char logmeter( void )
 {
 	char logpattern;
 	
-	logpattern = cntmpattern[ cntmpattern2 ] / 10;		// ‹L˜^‚µ‚½pattern‚ğŒÄ‚Ño‚µ
+	logpattern = cntmpattern[ cntmpattern2 ] / 10;		// è¨˜éŒ²ã—ãŸpatternã‚’å‘¼ã³å‡ºã—
 	if ( comp_uint[ logpattern ][ cntmpattern2 ] ) {	
 		if ( comp_uint[ logpattern ][ cntmpattern2 ] <= EncoderTotal ) {
 			cntmpattern2++;

@@ -1,24 +1,24 @@
-//====================================//
-// ƒCƒ“ƒNƒ‹[ƒh
+ï»¿//====================================//
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //====================================//
 #include "setup.h"
 //====================================//
-// ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€
 //====================================//
-char 	start;		// 0:ƒZƒbƒgƒAƒbƒv’†	1:ƒZƒbƒgƒAƒbƒvŠ®—¹
+char 	start;		// 0:ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—ä¸­	1:ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—å®Œäº†
 
-// ƒ^ƒCƒ}ŠÖ˜A
-unsigned short 		cntSetup1;		// ƒZƒbƒgƒAƒbƒv‚Åg—p
-unsigned short 		cntSetup2;		// ƒZƒbƒgƒAƒbƒv‚Åg—p
-unsigned short 		cntSetup3;		// ƒZƒbƒgƒAƒbƒv‚Åg—p
-short				cntSwitchUD;	// ƒXƒCƒbƒ`’·‰Ÿ‚µ”»’è—p‰E
-short				cntSwitchLR;	// ƒXƒCƒbƒ`’·‰Ÿ‚µ”»’è—p¶
+// ã‚¿ã‚¤ãƒé–¢é€£
+unsigned short 		cntSetup1;		// ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—ã§ä½¿ç”¨
+unsigned short 		cntSetup2;		// ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—ã§ä½¿ç”¨
+unsigned short 		cntSetup3;		// ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—ã§ä½¿ç”¨
+short				cntSwitchUD;	// ã‚¹ã‚¤ãƒƒãƒé•·æŠ¼ã—åˆ¤å®šç”¨å³
+short				cntSwitchLR;	// ã‚¹ã‚¤ãƒƒãƒé•·æŠ¼ã—åˆ¤å®šç”¨å·¦
 
-// ƒXƒCƒbƒ`ŠÖ˜A
+// ã‚¹ã‚¤ãƒƒãƒé–¢é€£
 signed char pushLR = 0;
 signed char pushUD = 0;
 
-// ƒpƒ^[ƒ“ŠÖ˜A
+// ãƒ‘ã‚¿ãƒ¼ãƒ³é–¢é€£
 char push = 0;
 char push1 = 0;
 char pattern_sensor = 1;
@@ -34,7 +34,7 @@ char pattern_msd = 1;
 char pattern_flash = 1;
 char pattern_scanf = 0;
 
-// ƒtƒ‰ƒOŠÖ˜A
+// ãƒ•ãƒ©ã‚°é–¢é€£
 char setting_1meter;
 char setting_2meter;
 char setting_3meter;
@@ -44,11 +44,11 @@ char servo_test2 = 0;
 char fixSpeed = 0;
 char str[8];
 
-// ƒpƒ‰ƒ[ƒ^ŠÖ˜A
+// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿é–¢é€£
 char motorTestPwm = 10;
 
 //====================================//
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //====================================//
 void data_select ( char *data , char button );
 void data_tuningUD ( void *data, char add );
@@ -57,10 +57,10 @@ void wait2 ( int waittime );
 
 short cnttest = 0;
 ///////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ setup
-// ˆ—ŠT—v     ‘–s‘Oİ’è
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å setup
+// å‡¦ç†æ¦‚è¦     èµ°è¡Œå‰è¨­å®š
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////
 void setup( void )
 {
@@ -68,19 +68,19 @@ void setup( void )
 	short i, j, k;
 	uint8_t sd_sw;
 	
-	// ƒfƒBƒbƒvƒXƒCƒbƒ`‚Å€–Ú‘I‘ğ
+	// ãƒ‡ã‚£ãƒƒãƒ—ã‚¹ã‚¤ãƒƒãƒã§é …ç›®é¸æŠ
 	switch ( dipswGet() ) {
 		//------------------------------------------------------------------
-		// ƒXƒ^[ƒg‘Ò‚¿
+		// ã‚¹ã‚¿ãƒ¼ãƒˆå¾…ã¡
 		//------------------------------------------------------------------
 		case 0x0:
 			lcdRowPrintf(UPROW, "START   ");
 			lcdRowPrintf(LOWROW, "STOP %2dm", stopping_meter );
 			
-			// ƒQ[ƒgŒŸo
+			// ã‚²ãƒ¼ãƒˆæ¤œå‡º
 			if ( startbar_get() ) ledOut(LED_B);
 			else 	ledOut(LED_R);
-			// ’â~‹——£“ü—Í
+			// åœæ­¢è·é›¢å…¥åŠ›
 			data_tuningUD ( &stopping_meter, 1 );
 			
 			modeAngle = 0;
@@ -88,7 +88,7 @@ void setup( void )
 			if ( servo_test == 1 ) servoPwmOut( ServoPwm );
 			else servoPwmOut( 0 );
 			
-			// ƒvƒbƒVƒ…ƒXƒCƒbƒ`‰Ÿ‰º‘Ò‚¿
+			// ãƒ—ãƒƒã‚·ãƒ¥ã‚¹ã‚¤ãƒƒãƒæŠ¼ä¸‹å¾…ã¡
 			if ( taswGet() == SW_PUSH ) {
 				start = START_COUNT;
 			} else if ( taswGet() == SW_LEFT ) {
@@ -100,7 +100,7 @@ void setup( void )
 			
 			break;
 		//------------------------------------------------------------------
-		// ƒpƒ‰ƒ[ƒ^’²®(’ÊíƒgƒŒ[ƒX)
+		// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿èª¿æ•´(é€šå¸¸ãƒˆãƒ¬ãƒ¼ã‚¹)
 		//------------------------------------------------------------------
 		case 0x1:
 			data_tuningLR( &pattern_parameter, 1 );
@@ -110,35 +110,35 @@ void setup( void )
 			
 			switch( pattern_parameter ) {
 				case 1:
-					// ’Êí‘–s‘¬“x
+					// é€šå¸¸èµ°è¡Œé€Ÿåº¦
 					lcdRowPrintf(UPROW, "STRAIGHT");
 					lcdRowPrintf(LOWROW, "  %3gm/s", (double)speed_straight / 10 );
 					
 					data_tuningUD ( &speed_straight, 1 );
 					break;
 				case 2:
-					// ƒJ[ƒuƒuƒŒ[ƒL
+					// ã‚«ãƒ¼ãƒ–ãƒ–ãƒ¬ãƒ¼ã‚­
 					lcdRowPrintf(UPROW, "BRAKE   ");
 					lcdRowPrintf(LOWROW, "  %3gm/s", (double)speed_curve_brake / 10 );
 					
 					data_tuningUD ( &speed_curve_brake, 1 );
 					break;
 				case 3:
-					// R600ƒJ[ƒu‘–s‘¬“x
+					// R600ã‚«ãƒ¼ãƒ–èµ°è¡Œé€Ÿåº¦
 					lcdRowPrintf(UPROW, "R600    ");
 					lcdRowPrintf(LOWROW, "  %3gm/s", (double)speed_curve_r600 / 10  );
 					
 					data_tuningUD ( &speed_curve_r600, 1 );
 					break;
 				case 4:
-					// R450ƒJ[ƒu‘–s‘¬“x
+					// R450ã‚«ãƒ¼ãƒ–èµ°è¡Œé€Ÿåº¦
 					lcdRowPrintf(UPROW, "R450    ");
 					lcdRowPrintf(LOWROW, "  %3gm/s", (double)speed_curve_r450 / 10 );
 					
 					data_tuningUD ( &speed_curve_r450, 1 );
 					break;
 				case 5:
-					// SšƒJ[ƒu’¼ü‘¬“x
+					// Så­—ã‚«ãƒ¼ãƒ–ç›´ç·šé€Ÿåº¦
 					lcdRowPrintf(UPROW, "CURVE_ST");
 					lcdRowPrintf(LOWROW, "  %3gm/s", (double)speed_curve_straight / 10 );
 					
@@ -148,7 +148,7 @@ void setup( void )
 			break;
 			
 		//------------------------------------------------------------------
-		// ƒpƒ‰ƒ[ƒ^’²®(ƒNƒ‰ƒ“ƒN)
+		// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿èª¿æ•´(ã‚¯ãƒ©ãƒ³ã‚¯)
 		//------------------------------------------------------------------
 		case 0x2:
 			data_tuningLR( &pattern_parameter2, 1 );
@@ -158,28 +158,28 @@ void setup( void )
 			
 			switch( pattern_parameter2 ) {
 				case 1:
-					// ƒNƒƒXƒ‰ƒCƒ“’Ê‰ß
+					// ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³é€šéæ™‚
 					lcdRowPrintf(UPROW, "CROSLINE");
 					lcdRowPrintf(LOWROW, "  %3gm/s", (double)speed_crossline / 10 );
 					
 					data_tuningUD ( &speed_crossline, 1 );
 					break;
 				case 2:
-					// ƒNƒ‰ƒ“ƒN‘OƒgƒŒ[ƒX
+					// ã‚¯ãƒ©ãƒ³ã‚¯å‰ãƒˆãƒ¬ãƒ¼ã‚¹
 					lcdRowPrintf(UPROW, "CL_TRACE");
 					lcdRowPrintf(LOWROW, "  %3gm/s", (double)speed_ckank_trace / 10 );
 					
 					data_tuningUD ( &speed_ckank_trace, 1 );
 					break;
 				case 3:
-					// ‰EƒNƒ‰ƒ“ƒNù‰ñ‘¬“x
+					// å³ã‚¯ãƒ©ãƒ³ã‚¯æ—‹å›é€Ÿåº¦
 					lcdRowPrintf(UPROW, "RCL_CUR ");
 					lcdRowPrintf(LOWROW, "  %3gm/s", (double)speed_rightclank_curve / 10 );
 					
 					data_tuningUD ( &speed_rightclank_curve, 1 );
 					break;
 				case 4:
-					// ‰EƒNƒ‰ƒ“ƒN•œ‹A‘¬“x
+					// å³ã‚¯ãƒ©ãƒ³ã‚¯å¾©å¸°é€Ÿåº¦
 					lcdRowPrintf(UPROW, "RCL_ESC ");
 					lcdRowPrintf(LOWROW, "  %3gm/s", (double)speed_rightclank_escape / 10 );
 					
@@ -187,7 +187,7 @@ void setup( void )
 					break;
 					
 				case 5:
-					// ¶ƒNƒ‰ƒ“ƒNù‰ñ‘¬“x
+					// å·¦ã‚¯ãƒ©ãƒ³ã‚¯æ—‹å›é€Ÿåº¦
 					lcdRowPrintf(UPROW, "LCL_CUR ");
 					lcdRowPrintf(LOWROW, "  %3gm/s", (double)speed_leftclank_curve / 10 );
 					
@@ -195,7 +195,7 @@ void setup( void )
 					break;
 					
 				case 6:
-					// ¶ƒNƒ‰ƒ“ƒN•œ‹A‘¬“x
+					// å·¦ã‚¯ãƒ©ãƒ³ã‚¯å¾©å¸°é€Ÿåº¦
 					lcdRowPrintf(UPROW, "LCL_ESC ");
 					lcdRowPrintf(LOWROW, "  %3gm/s", (double)speed_leftclank_escape / 10 );
 					
@@ -204,7 +204,7 @@ void setup( void )
 			}
 			break;
 		//------------------------------------------------------------------
-		// ƒpƒ‰ƒ[ƒ^’²®(ƒŒ[ƒ“ƒ`ƒFƒ“ƒW)
+		// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿èª¿æ•´(ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸)
 		//------------------------------------------------------------------
 		case 0x3:
 			data_tuningLR( &pattern_parameter3, 1 );
@@ -214,49 +214,49 @@ void setup( void )
 			
 			switch( pattern_parameter3 ) {
 				case 1:
-					// ƒn[ƒtƒ‰ƒCƒ“’Ê‰ß
+					// ãƒãƒ¼ãƒ•ãƒ©ã‚¤ãƒ³é€šéæ™‚
 					lcdRowPrintf(UPROW, "HALFLINE");
 					lcdRowPrintf(LOWROW, "  %3gm/s", (double)speed_halfine / 10 );
 					
 					data_tuningUD ( &speed_halfine, 1 );
 					break;
 				case 2:
-					// ‰EƒŒ[ƒ“ƒ`ƒFƒ“ƒWi“ü‘¬“x
+					// å³ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸é€²å…¥é€Ÿåº¦
 					lcdRowPrintf(UPROW, "RLC_STR ");
 					lcdRowPrintf(LOWROW, "  %3gm/s", (double)speed_rightchange_trace / 10 );
 					
 					data_tuningUD ( &speed_rightchange_trace, 1 );
 					break;
 				case 3:
-					// ‰EƒŒ[ƒ“ƒ`ƒFƒ“ƒWù‰ñ‘¬“x
+					// å³ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸æ—‹å›é€Ÿåº¦
 					lcdRowPrintf(UPROW, "RLC_CUR ");
 					lcdRowPrintf(LOWROW, "  %3gm/s", (double)speed_rightchange_curve / 10 );
 					
 					data_tuningUD ( &speed_rightchange_curve, 1 );
 					break;
 				case 4:
-					// ‰EƒŒ[ƒ“ƒ`ƒFƒ“ƒW•œ‹A‘¬“x
+					// å³ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸å¾©å¸°é€Ÿåº¦
 					lcdRowPrintf(UPROW, "RLC_ESC ");
 					lcdRowPrintf(LOWROW, "  %3gm/s", (double)speed_rightchange_escape / 10 );
 					
 					data_tuningUD ( &speed_rightchange_escape, 1 );
 					break;
 				case 5:
-					// ¶ƒŒ[ƒ“ƒ`ƒFƒ“ƒWi“ü‘¬“x
+					// å·¦ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸é€²å…¥é€Ÿåº¦
 					lcdRowPrintf(UPROW, "LLC_STR ");
 					lcdRowPrintf(LOWROW, "  %3gm/s", (double)speed_leftchange_trace / 10 );
 					
 					data_tuningUD ( &speed_leftchange_trace, 1 );
 					break;
 				case 6:
-					// ¶ƒŒ[ƒ“ƒ`ƒFƒ“ƒWù‰ñ‘¬“x
+					// å·¦ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸æ—‹å›é€Ÿåº¦
 					lcdRowPrintf(UPROW, "LLC_CUR ");
 					lcdRowPrintf(LOWROW, "  %3gm/s", (double)speed_leftchange_curve / 10 );
 					
 					data_tuningUD ( &speed_leftchange_curve, 1 );
 					break;
 				case 7:
-					// ¶ƒŒ[ƒ“ƒ`ƒFƒ“ƒWù‰ñ‘¬“x
+					// å·¦ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸æ—‹å›é€Ÿåº¦
 					lcdRowPrintf(UPROW, "LLC_ESC ");
 					lcdRowPrintf(LOWROW, "  %3gm/s", (double)speed_leftchange_escape / 10 );
 					
@@ -266,7 +266,7 @@ void setup( void )
 			break;
 		
 		//------------------------------------------------------------------
-		// ƒpƒ‰ƒ[ƒ^’²®(â“¹AŠp“x)
+		// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿èª¿æ•´(å‚é“ã€è§’åº¦)
 		//------------------------------------------------------------------
 		case 0x4:
 			data_tuningLR( &pattern_parameter4, 1 );
@@ -276,42 +276,42 @@ void setup( void )
 			
 			switch( pattern_parameter4 ) {
 				case 1:
-					// â“¹ƒuƒŒ[ƒL
+					// å‚é“ãƒ–ãƒ¬ãƒ¼ã‚­
 					lcdRowPrintf(UPROW, "SL_BRAKE");
 					lcdRowPrintf(LOWROW, "  %3gm/s", (double)speed_slope_brake / 10 );
 					
 					data_tuningUD ( &speed_slope_brake, 1 );
 					break;
 				case 2:
-					// â“Ç‚İ”ò‚Î‚µ‘¬“x
+					// å‚èª­ã¿é£›ã°ã—é€Ÿåº¦
 					lcdRowPrintf(UPROW, "SL_TRACE");
 					lcdRowPrintf(LOWROW, "  %3gm/s", (double)speed_slope_trace / 10 );
 					
 					data_tuningUD ( &speed_slope_trace, 1 );
 					break;
 				case 3:
-					// ‰EƒNƒ‰ƒ“ƒNù‰ñŠp“x
+					// å³ã‚¯ãƒ©ãƒ³ã‚¯æ—‹å›è§’åº¦
 					lcdRowPrintf(UPROW, "ANG_RCR ");
 					lcdRowPrintf(LOWROW, "   %5d", angle_rightclank );
 					
 					data_tuningUD ( &angle_rightclank, 1 );
 					break;
 				case 4:
-					// ¶ƒNƒ‰ƒ“ƒNù‰ñŠp“x
+					// å·¦ã‚¯ãƒ©ãƒ³ã‚¯æ—‹å›è§’åº¦
 					lcdRowPrintf(UPROW, "ANG_LCL ");
 					lcdRowPrintf(LOWROW, "   %5d", angle_leftclank );
 					
 					data_tuningUD ( &angle_leftclank, 1 );
 					break;
 				case 5:
-					// ‰EƒŒ[ƒ“ƒ`ƒFƒ“ƒWù‰ñŠp“x
+					// å³ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸æ—‹å›è§’åº¦
 					lcdRowPrintf(UPROW, "ANG_RLC ");
 					lcdRowPrintf(LOWROW, "   %5d", angle_rightchange );
 					
 					data_tuningUD ( &angle_rightchange, 1 );
 					break;
 				case 6:
-					// ¶ƒŒ[ƒ“ƒ`ƒFƒ“ƒWù‰ñŠp“x
+					// å·¦ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸æ—‹å›è§’åº¦
 					lcdRowPrintf(UPROW, "ANG_LLC ");
 					lcdRowPrintf(LOWROW, "   %5d", angle_leftchange );
 					
@@ -320,7 +320,7 @@ void setup( void )
 			}
 			break;
 		//------------------------------------------------------------------
-		// ƒQƒCƒ“’²®(ƒT[ƒ{)
+		// ã‚²ã‚¤ãƒ³èª¿æ•´(ã‚µãƒ¼ãƒœ)
 		//------------------------------------------------------------------
 		case 0x5:
 			lcdRowPrintf(UPROW, "kp ki kd");
@@ -337,7 +337,7 @@ void setup( void )
 			switch( pattern_gain ) {
 				case 1:
 					// kp
-					//’l‚ğ“_–Å
+					//å€¤ã‚’ç‚¹æ»…
 					if ( cntSetup1 >= 500 ) cntSetup1 = 0;
 					if ( cntSetup1 < 250 ) {
 						lcdRowPrintf(LOWROW, "   %2d %2d", ki_buff, kd_buff);
@@ -349,7 +349,7 @@ void setup( void )
 					break;
 				case 2:
 					// ki
-					//’l‚ğ“_–Å
+					//å€¤ã‚’ç‚¹æ»…
 					if ( cntSetup1 >= 500 ) cntSetup1 = 0;
 					if ( cntSetup1 < 250 ) {
 						lcdRowPrintf(LOWROW, "%2d    %2d", kp_buff, kd_buff);
@@ -361,7 +361,7 @@ void setup( void )
 					break;
 				case 3:
 					// kd
-					//’l‚ğ“_–Å
+					//å€¤ã‚’ç‚¹æ»…
 					if ( cntSetup1 >= 500 ) cntSetup1 = 0;
 					if ( cntSetup1 < 250 ) {
 						lcdRowPrintf(LOWROW, "%2d %2d   ", kp_buff, ki_buff);
@@ -374,7 +374,7 @@ void setup( void )
 			}
 			break;
 		//------------------------------------------------------------------
-		// ƒQƒCƒ“’²®(Šp“x)
+		// ã‚²ã‚¤ãƒ³èª¿æ•´(è§’åº¦)
 		//------------------------------------------------------------------
 		case 0x6:
 			lcdRowPrintf(UPROW, "kp ki kd");
@@ -393,7 +393,7 @@ void setup( void )
 			switch( pattern_gain2 ) {
 				case 1:
 					// kp2
-					//’l‚ğ“_–Å
+					//å€¤ã‚’ç‚¹æ»…
 					if ( cntSetup1 >= 500 ) cntSetup1 = 0;
 					if ( cntSetup1 < 250 ) {
 						lcdRowPrintf(LOWROW, "   %2d %2d", ki2_buff, kd2_buff);
@@ -404,7 +404,7 @@ void setup( void )
 					break;
 				case 2:
 					// ki2
-					//’l‚ğ“_–Å
+					//å€¤ã‚’ç‚¹æ»…
 					if ( cntSetup1 >= 500 ) cntSetup1 = 0;
 					if ( cntSetup1 < 250 ) {
 						lcdRowPrintf(LOWROW, "%2d    %2d", kp2_buff, kd2_buff);
@@ -415,7 +415,7 @@ void setup( void )
 					break;
 				case 3:
 					// kd2
-					//’l‚ğ“_–Å
+					//å€¤ã‚’ç‚¹æ»…
 					if ( cntSetup1 >= 500 ) cntSetup1 = 0;
 					if ( cntSetup1 < 250 ) {
 						lcdRowPrintf(LOWROW, "%2d %2d   ", kp2_buff, ki2_buff);
@@ -427,7 +427,7 @@ void setup( void )
 			}
 			break;
 		//------------------------------------------------------------------
-		// ƒQƒCƒ“’²®(‘¬“x)
+		// ã‚²ã‚¤ãƒ³èª¿æ•´(é€Ÿåº¦)
 		//------------------------------------------------------------------
 		case 0x7:
 			lcdRowPrintf(UPROW, "kp ki kd");
@@ -439,7 +439,7 @@ void setup( void )
 			switch( pattern_gain3 ) {
 				case 1:
 					// kp3
-					//’l‚ğ“_–Å
+					//å€¤ã‚’ç‚¹æ»…
 					if ( cntSetup1 >= 500 ) cntSetup1 = 0;
 					if ( cntSetup1 < 250 ) {
 						lcdRowPrintf(LOWROW, "   %2d %2d", ki3_buff, kd3_buff );
@@ -450,7 +450,7 @@ void setup( void )
 					break;
 				case 2:
 					// ki3
-					//’l‚ğ“_–Å
+					//å€¤ã‚’ç‚¹æ»…
 					if ( cntSetup1 >= 500 ) cntSetup1 = 0;
 					if ( cntSetup1 < 250 ) {
 						lcdRowPrintf(LOWROW, "%2d    %2d", kp3_buff, kd3_buff );
@@ -462,7 +462,7 @@ void setup( void )
 					
 				case 3:
 					// kd3
-					//’l‚ğ“_–Å
+					//å€¤ã‚’ç‚¹æ»…
 					if ( cntSetup1 >= 500 ) cntSetup1 = 0;
 					if ( cntSetup1 < 250 ) {
 						lcdRowPrintf(LOWROW, "%2d %2d   ", kp3_buff, ki3_buff );
@@ -474,7 +474,7 @@ void setup( void )
 			}
 			break;
 		//------------------------------------------------------------------
-		// ƒvƒŠƒZƒbƒgƒpƒ‰ƒ[ƒ^
+		// ãƒ—ãƒªã‚»ãƒƒãƒˆãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
 		//------------------------------------------------------------------
 		case 0x8:
 			lcdRowPrintf(LOWROW, "SETTING ");
@@ -559,7 +559,7 @@ void setup( void )
 					break;
 					
 				case 2:
-					// ƒWƒƒƒCƒ
+					// ã‚¸ãƒ£ã‚¤ãƒ­
 					if ( taswGet() == SW_TOP ) PichAngleIMU = 0;
 					if ( taswGet() == SW_DOWN ) RollAngleIMU = 0;
 					if ( cntSetup1 >= 100 ) {
@@ -570,7 +570,7 @@ void setup( void )
 					break;
 					
 				case 3:
-					// ƒGƒ“ƒR[ƒ_
+					// ã‚¨ãƒ³ã‚³ãƒ¼ãƒ€
 					lcdRowPrintf(UPROW, "Encoder ");
 					if ( cntSetup1 >= 100 ) {
 						cntSetup1 = 0;
@@ -581,7 +581,7 @@ void setup( void )
 					break;
 							
 				case 4:
-					// ƒ|ƒeƒ“ƒVƒ‡ƒ“ƒ[ƒ^[
+					// ãƒãƒ†ãƒ³ã‚·ãƒ§ãƒ³ãƒ¡ãƒ¼ã‚¿ãƒ¼
 					lcdRowPrintf(UPROW, "Angle   ");
 					if ( cntSetup1 >= 100 ) {
 						cntSetup1 = 0;
@@ -590,7 +590,7 @@ void setup( void )
 					break;
 					
 				case 5:
-					// ƒAƒiƒƒOƒZƒ“ƒT
+					// ã‚¢ãƒŠãƒ­ã‚°ã‚»ãƒ³ã‚µ
 					if ( cntSetup1 >= 100 ) {
 						cntSetup1 = 0;
 						lcdRowPrintf(UPROW, "R   %4d",sensorR);
@@ -599,7 +599,7 @@ void setup( void )
 					break;
 					
 				case 6:
-					// ƒfƒWƒ^ƒ‹•—ƒAƒiƒƒOƒZƒ“ƒT, ƒQ[ƒgƒZƒ“ƒT
+					// ãƒ‡ã‚¸ã‚¿ãƒ«é¢¨ã‚¢ãƒŠãƒ­ã‚°ã‚»ãƒ³ã‚µ, ã‚²ãƒ¼ãƒˆã‚»ãƒ³ã‚µ
 					motor_test = 0;
 					data_tuningUD ( &sensorG_th, 1 );
 					if ( cntSetup1 >= 100 ) {
@@ -611,7 +611,7 @@ void setup( void )
 					break;
 					
 				case 7:
-					// ƒ‚[ƒ^[ƒeƒXƒg
+					// ãƒ¢ãƒ¼ã‚¿ãƒ¼ãƒ†ã‚¹ãƒˆ
 					lcdRowPrintf(UPROW, "Motortes");
 					lcdRowPrintf(LOWROW, "    %3d%%",motorTestPwm);
 					demo = 0;
@@ -629,7 +629,7 @@ void setup( void )
 					data_select( &motor_test, SW_PUSH );
 					break;
 				case 8:
-					// ƒT[ƒ{ƒeƒXƒg
+					// ã‚µãƒ¼ãƒœãƒ†ã‚¹ãƒˆ
 					lcdRowPrintf(UPROW, "Servo   ");
 					lcdRowPrintf(LOWROW, "        ");
 					if ( motor_test == 1 ) servoPwmOut( 20 );
@@ -638,7 +638,7 @@ void setup( void )
 					data_select( &motor_test, SW_PUSH );
 					break;
 				case 9:
-					// ƒ‰ƒCƒ“ƒZƒ“ƒT·•ª
+					// ãƒ©ã‚¤ãƒ³ã‚»ãƒ³ã‚µå·®åˆ†
 					lcdRowPrintf(UPROW, "gASensor");
 					
 					motor_test = 0;
@@ -649,7 +649,7 @@ void setup( void )
 					break;
 					
 				case 10:
-					// ù‰ñŠp“x
+					// æ—‹å›è§’åº¦
 					lcdRowPrintf(UPROW, "IMU %4d", (short)TurningAngleIMU);
 					lcdRowPrintf(LOWROW, "        ");
 					if ( taswGet() == SW_PUSH ) TurningAngleIMU = 0;
@@ -685,7 +685,7 @@ void setup( void )
 			}
 			break;
 		//------------------------------------------------------------------
-		// ˆÊ’uŒÅ’èƒfƒ‚
+		// ä½ç½®å›ºå®šãƒ‡ãƒ¢
 		//------------------------------------------------------------------
 		case 0xa:
 			lcdRowPrintf(UPROW, "DEMO%4d",motorPwm);
@@ -730,46 +730,46 @@ void setup( void )
 					} else {
 						lcdRowPrintf(LOWROW, "data%2d  ",pattern_msd);
 						if ( taswGet() == SW_PUSH ) {
-							ledOut(LED_R);	// ƒƒO‘—MI—¹’Ê’m(ÔLED“_“”)
+							ledOut(LED_R);	// ãƒ­ã‚°é€ä¿¡çµ‚äº†é€šçŸ¥(èµ¤LEDç‚¹ç¯)
 							msd_sendToPC();	
-							ledOut(LED_G);	// ƒƒO‘—MI—¹’Ê’m(—ÎLED“_“”)
+							ledOut(LED_G);	// ãƒ­ã‚°é€ä¿¡çµ‚äº†é€šçŸ¥(ç·‘LEDç‚¹ç¯)
 							i = 1;
 							cntSetup1 = 0;
 						}
 						
 						if ( i = 1 && cntSetup1 >= 1500 ) {
-							ledOut(0);	// 1.5•b‚ÅI—¹’Ê’m‚ğI‚í‚é
+							ledOut(0);	// 1.5ç§’ã§çµ‚äº†é€šçŸ¥ã‚’çµ‚ã‚ã‚‹
 						}
 					}
 					
 					break;
 					
 				case 11:
-				// ƒƒO‹L˜^
+				// ãƒ­ã‚°è¨˜éŒ²
 					if ( msdFlag == 0 ) { 
 						lcdRowPrintf(LOWROW, "LogWrite");
 					}
 					if ( taswGet() == SW_TOP && push1 == 0 && msdFlag == 0) {
 						push1 = 1;
 						readFlashSetup( 0, 0, 1 ,0 ,0 ,0 ,0);
-						init_log();	// ƒƒO‹L˜^€”õ
-						msdFlag = 1;		// ƒf[ƒ^‹L˜^ŠJn
+						init_log();	// ãƒ­ã‚°è¨˜éŒ²æº–å‚™
+						msdFlag = 1;		// ãƒ‡ãƒ¼ã‚¿è¨˜éŒ²é–‹å§‹
 						lcdRowPrintf(LOWROW, "Logging ");
 					} else if ( taswGet() == SW_DOWN && push1 == 0 && msdFlag == 1) {
 						push1 = 1;
-						msdEndLog();		// MicroSD‚ÌI—¹ˆ—
+						msdEndLog();		// MicroSDã®çµ‚äº†å‡¦ç†
 					} else if ( taswGet() == 0x0 ) {
 						push1 = 0;
 					}
 					break;
 					
 				case 12:
-				// ƒR[ƒX‰ğÍ
+				// ã‚³ãƒ¼ã‚¹è§£æ
 					if ( msdFlag == 0 ) { 
 						lcdRowPrintf(LOWROW, "LogRead ");
 					}
 					if ( taswGet() == SW_PUSH && push1 == 0 && msdFlag == 0) {
-						//ƒƒO‰ğÍ
+						//ãƒ­ã‚°è§£æ
 						msdgetData () ;
 					} else if ( taswGet() == 0x0 ) {
 						push1 = 0;
@@ -778,7 +778,7 @@ void setup( void )
 			}
 			break;
 		//------------------------------------------------------------------
-		// ƒLƒƒƒŠƒuƒŒ[ƒVƒ‡ƒ“
+		// ã‚­ãƒ£ãƒªãƒ–ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³
 		//------------------------------------------------------------------
 		case 0xc:
 			lcdRowPrintf(UPROW, "Angle0  ");
@@ -802,7 +802,7 @@ void setup( void )
 			}
 			break;
 		//------------------------------------------------------------------
-		// ƒtƒ‰ƒbƒVƒ…
+		// ãƒ•ãƒ©ãƒƒã‚·ãƒ¥
 		//------------------------------------------------------------------
 		case 0xd:
 			switch( pattern_flash ) {
@@ -862,10 +862,10 @@ void setup( void )
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ data_select
-// ˆ—ŠT—v     ƒ^ƒNƒgƒXƒCƒbƒ`‚Å0,1‚É•Ï‰»‚³‚¹‚é
-// ˆø”         data: •Ï‰»‚³‚¹‚é•Ï” button: ‚Ç‚ÌƒXƒCƒbƒ`‚Å•Ï‰»‚³‚¹‚é‚©
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å data_select
+// å‡¦ç†æ¦‚è¦     ã‚¿ã‚¯ãƒˆã‚¹ã‚¤ãƒƒãƒã§0,1ã«å¤‰åŒ–ã•ã›ã‚‹
+// å¼•æ•°         data: å¤‰åŒ–ã•ã›ã‚‹å¤‰æ•° button: ã©ã®ã‚¹ã‚¤ãƒƒãƒã§å¤‰åŒ–ã•ã›ã‚‹ã‹
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////////////////
 void data_select ( char *data , char button )
 {
@@ -883,31 +883,31 @@ void data_select ( char *data , char button )
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ data_tuningUD
-// ˆ—ŠT—v     ƒ^ƒNƒgƒXƒCƒbƒ`‚Ådata‚ğ‰ÁŒ¸‚·‚é
-// ˆø”         data: ‰ÁŒ¸‚³‚¹‚é•Ï” add: 0: •Ï‰»—Ê dir: 0:ã‰º 1:¶‰E
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å data_tuningUD
+// å‡¦ç†æ¦‚è¦     ã‚¿ã‚¯ãƒˆã‚¹ã‚¤ãƒƒãƒã§dataã‚’åŠ æ¸›ã™ã‚‹
+// å¼•æ•°         data: åŠ æ¸›ã•ã›ã‚‹å¤‰æ•° add: 0: å¤‰åŒ–é‡ dir: 0:ä¸Šä¸‹ 1:å·¦å³
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////////////////
 void data_tuningUD ( void *data, char add )
 {
-	short *data2 = (short*)data;	// shortŒ^ƒ|ƒCƒ“ƒ^‚ÉƒLƒƒƒXƒg
+	short *data2 = (short*)data;	// shortå‹ãƒã‚¤ãƒ³ã‚¿ã«ã‚­ãƒ£ã‚¹ãƒˆ
 	
 	if ( cntSetup2 >= 50 ) {
 		if ( taswGet() == SW_TOP || taswGet() == SW_DOWN ) {
-			cntSwitchUD++; // ’·‰Ÿ‚µŠÔŒv‘ª
+			cntSwitchUD++; // é•·æŠ¼ã—æ™‚é–“è¨ˆæ¸¬
 			if ( taswGet() == SW_TOP  ) {
-				// ƒCƒ“ƒNƒŠƒƒ“ƒg
-				if ( cntSwitchUD >= 20 ) {	// ’·‰Ÿ‚µˆ—
+				// ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
+				if ( cntSwitchUD >= 20 ) {	// é•·æŠ¼ã—å‡¦ç†
 					*data2 += add;
-				} else if (pushUD == 0) {	// 1‰ñ‰Ÿ‚µˆ—
+				} else if (pushUD == 0) {	// 1å›æŠ¼ã—å‡¦ç†
 					pushUD = 1;
 					*data2 += add;
 				}
 			} else if ( taswGet() == SW_DOWN  ) {
-				// ƒfƒNƒŠƒƒ“ƒg
-				if ( cntSwitchUD >= 20 ) {	// ’·‰Ÿ‚µˆ—
+				// ãƒ‡ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
+				if ( cntSwitchUD >= 20 ) {	// é•·æŠ¼ã—å‡¦ç†
 					*data2 -= add;
-				} else if (pushUD == 0) {	// 1‰ñ‰Ÿ‚µˆ—
+				} else if (pushUD == 0) {	// 1å›æŠ¼ã—å‡¦ç†
 					pushUD = 1;
 					*data2 -= add;
 				}
@@ -920,31 +920,31 @@ void data_tuningUD ( void *data, char add )
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ data_tuningUD
-// ˆ—ŠT—v     ƒ^ƒNƒgƒXƒCƒbƒ`‚Ådata‚ğ‰ÁŒ¸‚·‚é
-// ˆø”         data: ‰ÁŒ¸‚³‚¹‚é•Ï” add: 0: •Ï‰»—Ê dir: 0:ã‰º 1:¶‰E
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å data_tuningUD
+// å‡¦ç†æ¦‚è¦     ã‚¿ã‚¯ãƒˆã‚¹ã‚¤ãƒƒãƒã§dataã‚’åŠ æ¸›ã™ã‚‹
+// å¼•æ•°         data: åŠ æ¸›ã•ã›ã‚‹å¤‰æ•° add: 0: å¤‰åŒ–é‡ dir: 0:ä¸Šä¸‹ 1:å·¦å³
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////////////////
 void data_tuningLR ( void *data, char add )
 {
-	short *data2 = (short*)data;	// shortŒ^ƒ|ƒCƒ“ƒ^‚ÉƒLƒƒƒXƒg
+	short *data2 = (short*)data;	// shortå‹ãƒã‚¤ãƒ³ã‚¿ã«ã‚­ãƒ£ã‚¹ãƒˆ
 
 	if ( cntSetup3 >= 50 ) {
 		if ( taswGet() == SW_LEFT || taswGet() == SW_RIGHT ) {
-			cntSwitchLR++; // ’·‰Ÿ‚µŠÔŒv‘ª
+			cntSwitchLR++; // é•·æŠ¼ã—æ™‚é–“è¨ˆæ¸¬
 			if ( taswGet() == SW_RIGHT  ) {
-				// ƒCƒ“ƒNƒŠƒƒ“ƒg
-				if ( cntSwitchLR >= 20 ) {	// ’·‰Ÿ‚µˆ—
+				// ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
+				if ( cntSwitchLR >= 20 ) {	// é•·æŠ¼ã—å‡¦ç†
 					*data2 += add;
-				} else if (pushLR == 0) {	// 1‰ñ‰Ÿ‚µˆ—
+				} else if (pushLR == 0) {	// 1å›æŠ¼ã—å‡¦ç†
 					pushLR = 1;
 					*data2 += add;
 				}
 			} else if ( taswGet() == SW_LEFT  ) {
-				// ƒfƒNƒŠƒƒ“ƒg
-				if ( cntSwitchLR >= 20 ) {	// ’·‰Ÿ‚µˆ—
+				// ãƒ‡ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
+				if ( cntSwitchLR >= 20 ) {	// é•·æŠ¼ã—å‡¦ç†
 					*data2 -= add;
-				} else if (pushLR == 0) {	// 1‰ñ‰Ÿ‚µˆ—
+				} else if (pushLR == 0) {	// 1å›æŠ¼ã—å‡¦ç†
 					pushLR = 1;
 					*data2 -= add;
 				}
@@ -957,10 +957,10 @@ void data_tuningLR ( void *data, char add )
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ fixSpeedSetting
-// ˆ—ŠT—v     ‘¬“xƒpƒ‰ƒ[ƒ^‚ğŒÅ’è’l‚É‚·‚é
-// ˆø”         ‚È‚µ
-// –ß‚è’l       0: ‘¬“xˆê’è‚É‚µ‚È‚¢@1: ‘¬“xˆê’è‚É‚·‚é
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å fixSpeedSetting
+// å‡¦ç†æ¦‚è¦     é€Ÿåº¦ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’å›ºå®šå€¤ã«ã™ã‚‹
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       0: é€Ÿåº¦ä¸€å®šã«ã—ãªã„ã€€1: é€Ÿåº¦ä¸€å®šã«ã™ã‚‹
 /////////////////////////////////////////////////////////////////////////////////
 char fixSpeedSetting ( void )
 {

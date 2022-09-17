@@ -1,23 +1,23 @@
-//======================================//
-// ƒCƒ“ƒNƒ‹[ƒh
+ï»¿//======================================//
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //======================================//
 #include "E2dataFlash.h"
 //======================================//
-// ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€
 //======================================//
-// ƒ^ƒCƒ}ŠÖ˜A
-unsigned short	cnt_flash;	// ƒtƒ‰ƒbƒVƒ…—pƒJƒEƒ“ƒg
+// ã‚¿ã‚¤ãƒžé–¢é€£
+unsigned short	cnt_flash;	// ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ç”¨ã‚«ã‚¦ãƒ³ãƒˆ
 
-// ƒtƒ‰ƒbƒVƒ…ŠÖ˜A
-volatile unsigned int 		beforeAddr;	// ‘O‰ñ•Û‘¶Žž‚ÌƒuƒƒbƒN”Ô†
-short 				flashDataBuff[45];	// ˆêŽž•Û‘¶ƒoƒbƒtƒ@
+// ãƒ•ãƒ©ãƒƒã‚·ãƒ¥é–¢é€£
+volatile unsigned int 		beforeAddr;	// å‰å›žä¿å­˜æ™‚ã®ãƒ–ãƒ­ãƒƒã‚¯ç•ªå·
+short 				flashDataBuff[45];	// ä¸€æ™‚ä¿å­˜ãƒãƒƒãƒ•ã‚¡
 
-volatile unsigned int 		nowAddr;		// Œ»Ý‚Ì‘‚«ž‚Ü‚ê‚Ä‚¢‚éƒuƒƒbƒN”Ô†
+volatile unsigned int 		nowAddr;		// ç¾åœ¨ã®æ›¸ãè¾¼ã¾ã‚Œã¦ã„ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ç•ªå·
 //////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ wait_flash
-// ˆ—ŠT—v     ’x‰„ˆ—
-// ˆø”         ’x‰„ŽžŠÔ(ms)
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å wait_flash
+// å‡¦ç†æ¦‚è¦     é…å»¶å‡¦ç†
+// å¼•æ•°         é…å»¶æ™‚é–“(ms)
+// æˆ»ã‚Šå€¤       ãªã—
 //////////////////////////////////////////////////////////////////////////
 void wait_flash ( short waitTime )
 {
@@ -27,63 +27,63 @@ void wait_flash ( short waitTime )
 	for ( i = 0; i < time; i++) __nop();
 }
 //////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ FirmWareCopy
-// ˆ—ŠT—v     FCU RAM‚Ö‚Ìƒtƒ@[ƒ€ƒEƒFƒAƒRƒs[
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å FirmWareCopy
+// å‡¦ç†æ¦‚è¦     FCU RAMã¸ã®ãƒ•ã‚¡ãƒ¼ãƒ ã‚¦ã‚§ã‚¢ã‚³ãƒ”ãƒ¼
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
 //////////////////////////////////////////////////////////////////////////
 void FirmWareCopy ( void )
 {
 	short i;
-	static const int fcu_ram_size = 8 * 1024;				// ƒtƒ@[ƒ€ƒEƒFƒAƒTƒCƒY
-	volatile unsigned int *fcu_ram = (unsigned int *)0x007f8000;		// FCU RAM‚ÌƒAƒhƒŒƒX
-	const volatile unsigned int *fcu_firmware = (unsigned int *)0xfeffe000;	// FCUƒtƒ@[ƒ€ƒEƒFƒA‚ÌƒAƒhƒŒƒX
+	static const int fcu_ram_size = 8 * 1024;				// ãƒ•ã‚¡ãƒ¼ãƒ ã‚¦ã‚§ã‚¢ã‚µã‚¤ã‚º
+	volatile unsigned int *fcu_ram = (unsigned int *)0x007f8000;		// FCU RAMã®ã‚¢ãƒ‰ãƒ¬ã‚¹
+	const volatile unsigned int *fcu_firmware = (unsigned int *)0xfeffe000;	// FCUãƒ•ã‚¡ãƒ¼ãƒ ã‚¦ã‚§ã‚¢ã®ã‚¢ãƒ‰ãƒ¬ã‚¹
 	
 	
-	// ROMƒŠ[ƒhƒ‚[ƒhŠm”F
+	// ROMãƒªãƒ¼ãƒ‰ãƒ¢ãƒ¼ãƒ‰ç¢ºèª
 	if (  FLASH.FENTRYR.WORD & 0x00ff ) FLASH.FENTRYR.WORD = 0xaa00;
 	
-	FLASH.FCURAME.WORD = 0xc401;	// FCU RAMƒAƒNƒZƒX‹–‰Â
+	FLASH.FCURAME.WORD = 0xc401;	// FCU RAMã‚¢ã‚¯ã‚»ã‚¹è¨±å¯
 
-	// FCUƒtƒ@[ƒ€ƒEƒFƒA‚ðFCU RAM‚ÉƒRƒs[
+	// FCUãƒ•ã‚¡ãƒ¼ãƒ ã‚¦ã‚§ã‚¢ã‚’FCU RAMã«ã‚³ãƒ”ãƒ¼
 	for ( i = 0; i < fcu_ram_size / sizeof( unsigned int ); i++ ) {
 		*fcu_ram++ = *fcu_firmware++;
 	}
 
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ fcuCommandByte
-// ˆ—ŠT—v     Žw’èƒAƒhƒŒƒX‚ÉFCUƒRƒ}ƒ“ƒh”­s
-// ˆø”         Block_number: ƒuƒƒbƒN”Ô†@command:FCUƒRƒ}ƒ“ƒh(16i”)ƒoƒCƒgƒTƒCƒY
-//				Addr_number: æ“ªƒAƒhƒŒƒX‚©‚ç‚ÌƒIƒtƒZƒbƒg’l
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å fcuCommandByte
+// å‡¦ç†æ¦‚è¦     æŒ‡å®šã‚¢ãƒ‰ãƒ¬ã‚¹ã«FCUã‚³ãƒžãƒ³ãƒ‰ç™ºè¡Œ
+// å¼•æ•°         Block_number: ãƒ–ãƒ­ãƒƒã‚¯ç•ªå·ã€€command:FCUã‚³ãƒžãƒ³ãƒ‰(16é€²æ•°)ãƒã‚¤ãƒˆã‚µã‚¤ã‚º
+//				Addr_number: å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹ã‹ã‚‰ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆå€¤
+// æˆ»ã‚Šå€¤       ãªã—
 //////////////////////////////////////////////////////////////////////////////////////////
 void fcuCommandByte ( unsigned int Addr, unsigned char command )
 {
 	volatile unsigned char *e2data;
 	
-	e2data = ( unsigned char *)Addr;	// ƒ|ƒCƒ“ƒ^‚ÉƒAƒhƒŒƒX‘ã“ü
-	*e2data = command;			// Žw’èƒAƒhƒŒƒX‚ÉƒRƒ}ƒ“ƒh”­s
+	e2data = ( unsigned char *)Addr;	// ãƒã‚¤ãƒ³ã‚¿ã«ã‚¢ãƒ‰ãƒ¬ã‚¹ä»£å…¥
+	*e2data = command;			// æŒ‡å®šã‚¢ãƒ‰ãƒ¬ã‚¹ã«ã‚³ãƒžãƒ³ãƒ‰ç™ºè¡Œ
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ fcuCommandWord
-// ˆ—ŠT—v     Žw’èƒAƒhƒŒƒX‚ÉFCUƒRƒ}ƒ“ƒh”­s
-// ˆø”         Block_number: ƒuƒƒbƒN”Ô†@command:FCUƒRƒ}ƒ“ƒh(16i”)ƒ[ƒhƒTƒCƒY
-//				Addr_number: æ“ªƒAƒhƒŒƒX‚©‚ç‚ÌƒIƒtƒZƒbƒg’l
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å fcuCommandWord
+// å‡¦ç†æ¦‚è¦     æŒ‡å®šã‚¢ãƒ‰ãƒ¬ã‚¹ã«FCUã‚³ãƒžãƒ³ãƒ‰ç™ºè¡Œ
+// å¼•æ•°         Block_number: ãƒ–ãƒ­ãƒƒã‚¯ç•ªå·ã€€command:FCUã‚³ãƒžãƒ³ãƒ‰(16é€²æ•°)ãƒ¯ãƒ¼ãƒ‰ã‚µã‚¤ã‚º
+//				Addr_number: å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹ã‹ã‚‰ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆå€¤
+// æˆ»ã‚Šå€¤       ãªã—
 //////////////////////////////////////////////////////////////////////////////////////////
 void fcuCommandWord ( unsigned int Addr, unsigned short command )
 {
 	volatile unsigned short *e2data;
 	
-	e2data = ( unsigned short *)Addr;	// ƒ|ƒCƒ“ƒ^‚ÉƒAƒhƒŒƒX‘ã“ü
-	*e2data = command;			// Žw’èƒAƒhƒŒƒX‚ÉƒRƒ}ƒ“ƒh”­s
+	e2data = ( unsigned short *)Addr;	// ãƒã‚¤ãƒ³ã‚¿ã«ã‚¢ãƒ‰ãƒ¬ã‚¹ä»£å…¥
+	*e2data = command;			// æŒ‡å®šã‚¢ãƒ‰ãƒ¬ã‚¹ã«ã‚³ãƒžãƒ³ãƒ‰ç™ºè¡Œ
 }
 //////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ checkFRDY
-// ˆ—ŠT—v     P/Eˆ—’†‚©”»’è‚·‚é
-// ˆø”         nƒoƒCƒg‚ÌƒuƒƒbƒN‚É‘Î‚·‚éÁ‹ŽŽžŠÔ
-// –ß‚è’l      	0: ƒGƒ‰[‚È‚µ 1:ƒ^ƒCƒ€ƒAƒEƒgƒGƒ‰[
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å checkFRDY
+// å‡¦ç†æ¦‚è¦     P/Eå‡¦ç†ä¸­ã‹åˆ¤å®šã™ã‚‹
+// å¼•æ•°         nãƒã‚¤ãƒˆã®ãƒ–ãƒ­ãƒƒã‚¯ã«å¯¾ã™ã‚‹æ¶ˆåŽ»æ™‚é–“
+// æˆ»ã‚Šå€¤      	0: ã‚¨ãƒ©ãƒ¼ãªã— 1:ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆã‚¨ãƒ©ãƒ¼
 //////////////////////////////////////////////////////////////////////////
 bool checkFRDY ( unsigned short waittime )
 {
@@ -97,7 +97,7 @@ bool checkFRDY ( unsigned short waittime )
 			if ( cnt_flash >= waittime ) {
 				cnt_flash = 0;
 				timeout = true;
-				printf("FCU‰Šú‰»\n");
+				printf("FCUåˆæœŸåŒ–\n");
 				break;
 			} else {
 				continue;
@@ -108,7 +108,7 @@ bool checkFRDY ( unsigned short waittime )
 		}
 	}
 	
-	// FCU‰Šú‰»
+	// FCUåˆæœŸåŒ–
 	if ( timeout ) {
 		cnt_flash = 0;
 		while( cnt_flash <= 5 ) {
@@ -116,76 +116,76 @@ bool checkFRDY ( unsigned short waittime )
 			if ( cnt_flash >= 5 ) {
 				FLASH.FRESETR.BIT.FRESET = 0;
 				FirmWareCopy();
-				printf("FCU‰Šú‰»Š®—¹\n");
+				printf("FCUåˆæœŸåŒ–å®Œäº†\n");
 				break;
 			}
 		}
 	} else if ( !timeout ){
-		//printf("ƒ^ƒCƒ€ƒAƒEƒg‚È‚µ\n");
+		//printf("ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆãªã—\n");
 	}
 	return timeout;
 }
 //////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ checkErrorFlash
-// ˆ—ŠT—v     ƒGƒ‰[Šm”F
-// ˆø”         ‚È‚µ
-// –ß‚è’l       0: ƒGƒ‰[‚È‚µ 1:ƒGƒ‰[‚ ‚è
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å checkErrorFlash
+// å‡¦ç†æ¦‚è¦     ã‚¨ãƒ©ãƒ¼ç¢ºèª
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       0: ã‚¨ãƒ©ãƒ¼ãªã— 1:ã‚¨ãƒ©ãƒ¼ã‚ã‚Š
 //////////////////////////////////////////////////////////////////////////
 bool checkErrorFlash ( void )
 {
 	volatile char error;
 	
 	if ( FLASH.FSTATR0.BIT.ILGLERR == 1 || FLASH.FSTATR0.BIT.ERSERR == 1 || FLASH.FSTATR0.BIT.PRGERR == 1 ) {
-		printf("ƒGƒ‰[Šm”F ILGLERR = %d ERSERR = %d PRGERR = %d\n", FLASH.FSTATR0.BIT.ILGLERR, FLASH.FSTATR0.BIT.ERSERR, FLASH.FSTATR0.BIT.PRGERR);
+		printf("ã‚¨ãƒ©ãƒ¼ç¢ºèª ILGLERR = %d ERSERR = %d PRGERR = %d\n", FLASH.FSTATR0.BIT.ILGLERR, FLASH.FSTATR0.BIT.ERSERR, FLASH.FSTATR0.BIT.PRGERR);
 		error = true;
 		
 		if ( FLASH.FSTATR0.BIT.ILGLERR == 1 ) {
-			printf("•s³ƒRƒ}ƒ“ƒhŒŸo\n");
+			printf("ä¸æ­£ã‚³ãƒžãƒ³ãƒ‰æ¤œå‡º\n");
 			printf("ROMAE = %d DFLAE = %d DFLRPE = %d DFLWPE = %d\n", FLASH.FASTAT.BIT.ROMAE, FLASH.FASTAT.BIT.DFLAE, FLASH.FASTAT.BIT.DFLRPE, FLASH.FASTAT.BIT.DFLWPE);
 			
 			if ( FLASH.FASTAT.BYTE == 0x10 ) {
-				printf("FCUƒRƒ}ƒ“ƒh‚ÍŽó‚¯•t‚¯‚Ä‚È‚¢\n");
+				printf("FCUã‚³ãƒžãƒ³ãƒ‰ã¯å—ã‘ä»˜ã‘ã¦ãªã„\n");
 			} else {
 				FLASH.FASTAT.BYTE = 0x10;
-				printf("FCUƒRƒ}ƒ“ƒh‚ðŽó‚¯•t‚¯‚Ä‚é\n");
+				printf("FCUã‚³ãƒžãƒ³ãƒ‰ã‚’å—ã‘ä»˜ã‘ã¦ã‚‹\n");
 			}
 			fcuCommandByte( FLASHSTARTADDR, 0x50 );
 		} else {
-			printf("ƒXƒe[ƒ^ƒXƒNƒŠƒAƒRƒ}ƒ“ƒh”­s(ILGLERR = 0)\n");
+			printf("ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ã‚¯ãƒªã‚¢ã‚³ãƒžãƒ³ãƒ‰ç™ºè¡Œ(ILGLERR = 0)\n");
 		}
 		fcuCommandByte( FLASHSTARTADDR, 0x50 );
 	} else {
-		//printf("ƒGƒ‰[‚È‚µ\n");
+		//printf("ã‚¨ãƒ©ãƒ¼ãªã—\n");
 		error = false;
 	}
 	
 	return error;
 }
 //////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ inti_falsh
-// ˆ—ŠT—v     E2ƒf[ƒ^ƒtƒ‰ƒbƒVƒ…‚Ì‰Šú‰»
-// ˆø”         ‚È‚µ
-// –ß‚è’l       0:ƒGƒ‰[‚È‚µ@1:ƒGƒ‰[‚ ‚è
-// •â‘«			‰Šúó‘Ô P/Eƒm[ƒ}ƒ‹ƒ‚[ƒh
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å inti_falsh
+// å‡¦ç†æ¦‚è¦     E2ãƒ‡ãƒ¼ã‚¿ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã®åˆæœŸåŒ–
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       0:ã‚¨ãƒ©ãƒ¼ãªã—ã€€1:ã‚¨ãƒ©ãƒ¼ã‚ã‚Š
+// è£œè¶³			åˆæœŸçŠ¶æ…‹ P/EãƒŽãƒ¼ãƒžãƒ«ãƒ¢ãƒ¼ãƒ‰
 //////////////////////////////////////////////////////////////////////////
 bool initFlash ( void )
 {	
 	char ret = false;
 	
-	// FCUƒtƒ@[ƒ€ƒEƒFƒA‚ðƒRƒs[
+	// FCUãƒ•ã‚¡ãƒ¼ãƒ ã‚¦ã‚§ã‚¢ã‚’ã‚³ãƒ”ãƒ¼
 	FirmWareCopy();
 	
-	// Žü•ÓƒNƒƒbƒN’Ê’mƒRƒ}ƒ“ƒh”­s
-	// P/Eƒ‚[ƒh‚ÉˆÚs
+	// å‘¨è¾ºã‚¯ãƒ­ãƒƒã‚¯é€šçŸ¥ã‚³ãƒžãƒ³ãƒ‰ç™ºè¡Œ
+	// P/Eãƒ¢ãƒ¼ãƒ‰ã«ç§»è¡Œ
 	if ( ( FLASH.FENTRYR.WORD & 0x00ff ) != 0x0080 ) FLASH.FENTRYR.WORD = 0xaa80;
 	
-	// E2ƒf[ƒ^ƒtƒ‰ƒbƒVƒ…—Ìˆæ‚ÌP/E‚ð‚ð‹–‰Â
+	// E2ãƒ‡ãƒ¼ã‚¿ãƒ•ãƒ©ãƒƒã‚·ãƒ¥é ˜åŸŸã®P/Eã‚’ã‚’è¨±å¯
 	FLASH.DFLWE0.WORD = 0x1eff;
 	
-	// FCLK(48MHz)‚ðŽü•ÓƒNƒƒbƒN’Ê’mƒŒƒWƒXƒ^‚ÉÝ’è
+	// FCLK(48MHz)ã‚’å‘¨è¾ºã‚¯ãƒ­ãƒƒã‚¯é€šçŸ¥ãƒ¬ã‚¸ã‚¹ã‚¿ã«è¨­å®š
 	FLASH.PCKAR.BIT.PCKA = 48;	
 	
-	// Žü•ÓƒNƒƒbƒN’Ê’mƒRƒ}ƒ“ƒh”­s
+	// å‘¨è¾ºã‚¯ãƒ­ãƒƒã‚¯é€šçŸ¥ã‚³ãƒžãƒ³ãƒ‰ç™ºè¡Œ
 	fcuCommandByte( FLASHSTARTADDR, 0xe9 );
 	fcuCommandByte( FLASHSTARTADDR, 0x03 );
 	fcuCommandWord( FLASHSTARTADDR, 0x0f0f );
@@ -193,92 +193,92 @@ bool initFlash ( void )
 	fcuCommandWord( FLASHSTARTADDR, 0x0f0f );
 	fcuCommandByte(FLASHSTARTADDR, 0xd0 );
 	
-	// P/Eˆ—’†‚©Šm”F
+	// P/Eå‡¦ç†ä¸­ã‹ç¢ºèª
 	if ( checkFRDY(1) == 0 ) {
-		// ƒGƒ‰[Šm”F
+		// ã‚¨ãƒ©ãƒ¼ç¢ºèª
 		if ( checkErrorFlash() == 0 ) {
-			// E2ƒf[ƒ^ƒtƒ‰ƒbƒVƒ…—Ìˆæ‚ÌP/E‚ð‚ð‹–‰Â
+			// E2ãƒ‡ãƒ¼ã‚¿ãƒ•ãƒ©ãƒƒã‚·ãƒ¥é ˜åŸŸã®P/Eã‚’ã‚’è¨±å¯
 			FLASH.DFLWE0.WORD = 0x1e00;
 		} else {
-			printf("E2ƒf[ƒ^ƒtƒ‰ƒbƒVƒ…‰Šú‰»ƒGƒ‰[\n");
+			printf("E2ãƒ‡ãƒ¼ã‚¿ãƒ•ãƒ©ãƒƒã‚·ãƒ¥åˆæœŸåŒ–ã‚¨ãƒ©ãƒ¼\n");
 			ret = true;
 		}
 	} else {
-		printf("E2ƒf[ƒ^ƒtƒ‰ƒbƒVƒ…‰Šú‰»ƒGƒ‰[\n");
+		printf("E2ãƒ‡ãƒ¼ã‚¿ãƒ•ãƒ©ãƒƒã‚·ãƒ¥åˆæœŸåŒ–ã‚¨ãƒ©ãƒ¼\n");
 		ret = true;
 	}
 	
 	return ret;
 }
 //////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ changeFlashPE
-// ˆ—ŠT—v     E2ƒf[ƒ^ƒtƒ‰ƒbƒVƒ…‚ÌP/Eƒ‚[ƒhˆÚs
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ‚È‚µ
-// •â‘«		‰Šúó‘Ô P/Eƒm[ƒ}ƒ‹ƒ‚[ƒh
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å changeFlashPE
+// å‡¦ç†æ¦‚è¦     E2ãƒ‡ãƒ¼ã‚¿ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã®P/Eãƒ¢ãƒ¼ãƒ‰ç§»è¡Œ
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
+// è£œè¶³		åˆæœŸçŠ¶æ…‹ P/EãƒŽãƒ¼ãƒžãƒ«ãƒ¢ãƒ¼ãƒ‰
 //////////////////////////////////////////////////////////////////////////
 void changeFlashPE ( void )
 {
-	// P/Eƒ‚[ƒh‚ÉˆÚs
+	// P/Eãƒ¢ãƒ¼ãƒ‰ã«ç§»è¡Œ
 	if ( ( FLASH.FENTRYR.WORD & 0x00ff ) != 0x0080 ) FLASH.FENTRYR.WORD = 0xaa80;
 	
-	// P/E ‰Â”\ó‘Ô‚É‚·‚é
+	// P/E å¯èƒ½çŠ¶æ…‹ã«ã™ã‚‹
 	FLASH.FWEPROR.BYTE = 0x01;
 	
-	// P/Eƒ‚[ƒhˆÚsƒRƒ}ƒ“ƒh”­s
+	// P/Eãƒ¢ãƒ¼ãƒ‰ç§»è¡Œã‚³ãƒžãƒ³ãƒ‰ç™ºè¡Œ
 	fcuCommandByte( FLASHSTARTADDR, 0xff );
 	
-	// ˆ—’†Šm”F
+	// å‡¦ç†ä¸­ç¢ºèª
 	if ( checkFRDY( 300 ) == 0 ) {
-		// ƒGƒ‰[Šm”F
+		// ã‚¨ãƒ©ãƒ¼ç¢ºèª
 		if ( checkErrorFlash() == 0 ) {
 			if ( checkErrorFlash() == 0 ) {
-				//printf("P/E ƒ‚[ƒhˆÚsŠ®—¹\n");
+				//printf("P/E ãƒ¢ãƒ¼ãƒ‰ç§»è¡Œå®Œäº†\n");
 			} else {
-				printf("P/E ƒ‚[ƒhˆÚsƒGƒ‰[\n");
+				printf("P/E ãƒ¢ãƒ¼ãƒ‰ç§»è¡Œã‚¨ãƒ©ãƒ¼\n");
 			}
 		}
 	}
 }
 //////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ changeFlashRead
-// ˆ—ŠT—v     E2ƒf[ƒ^ƒtƒ‰ƒbƒVƒ…‚ÌƒŠ[ƒhƒ‚[ƒhˆÚs
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å changeFlashRead
+// å‡¦ç†æ¦‚è¦     E2ãƒ‡ãƒ¼ã‚¿ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã®ãƒªãƒ¼ãƒ‰ãƒ¢ãƒ¼ãƒ‰ç§»è¡Œ
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
 //////////////////////////////////////////////////////////////////////////
 void changeFlashRead ( void ) 
 {
 	
-	// ˆ—’†Šm”F
+	// å‡¦ç†ä¸­ç¢ºèª
 	if ( checkFRDY( 300 ) == 0 ) {
-		// ƒGƒ‰[Šm”F
+		// ã‚¨ãƒ©ãƒ¼ç¢ºèª
 		if ( checkErrorFlash() == 0 ) {
-			// ROM/E2ƒf[ƒ^ƒtƒ‰ƒbƒVƒ…ƒŠ[ƒhƒ‚[ƒh‚ÖˆÚs
+			// ROM/E2ãƒ‡ãƒ¼ã‚¿ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ãƒªãƒ¼ãƒ‰ãƒ¢ãƒ¼ãƒ‰ã¸ç§»è¡Œ
 			FLASH.FENTRYR.WORD = 0xaa00;
 			if ( ( FLASH.FENTRYR.WORD & 0x00ff ) != 0x0000 ) FLASH.FENTRYR.WORD = 0xaa00;
-			// ƒuƒ‰ƒ“ƒNƒ`ƒFƒbƒN‹ÖŽ~
+			// ãƒ–ãƒ©ãƒ³ã‚¯ãƒã‚§ãƒƒã‚¯ç¦æ­¢
 			FLASH.FWEPROR.BYTE = 0x02;
-			//printf("ƒŠ[ƒhƒ‚[ƒhˆÚsŠ®—¹\n");
+			//printf("ãƒªãƒ¼ãƒ‰ãƒ¢ãƒ¼ãƒ‰ç§»è¡Œå®Œäº†\n");
 		}
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ checkBlank
-// ˆ—ŠT—v     Žw’èƒAƒhƒŒƒX‚Éƒuƒ‰ƒ“ƒNƒ`ƒFƒbƒN
-// ˆø”         Block_number: ƒuƒ‰ƒ“ƒNƒ`ƒFƒbƒN‚·‚éƒuƒƒbƒN”Ô†
-//				Addr_offset: æ“ªƒAƒhƒŒƒX‚©‚ç‚ÌƒIƒtƒZƒbƒg’l
-// –ß‚è’l       0:ƒCƒŒ[ƒYÏ‚Ý@1:‘‚«ž‚ÝÏ‚Ý -1:ƒGƒ‰[‚ ‚è
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å checkBlank
+// å‡¦ç†æ¦‚è¦     æŒ‡å®šã‚¢ãƒ‰ãƒ¬ã‚¹ã«ãƒ–ãƒ©ãƒ³ã‚¯ãƒã‚§ãƒƒã‚¯
+// å¼•æ•°         Block_number: ãƒ–ãƒ©ãƒ³ã‚¯ãƒã‚§ãƒƒã‚¯ã™ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ç•ªå·
+//				Addr_offset: å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹ã‹ã‚‰ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆå€¤
+// æˆ»ã‚Šå€¤       0:ã‚¤ãƒ¬ãƒ¼ã‚ºæ¸ˆã¿ã€€1:æ›¸ãè¾¼ã¿æ¸ˆã¿ -1:ã‚¨ãƒ©ãƒ¼ã‚ã‚Š
 //////////////////////////////////////////////////////////////////////////////////
 signed char checkBlank ( unsigned int Addr )
 {
 	volatile signed char ret;
 	volatile unsigned int Block_number, lead_Addr, offset;
 
-	// P/Eƒ‚[ƒhˆÚs
+	// P/Eãƒ¢ãƒ¼ãƒ‰ç§»è¡Œ
 	changeFlashPE();
 	
-	Block_number = ( Addr - FLASHSTARTADDR ) / 32;	// ƒuƒ‰ƒ“ƒNƒ`ƒFƒbƒN‚·‚éƒAƒhƒŒƒX‚ðŽZo
-	// ŠeƒuƒƒbƒN‚Ìæ“ªƒAƒhƒŒƒXŽZo
+	Block_number = ( Addr - FLASHSTARTADDR ) / 32;	// ãƒ–ãƒ©ãƒ³ã‚¯ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’ç®—å‡º
+	// å„ãƒ–ãƒ­ãƒƒã‚¯ã®å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹ç®—å‡º
 	if ( Block_number <= 63 ) lead_Addr = ( 0 * 32 ) + FLASHSTARTADDR;
 	if ( Block_number >= 64 && Block_number <= 127 ) lead_Addr = ( 64 * 32 ) + FLASHSTARTADDR;
 	if ( Block_number >= 128 && Block_number <= 191 ) lead_Addr = ( 128 * 32 ) + FLASHSTARTADDR;
@@ -295,30 +295,30 @@ signed char checkBlank ( unsigned int Addr )
 	if ( Block_number >= 832 && Block_number <= 895 ) lead_Addr = ( 832 * 32 ) + FLASHSTARTADDR;
 	if ( Block_number >= 896 && Block_number <= 959 ) lead_Addr = ( 896 * 32 ) + FLASHSTARTADDR;
 	if ( Block_number >= 960 && Block_number <= 1023 ) lead_Addr = ( 960 * 32 ) + FLASHSTARTADDR;
-	// ƒIƒtƒZƒbƒg—ÊŽZo
+	// ã‚ªãƒ•ã‚»ãƒƒãƒˆé‡ç®—å‡º
 	offset = Addr - lead_Addr;
 	
-	// ƒuƒ‰ƒ“ƒNƒ`ƒFƒbƒN‹–‰Â
+	// ãƒ–ãƒ©ãƒ³ã‚¯ãƒã‚§ãƒƒã‚¯è¨±å¯
 	FLASH.FMODR.BIT.FRDMD = 1;
 	
-	// ƒ`ƒFƒbƒNƒTƒCƒYÝ’è( 2B )
+	// ãƒã‚§ãƒƒã‚¯ã‚µã‚¤ã‚ºè¨­å®š( 2B )
 	FLASH.DFLBCCNT.BIT.BCSIZE = 0;
 	FLASH.DFLBCCNT.BIT.BCADR = offset;
 	
-	// ƒuƒ‰ƒ“ƒNƒ`ƒFƒbƒNƒRƒ}ƒ“ƒh”­s
+	// ãƒ–ãƒ©ãƒ³ã‚¯ãƒã‚§ãƒƒã‚¯ã‚³ãƒžãƒ³ãƒ‰ç™ºè¡Œ
 	fcuCommandByte( Addr, 0x71 );
 	fcuCommandByte( Addr, 0xd0 );
 	
-	// P/Eˆ—’†‚©Šm”F
+	// P/Eå‡¦ç†ä¸­ã‹ç¢ºèª
 	if ( checkFRDY( 6 * 1.1 ) == 0 ) {
-		// ƒGƒ‰[Šm”F
+		// ã‚¨ãƒ©ãƒ¼ç¢ºèª
 		if ( checkErrorFlash() == 0 ) {
-			// ƒuƒ‰ƒ“ƒNƒ`ƒFƒbƒNŒ‹‰ÊŽæ“¾
+			// ãƒ–ãƒ©ãƒ³ã‚¯ãƒã‚§ãƒƒã‚¯çµæžœå–å¾—
 			if ( FLASH.DFLBCSTAT.BIT.BCST == 1 ) {
-				//printf("ƒAƒhƒŒƒX%p‚Í‘‚«ž‚ÝÏ‚Ý\n", Addr);
+				//printf("ã‚¢ãƒ‰ãƒ¬ã‚¹%pã¯æ›¸ãè¾¼ã¿æ¸ˆã¿\n", Addr);
 				ret = 1;
 			} else {
-				//printf("ƒAƒhƒŒƒX%p‚ÍƒCƒŒ[ƒYÏ‚Ý\n", Addr);
+				//printf("ã‚¢ãƒ‰ãƒ¬ã‚¹%pã¯ã‚¤ãƒ¬ãƒ¼ã‚ºæ¸ˆã¿\n", Addr);
 				ret = 0;
 			}
 		} else {
@@ -331,40 +331,40 @@ signed char checkBlank ( unsigned int Addr )
 	return ret;
 }
 //////////////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ eraseE2DataFlash
-// ˆ—ŠT—v     Žw’èƒf[ƒ^ƒuƒƒbƒN‚ðƒCƒŒ[ƒY
-// ˆø”         Block_number: ƒCƒŒ[ƒY‚·‚éƒuƒƒbƒN”Ô†
-// –ß‚è’l      	0:ƒCƒŒ[ƒYŠ®—¹ 1:ƒCƒŒ[ƒYƒGƒ‰[
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å eraseE2DataFlash
+// å‡¦ç†æ¦‚è¦     æŒ‡å®šãƒ‡ãƒ¼ã‚¿ãƒ–ãƒ­ãƒƒã‚¯ã‚’ã‚¤ãƒ¬ãƒ¼ã‚º
+// å¼•æ•°         Block_number: ã‚¤ãƒ¬ãƒ¼ã‚ºã™ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ç•ªå·
+// æˆ»ã‚Šå€¤      	0:ã‚¤ãƒ¬ãƒ¼ã‚ºå®Œäº† 1:ã‚¤ãƒ¬ãƒ¼ã‚ºã‚¨ãƒ©ãƒ¼
 //////////////////////////////////////////////////////////////////////////////////
 bool eraseE2DataFlash ( unsigned short Block_number )
 {
 	volatile char ret = false;
 	unsigned int Addr;
 	
-	Addr = ( Block_number * 32 ) + FLASHSTARTADDR;	// ƒuƒƒbƒNN‚ÌƒAƒhƒŒƒX‚ðŽZo
+	Addr = ( Block_number * 32 ) + FLASHSTARTADDR;	// ãƒ–ãƒ­ãƒƒã‚¯Nã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’ç®—å‡º
 	
-	// P/Eƒ‚[ƒhˆÚs
+	// P/Eãƒ¢ãƒ¼ãƒ‰ç§»è¡Œ
 	changeFlashPE();
 	
-	// Á‹ŽƒvƒƒeƒNƒg‰ðœ
+	// æ¶ˆåŽ»ãƒ—ãƒ­ãƒ†ã‚¯ãƒˆè§£é™¤
 	FLASH.FWEPROR.BIT.FLWE = 1;
 	
-	// ƒCƒŒ[ƒY‹–‰Â
-	FLASH.DFLWE0.WORD = 0x1eff;	// 0000`0511ƒuƒƒbƒN‚Ü‚ÅP/E‹–‰Â
-	FLASH.DFLWE1.WORD = 0xe1ff;	// 0512`1023ƒuƒƒbƒN‚Ü‚ÅP/E‹–‰Â
+	// ã‚¤ãƒ¬ãƒ¼ã‚ºè¨±å¯
+	FLASH.DFLWE0.WORD = 0x1eff;	// 0000ï½ž0511ãƒ–ãƒ­ãƒƒã‚¯ã¾ã§P/Eè¨±å¯
+	FLASH.DFLWE1.WORD = 0xe1ff;	// 0512ï½ž1023ãƒ–ãƒ­ãƒƒã‚¯ã¾ã§P/Eè¨±å¯
 	
-	// ƒuƒƒbƒNƒCƒŒ[ƒYƒRƒ}ƒ“ƒh”­s
+	// ãƒ–ãƒ­ãƒƒã‚¯ã‚¤ãƒ¬ãƒ¼ã‚ºã‚³ãƒžãƒ³ãƒ‰ç™ºè¡Œ
 	fcuCommandByte( Addr, 0x20 );
 	fcuCommandByte( Addr, 0xd0 );
 	
 	if ( ( FLASH.DFLWE0.WORD & 0x00ff ) == 0x00ff ) {
-		// P/Eˆ—’†‚©Šm”F
+		// P/Eå‡¦ç†ä¸­ã‹ç¢ºèª
 		if ( checkFRDY( 20 * 63 * 1.1 ) == 0 ) {
-			// ƒGƒ‰[Šm”F
+			// ã‚¨ãƒ©ãƒ¼ç¢ºèª
 			if ( checkErrorFlash() == 0 ) {
-				FLASH.FWEPROR.BIT.FLWE = 2;	// Á‹ŽƒvƒƒeƒNƒg
-				FLASH.DFLWE0.WORD = 0x1e00;	// 0000`0511ƒuƒƒbƒN‚Ü‚ÅP/E‹–‰Â
-				FLASH.DFLWE1.WORD = 0xe100;	// 0512`1023ƒuƒƒbƒN‚Ü‚ÅP/E‹–‰Â
+				FLASH.FWEPROR.BIT.FLWE = 2;	// æ¶ˆåŽ»ãƒ—ãƒ­ãƒ†ã‚¯ãƒˆ
+				FLASH.DFLWE0.WORD = 0x1e00;	// 0000ï½ž0511ãƒ–ãƒ­ãƒƒã‚¯ã¾ã§P/Eè¨±å¯
+				FLASH.DFLWE1.WORD = 0xe100;	// 0512ï½ž1023ãƒ–ãƒ­ãƒƒã‚¯ã¾ã§P/Eè¨±å¯
 				//printf("Block%dErase\n", Block_number);
 			}
 		}
@@ -376,11 +376,11 @@ bool eraseE2DataFlash ( unsigned short Block_number )
 	return ret;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ checkWriteAddr
-// ˆ—ŠT—v     startBlock‚©‚çendbloock‚Ü‚Å‚ÌƒCƒŒ[ƒYÏ‚Ý—Ìˆæ‚ð’T‚·
-// ˆø”         startBlock: ŠJŽnƒuƒƒbƒN”Ô† 	endbloock: I—¹ƒuƒƒbƒN”Ô†
-//				startoffset: ŠJŽnƒIƒtƒZƒbƒg’l	width_data: Šm•Û‚·‚éƒf[ƒ^—Ê
-// –ß‚è’l       0: ƒCƒŒ[ƒYÏ‚Ý—Ìˆæ‚ ‚è 1:ƒCƒŒ[ƒYÏ‚Ý—Ìˆæ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å checkWriteAddr
+// å‡¦ç†æ¦‚è¦     startBlockã‹ã‚‰endbloockã¾ã§ã®ã‚¤ãƒ¬ãƒ¼ã‚ºæ¸ˆã¿é ˜åŸŸã‚’æŽ¢ã™
+// å¼•æ•°         startBlock: é–‹å§‹ãƒ–ãƒ­ãƒƒã‚¯ç•ªå· 	endbloock: çµ‚äº†ãƒ–ãƒ­ãƒƒã‚¯ç•ªå·
+//				startoffset: é–‹å§‹ã‚ªãƒ•ã‚»ãƒƒãƒˆå€¤	width_data: ç¢ºä¿ã™ã‚‹ãƒ‡ãƒ¼ã‚¿é‡
+// æˆ»ã‚Šå€¤       0: ã‚¤ãƒ¬ãƒ¼ã‚ºæ¸ˆã¿é ˜åŸŸã‚ã‚Š 1:ã‚¤ãƒ¬ãƒ¼ã‚ºæ¸ˆã¿é ˜åŸŸãªã—
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 void checkWriteAddr ( unsigned int Addr, short endblock, short width_data, short startBlock )
 {
@@ -390,7 +390,7 @@ void checkWriteAddr ( unsigned int Addr, short endblock, short width_data, short
 	cheakAddr = Addr;
 	limitAddr = ( endblock * 32 ) + FLASHSTARTADDR + 30;
 	//printf("width_data = %x\n", width_data);
-	// Žw’è‚µ‚½ƒf[ƒ^—Ê‚Ì—Ìˆæ‚ªŒ©‚Â‚©‚é‚Ü‚Åƒuƒ‰ƒ“ƒNƒ`ƒFƒbƒN‚·‚é
+	// æŒ‡å®šã—ãŸãƒ‡ãƒ¼ã‚¿é‡ã®é ˜åŸŸãŒè¦‹ã¤ã‹ã‚‹ã¾ã§ãƒ–ãƒ©ãƒ³ã‚¯ãƒã‚§ãƒƒã‚¯ã™ã‚‹
 	while ( cheakAddr <= limitAddr ) {
 		if ( checkBlank( cheakAddr ) > 0 ) {
 			width = 0;
@@ -398,16 +398,16 @@ void checkWriteAddr ( unsigned int Addr, short endblock, short width_data, short
 			width++;
 			//printf("width = %x\n", width);
 			if ( width == 1 ) {
-				// ‘‚«ž‚ÝŠJŽnƒAƒhƒŒƒX
+				// æ›¸ãè¾¼ã¿é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹
 				leadAddr = cheakAddr;
 			}
-			// •K—v‚Èƒf[ƒ^—ÊŠm•Û‚Å‚«‚½‚çƒXƒgƒbƒv
+			// å¿…è¦ãªãƒ‡ãƒ¼ã‚¿é‡ç¢ºä¿ã§ããŸã‚‰ã‚¹ãƒˆãƒƒãƒ—
 			if ( width >= width_data ) break;
 		}
 		cheakAddr += 2;
 	}
 	
-	// ‘‚«ž‚Ý—Ìˆæ‚ª‚È‚¯‚ê‚ÎƒCƒŒ[ƒY‚·‚é
+	// æ›¸ãè¾¼ã¿é ˜åŸŸãŒãªã‘ã‚Œã°ã‚¤ãƒ¬ãƒ¼ã‚ºã™ã‚‹
 	if ( cheakAddr > limitAddr || width < width_data ) {
 		//printf("startBlock = %d\n", startBlock);
 		i = startBlock;
@@ -417,53 +417,53 @@ void checkWriteAddr ( unsigned int Addr, short endblock, short width_data, short
 			i++;
 		}
 		
-		// ŠJŽnˆÊ’u‚É–ß‚·
+		// é–‹å§‹ä½ç½®ã«æˆ»ã™
 		leadAddr = ( startBlock * 32 ) + FLASHSTARTADDR;
 	}
 	//printf("leadAddr = %x\n", leadAddr);
 	nowAddr = leadAddr;
 }
 //////////////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ writeFlash
-// ˆ—ŠT—v     Žw’èƒAƒhƒŒƒX‚É‘‚«ž‚Ý
-// ˆø”         write_data:‘‚«ž‚Þƒf[ƒ^‚Ì‚ ‚é”z—ñ @width_data:ƒf[ƒ^‚ÌŒÂ”
-// –ß‚è’l       0: ‘‚«ž‚ÝŠ®—¹	1: ƒGƒ‰[‚ ‚è
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å writeFlash
+// å‡¦ç†æ¦‚è¦     æŒ‡å®šã‚¢ãƒ‰ãƒ¬ã‚¹ã«æ›¸ãè¾¼ã¿
+// å¼•æ•°         write_data:æ›¸ãè¾¼ã‚€ãƒ‡ãƒ¼ã‚¿ã®ã‚ã‚‹é…åˆ— ã€€width_data:ãƒ‡ãƒ¼ã‚¿ã®å€‹æ•°
+// æˆ»ã‚Šå€¤       0: æ›¸ãè¾¼ã¿å®Œäº†	1: ã‚¨ãƒ©ãƒ¼ã‚ã‚Š
 //////////////////////////////////////////////////////////////////////////////////
 bool writeFlash ( short* write_data, short width_data )
 {
 	volatile char ret = false;
-	volatile short*	sendData;	// “]‘——pƒ|ƒCƒ“ƒ^
+	volatile short*	sendData;	// è»¢é€ç”¨ãƒã‚¤ãƒ³ã‚¿
 	volatile unsigned int Addr, i = 1;
 	
 	sendData = write_data;
 	
-	// P/Eƒ‚[ƒhˆÚs
+	// P/Eãƒ¢ãƒ¼ãƒ‰ç§»è¡Œ
 	changeFlashPE();
 	
-	// ‘‚«ž‚ÝƒvƒƒeƒNƒg‰ðœ
+	// æ›¸ãè¾¼ã¿ãƒ—ãƒ­ãƒ†ã‚¯ãƒˆè§£é™¤
 	FLASH.FWEPROR.BIT.FLWE = 1;
 	
-	// ƒvƒƒOƒ‰ƒ€‹–‰Â
-	FLASH.DFLWE0.WORD = 0x1eff;	// 0000`0511ƒuƒƒbƒN‚Ü‚ÅP/E‹–‰Â
-	FLASH.DFLWE1.WORD = 0xe1ff;	// 0512`1023ƒuƒƒbƒN‚Ü‚ÅP/E‹–‰Â
+	// ãƒ—ãƒ­ã‚°ãƒ©ãƒ è¨±å¯
+	FLASH.DFLWE0.WORD = 0x1eff;	// 0000ï½ž0511ãƒ–ãƒ­ãƒƒã‚¯ã¾ã§P/Eè¨±å¯
+	FLASH.DFLWE1.WORD = 0xe1ff;	// 0512ï½ž1023ãƒ–ãƒ­ãƒƒã‚¯ã¾ã§P/Eè¨±å¯
 	
 	while ( i <= width_data ) {
 		if ( nowAddr <= ( 1023 * 32 ) + FLASHSTARTADDR + 30 ) {
-			// ƒvƒƒOƒ‰ƒ€ƒRƒ}ƒ“ƒh”­s
+			// ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚³ãƒžãƒ³ãƒ‰ç™ºè¡Œ
 			fcuCommandByte( nowAddr, 0xe8 );
 			fcuCommandByte( nowAddr, 0x01 );
-			fcuCommandWord( nowAddr, *sendData );	// ‘‚«ž‚Ý
+			fcuCommandWord( nowAddr, *sendData );	// æ›¸ãè¾¼ã¿
 			fcuCommandByte( nowAddr, 0xd0 );
 			
-			// P/Eˆ—’†‚©Šm”F
+			// P/Eå‡¦ç†ä¸­ã‹ç¢ºèª
 			if ( checkFRDY( 20 * 1.1 ) == 0 ) {
-				// ƒGƒ‰[Šm”F
+				// ã‚¨ãƒ©ãƒ¼ç¢ºèª
 				if ( checkErrorFlash() == 0 ) {
 					//printf("Addr%x %dWritten\n", nowAddr, *sendData);
 					
-					nowAddr += 2;	// ŽŸ‚ÌƒAƒhƒŒƒX‚ÖˆÚ“®
-					*sendData++;	// ŽŸ‚Ì‘‚«ž‚Ýƒf[ƒ^‚ð“Ç‚Ýž‚Þ
-					i++;			// ‘‚«ž‚Ý‰ñ”
+					nowAddr += 2;	// æ¬¡ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã¸ç§»å‹•
+					*sendData++;	// æ¬¡ã®æ›¸ãè¾¼ã¿ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã¿è¾¼ã‚€
+					i++;			// æ›¸ãè¾¼ã¿å›žæ•°
 				} else {
 					ret = true;
 					printf("Write Error\n");
@@ -480,82 +480,82 @@ bool writeFlash ( short* write_data, short width_data )
 			break;
 		}
 	}
-	nowAddr -= 2;	// ÅI‘‚«ž‚ÝƒAƒhƒŒƒX‚É‚·‚é
+	nowAddr -= 2;	// æœ€çµ‚æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹ã«ã™ã‚‹
 	
-	FLASH.FWEPROR.BIT.FLWE = 2;	// ‘‚«ž‚ÝƒvƒƒeƒNƒg
-	FLASH.DFLWE0.WORD = 0x1e00;	// 0000`0511ƒuƒƒbƒN‚Ü‚ÅP/E‹ÖŽ~
-	FLASH.DFLWE1.WORD = 0xe100;	// 0512`1023ƒuƒƒbƒN‚Ü‚ÅP/E‹ÖŽ~
+	FLASH.FWEPROR.BIT.FLWE = 2;	// æ›¸ãè¾¼ã¿ãƒ—ãƒ­ãƒ†ã‚¯ãƒˆ
+	FLASH.DFLWE0.WORD = 0x1e00;	// 0000ï½ž0511ãƒ–ãƒ­ãƒƒã‚¯ã¾ã§P/Eç¦æ­¢
+	FLASH.DFLWE1.WORD = 0xe100;	// 0512ï½ž1023ãƒ–ãƒ­ãƒƒã‚¯ã¾ã§P/Eç¦æ­¢
 	
 	return ret;
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ readFlashAddr
-// ˆ—ŠT—v     Žw’èƒAƒhƒŒƒX‚Ì’l‚ð“Ç‚Þ
-// ˆø”         Addr: E2ƒf[ƒ^ƒtƒ‰ƒbƒVƒ…—Ìˆæ‚ÌƒAƒhƒŒƒX
-// –ß‚è’l       Addr‚Ì’l
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å readFlashAddr
+// å‡¦ç†æ¦‚è¦     æŒ‡å®šã‚¢ãƒ‰ãƒ¬ã‚¹ã®å€¤ã‚’èª­ã‚€
+// å¼•æ•°         Addr: E2ãƒ‡ãƒ¼ã‚¿ãƒ•ãƒ©ãƒƒã‚·ãƒ¥é ˜åŸŸã®ã‚¢ãƒ‰ãƒ¬ã‚¹
+// æˆ»ã‚Šå€¤       Addrã®å€¤
 //////////////////////////////////////////////////////////////////////////////////////////
 short readFlashAddr ( unsigned int Addr )
 {
 	volatile short ret;
 	
-	// ƒtƒ‰ƒbƒVƒ…ƒŠ[ƒhƒ‚[ƒhˆÚs
+	// ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ãƒªãƒ¼ãƒ‰ãƒ¢ãƒ¼ãƒ‰ç§»è¡Œ
 	changeFlashRead();
-	// E2ƒf[ƒ^ƒtƒ‰ƒbƒVƒ…—Ìˆæ‚Ì“Ç‚Ýo‚µ‚ð‹–‰Â
+	// E2ãƒ‡ãƒ¼ã‚¿ãƒ•ãƒ©ãƒƒã‚·ãƒ¥é ˜åŸŸã®èª­ã¿å‡ºã—ã‚’è¨±å¯
 	FLASH.DFLRE0.WORD = 0x2dff;
 	FLASH.DFLRE1.WORD = 0xd2ff;
 	
 	ret = *(volatile unsigned short *)Addr;
 	//printf("Addr%x ReadData = %d\n", Addr, ret );
-	// E2ƒf[ƒ^ƒtƒ‰ƒbƒVƒ…—Ìˆæ‚Ì“Ç‚Ýo‚µ‹ÖŽ~
+	// E2ãƒ‡ãƒ¼ã‚¿ãƒ•ãƒ©ãƒƒã‚·ãƒ¥é ˜åŸŸã®èª­ã¿å‡ºã—ç¦æ­¢
 	FLASH.DFLRE0.WORD = 0x2d00;
 	FLASH.DFLRE1.WORD = 0xd200;
 	
 	return ret;
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ readFlashArray
-// ˆ—ŠT—v     Žw’è‚µ‚½—Ìˆæ‚É•Û‘¶‚³‚ê‚Ä‚¢‚éƒAƒhƒŒƒX’l‚©‚çŽw’è‚³‚ê‚½”‚Ìƒf[ƒ^‚ð“Ç‚Þ
-// ˆø”         dataarray: “Ç‚ñ‚¾’l‚ð•Û‘¶‚·‚é”z—ñ width_data: ƒf[ƒ^‚ÌŒÂ”
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å readFlashArray
+// å‡¦ç†æ¦‚è¦     æŒ‡å®šã—ãŸé ˜åŸŸã«ä¿å­˜ã•ã‚Œã¦ã„ã‚‹ã‚¢ãƒ‰ãƒ¬ã‚¹å€¤ã‹ã‚‰æŒ‡å®šã•ã‚ŒãŸæ•°ã®ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã‚€
+// å¼•æ•°         dataarray: èª­ã‚“ã å€¤ã‚’ä¿å­˜ã™ã‚‹é…åˆ— width_data: ãƒ‡ãƒ¼ã‚¿ã®å€‹æ•°
+// æˆ»ã‚Šå€¤       ãªã—
 //////////////////////////////////////////////////////////////////////////////////////////
 void readFlashArray ( unsigned int Addr, volatile short* dataArray, short width_data )
 {
 	volatile short* flashDataBuff2;
 	volatile short datasize, i = 0;
-	volatile unsigned int DataAddr;	// ‘O‰ñ‚Ìƒpƒ‰ƒ[ƒ^‚Ì•Û‘¶ƒAƒhƒŒƒX
+	volatile unsigned int DataAddr;	// å‰å›žã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®ä¿å­˜ã‚¢ãƒ‰ãƒ¬ã‚¹
 	
 	flashDataBuff2 = dataArray;
 	datasize = 2 * ( width_data - 1 );
 	
-	// Šeƒf[ƒ^‚ÌƒAƒhƒŒƒXŽZo
+	// å„ãƒ‡ãƒ¼ã‚¿ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ç®—å‡º
 	while ( i <= datasize ) {
-		DataAddr= Addr - datasize + i;		// ƒf[ƒ^‚Ìæ“ª‚©‚ç“Ç‚Ýž‚Ý‚½‚¢
+		DataAddr= Addr - datasize + i;		// ãƒ‡ãƒ¼ã‚¿ã®å…ˆé ­ã‹ã‚‰èª­ã¿è¾¼ã¿ãŸã„
 		*flashDataBuff2++ = readFlashAddr ( DataAddr );
 		i += 2;
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ readFlashArray2
-// ˆ—ŠT—v     Žw’è‚µ‚½—Ìˆæ‚É•Û‘¶‚³‚ê‚Ä‚¢‚éƒAƒhƒŒƒX’l‚©‚çŽw’è‚³‚ê‚½”‚Ìƒf[ƒ^‚ð“Ç‚Þ
-// ˆø”         dataarray: “Ç‚ñ‚¾’l‚ð•Û‘¶‚·‚é”z—ñ width_data: ƒf[ƒ^‚ÌŒÂ”
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å readFlashArray2
+// å‡¦ç†æ¦‚è¦     æŒ‡å®šã—ãŸé ˜åŸŸã«ä¿å­˜ã•ã‚Œã¦ã„ã‚‹ã‚¢ãƒ‰ãƒ¬ã‚¹å€¤ã‹ã‚‰æŒ‡å®šã•ã‚ŒãŸæ•°ã®ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã‚€
+// å¼•æ•°         dataarray: èª­ã‚“ã å€¤ã‚’ä¿å­˜ã™ã‚‹é…åˆ— width_data: ãƒ‡ãƒ¼ã‚¿ã®å€‹æ•°
+// æˆ»ã‚Šå€¤       ãªã—
 //////////////////////////////////////////////////////////////////////////////////////////
 void readFlashArray2 ( unsigned int Addr, volatile short* dataArray, short width_data, short limitArea )
 {
 	volatile short* flashDataBuff2;
 	volatile short datasize, i = 0;
-	volatile unsigned int DataAddr, limitAddr;	// ‘O‰ñ‚Ìƒpƒ‰ƒ[ƒ^‚Ì•Û‘¶ƒAƒhƒŒƒX
+	volatile unsigned int DataAddr, limitAddr;	// å‰å›žã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®ä¿å­˜ã‚¢ãƒ‰ãƒ¬ã‚¹
 	
 	flashDataBuff2 = dataArray;
 	
-	while ( i <= 44 ) {		// “ü—Í‚³‚ê‚½”z—ñ‚ðƒNƒŠƒA
+	while ( i <= 44 ) {		// å…¥åŠ›ã•ã‚ŒãŸé…åˆ—ã‚’ã‚¯ãƒªã‚¢
 		*flashDataBuff2++ = 0;
 		i++;
 	}
-	// §ŒÀƒAƒhƒŒƒXŽZo
+	// åˆ¶é™ã‚¢ãƒ‰ãƒ¬ã‚¹ç®—å‡º
 	limitAddr = ( (limitArea + 1) * 32 ) + 0x100000;
 	
-	DataAddr = Addr - limitAddr + 2;		// ‘‚«ž‚Ü‚ê‚Ä‚¢‚éƒf[ƒ^”‚ðŽZo
+	DataAddr = Addr - limitAddr + 2;		// æ›¸ãè¾¼ã¾ã‚Œã¦ã„ã‚‹ãƒ‡ãƒ¼ã‚¿æ•°ã‚’ç®—å‡º
 	
 	if ( DataAddr < (2 * width_data) ) {
 		datasize = 2 * ( (DataAddr/2) - 1);
@@ -563,7 +563,7 @@ void readFlashArray2 ( unsigned int Addr, volatile short* dataArray, short width
 		datasize = 2 * ( width_data - 1 );
 	}
 	
-	// Šeƒf[ƒ^‚ÌƒAƒhƒŒƒXŽZo
+	// å„ãƒ‡ãƒ¼ã‚¿ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ç®—å‡º
 	i = 0;
 	flashDataBuff2 = dataArray;
 	while ( i <= datasize ) {
@@ -573,21 +573,21 @@ void readFlashArray2 ( unsigned int Addr, volatile short* dataArray, short width
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ readbeforeAddr
-// ˆ—ŠT—v     Žw’èƒuƒƒbƒNŠÔ‚É‹L˜^‚³‚ê‚Ä‚¢‚éƒuƒƒbƒN”Ô†AƒIƒtƒZƒbƒg’l‚ð“Ç‚Þ
-// ˆø”         startBlock: ŠJŽnƒuƒƒbƒN”Ô† 	endbloock: I—¹ƒuƒƒbƒN”Ô†
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å readbeforeAddr
+// å‡¦ç†æ¦‚è¦     æŒ‡å®šãƒ–ãƒ­ãƒƒã‚¯é–“ã«è¨˜éŒ²ã•ã‚Œã¦ã„ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ç•ªå·ã€ã‚ªãƒ•ã‚»ãƒƒãƒˆå€¤ã‚’èª­ã‚€
+// å¼•æ•°         startBlock: é–‹å§‹ãƒ–ãƒ­ãƒƒã‚¯ç•ªå· 	endbloock: çµ‚äº†ãƒ–ãƒ­ãƒƒã‚¯ç•ªå·
+// æˆ»ã‚Šå€¤       ãªã—
 //////////////////////////////////////////////////////////////////////////////////////////
 void readbeforeAddr ( short startBlockNumber, short endBlockNumber )
 {
 	volatile unsigned int cheakAddr, limitAddr;
 	
-	// startBlockNumber`endBlockNumber‚É‘‚¢‚½‘O‰ñ‘‚«ž‚ÝŽž‚ÌÅIƒAƒhƒŒƒX‚ðŽæ“¾‚·‚é
-	cheakAddr = ( startBlockNumber * 32 ) + FLASHSTARTADDR;	// ŠJŽnƒuƒƒbƒN‚ÌƒAƒhƒŒƒX‚ðŽZo
-	limitAddr = ( endBlockNumber * 32 ) + FLASHSTARTADDR + 30;	// ŠJŽnƒuƒƒbƒN‚ÌƒAƒhƒŒƒX‚ðŽZo
+	// startBlockNumberï½žendBlockNumberã«æ›¸ã„ãŸå‰å›žæ›¸ãè¾¼ã¿æ™‚ã®æœ€çµ‚ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’å–å¾—ã™ã‚‹
+	cheakAddr = ( startBlockNumber * 32 ) + FLASHSTARTADDR;	// é–‹å§‹ãƒ–ãƒ­ãƒƒã‚¯ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’ç®—å‡º
+	limitAddr = ( endBlockNumber * 32 ) + FLASHSTARTADDR + 30;	// é–‹å§‹ãƒ–ãƒ­ãƒƒã‚¯ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’ç®—å‡º
 	//printf("cheakAddr = %x\n", cheakAddr);
-	if ( !checkBlank( cheakAddr )  ) {		// Å‰‚ÌƒAƒhƒŒƒX‚ªƒCƒŒ[ƒY‚³‚ê‚Ä‚¢‚é‚©Šm”F
-		// ƒCƒŒ[ƒYÏ‚Ý‚È‚ç‰Šú’l‚ÉƒZƒbƒg‚·‚é
+	if ( !checkBlank( cheakAddr )  ) {		// æœ€åˆã®ã‚¢ãƒ‰ãƒ¬ã‚¹ãŒã‚¤ãƒ¬ãƒ¼ã‚ºã•ã‚Œã¦ã„ã‚‹ã‹ç¢ºèª
+		// ã‚¤ãƒ¬ãƒ¼ã‚ºæ¸ˆã¿ãªã‚‰åˆæœŸå€¤ã«ã‚»ãƒƒãƒˆã™ã‚‹
 		beforeAddr = ( ( endBlockNumber + 1 ) * 32 ) + FLASHSTARTADDR;
 	} else {
 		cheakAddr += 2;
@@ -595,62 +595,62 @@ void readbeforeAddr ( short startBlockNumber, short endBlockNumber )
 			cheakAddr += 2;
 			if ( cheakAddr >= limitAddr ) break;
 		}
-		cheakAddr -= 2;		// ‘‚«ž‚ÝƒAƒhƒŒƒX‹L˜^—Ìˆæ‚É–ß‚·
-		// ÅIƒuƒƒbƒN”Ô†AÅIƒIƒtƒZƒbƒgƒAƒhƒŒƒXŽæ“¾
+		cheakAddr -= 2;		// æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹è¨˜éŒ²é ˜åŸŸã«æˆ»ã™
+		// æœ€çµ‚ãƒ–ãƒ­ãƒƒã‚¯ç•ªå·ã€æœ€çµ‚ã‚ªãƒ•ã‚»ãƒƒãƒˆã‚¢ãƒ‰ãƒ¬ã‚¹å–å¾—
 		beforeAddr = readFlashAddr( cheakAddr ) + FLASHSTARTADDR;
 	}
 	//printf("beforeAddr = %x\n", beforeAddr);
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ writeFlashData
-// ˆ—ŠT—v     Žw’èƒuƒƒbƒNŠÔ‚ÉflashDataBuff‚ð‘‚«ž‚ÝƒAƒhƒŒƒX‚ð‹L˜^‚·‚é
-// ˆø”			startBlock: ŠJŽnƒuƒƒbƒN”Ô† 	endbloock: I—¹ƒuƒƒbƒN”Ô†
-//				endData: ƒf[ƒ^•Û‘¶ÅŒãƒuƒƒbƒN	width_data: Šm•Û‚·‚éƒf[ƒ^—Ê
-// –ß‚è’l		‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å writeFlashData
+// å‡¦ç†æ¦‚è¦     æŒ‡å®šãƒ–ãƒ­ãƒƒã‚¯é–“ã«flashDataBuffã‚’æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’è¨˜éŒ²ã™ã‚‹
+// å¼•æ•°			startBlock: é–‹å§‹ãƒ–ãƒ­ãƒƒã‚¯ç•ªå· 	endbloock: çµ‚äº†ãƒ–ãƒ­ãƒƒã‚¯ç•ªå·
+//				endData: ãƒ‡ãƒ¼ã‚¿ä¿å­˜æœ€å¾Œãƒ–ãƒ­ãƒƒã‚¯	width_data: ç¢ºä¿ã™ã‚‹ãƒ‡ãƒ¼ã‚¿é‡
+// æˆ»ã‚Šå€¤		ãªã—
 //////////////////////////////////////////////////////////////////////////////////////////
 void writeFlashData ( short startBlockNumber, short endBlockNumber, short endData, short width_data )
 {
-	// ‘O‰ñ•Û‘¶Žž‚ÌƒAƒhƒŒƒX“Ç‚Ýž‚Ý
+	// å‰å›žä¿å­˜æ™‚ã®ã‚¢ãƒ‰ãƒ¬ã‚¹èª­ã¿è¾¼ã¿
 	readbeforeAddr( startBlockNumber, endBlockNumber );
-	// ‘‚«ž‚Ý—ÌˆæŠm•Û
+	// æ›¸ãè¾¼ã¿é ˜åŸŸç¢ºä¿
 	checkWriteAddr ( beforeAddr, endData, width_data, endBlockNumber + 1 );
-	// ‘‚«ž‚ÝŠJŽn
+	// æ›¸ãè¾¼ã¿é–‹å§‹
 	writeFlash ( flashDataBuff, width_data );
 
 	
-	// ÅIƒAƒhƒŒƒX‹L˜^
+	// æœ€çµ‚ã‚¢ãƒ‰ãƒ¬ã‚¹è¨˜éŒ²
 	flashDataBuff[ 0 ] = (short)( nowAddr - FLASHSTARTADDR );
 	//printf("nowAddr = %x\n", nowAddr);
 	//printf("flashDataBuff[ 0 ] = %x\n", flashDataBuff[ 0 ]);
-	// ‘‚«ž‚Ý—ÌˆæŠm•Û
+	// æ›¸ãè¾¼ã¿é ˜åŸŸç¢ºä¿
 	checkWriteAddr ( ( startBlockNumber * 32 ) + FLASHSTARTADDR, endBlockNumber, 1, startBlockNumber );
-	// ‘‚«ž‚ÝŠJŽn
+	// æ›¸ãè¾¼ã¿é–‹å§‹
 	writeFlash ( flashDataBuff, 1 );
 	
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ readFlashSetup
-// ˆ—ŠT—v     Žw’èƒAƒhƒŒƒX‚Ì’l‚ð“Ç‚Þ
-// ˆø”         Addr: E2ƒf[ƒ^ƒtƒ‰ƒbƒVƒ…—Ìˆæ‚ÌƒAƒhƒŒƒX
-// –ß‚è’l       Addr‚Ì’l
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å readFlashSetup
+// å‡¦ç†æ¦‚è¦     æŒ‡å®šã‚¢ãƒ‰ãƒ¬ã‚¹ã®å€¤ã‚’èª­ã‚€
+// å¼•æ•°         Addr: E2ãƒ‡ãƒ¼ã‚¿ãƒ•ãƒ©ãƒƒã‚·ãƒ¥é ˜åŸŸã®ã‚¢ãƒ‰ãƒ¬ã‚¹
+// æˆ»ã‚Šå€¤       Addrã®å€¤
 //////////////////////////////////////////////////////////////////////////////////////////
 void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pid_angle, bool pid_speed, bool meter)
 {
 	short s, s2;
-	// ƒtƒ‰ƒbƒVƒ…“Ç‚Ýž‚ÝŠJŽn
-	printf("‘O‰ñƒpƒ‰ƒ[ƒ^“Ç‚Ýž‚ÝŠJŽn\n");
+	// ãƒ•ãƒ©ãƒƒã‚·ãƒ¥èª­ã¿è¾¼ã¿é–‹å§‹
+	printf("å‰å›žãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿é–‹å§‹\n");
 	
-	// ƒpƒ‰ƒ[ƒ^“Ç‚Ýž‚Ý
+	// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿
 	if ( speed ) {
-		// ‘SƒuƒƒbƒNƒCƒŒ[ƒY‚³‚ê‚Ä‚¢‚é‚©Šm”F‚·‚é
+		// å…¨ãƒ–ãƒ­ãƒƒã‚¯ã‚¤ãƒ¬ãƒ¼ã‚ºã•ã‚Œã¦ã„ã‚‹ã‹ç¢ºèªã™ã‚‹
 		if ( checkBlank( ( PARAMETER_STARTAREA *32 ) + FLASHSTARTADDR ) ) {
 			
-			// ‘O‰ñ•Û‘¶Žž‚ÌƒAƒhƒŒƒX“Ç‚Ýž‚Ý
+			// å‰å›žä¿å­˜æ™‚ã®ã‚¢ãƒ‰ãƒ¬ã‚¹èª­ã¿è¾¼ã¿
 			readbeforeAddr( PARAMETER_STARTAREA, PARAMETER_ENDAREA );
-			// flashDataBuff‚Éƒpƒ‰ƒ[ƒ^“Ç‚Ýž‚Ý
+			// flashDataBuffã«ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿
 			readFlashArray( beforeAddr, flashDataBuff, NUMDATA );
 			
-			// Šeƒf[ƒ^Žæ“¾
+			// å„ãƒ‡ãƒ¼ã‚¿å–å¾—
 			speed_straight		= flashDataBuff[ 0 ];
 			speed_curve_brake	= flashDataBuff[ 1 ];
 			speed_curve_r600	= flashDataBuff[ 2 ];
@@ -681,7 +681,7 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 			angle_leftchange	= flashDataBuff[ 23 ];
 		
 		} else if ( checkBlank( ( PARAMETER_STARTAREA *32 ) + FLASHSTARTADDR ) <= 0 ) {
-			// ‘SƒuƒƒbƒNƒCƒŒ[ƒY‚Ü‚½‚ÍƒGƒ‰[‚ª”­¶‚µ‚½‚ç‰Šú’l‚ÉÝ’è‚·‚é
+			// å…¨ãƒ–ãƒ­ãƒƒã‚¯ã‚¤ãƒ¬ãƒ¼ã‚ºã¾ãŸã¯ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ãŸã‚‰åˆæœŸå€¤ã«è¨­å®šã™ã‚‹
 			speed_straight		= SPEED_STRAIGHT;
 			speed_curve_brake	= SPEED_CURVE_BRAKE;
 			speed_curve_r600	= SPEED_CURVE_R600;
@@ -715,47 +715,47 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 		}
 	}
 		
-	// Angle0“Ç‚Ýž‚Ý
+	// Angle0èª­ã¿è¾¼ã¿
 	if ( C_angle ) {
-		// ‘SƒuƒƒbƒNƒCƒŒ[ƒY‚³‚ê‚Ä‚¢‚é‚©Šm”F‚·‚é
+		// å…¨ãƒ–ãƒ­ãƒƒã‚¯ã‚¤ãƒ¬ãƒ¼ã‚ºã•ã‚Œã¦ã„ã‚‹ã‹ç¢ºèªã™ã‚‹
 		if ( checkBlank( ( ANGLE0_STARTAREA *32 ) + FLASHSTARTADDR ) ) {
-			readbeforeAddr( ANGLE0_STARTAREA, ANGLE0_ENDAREA );	// ‘O‰ñ•Û‘¶Žž‚ÌƒAƒhƒŒƒX“Ç‚Ýž‚Ý
-			readFlashArray( beforeAddr, flashDataBuff, 1 );		// flashDataBuff‚ÉAngle0“Ç‚Ýž‚Ý
-			Angle0 = flashDataBuff[ 0 ];			// ƒf[ƒ^Žæ“¾
+			readbeforeAddr( ANGLE0_STARTAREA, ANGLE0_ENDAREA );	// å‰å›žä¿å­˜æ™‚ã®ã‚¢ãƒ‰ãƒ¬ã‚¹èª­ã¿è¾¼ã¿
+			readFlashArray( beforeAddr, flashDataBuff, 1 );		// flashDataBuffã«Angle0èª­ã¿è¾¼ã¿
+			Angle0 = flashDataBuff[ 0 ];			// ãƒ‡ãƒ¼ã‚¿å–å¾—
 		} else if ( checkBlank( ( ANGLE0_STARTAREA *32 ) + FLASHSTARTADDR ) <= 0 ) {
-			// ‘SƒuƒƒbƒNƒCƒŒ[ƒY‚Ü‚½‚ÍƒGƒ‰[‚ª”­¶‚µ‚½‚ç‰Šú’l‚ÉÝ’è‚·‚é
+			// å…¨ãƒ–ãƒ­ãƒƒã‚¯ã‚¤ãƒ¬ãƒ¼ã‚ºã¾ãŸã¯ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ãŸã‚‰åˆæœŸå€¤ã«è¨­å®šã™ã‚‹
 			Angle0 = SERVO_CENTER;
 			printf("Angle0 Initialize\n");
 		}
 	}
 	
-	// msdWorkAddress“Ç‚Ýž‚Ý
+	// msdWorkAddressèª­ã¿è¾¼ã¿
 	if ( msd ) {
-		// ‘SƒuƒƒbƒNƒCƒŒ[ƒY‚³‚ê‚Ä‚¢‚é‚©Šm”F‚·‚é
+		// å…¨ãƒ–ãƒ­ãƒƒã‚¯ã‚¤ãƒ¬ãƒ¼ã‚ºã•ã‚Œã¦ã„ã‚‹ã‹ç¢ºèªã™ã‚‹
 		if ( checkBlank( ( MSD_STARTAREA *32 ) + FLASHSTARTADDR  ) ) {
-			readbeforeAddr( MSD_STARTAREA, MSD_ENDAREA );	// ‘O‰ñ•Û‘¶Žž‚ÌƒAƒhƒŒƒX“Ç‚Ýž‚Ý
-			readFlashArray2( beforeAddr, flashDataBuff, 40, MSD_ENDAREA);// flashDataBuff‚ÉmsdWorkAddress“Ç‚Ýž‚Ý“Ç‚Ýž‚Ý
-			// ƒf[ƒ^Žæ“¾
-			// ’¼‹ß‚ÌƒƒOƒAƒhƒŒƒX10ŒÂ‚ðŽæ“¾
+			readbeforeAddr( MSD_STARTAREA, MSD_ENDAREA );	// å‰å›žä¿å­˜æ™‚ã®ã‚¢ãƒ‰ãƒ¬ã‚¹èª­ã¿è¾¼ã¿
+			readFlashArray2( beforeAddr, flashDataBuff, 40, MSD_ENDAREA);// flashDataBuffã«msdWorkAddressèª­ã¿è¾¼ã¿èª­ã¿è¾¼ã¿
+			// ãƒ‡ãƒ¼ã‚¿å–å¾—
+			// ç›´è¿‘ã®ãƒ­ã‚°ã‚¢ãƒ‰ãƒ¬ã‚¹10å€‹ã‚’å–å¾—
 			s = 0;
 			s2 = 0;
 			while ( s < 19 ) {
-				// I—¹ƒAƒhƒŒƒX
+				// çµ‚äº†ã‚¢ãƒ‰ãƒ¬ã‚¹
 				msdaddrBuff[s++] = (unsigned int)( (unsigned short)flashDataBuff[ s2+1 ] * 0x10000 + 
 							(unsigned short)flashDataBuff[ s2 ]);
-				// ŠJŽnƒAƒhƒŒƒX
+				// é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹
 				msdaddrBuff[s++] = (unsigned int)( (unsigned short)flashDataBuff[ s2+3 ] * 0x10000 + 
 							(unsigned short)flashDataBuff[ s2+2 ]);
 							
 				if ( ( msdaddrBuff[s-2] - 1 ) == msdaddrBuff[s-1] ) {
-					msdaddrBuff[s-1] = msdaddrBuff[s-2];		// ŠJŽnƒAƒhƒŒƒX
-					msdaddrBuff[s-2] += MSD_ENDADDRESS;			// 15•b•ª‚ÌƒAƒhƒŒƒX
+					msdaddrBuff[s-1] = msdaddrBuff[s-2];		// é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹
+					msdaddrBuff[s-2] += MSD_ENDADDRESS;			// 15ç§’åˆ†ã®ã‚¢ãƒ‰ãƒ¬ã‚¹
 					s2 += 2;
 				} else {
 					s2 += 4;
 				}
 			}
-			// ÅV‚ÌƒƒOƒAƒhƒŒƒX
+			// æœ€æ–°ã®ãƒ­ã‚°ã‚¢ãƒ‰ãƒ¬ã‚¹
 			printf("msdAddrBuff[0] = %d msdAddrBuff[1] = %d\n", msdaddrBuff[0], msdaddrBuff[1]);
 			printf("msdaddrBuff[2] = %d msdaddrBuff[3] = %d\n", msdaddrBuff[2], msdaddrBuff[3]);
 			printf("msdaddrBuff[4] = %d msdaddrBuff[5] = %d\n", msdaddrBuff[4], msdaddrBuff[5]);
@@ -767,28 +767,28 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 			printf("msdaddrBuff[16] = %d msdaddrBuff[17] = %d\n", msdaddrBuff[16], msdaddrBuff[17]);
 			printf("msdaddrBuff[18] = %d msdaddrBuff[19] = %d\n", msdaddrBuff[18], msdaddrBuff[19]);
 			
-			msdWorkaddress = msdaddrBuff[1];	// ‘O‰ñŠJŽnƒAƒhƒŒƒX
-			msdWorkaddress2 = msdaddrBuff[0];	// ‘O‰ñI—¹ƒAƒhƒŒƒX
+			msdWorkaddress = msdaddrBuff[1];	// å‰å›žé–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹
+			msdWorkaddress2 = msdaddrBuff[0];	// å‰å›žçµ‚äº†ã‚¢ãƒ‰ãƒ¬ã‚¹
 		} else if ( checkBlank( ( MSD_STARTAREA *32 ) + FLASHSTARTADDR ) <= 0 ) {
-			// ‘SƒuƒƒbƒNƒCƒŒ[ƒY‚Ü‚½‚ÍƒGƒ‰[‚ª”­¶‚µ‚½‚ç‰Šú’l‚ÉÝ’è‚·‚é
-			msdWorkaddress = MSD_STARTADDRESS;	// ŠJŽnƒAƒhƒŒƒX
-			msdWorkaddress2 = MSD_ENDADDRESS;	// I—¹ƒAƒhƒŒƒX
+			// å…¨ãƒ–ãƒ­ãƒƒã‚¯ã‚¤ãƒ¬ãƒ¼ã‚ºã¾ãŸã¯ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ãŸã‚‰åˆæœŸå€¤ã«è¨­å®šã™ã‚‹
+			msdWorkaddress = MSD_STARTADDRESS;	// é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹
+			msdWorkaddress2 = MSD_ENDADDRESS;	// çµ‚äº†ã‚¢ãƒ‰ãƒ¬ã‚¹
 			printf("msdWorkAddress Initialize\n");
 		}
 	}
 	
-	// ”’üƒgƒŒ[ƒX—pPIDƒQƒCƒ““Ç‚Ýž‚Ý
+	// ç™½ç·šãƒˆãƒ¬ãƒ¼ã‚¹ç”¨PIDã‚²ã‚¤ãƒ³èª­ã¿è¾¼ã¿
 	if ( pid_line ) {
-		// ‘SƒuƒƒbƒNƒCƒŒ[ƒY‚³‚ê‚Ä‚¢‚é‚©Šm”F‚·‚é
+		// å…¨ãƒ–ãƒ­ãƒƒã‚¯ã‚¤ãƒ¬ãƒ¼ã‚ºã•ã‚Œã¦ã„ã‚‹ã‹ç¢ºèªã™ã‚‹
 		if ( checkBlank( ( PID_STARTAREA *32 ) + FLASHSTARTADDR ) ) {
-			readbeforeAddr( PID_STARTAREA, PID_ENDAREA );	// ‘O‰ñ•Û‘¶Žž‚ÌƒAƒhƒŒƒX“Ç‚Ýž‚Ý
-			readFlashArray( beforeAddr, flashDataBuff, 3 );		// flashDataBuff‚ÉPIDƒQƒCƒ““Ç‚Ýž‚Ý
-			// ƒf[ƒ^Žæ“¾
+			readbeforeAddr( PID_STARTAREA, PID_ENDAREA );	// å‰å›žä¿å­˜æ™‚ã®ã‚¢ãƒ‰ãƒ¬ã‚¹èª­ã¿è¾¼ã¿
+			readFlashArray( beforeAddr, flashDataBuff, 3 );		// flashDataBuffã«PIDã‚²ã‚¤ãƒ³èª­ã¿è¾¼ã¿
+			// ãƒ‡ãƒ¼ã‚¿å–å¾—
 			kp_buff = flashDataBuff[ 0 ];
 			ki_buff = flashDataBuff[ 1 ];
 			kd_buff = flashDataBuff[ 2 ];
 		} else if ( checkBlank( ( PID_STARTAREA *32 ) + FLASHSTARTADDR ) <= 0 ) {
-			// ‘SƒuƒƒbƒNƒCƒŒ[ƒY‚Ü‚½‚ÍƒGƒ‰[‚ª”­¶‚µ‚½‚ç‰Šú’l‚ÉÝ’è‚·‚é
+			// å…¨ãƒ–ãƒ­ãƒƒã‚¯ã‚¤ãƒ¬ãƒ¼ã‚ºã¾ãŸã¯ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ãŸã‚‰åˆæœŸå€¤ã«è¨­å®šã™ã‚‹
 			kp_buff = KP;
 			ki_buff = KI;
 			kd_buff = KD;
@@ -796,17 +796,17 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 		}
 	}
 	
-	// Šp“x§Œä—pPIDƒQƒCƒ““Ç‚Ýž‚Ý
+	// è§’åº¦åˆ¶å¾¡ç”¨PIDã‚²ã‚¤ãƒ³èª­ã¿è¾¼ã¿
 	if ( pid_angle ) {
-		// ‘SƒuƒƒbƒNƒCƒŒ[ƒY‚³‚ê‚Ä‚¢‚é‚©Šm”F‚·‚é
+		// å…¨ãƒ–ãƒ­ãƒƒã‚¯ã‚¤ãƒ¬ãƒ¼ã‚ºã•ã‚Œã¦ã„ã‚‹ã‹ç¢ºèªã™ã‚‹
 		if ( checkBlank( ( PID2_STARTAREA *32 ) + FLASHSTARTADDR ) ) {
-			readbeforeAddr( PID2_STARTAREA, PID2_ENDAREA );	// ‘O‰ñ•Û‘¶Žž‚ÌƒAƒhƒŒƒX“Ç‚Ýž‚Ý
-			readFlashArray( beforeAddr, flashDataBuff, 3 );		// flashDataBuff‚ÉPIDƒQƒCƒ““Ç‚Ýž‚Ý
+			readbeforeAddr( PID2_STARTAREA, PID2_ENDAREA );	// å‰å›žä¿å­˜æ™‚ã®ã‚¢ãƒ‰ãƒ¬ã‚¹èª­ã¿è¾¼ã¿
+			readFlashArray( beforeAddr, flashDataBuff, 3 );		// flashDataBuffã«PIDã‚²ã‚¤ãƒ³èª­ã¿è¾¼ã¿
 			kp2_buff = flashDataBuff[ 0 ];
 			ki2_buff = flashDataBuff[ 1 ];
 			kd2_buff = flashDataBuff[ 2 ];
 		} else if ( checkBlank( ( PID2_STARTAREA *32 ) + FLASHSTARTADDR ) <= 0 ) {
-			// ‘SƒuƒƒbƒNƒCƒŒ[ƒY‚Ü‚½‚ÍƒGƒ‰[‚ª”­¶‚µ‚½‚ç‰Šú’l‚ÉÝ’è‚·‚é
+			// å…¨ãƒ–ãƒ­ãƒƒã‚¯ã‚¤ãƒ¬ãƒ¼ã‚ºã¾ãŸã¯ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ãŸã‚‰åˆæœŸå€¤ã«è¨­å®šã™ã‚‹
 			kp2_buff = KP2;
 			ki2_buff = KI2;
 			kd2_buff = KD2;
@@ -814,18 +814,18 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 		}
 	}
 	
-	// ‘¬“x§Œä—pPIDƒQƒCƒ““Ç‚Ýž‚Ý
+	// é€Ÿåº¦åˆ¶å¾¡ç”¨PIDã‚²ã‚¤ãƒ³èª­ã¿è¾¼ã¿
 	if ( pid_speed ) {
-		// ‘SƒuƒƒbƒNƒCƒŒ[ƒY‚³‚ê‚Ä‚¢‚é‚©Šm”F‚·‚é
+		// å…¨ãƒ–ãƒ­ãƒƒã‚¯ã‚¤ãƒ¬ãƒ¼ã‚ºã•ã‚Œã¦ã„ã‚‹ã‹ç¢ºèªã™ã‚‹
 		if ( checkBlank( ( PID3_STARTAREA *32 ) + FLASHSTARTADDR ) ) {
-			readbeforeAddr( PID3_STARTAREA, PID3_ENDAREA );	// ‘O‰ñ•Û‘¶Žž‚ÌƒAƒhƒŒƒX“Ç‚Ýž‚Ý
-			readFlashArray( beforeAddr, flashDataBuff, 3 );		// flashDataBuff‚ÉPIDƒQƒCƒ““Ç‚Ýž‚Ý
-			// ƒf[ƒ^Žæ“¾
+			readbeforeAddr( PID3_STARTAREA, PID3_ENDAREA );	// å‰å›žä¿å­˜æ™‚ã®ã‚¢ãƒ‰ãƒ¬ã‚¹èª­ã¿è¾¼ã¿
+			readFlashArray( beforeAddr, flashDataBuff, 3 );		// flashDataBuffã«PIDã‚²ã‚¤ãƒ³èª­ã¿è¾¼ã¿
+			// ãƒ‡ãƒ¼ã‚¿å–å¾—
 			kp3_buff = flashDataBuff[ 0 ];
 			ki3_buff = flashDataBuff[ 1 ];
 			kd3_buff = flashDataBuff[ 2 ];
 		} else if ( checkBlank( ( PID3_STARTAREA *32 ) + FLASHSTARTADDR ) <= 0 ) {
-			// ‘SƒuƒƒbƒNƒCƒŒ[ƒY‚Ü‚½‚ÍƒGƒ‰[‚ª”­¶‚µ‚½‚ç‰Šú’l‚ÉÝ’è‚·‚é
+			// å…¨ãƒ–ãƒ­ãƒƒã‚¯ã‚¤ãƒ¬ãƒ¼ã‚ºã¾ãŸã¯ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ãŸã‚‰åˆæœŸå€¤ã«è¨­å®šã™ã‚‹
 			kp3_buff = KP3;
 			ki3_buff = KI3;
 			kd3_buff = KD3;
@@ -833,31 +833,31 @@ void readFlashSetup ( bool speed, bool C_angle, bool msd, bool pid_line, bool pi
 		}
 	}
 	
-	// ’âŽ~‹——£“Ç‚Ýž‚Ý
+	// åœæ­¢è·é›¢èª­ã¿è¾¼ã¿
 	if ( meter ) {
-		// ‘SƒuƒƒbƒNƒCƒŒ[ƒY‚³‚ê‚Ä‚¢‚é‚©Šm”F‚·‚é
+		// å…¨ãƒ–ãƒ­ãƒƒã‚¯ã‚¤ãƒ¬ãƒ¼ã‚ºã•ã‚Œã¦ã„ã‚‹ã‹ç¢ºèªã™ã‚‹
 		if ( checkBlank( ( STOPMETER_STARTAREA *32 ) + FLASHSTARTADDR ) ) {
-			readbeforeAddr( STOPMETER_STARTAREA, STOPMETER_ENDAREA );	// ‘O‰ñ•Û‘¶Žž‚ÌƒAƒhƒŒƒX“Ç‚Ýž‚Ý
-			readFlashArray( beforeAddr, flashDataBuff, 1 );				// flashDataBuff‚É’âŽ~‹——£“Ç‚Ýž‚Ý
-			stopping_meter = flashDataBuff[ 0 ];				// ƒf[ƒ^Žæ“¾
+			readbeforeAddr( STOPMETER_STARTAREA, STOPMETER_ENDAREA );	// å‰å›žä¿å­˜æ™‚ã®ã‚¢ãƒ‰ãƒ¬ã‚¹èª­ã¿è¾¼ã¿
+			readFlashArray( beforeAddr, flashDataBuff, 1 );				// flashDataBuffã«åœæ­¢è·é›¢èª­ã¿è¾¼ã¿
+			stopping_meter = flashDataBuff[ 0 ];				// ãƒ‡ãƒ¼ã‚¿å–å¾—
 		} else if ( checkBlank( ( STOPMETER_STARTAREA *32 ) + FLASHSTARTADDR ) <= 0 ) {
-			// ‘SƒuƒƒbƒNƒCƒŒ[ƒY‚Ü‚½‚ÍƒGƒ‰[‚ª”­¶‚µ‚½‚ç‰Šú’l‚ÉÝ’è‚·‚é
+			// å…¨ãƒ–ãƒ­ãƒƒã‚¯ã‚¤ãƒ¬ãƒ¼ã‚ºã¾ãŸã¯ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ãŸã‚‰åˆæœŸå€¤ã«è¨­å®šã™ã‚‹
 			stopping_meter = STOPPING_METER;
 			printf("StopMeter Initialize\n");
 		}
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ writeFlashBeforeStart
-// ˆ—ŠT—v     Žw’èƒAƒhƒŒƒX‚Ì’l‚ð“Ç‚Þ
-// ˆø”         Addr: E2ƒf[ƒ^ƒtƒ‰ƒbƒVƒ…—Ìˆæ‚ÌƒAƒhƒŒƒX
-// –ß‚è’l       Addr‚Ì’l
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å writeFlashBeforeStart
+// å‡¦ç†æ¦‚è¦     æŒ‡å®šã‚¢ãƒ‰ãƒ¬ã‚¹ã®å€¤ã‚’èª­ã‚€
+// å¼•æ•°         Addr: E2ãƒ‡ãƒ¼ã‚¿ãƒ•ãƒ©ãƒƒã‚·ãƒ¥é ˜åŸŸã®ã‚¢ãƒ‰ãƒ¬ã‚¹
+// æˆ»ã‚Šå€¤       Addrã®å€¤
 //////////////////////////////////////////////////////////////////////////////////////////
 void writeFlashBeforeStart ( bool speed, bool C_angle, bool pid_line, bool pid_angle, bool pid_speed, bool meter )
 {
-	// ƒtƒ‰ƒbƒVƒ…‘‚«ž‚ÝŠJŽn
+	// ãƒ•ãƒ©ãƒƒã‚·ãƒ¥æ›¸ãè¾¼ã¿é–‹å§‹
 	if ( speed ) {
-		// Še‘¬“xƒf[ƒ^‚ðƒoƒbƒtƒ@‚É•Û‘¶
+		// å„é€Ÿåº¦ãƒ‡ãƒ¼ã‚¿ã‚’ãƒãƒƒãƒ•ã‚¡ã«ä¿å­˜
 		flashDataBuff[ 0 ] = speed_straight;
 		flashDataBuff[ 1 ] = speed_curve_brake;
 		flashDataBuff[ 2 ] = speed_curve_r600;
@@ -891,13 +891,13 @@ void writeFlashBeforeStart ( bool speed, bool C_angle, bool pid_line, bool pid_a
 	}
 	
 	if ( C_angle ) {
-		// ƒ|ƒeƒ“ƒVƒ‡ƒ“ƒ[ƒ^0‹’l(Angle0)•Û‘¶
+		// ãƒãƒ†ãƒ³ã‚·ãƒ§ãƒ³ãƒ¡ãƒ¼ã‚¿0Â°å€¤(Angle0)ä¿å­˜
 		flashDataBuff[0] = Angle0;
 		writeFlashData( ANGLE0_STARTAREA, ANGLE0_ENDAREA, ANGLE0_DATA, 1 );
 	}
 	
 	if ( pid_line ) {
-		// ”’üƒgƒŒ[ƒX—pPIDƒQƒCƒ“•Û‘¶
+		// ç™½ç·šãƒˆãƒ¬ãƒ¼ã‚¹ç”¨PIDã‚²ã‚¤ãƒ³ä¿å­˜
 		flashDataBuff[ 0 ] = kp_buff;
 		flashDataBuff[ 1 ] = ki_buff;
 		flashDataBuff[ 2 ] = kd_buff;
@@ -905,7 +905,7 @@ void writeFlashBeforeStart ( bool speed, bool C_angle, bool pid_line, bool pid_a
 	}
 	
 	if ( pid_angle ) {
-		// Šp“x§Œä—pPIDƒQƒCƒ“•Û‘¶
+		// è§’åº¦åˆ¶å¾¡ç”¨PIDã‚²ã‚¤ãƒ³ä¿å­˜
 		flashDataBuff[ 0 ] = kp2_buff;
 		flashDataBuff[ 1 ] = ki2_buff;
 		flashDataBuff[ 2 ] = kd2_buff;
@@ -913,7 +913,7 @@ void writeFlashBeforeStart ( bool speed, bool C_angle, bool pid_line, bool pid_a
 	}
 	
 	if ( pid_speed ) {
-		// ‘¬“x§Œä—pPIDƒQƒCƒ“•Û‘¶
+		// é€Ÿåº¦åˆ¶å¾¡ç”¨PIDã‚²ã‚¤ãƒ³ä¿å­˜
 		flashDataBuff[ 0 ] = kp3_buff;
 		flashDataBuff[ 1 ] = ki3_buff;
 		flashDataBuff[ 2 ] = kd3_buff;
@@ -921,7 +921,7 @@ void writeFlashBeforeStart ( bool speed, bool C_angle, bool pid_line, bool pid_a
 	}
 	
 	if ( meter ) {
-		// ’âŽ~‹——£•Û‘¶
+		// åœæ­¢è·é›¢ä¿å­˜
 		flashDataBuff[ 0 ] = stopping_meter;
 		writeFlashData( STOPMETER_STARTAREA, STOPMETER_ENDAREA, STOPMETER_DATA, 1 );
 	}

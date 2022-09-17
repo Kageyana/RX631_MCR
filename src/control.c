@@ -1,99 +1,99 @@
-//====================================//
-// ƒCƒ“ƒNƒ‹[ƒh
+ï»¿//====================================//
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //====================================//
 #include "control.h"
 //====================================//
-// ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€
 //====================================//
-// ƒ‚[ƒhŠÖ˜A
-char 	modeLCD = 1;		// LCD•\¦‰Â”Û		1:•\¦		0:Á“”		
-char 	modeSlope;			// âƒ`ƒFƒbƒN		0:ã‚èân‚ß	1:ã‚èâI‚í‚è	2:‰º‚èân‚ß
-char 	modeAngle;			// ƒT[ƒ{PWM•ÏX	0:”’üƒgƒŒ[ƒX	1:Šp“x§Œä
-char	modePushcart;		// è‰Ÿ‚µƒ‚[ƒh‰Â”Û	0:©“®‘–s	1:è‰Ÿ‚µ
-char	msdset;				// MicroSD‚ª‰Šú‰»‚³‚ê‚½‚©	0:‰Šú‰»¸”s	1:‰Šú‰»¬Œ÷
-char	IMUSet = 0;			// IMU‚ª‰Šú‰»‚³‚ê‚½‚©		0: ‰Šú‰»¸”s	1:‰Šú‰»¬Œ÷
+// ãƒ¢ãƒ¼ãƒ‰é–¢é€£
+char 	modeLCD = 1;		// LCDè¡¨ç¤ºå¯å¦		1:è¡¨ç¤º		0:æ¶ˆç¯		
+char 	modeSlope;			// å‚ãƒã‚§ãƒƒã‚¯		0:ä¸Šã‚Šå‚å§‹ã‚	1:ä¸Šã‚Šå‚çµ‚ã‚ã‚Š	2:ä¸‹ã‚Šå‚å§‹ã‚
+char 	modeAngle;			// ã‚µãƒ¼ãƒœPWMå¤‰æ›´	0:ç™½ç·šãƒˆãƒ¬ãƒ¼ã‚¹	1:è§’åº¦åˆ¶å¾¡
+char	modePushcart;		// æ‰‹æŠ¼ã—ãƒ¢ãƒ¼ãƒ‰å¯å¦	0:è‡ªå‹•èµ°è¡Œ	1:æ‰‹æŠ¼ã—
+char	msdset;				// MicroSDãŒåˆæœŸåŒ–ã•ã‚ŒãŸã‹	0:åˆæœŸåŒ–å¤±æ•—	1:åˆæœŸåŒ–æˆåŠŸ
+char	IMUSet = 0;			// IMUãŒåˆæœŸåŒ–ã•ã‚ŒãŸã‹		0: åˆæœŸåŒ–å¤±æ•—	1:åˆæœŸåŒ–æˆåŠŸ
 
-// ƒpƒ‰ƒ[ƒ^ŠÖ˜A
-// ‹——£
-short	stopping_meter;			// ’â~‹——£
-// ‘¬“x
-short	speed_straight;			// ’ÊíƒgƒŒ[ƒX
-short	speed_curve_brake;		// ƒJ[ƒuƒuƒŒ[ƒL
-short	speed_curve_r600;		// R600ƒJ[ƒu‘¬“x
-short	speed_curve_r450;		// R450ƒJ[ƒu‘¬“x
-short	speed_curve_straight;		// SšƒJ[ƒu’¼ü‘¬“x
+// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿é–¢é€£
+// è·é›¢
+short	stopping_meter;			// åœæ­¢è·é›¢
+// é€Ÿåº¦
+short	speed_straight;			// é€šå¸¸ãƒˆãƒ¬ãƒ¼ã‚¹
+short	speed_curve_brake;		// ã‚«ãƒ¼ãƒ–ãƒ–ãƒ¬ãƒ¼ã‚­
+short	speed_curve_r600;		// R600ã‚«ãƒ¼ãƒ–é€Ÿåº¦
+short	speed_curve_r450;		// R450ã‚«ãƒ¼ãƒ–é€Ÿåº¦
+short	speed_curve_straight;		// Så­—ã‚«ãƒ¼ãƒ–ç›´ç·šé€Ÿåº¦
 
-short	speed_crossline;			// ƒNƒƒXƒ‰ƒCƒ“i“ü‘¬“x
-short	speed_ckank_trace;			// ƒNƒ‰ƒ“ƒNi“ü‘¬“x
-short	speed_rightclank_curve;		// ‰EƒNƒ‰ƒ“ƒNù‰ñ‘¬“x
-short	speed_rightclank_escape;	// ‰EƒNƒ‰ƒ“ƒN•œ‹A‘¬“x
-short	speed_leftclank_curve;		// ¶ƒNƒ‰ƒ“ƒNù‰ñ‘¬“x
-short	speed_leftclank_escape;		// ¶ƒNƒ‰ƒ“ƒN•œ‹A‘¬“x
+short	speed_crossline;			// ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³é€²å…¥é€Ÿåº¦
+short	speed_ckank_trace;			// ã‚¯ãƒ©ãƒ³ã‚¯é€²å…¥é€Ÿåº¦
+short	speed_rightclank_curve;		// å³ã‚¯ãƒ©ãƒ³ã‚¯æ—‹å›é€Ÿåº¦
+short	speed_rightclank_escape;	// å³ã‚¯ãƒ©ãƒ³ã‚¯å¾©å¸°é€Ÿåº¦
+short	speed_leftclank_curve;		// å·¦ã‚¯ãƒ©ãƒ³ã‚¯æ—‹å›é€Ÿåº¦
+short	speed_leftclank_escape;		// å·¦ã‚¯ãƒ©ãƒ³ã‚¯å¾©å¸°é€Ÿåº¦
 
-short	speed_halfine;				// ƒn[ƒtƒ‰ƒCƒ“i“ü‘¬“x
-short	speed_rightchange_trace;	// ‰EƒŒ[ƒ“ƒ`ƒFƒ“ƒWi“ü‘¬“x
-short	speed_rightchange_curve;	// ‰EƒŒ[ƒ“ƒ`ƒFƒ“ƒWù‰ñ‘¬“x
-short	speed_rightchange_escape;	// ‰EƒŒ[ƒ“ƒ`ƒFƒ“ƒW•œ‹A‘¬“x
+short	speed_halfine;				// ãƒãƒ¼ãƒ•ãƒ©ã‚¤ãƒ³é€²å…¥é€Ÿåº¦
+short	speed_rightchange_trace;	// å³ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸é€²å…¥é€Ÿåº¦
+short	speed_rightchange_curve;	// å³ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸æ—‹å›é€Ÿåº¦
+short	speed_rightchange_escape;	// å³ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸å¾©å¸°é€Ÿåº¦
 
-short	speed_leftchange_trace;		// ¶ƒŒ[ƒ“ƒ`ƒFƒ“ƒWi“ü‘¬“x
-short	speed_leftchange_curve;		// ¶ƒŒ[ƒ“ƒ`ƒFƒ“ƒWù‰ñ‘¬“x
-short	speed_leftchange_escape;	// ¶ƒŒ[ƒ“ƒ`ƒFƒ“ƒWù‰ñ‘¬“x
+short	speed_leftchange_trace;		// å·¦ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸é€²å…¥é€Ÿåº¦
+short	speed_leftchange_curve;		// å·¦ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸æ—‹å›é€Ÿåº¦
+short	speed_leftchange_escape;	// å·¦ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸æ—‹å›é€Ÿåº¦
 
-short	speed_slope_brake;			// ‰º‚èâI“_‘¬“x
-short	speed_slope_trace;			// â“Ç‚İ”ò‚Î‚µ‘¬“x
+short	speed_slope_brake;			// ä¸‹ã‚Šå‚çµ‚ç‚¹é€Ÿåº¦
+short	speed_slope_trace;			// å‚èª­ã¿é£›ã°ã—é€Ÿåº¦
 
-// ƒT[ƒ{Šp“x
-short	angle_rightclank;		// ‰EƒNƒ‰ƒ“ƒNù‰ñŠp“x
-short	angle_leftclank;		// ¶ƒNƒ‰ƒ“ƒNù‰ñŠp“x
-short	angle_rightchange;		// ‰EƒŒ[ƒ“ƒ`ƒFƒ“ƒWù‰ñŠp“x
-short	angle_leftchange;		// ‰EƒŒ[ƒ“ƒ`ƒFƒ“ƒWù‰ñŠp“x
+// ã‚µãƒ¼ãƒœè§’åº¦
+short	angle_rightclank;		// å³ã‚¯ãƒ©ãƒ³ã‚¯æ—‹å›è§’åº¦
+short	angle_leftclank;		// å·¦ã‚¯ãƒ©ãƒ³ã‚¯æ—‹å›è§’åº¦
+short	angle_rightchange;		// å³ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸æ—‹å›è§’åº¦
+short	angle_leftchange;		// å³ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸æ—‹å›è§’åº¦
 
-// ƒ^ƒCƒ}ŠÖ˜A
-short		cntGyro;			// Šp“xŒvZ—pƒJƒEƒ“ƒ^
+// ã‚¿ã‚¤ãƒé–¢é€£
+short		cntGyro;			// è§’åº¦è¨ˆç®—ç”¨ã‚«ã‚¦ãƒ³ã‚¿
 
-// Šp“xŠÖ˜A
-double 		TurningAngleEnc;	// ƒGƒ“ƒR[ƒ_‚©‚ç‹‚ß‚½ù‰ñŠp“x
-double		PichAngleAD;		// ƒAƒiƒƒOƒWƒƒƒCƒ‚©‚ç‹‚ß‚½ƒsƒbƒ`Šp“x
+// è§’åº¦é–¢é€£
+double 		TurningAngleEnc;	// ã‚¨ãƒ³ã‚³ãƒ¼ãƒ€ã‹ã‚‰æ±‚ã‚ãŸæ—‹å›è§’åº¦
+double		PichAngleAD;		// ã‚¢ãƒŠãƒ­ã‚°ã‚¸ãƒ£ã‚¤ãƒ­ã‹ã‚‰æ±‚ã‚ãŸãƒ”ãƒƒãƒè§’åº¦
 double		gyVoltageBefore;
 
-// ƒT[ƒ{ŠÖ˜A
-// ”’üƒgƒŒ[ƒX
-signed char	ServoPwm;		// ”’üƒgƒŒ[ƒXƒT[ƒ{PWM
-short 		SensorBefore;	// 1ms‘O‚ÌƒZƒ“ƒT’l
-char		DevBefore;		// I¬•ªƒŠƒZƒbƒg—p
-double		Int;			// I¬•ªÏZ’l(”’üƒgƒŒ[ƒX)
-// Šp“x§Œä
-signed char	ServoPwm2;		// Šp“xƒT[ƒ{PWM
-short 		SetAngle;		// –Ú•WŠp“x
-short		SetAngleBefore;	// 1ms‘O‚Ì–Ú•WŠp“x
-short 		AngleBefore2;	// 1ms‘O‚ÌŠp“x
-char		AngleBefore3;	// I¬•ªƒŠƒZƒbƒg—p
-double		Int2;			// I¬•ªÏZ’l(Šp“x§Œä)
+// ã‚µãƒ¼ãƒœé–¢é€£
+// ç™½ç·šãƒˆãƒ¬ãƒ¼ã‚¹
+signed char	ServoPwm;		// ç™½ç·šãƒˆãƒ¬ãƒ¼ã‚¹ã‚µãƒ¼ãƒœPWM
+short 		SensorBefore;	// 1mså‰ã®ã‚»ãƒ³ã‚µå€¤
+char		DevBefore;		// Iæˆåˆ†ãƒªã‚»ãƒƒãƒˆç”¨
+double		Int;			// Iæˆåˆ†ç©ç®—å€¤(ç™½ç·šãƒˆãƒ¬ãƒ¼ã‚¹)
+// è§’åº¦åˆ¶å¾¡
+signed char	ServoPwm2;		// è§’åº¦ã‚µãƒ¼ãƒœPWM
+short 		SetAngle;		// ç›®æ¨™è§’åº¦
+short		SetAngleBefore;	// 1mså‰ã®ç›®æ¨™è§’åº¦
+short 		AngleBefore2;	// 1mså‰ã®è§’åº¦
+char		AngleBefore3;	// Iæˆåˆ†ãƒªã‚»ãƒƒãƒˆç”¨
+double		Int2;			// Iæˆåˆ†ç©ç®—å€¤(è§’åº¦åˆ¶å¾¡)
 
-// ƒ‚[ƒ^[ŠÖ˜A
-signed char 	motorPwm;			// ƒ‚[ƒ^[§ŒäPWM
-short			targetSpeed;		// –Ú•W‘¬“x
+// ãƒ¢ãƒ¼ã‚¿ãƒ¼é–¢é€£
+signed char 	motorPwm;			// ãƒ¢ãƒ¼ã‚¿ãƒ¼åˆ¶å¾¡PWM
+short			targetSpeed;		// ç›®æ¨™é€Ÿåº¦
 bool			stableSpeed = false;
 unsigned int	encStable = 0;
 short			cntStable = 0;
-char 			AccelefBefore;		// I¬•ªƒŠƒZƒbƒg—p
-short			EncoderBefore;		// 1ms‘O‚Ì‘¬“x
-int 			targetSpeedBefore;	// 1ms‘O‚Ì–Ú•W‘¬“x	
-double 			Int3;				// I¬•ªÏZ’l(‘¬“x§Œä)
+char 			AccelefBefore;		// Iæˆåˆ†ãƒªã‚»ãƒƒãƒˆç”¨
+short			EncoderBefore;		// 1mså‰ã®é€Ÿåº¦
+int 			targetSpeedBefore;	// 1mså‰ã®ç›®æ¨™é€Ÿåº¦	
+double 			Int3;				// Iæˆåˆ†ç©ç®—å€¤(é€Ÿåº¦åˆ¶å¾¡)
 
-// ƒfƒ‚ŠÖ˜A
+// ãƒ‡ãƒ¢é–¢é€£
 char 	demo;
 
-// ƒQƒCƒ“ŠÖ˜A
+// ã‚²ã‚¤ãƒ³é–¢é€£
 char	kp_buff, ki_buff, kd_buff;
 char	kp2_buff, ki2_buff, kd2_buff;
 char 	kp3_buff, ki3_buff, kd3_buff;
 
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ checkCrossLine
-// ˆ—ŠT—v     ƒNƒƒXƒ‰ƒCƒ“ŒŸ’m
-// ˆø”         ‚È‚µ
-// –ß‚è’l       0:ƒNƒƒXƒ‰ƒCƒ“‚È‚µ 1:‚ ‚è
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å checkCrossLine
+// å‡¦ç†æ¦‚è¦     ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³æ¤œçŸ¥
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       0:ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³ãªã— 1:ã‚ã‚Š
 ///////////////////////////////////////////////////////////////////////////
 bool checkCrossLine( void )
 {
@@ -101,10 +101,10 @@ bool checkCrossLine( void )
 	else return false;
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ checkRightLine
-// ˆ—ŠT—v     ‰Eƒn[ƒtƒ‰ƒCƒ“ŒŸoˆ—
-// ˆø”         ‚È‚µ
-// –ß‚è’l       0:‰Eƒn[ƒtƒ‰ƒCƒ“‚È‚µ 1:‚ ‚è
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å checkRightLine
+// å‡¦ç†æ¦‚è¦     å³ãƒãƒ¼ãƒ•ãƒ©ã‚¤ãƒ³æ¤œå‡ºå‡¦ç†
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       0:å³ãƒãƒ¼ãƒ•ãƒ©ã‚¤ãƒ³ãªã— 1:ã‚ã‚Š
 ///////////////////////////////////////////////////////////////////////////
 bool checkRightLine( void )
 {
@@ -112,10 +112,10 @@ bool checkRightLine( void )
 	else return false;
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ checkLeftLine
-// ˆ—ŠT—v     ¶ƒn[ƒtƒ‰ƒCƒ“ŒŸoˆ—
-// ˆø”         ‚È‚µ
-// –ß‚è’l       0:¶ƒn[ƒtƒ‰ƒCƒ“‚È‚µ 1:‚ ‚è
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å checkLeftLine
+// å‡¦ç†æ¦‚è¦     å·¦ãƒãƒ¼ãƒ•ãƒ©ã‚¤ãƒ³æ¤œå‡ºå‡¦ç†
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       0:å·¦ãƒãƒ¼ãƒ•ãƒ©ã‚¤ãƒ³ãªã— 1:ã‚ã‚Š
 ///////////////////////////////////////////////////////////////////////////
 bool checkLeftLine( void )
 {
@@ -123,10 +123,10 @@ bool checkLeftLine( void )
 	else return false;
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ checkSlope
-// ˆ—ŠT—v     ƒWƒƒƒCƒƒZƒ“ƒT‚Ì’l‚©‚çâ“¹ŒŸo
-// ˆø”         ‚È‚µ
-// –ß‚è’l       0:â“¹‚È‚µ 1:ã‚èâ@-1:‰º‚èâ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å checkSlope
+// å‡¦ç†æ¦‚è¦     ã‚¸ãƒ£ã‚¤ãƒ­ã‚»ãƒ³ã‚µã®å€¤ã‹ã‚‰å‚é“æ¤œå‡º
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       0:å‚é“ãªã— 1:ä¸Šã‚Šå‚ã€€-1:ä¸‹ã‚Šå‚
 ///////////////////////////////////////////////////////////////////////////
 signed char checkSlope( void )
 {
@@ -138,20 +138,20 @@ signed char checkSlope( void )
 	return ret;
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ encMM
-// ˆ—ŠT—v     mm‚ğƒGƒ“ƒR[ƒ_‚Ìƒpƒ‹ƒX”‚É•ÏŠ·‚µ‚Ä•Ô‚·
-// ˆø”         mm:•ÏŠ·‚·‚é’·‚³[mm]
-// –ß‚è’l       •ÏŠ·‚µ‚½ƒpƒ‹ƒX”
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å encMM
+// å‡¦ç†æ¦‚è¦     mmã‚’ã‚¨ãƒ³ã‚³ãƒ¼ãƒ€ã®ãƒ‘ãƒ«ã‚¹æ•°ã«å¤‰æ›ã—ã¦è¿”ã™
+// å¼•æ•°         mm:å¤‰æ›ã™ã‚‹é•·ã•[mm]
+// æˆ»ã‚Šå€¤       å¤‰æ›ã—ãŸãƒ‘ãƒ«ã‚¹æ•°
 ///////////////////////////////////////////////////////////////////////////
 unsigned int encMM( short mm )
 {
 	return PALSE_MILLIMETER * mm;
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ stableSpeedDistance
-// ˆ—ŠT—v     –Ú•W‘¬“x‚É’B‚µ‚Ä‚©‚ç‚ÌŠÔ‚Æ‹——£‚ğŒv‘ª‚·‚é
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å stableSpeedDistance
+// å‡¦ç†æ¦‚è¦     ç›®æ¨™é€Ÿåº¦ã«é”ã—ã¦ã‹ã‚‰ã®æ™‚é–“ã¨è·é›¢ã‚’è¨ˆæ¸¬ã™ã‚‹
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////
 unsigned int stableSpeedDistance( void )
 {
@@ -162,74 +162,74 @@ unsigned int stableSpeedDistance( void )
 	}
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ servoControlTrace
-// ˆ—ŠT—v     ƒ‰ƒCƒ“ƒgƒŒ[ƒXƒT[ƒ{‚ÌPWM‚ÌŒvZ
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å servoControlTrace
+// å‡¦ç†æ¦‚è¦     ãƒ©ã‚¤ãƒ³ãƒˆãƒ¬ãƒ¼ã‚¹æ™‚ã‚µãƒ¼ãƒœã®PWMã®è¨ˆç®—
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////
 void servoControlTrace( void )
 {
 	int iP, iD, iI, iRet;
 	short Dev, Dif;
 	
-	//ƒT[ƒ{ƒ‚[ƒ^—pPWM’lŒvZ
+	//ã‚µãƒ¼ãƒœãƒ¢ãƒ¼ã‚¿ç”¨PWMå€¤è¨ˆç®—
 	Dev = getAnalogSensor();
-	// I¬•ªÏZ
+	// Iæˆåˆ†ç©ç®—
 	Int += (double)Dev * 0.001;
-	if ( Int > 10000 ) Int = 10000;		// I¬•ªƒŠƒ~ƒbƒg
+	if ( Int > 10000 ) Int = 10000;		// Iæˆåˆ†ãƒªãƒŸãƒƒãƒˆ
 	else if ( Int < -10000 ) Int = -10000;
-	Dif = ( Dev - SensorBefore ) * 1;	// dƒQƒCƒ“1/1000”{
+	Dif = ( Dev - SensorBefore ) * 1;	// dã‚²ã‚¤ãƒ³1/1000å€
 
-	iP = (int)kp_buff * Dev;		// ”ä—á
-	iI = (double)ki_buff * Int;		// Ï•ª
-	iD = (int)kd_buff * Dif;		// ”÷•ª
+	iP = (int)kp_buff * Dev;		// æ¯”ä¾‹
+	iI = (double)ki_buff * Int;		// ç©åˆ†
+	iD = (int)kd_buff * Dif;		// å¾®åˆ†
 	iRet = iP + iI + iD;
-	iRet = iRet >> 10;				// PWM‚ğ0`100‹ß–T‚Éû‚ß‚é
+	iRet = iRet >> 10;				// PWMã‚’0ï½100è¿‘å‚ã«åã‚ã‚‹
 
-	// PWM‚ÌãŒÀ‚Ìİ’è
+	// PWMã®ä¸Šé™ã®è¨­å®š
 	if ( iRet >  100 ) iRet =  100;
 	if ( iRet <  -100 ) iRet = -100;
 	
 	if ( Dev >= 0 )	DevBefore = 0;
 	else			DevBefore = 1;
 	ServoPwm = iRet;
-	SensorBefore = Dev;				// Ÿ‰ñ‚Í‚±‚Ì’l‚ª1ms‘O‚Ì’l‚Æ‚È‚é
+	SensorBefore = Dev;				// æ¬¡å›ã¯ã“ã®å€¤ãŒ1mså‰ã®å€¤ã¨ãªã‚‹
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ servoControlAngle
-// ˆ—ŠT—v     Šp“x§ŒäƒT[ƒ{‚ÌPWM‚ÌŒvZ
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å servoControlAngle
+// å‡¦ç†æ¦‚è¦     è§’åº¦åˆ¶å¾¡æ™‚ã‚µãƒ¼ãƒœã®PWMã®è¨ˆç®—
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////
 void servoControlAngle( void )
 {
 	short i, j, Dev, Dif;
 	int iP, iD, iI, iRet;
 	
-	// –Ú•W’lAŒ»İ’læ“¾
+	// ç›®æ¨™å€¤ã€ç¾åœ¨å€¤å–å¾—
 	i = SetAngle;
 	j = getServoAngle();
 	
-	//ƒT[ƒ{ƒ‚[ƒ^—pPWM’lŒvZ
+	//ã‚µãƒ¼ãƒœãƒ¢ãƒ¼ã‚¿ç”¨PWMå€¤è¨ˆç®—
 	Dev = i - j;
 		
-	// –Ú•W’l‚ğ’´‚¦‚½‚çI¬•ªƒŠƒZƒbƒg
+	// ç›®æ¨™å€¤ã‚’è¶…ãˆãŸã‚‰Iæˆåˆ†ãƒªã‚»ãƒƒãƒˆ
 	if ( Dev >= 0 && AngleBefore3 == 1 ) Int2 = 0;
 	else if ( Dev < 0 && AngleBefore3 == 0 ) Int2 = 0;
 	
-	// –Ú•W’l‚ğ•ÏX‚µ‚½‚çI¬•ªƒŠƒZƒbƒg
+	// ç›®æ¨™å€¤ã‚’å¤‰æ›´ã—ãŸã‚‰Iæˆåˆ†ãƒªã‚»ãƒƒãƒˆ
 	if ( !(i == SetAngleBefore) ) Int2 = 0;
 	
 	Int2 += (double)Dev * 0.001;
-	Dif = ( Dev - AngleBefore2 ) * 1;		// dƒQƒCƒ“1/1000”{
+	Dif = ( Dev - AngleBefore2 ) * 1;		// dã‚²ã‚¤ãƒ³1/1000å€
 
-	iP = (int)kp2_buff * Dev;		// ”ä—á
-	iI = (double)ki2_buff * Int2;	// Ï•ª
-	iD = (int)kd2_buff * Dif;		// ”÷•ª
+	iP = (int)kp2_buff * Dev;		// æ¯”ä¾‹
+	iI = (double)ki2_buff * Int2;	// ç©åˆ†
+	iD = (int)kd2_buff * Dif;		// å¾®åˆ†
 	iRet = iP + iI + iD;
-	iRet = iRet >> 4;		// PWM‚ğ0`100‹ß–T‚Éû‚ß‚é
+	iRet = iRet >> 4;		// PWMã‚’0ï½100è¿‘å‚ã«åã‚ã‚‹
 
-	// PWM‚ÌãŒÀ‚Ìİ’è
+	// PWMã®ä¸Šé™ã®è¨­å®š
 	if ( iRet >  100 ) iRet =  100;
 	if ( iRet <  -100 ) iRet = -100;
 
@@ -237,17 +237,17 @@ void servoControlAngle( void )
 	else 				AngleBefore3 = 1;
 	SetAngleBefore = i;
 	ServoPwm2 = iRet;
-	AngleBefore2 = Dev;			// Ÿ‰ñ‚Í‚±‚Ì’l‚ª1ms‘O‚Ì’l‚Æ‚È‚é
+	AngleBefore2 = Dev;			// æ¬¡å›ã¯ã“ã®å€¤ãŒ1mså‰ã®å€¤ã¨ãªã‚‹
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ diff
-// ˆ—ŠT—v   	R1,R2,R3‹y‚ÑR4‚ÌŒvZ
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å diff
+// å‡¦ç†æ¦‚è¦   	R1,R2,R3åŠã³R4ã®è¨ˆç®—
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////
 void diff ( signed char pwm )
 {
-	const char rev_difference_D[] = {       // Šp“x‚©‚ç“à—ÖAŠO—Ö‰ñ“]·ŒvZ
+	const char rev_difference_D[] = {       // è§’åº¦ã‹ã‚‰å†…è¼ªã€å¤–è¼ªå›è»¢å·®è¨ˆç®—
 		100,100,100,99,100,99,99,100,99,98,100,98,97,100,97,
 		96,100,97,95,99,96,95,99,95,94,99,95,93,99,94,
 		92,98,93,91,98,93,90,98,92,89,97,91,88,97,91,
@@ -263,7 +263,7 @@ void diff ( signed char pwm )
 	short angle2, r1, r2, r3;
 	double angle;
 	
-	angle = (double)getServoAngle()*AD2DEG;		// AD’l‚ğŠp“x‚É•ÏŠ·
+	angle = (double)getServoAngle()*AD2DEG;		// ADå€¤ã‚’è§’åº¦ã«å¤‰æ›
 	angle2 = abs((short)angle* 3);
 	
 	if ( pwm >= 0 ) {
@@ -299,21 +299,21 @@ void diff ( signed char pwm )
 	}
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ motorControl
-// ˆ—ŠT—v     ƒ‚[ƒ^[‚ÌPWMŒˆŒvZ
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å motorControl
+// å‡¦ç†æ¦‚è¦     ãƒ¢ãƒ¼ã‚¿ãƒ¼ã®PWMæ±ºè¨ˆç®—
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////
 void motorControl( void )
 {
 	int i, j, iRet, Dif, iP, iI, iD, Dev;
 	char kp3, ki3, kd3;
 	
-	i = targetSpeed;		// –Ú•W’l
-	j = Encoder * 10;		// Œ»İ’l targetSpeed‚ÍƒGƒ“ƒR[ƒ_‚Ìƒpƒ‹ƒX”*10‚Ì‚½‚ß
-							// Œ»İˆÊ’u‚à10”{‚·‚é
+	i = targetSpeed;		// ç›®æ¨™å€¤
+	j = Encoder * 10;		// ç¾åœ¨å€¤ targetSpeedã¯ã‚¨ãƒ³ã‚³ãƒ¼ãƒ€ã®ãƒ‘ãƒ«ã‚¹æ•°*10ã®ãŸã‚
+							// ç¾åœ¨ä½ç½®ã‚‚10å€ã™ã‚‹
 
-	// ƒfƒ‚ƒ‚[ƒh‚Ì‚Æ‚«ƒQƒCƒ“•ÏX
+	// ãƒ‡ãƒ¢ãƒ¢ãƒ¼ãƒ‰ã®ã¨ãã‚²ã‚¤ãƒ³å¤‰æ›´
 	if ( demo ) {
 		kp3 = kp3_buff;
 		ki3 = ki3_buff;
@@ -324,21 +324,21 @@ void motorControl( void )
 		kd3 = kd3_buff;
 	}
 	
-	// ‹ì“®ƒ‚[ƒ^[—pPWM’lŒvZ
-	Dev = i - j;	// •Î·
-	// –Ú•W’l‚ğ•ÏX‚µ‚½‚çI¬•ªƒŠƒZƒbƒg
+	// é§†å‹•ãƒ¢ãƒ¼ã‚¿ãƒ¼ç”¨PWMå€¤è¨ˆç®—
+	Dev = i - j;	// åå·®
+	// ç›®æ¨™å€¤ã‚’å¤‰æ›´ã—ãŸã‚‰Iæˆåˆ†ãƒªã‚»ãƒƒãƒˆ
 	if ( i != targetSpeedBefore ) Int3 = 0;
 	
-	Int3 += (double)Dev * 0.001;	// ŠÔÏ•ª
-	Dif = Dev - EncoderBefore;		// ”÷•ª@dƒQƒCƒ“1/1000”{
+	Int3 += (double)Dev * 0.001;	// æ™‚é–“ç©åˆ†
+	Dif = Dev - EncoderBefore;		// å¾®åˆ†ã€€dã‚²ã‚¤ãƒ³1/1000å€
 	
-	iP = (int)kp3 * Dev;			// ”ä—á
-	iI = (double)ki3 * Int3;		// Ï•ª
-	iD = (int)kd3 * Dif;			// ”÷•ª
+	iP = (int)kp3 * Dev;			// æ¯”ä¾‹
+	iI = (double)ki3 * Int3;		// ç©åˆ†
+	iD = (int)kd3 * Dif;			// å¾®åˆ†
 	iRet = iP + iI + iD;
 	iRet = iRet >> 4;
 	
-	// PWM‚ÌãŒÀ‚Ìİ’è
+	// PWMã®ä¸Šé™ã®è¨­å®š
 	if ( iRet >  100 ) iRet = 100;
 	if ( iRet <  -100 ) iRet = -100;
 	
@@ -347,13 +347,13 @@ void motorControl( void )
 	targetSpeedBefore = i;
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ getLinePositionNow
-// ˆ—ŠT—v     ’†‰›ƒZƒ“ƒT‚ÌˆÊ’u‚ğZo‚·‚é
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å getLinePositionNow
+// å‡¦ç†æ¦‚è¦     ä¸­å¤®ã‚»ãƒ³ã‚µã®ä½ç½®ã‚’ç®—å‡ºã™ã‚‹
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////
 double getLinePositionNow( short angleAD, double angleIMU ) {
-	const double turningRadius[] = {       // Šp“x‚©‚ç“à—ÖAŠO—Ö‰ñ“]·ŒvZ
+	const double turningRadius[] = {       // è§’åº¦ã‹ã‚‰å†…è¼ªã€å¤–è¼ªå›è»¢å·®è¨ˆç®—
 		3637467,8504,4221,2794,2081,1653,1367,1163,1010,890,
 		794,716,650,594,546,505,468,436,407,381,
 		358,336,317,299,282,267,253,239,227,215,
@@ -362,22 +362,22 @@ double getLinePositionNow( short angleAD, double angleIMU ) {
 		};
 	double thetaM, thetaS, theta1, r1;
 	short angle;
-	thetaS = (double)abs(angleAD) * AD2DEG;	// [‹]‚É•ÏŠ·
-	thetaM = fabs(angleIMU) * M_PI / 180;	// [rad]‚É•ÏŠ·
+	thetaS = (double)abs(angleAD) * AD2DEG;	// [Â°]ã«å¤‰æ›
+	thetaM = fabs(angleIMU) * M_PI / 180;	// [rad]ã«å¤‰æ›
 	r1 = turningRadius[(short)thetaS];
-	theta1 = 90.0 - thetaS - fabs(angleIMU);	// ‹@‘ÌŠp“x
-	theta1 = thetaS * M_PI / 180;			// [rad]‚É•ÏŠ·
+	theta1 = 90.0 - thetaS - fabs(angleIMU);	// æ©Ÿä½“è§’åº¦
+	theta1 = thetaS * M_PI / 180;			// [rad]ã«å¤‰æ›
 
 	return ( (r1+TREAD/2) * sin(thetaM) ) + ( WHELLBASE * cos(thetaM) ) + ( SENSORBAR * sin(theta1) );
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ getLinePositionAfter
-// ˆ—ŠT—v     ù‰ñŒã‚Ì’†‰›ƒZƒ“ƒT‚ÌˆÊ’u‚ğZo‚·‚é
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å getLinePositionAfter
+// å‡¦ç†æ¦‚è¦     æ—‹å›å¾Œã®ä¸­å¤®ã‚»ãƒ³ã‚µã®ä½ç½®ã‚’ç®—å‡ºã™ã‚‹
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////
 double getLinePositionAfter ( short angle, double angleIMU ) {
-	const double turningRadius[] = {       // Šp“x‚©‚ç“à—ÖAŠO—Ö‰ñ“]·ŒvZ
+	const double turningRadius[] = {       // è§’åº¦ã‹ã‚‰å†…è¼ªã€å¤–è¼ªå›è»¢å·®è¨ˆç®—
 		3637467,8504,4221,2794,2081,1653,1367,1163,1010,890,
 		794,716,650,594,546,505,468,436,407,381,
 		358,336,317,299,282,267,253,239,227,215,
@@ -387,10 +387,10 @@ double getLinePositionAfter ( short angle, double angleIMU ) {
 	double thetaS, thetaM, theta1, theta2, theta3, y1, x1, r, r1;
 	
 	r1 = turningRadius[angle];
-	thetaS = (double)angle * M_PI / 180;	// [rad]‚É•ÏŠ·
-	thetaM = fabs(angleIMU) * M_PI / 180;			// [rad]‚É•ÏŠ·
+	thetaS = (double)angle * M_PI / 180;	// [rad]ã«å¤‰æ›
+	thetaM = fabs(angleIMU) * M_PI / 180;			// [rad]ã«å¤‰æ›
 
-	// Šeƒpƒ‰ƒ[ƒ^Zo
+	// å„ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ç®—å‡º
 	theta1 = M_PI/2 - thetaS - thetaM;
 	x1 = turningRadius[(short)angle*4] + ( (TREAD/2) - SENSORBAR*cos(thetaS) );
 	y1 = ( (r1+TREAD/2) * sin(thetaM) ) + ( WHELLBASE * cos(thetaM) ) + ( SENSORBAR * sin(theta1) );
@@ -405,10 +405,10 @@ double getLinePositionAfter ( short angle, double angleIMU ) {
 	return r * cos(theta3);
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ getReturnAngle
-// ˆ—ŠT—v     ù‰ñŒã‚ÉƒZƒ“ƒT[ƒo[‚Æ”’ü‚ª•Às‚É‚È‚éƒT[ƒ{Šp“x‚ÌZo
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å getReturnAngle
+// å‡¦ç†æ¦‚è¦     æ—‹å›å¾Œã«ã‚»ãƒ³ã‚µãƒ¼ãƒãƒ¼ã¨ç™½ç·šãŒä¸¦è¡Œã«ãªã‚‹ã‚µãƒ¼ãƒœè§’åº¦ã®ç®—å‡º
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////
 short getReturnAngle( double angleIMU, double y1) {
 	short i;

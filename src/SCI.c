@@ -1,53 +1,53 @@
-//====================================//
-// ƒCƒ“ƒNƒ‹[ƒh
+ï»¿//====================================//
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //====================================//
 #include "sci.h"
 
 //====================================//
-// ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€
 //====================================//
-char		revErr = 0;			// ’ÊMƒGƒ‰[”Ô†
-// SCI1ŠÖ˜A
-char		modeSCI1;			// ’ÊM•û®
-char		txtCommand[128];	// ƒRƒ}ƒ“ƒhŠi”[
-char		txtData[128];		// ƒf[ƒ^Ši”[
-char*		txt = txtData;					// óMƒf[ƒ^Ši”[
-char		cmmandMode = 0;		// ƒRƒ}ƒ“ƒh‘I‘ğ
-char		stopWord = 0;		// 0: ’â~ƒ[ƒh–¢óM 1:’â~ƒ[ƒhóM
-short 		cntByte = 0;			// óM‚µ‚½ƒoƒCƒg”
-char 		command = 0;		// 0:ƒRƒ}ƒ“ƒhóM‘Ò‚¿ 1:ƒRƒ}ƒ“ƒh“ü—Í’† 2:ƒRƒ}ƒ“ƒh”»’è’†
+char		revErr = 0;			// é€šä¿¡ã‚¨ãƒ©ãƒ¼ç•ªå·
+// SCI1é–¢é€£
+char		modeSCI1;			// é€šä¿¡æ–¹å¼
+char		txtCommand[128];	// ã‚³ãƒãƒ³ãƒ‰æ ¼ç´
+char		txtData[128];		// ãƒ‡ãƒ¼ã‚¿æ ¼ç´
+char*		txt = txtData;					// å—ä¿¡ãƒ‡ãƒ¼ã‚¿æ ¼ç´
+char		cmmandMode = 0;		// ã‚³ãƒãƒ³ãƒ‰é¸æŠ
+char		stopWord = 0;		// 0: åœæ­¢ãƒ¯ãƒ¼ãƒ‰æœªå—ä¿¡ 1:åœæ­¢ãƒ¯ãƒ¼ãƒ‰å—ä¿¡
+short 		cntByte = 0;			// å—ä¿¡ã—ãŸãƒã‚¤ãƒˆæ•°
+char 		command = 0;		// 0:ã‚³ãƒãƒ³ãƒ‰å—ä¿¡å¾…ã¡ 1:ã‚³ãƒãƒ³ãƒ‰å…¥åŠ›ä¸­ 2:ã‚³ãƒãƒ³ãƒ‰åˆ¤å®šä¸­
 
-char		SCI1_Req_mode;		// 0:ƒXƒ^[ƒg 1:ƒXƒgƒbƒv 2:ƒf[ƒ^‘—óM’†
-char		SCI1_RW_mode;		// 0:‘—M 1:óM
-char		SCI1_Slaveaddr;		// ƒXƒŒ[ƒuƒAƒhƒŒƒX
-char		SCI1_NumData;		// ‘—Mƒf[ƒ^”
-char*		SCI1_DataArry;			// ‘—Mƒf[ƒ^”z—ñ
-char		SCI1_DataBuff[255];	// ‘—Mƒf[ƒ^ƒoƒbƒtƒ@
+char		SCI1_Req_mode;		// 0:ã‚¹ã‚¿ãƒ¼ãƒˆ 1:ã‚¹ãƒˆãƒƒãƒ— 2:ãƒ‡ãƒ¼ã‚¿é€å—ä¿¡ä¸­
+char		SCI1_RW_mode;		// 0:é€ä¿¡ 1:å—ä¿¡
+char		SCI1_Slaveaddr;		// ã‚¹ãƒ¬ãƒ¼ãƒ–ã‚¢ãƒ‰ãƒ¬ã‚¹
+char		SCI1_NumData;		// é€ä¿¡ãƒ‡ãƒ¼ã‚¿æ•°
+char*		SCI1_DataArry;			// é€ä¿¡ãƒ‡ãƒ¼ã‚¿é…åˆ—
+char		SCI1_DataBuff[255];	// é€ä¿¡ãƒ‡ãƒ¼ã‚¿ãƒãƒƒãƒ•ã‚¡
 
-// SCI12ŠÖ˜A
-char		SCI12_Req_mode = 0;		// 0:ƒXƒ^[ƒg 1:ƒXƒgƒbƒv
-char		SCI12_Slaveaddr;		// ‘—Mƒf[ƒ^”
-char		SCI12_NumData;			// ƒf[ƒ^”
-char		SCI1_NumData2;			// ‘—Mƒf[ƒ^”2
-char*		SCI12_DataArry;			// ƒf[ƒ^”z—ñ
-char*		SCI1_DataArry2;			// ‘—Mƒf[ƒ^”z—ñ2
-char		SCI12_DataBuff[255];	// ‘—Mƒf[ƒ^ƒoƒbƒtƒ@
+// SCI12é–¢é€£
+char		SCI12_Req_mode = 0;		// 0:ã‚¹ã‚¿ãƒ¼ãƒˆ 1:ã‚¹ãƒˆãƒƒãƒ—
+char		SCI12_Slaveaddr;		// é€ä¿¡ãƒ‡ãƒ¼ã‚¿æ•°
+char		SCI12_NumData;			// ãƒ‡ãƒ¼ã‚¿æ•°
+char		SCI1_NumData2;			// é€ä¿¡ãƒ‡ãƒ¼ã‚¿æ•°2
+char*		SCI12_DataArry;			// ãƒ‡ãƒ¼ã‚¿é…åˆ—
+char*		SCI1_DataArry2;			// é€ä¿¡ãƒ‡ãƒ¼ã‚¿é…åˆ—2
+char		SCI12_DataBuff[255];	// é€ä¿¡ãƒ‡ãƒ¼ã‚¿ãƒãƒƒãƒ•ã‚¡
 
-#pragma interrupt Excep_SCI6_RXI6 (vect = VECT_SCI6_RXI6, enable)	// RXI1Š„‚è‚İŠÖ”’è‹`
-#pragma interrupt Excep_SCI6_TXI6 (vect = VECT_SCI6_TXI6, enable)	// TXI1Š„‚è‚İŠÖ”’è‹`
-#pragma interrupt Excep_SCI6_TEI6 (vect = VECT_SCI6_TEI6, enable)	// TEI1Š„‚è‚İŠÖ”’è‹`
+#pragma interrupt Excep_SCI6_RXI6 (vect = VECT_SCI6_RXI6, enable)	// RXI1å‰²ã‚Šè¾¼ã¿é–¢æ•°å®šç¾©
+#pragma interrupt Excep_SCI6_TXI6 (vect = VECT_SCI6_TXI6, enable)	// TXI1å‰²ã‚Šè¾¼ã¿é–¢æ•°å®šç¾©
+#pragma interrupt Excep_SCI6_TEI6 (vect = VECT_SCI6_TEI6, enable)	// TEI1å‰²ã‚Šè¾¼ã¿é–¢æ•°å®šç¾©
 
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ initSCI1
-// ˆ—ŠT—v     SCI1‚Ì‰Šú‰»
-// ˆø”         mode: ’ÊM•û® rate:ƒ{[ƒŒ[ƒg‚ğbps‚Å“ü—Í
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å initSCI1
+// å‡¦ç†æ¦‚è¦     SCI1ã®åˆæœŸåŒ–
+// å¼•æ•°         mode: é€šä¿¡æ–¹å¼ rate:ãƒœãƒ¼ãƒ¬ãƒ¼ãƒˆã‚’bpsã§å…¥åŠ›
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////
 void initSCI1( char rate )
 {
 	unsigned char brr,abcs;
 	
-		// ƒ{[ƒŒ[ƒg‘I‘ğ
+		// ãƒœãƒ¼ãƒ¬ãƒ¼ãƒˆé¸æŠ
 		if ( rate == RATE_9600 ) {
 		abcs = 0;
 		brr = 155;
@@ -132,16 +132,16 @@ void initSCI1( char rate )
 	SCI1.SCR.BIT.RE = 1;			// Enable RX
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ initSCI6
-// ˆ—ŠT—v     SCI6‚Ì‰Šú‰»
-// ˆø”         mode: ’ÊM•û® rate:ƒ{[ƒŒ[ƒg‚ğbps‚Å“ü—Í
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å initSCI6
+// å‡¦ç†æ¦‚è¦     SCI6ã®åˆæœŸåŒ–
+// å¼•æ•°         mode: é€šä¿¡æ–¹å¼ rate:ãƒœãƒ¼ãƒ¬ãƒ¼ãƒˆã‚’bpsã§å…¥åŠ›
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////
 void initSCI6( char rate )
 {
 	unsigned char brr,abcs;
 	
-		// ƒ{[ƒŒ[ƒg‘I‘ğ
+		// ãƒœãƒ¼ãƒ¬ãƒ¼ãƒˆé¸æŠ
 		if ( rate == RATE_9600 ) {
 		abcs = 0;
 		brr = 155;
@@ -191,7 +191,7 @@ void initSCI6( char rate )
 	 
 	ICU.IER[IER_SCI6_RXI6].BIT.IEN_SCI6_RXI6 = 1;	// RXI??????J?n
 	ICU.IPR[VECT_SCI6_RXI6].BIT.IPR = 15;		// RXI?????????
-	IEN( SCI6, RXI6 ) = 1;	// RXIŠ„‚è‚İŠJn
+	IEN( SCI6, RXI6 ) = 1;	// RXIå‰²ã‚Šè¾¼ã¿é–‹å§‹
 	
 	// Set MPC
 	PORT3.PMR.BIT.B3 = 1;			// Disable P33: peripheral
@@ -227,10 +227,10 @@ void initSCI6( char rate )
 	SCI6.SCR.BIT.RE = 1;			// Enable RX
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ charput
-// ˆ—ŠT—v     printf‚Ìo—Í(printf‚Åg—p‚·‚é)
-// ˆø”         data:o—Í‚·‚éˆê•¶š
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å charput
+// å‡¦ç†æ¦‚è¦     printfã®å‡ºåŠ›(printfã§ä½¿ç”¨ã™ã‚‹)
+// å¼•æ•°         data:å‡ºåŠ›ã™ã‚‹ä¸€æ–‡å­—
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////
 void charput( uint8_t data )
 {
@@ -239,10 +239,10 @@ void charput( uint8_t data )
 	SCI6.SSR.BIT.TEND = 0;
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ charget
-// ˆ—ŠT—v     scanf‚Ì“ü—Í(scanf‚Åg—p‚·‚é)
-// ˆø”         ‚È‚µ
-// –ß‚è’l       data:“ü—Í‚µ‚½ˆê•¶š
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å charget
+// å‡¦ç†æ¦‚è¦     scanfã®å…¥åŠ›(scanfã§ä½¿ç”¨ã™ã‚‹)
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       data:å…¥åŠ›ã—ãŸä¸€æ–‡å­—
 ///////////////////////////////////////////////////////////////////////////
 unsigned char charget(void)
 {
@@ -251,10 +251,10 @@ unsigned char charget(void)
 	return data;
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ Excep_SCI1_RXI1
-// ˆ—ŠT—v     UARTóM‚ÉŠ„‚è‚İ‚ÅÀs‚³‚ê‚é
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å Excep_SCI1_RXI1
+// å‡¦ç†æ¦‚è¦     UARTå—ä¿¡æ™‚ã«å‰²ã‚Šè¾¼ã¿ã§å®Ÿè¡Œã•ã‚Œã‚‹
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////
 void Excep_SCI6_RXI6(void)
 {
@@ -262,8 +262,8 @@ void Excep_SCI6_RXI6(void)
 	c = SCI6.RDR;
 	
 	*txt++ = c;
-	if ( c == 0xA) {	// ‰üsƒR[ƒh‚Å•¶š—ñƒŠƒZƒbƒg
+	if ( c == 0xA) {	// æ”¹è¡Œã‚³ãƒ¼ãƒ‰ã§æ–‡å­—åˆ—ãƒªã‚»ãƒƒãƒˆ
 		memset(txtData, 0, strlen(txtData));
-		txt = txtData;	// ƒAƒhƒŒƒXƒŠƒZƒbƒg
+		txt = txtData;	// ã‚¢ãƒ‰ãƒ¬ã‚¹ãƒªã‚»ãƒƒãƒˆ
 	}
 }

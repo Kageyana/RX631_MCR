@@ -1,23 +1,23 @@
-//======================================//
-// ƒCƒ“ƒNƒ‹[ƒh
+ï»¿//======================================//
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //======================================//
 #include "AQM0802A.h"
 //====================================//
-// ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€
 //====================================//
-// LCDŠÖ˜A
-static volatile char	buffLcdData[ LCD_MAX_X / LCD_MAX_Y ];		// •\¦ƒoƒbƒtƒ@
-static char		buffLcdData2[ LCD_MAX_X / LCD_MAX_Y + 10 ]; 	// •\¦ƒoƒbƒtƒ@ˆêì‹ÆƒGƒŠƒA
-static volatile int	lcdBuffPosition;				// ƒoƒbƒtƒ@‚É‘‚«‚ŞˆÊ’u
-static volatile int	lcdMode2 = 1;					// •\¦ˆ—NoŠÇ—
-static volatile int	lcdNowLocate;					// Œ»İ‚Ì•\¦‚µ‚Ä‚¢‚éˆÊ’u
-static volatile int	lcdRefreshFlag;					// ƒŠƒtƒŒƒbƒVƒ…ƒtƒ‰ƒO
+// LCDé–¢é€£
+static volatile char	buffLcdData[ LCD_MAX_X / LCD_MAX_Y ];		// è¡¨ç¤ºãƒãƒƒãƒ•ã‚¡
+static char		buffLcdData2[ LCD_MAX_X / LCD_MAX_Y + 10 ]; 	// è¡¨ç¤ºãƒãƒƒãƒ•ã‚¡ä¸€æ™‚ä½œæ¥­ã‚¨ãƒªã‚¢
+static volatile int	lcdBuffPosition;				// ãƒãƒƒãƒ•ã‚¡ã«æ›¸ãè¾¼ã‚€ä½ç½®
+static volatile int	lcdMode2 = 1;					// è¡¨ç¤ºå‡¦ç†Noç®¡ç†
+static volatile int	lcdNowLocate;					// ç¾åœ¨ã®è¡¨ç¤ºã—ã¦ã„ã‚‹ä½ç½®
+static volatile int	lcdRefreshFlag;					// ãƒªãƒ•ãƒ¬ãƒƒã‚·ãƒ¥ãƒ•ãƒ©ã‚°
 
 //////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ lcdPut
-// ˆ—ŠT—v     ƒf[ƒ^‘—M
-// ˆø”         data
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å lcdPut
+// å‡¦ç†æ¦‚è¦     ãƒ‡ãƒ¼ã‚¿é€ä¿¡
+// å¼•æ•°         data
+// æˆ»ã‚Šå€¤       ãªã—
 //////////////////////////////////////////////////////////////////////////
 void lcdPut( unsigned char data )
 {
@@ -25,10 +25,10 @@ void lcdPut( unsigned char data )
 	I2C_LCD_SEND
 }
 //////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ lcdCMD
-// ˆ—ŠT—v     ƒRƒ}ƒ“ƒh‘—M
-// ˆø”         cmd
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å lcdCMD
+// å‡¦ç†æ¦‚è¦     ã‚³ãƒãƒ³ãƒ‰é€ä¿¡
+// å¼•æ•°         cmd
+// æˆ»ã‚Šå€¤       ãªã—
 //////////////////////////////////////////////////////////////////////////
 void lcdCMD( unsigned char cmd ) 
 {
@@ -36,10 +36,10 @@ void lcdCMD( unsigned char cmd )
  	I2C_LCD_READ
 }
 //////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ waitLcd
-// ˆ—ŠT—v     ’x‰„ˆ—
-// ˆø”         ’x‰„ŠÔ(ms)
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å waitLcd
+// å‡¦ç†æ¦‚è¦     é…å»¶å‡¦ç†
+// å¼•æ•°         é…å»¶æ™‚é–“(ms)
+// æˆ»ã‚Šå€¤       ãªã—
 //////////////////////////////////////////////////////////////////////////
 void waitLcd ( short waitTime )
 {
@@ -49,47 +49,47 @@ void waitLcd ( short waitTime )
 	for ( i = 0; i < time; i++) __nop();
 }
 //////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ intiLcd
-// ˆ—ŠT—v     LCD‚Ì‰Šú‰»
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å intiLcd
+// å‡¦ç†æ¦‚è¦     LCDã®åˆæœŸåŒ–
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
 //////////////////////////////////////////////////////////////////////////
  void intiLcd(void)
  {
 	waitLcd(4);
-	lcdCMD(0x38);	// function set			: ƒf[ƒ^ü‚Í8–{E•\¦‚Í‚QsEƒtƒHƒ“ƒg‚Í5x8ƒhƒbƒg
+	lcdCMD(0x38);	// function set			: ãƒ‡ãƒ¼ã‚¿ç·šã¯8æœ¬ãƒ»è¡¨ç¤ºã¯ï¼’è¡Œãƒ»ãƒ•ã‚©ãƒ³ãƒˆã¯5x8ãƒ‰ãƒƒãƒˆ
 	waitLcd(1);
-	lcdCMD(0x39);	// function set           	: Šg’£ƒRƒ}ƒ“ƒh‚Ìİ’è‚ğ—LŒø‚É‚·‚é
+	lcdCMD(0x39);	// function set           	: æ‹¡å¼µã‚³ãƒãƒ³ãƒ‰ã®è¨­å®šã‚’æœ‰åŠ¹ã«ã™ã‚‹
 	waitLcd(1);
-	lcdCMD(0x14);	// Internal OSC frequency 	: ƒoƒCƒAƒX‚Ì‘I‘ğ‚Æ“à•”OSCü”g”‚Ì’²®
+	lcdCMD(0x14);	// Internal OSC frequency 	: ãƒã‚¤ã‚¢ã‚¹ã®é¸æŠã¨å†…éƒ¨OSCå‘¨æ³¢æ•°ã®èª¿æ•´
 	waitLcd(1);
-	lcdCMD(0x70);	// Contrast set          	: ƒRƒ“ƒgƒ‰ƒXƒg’²®ƒf[ƒ^(‰ºˆÊ4ƒrƒbƒg)
+	lcdCMD(0x70);	// Contrast set          	: ã‚³ãƒ³ãƒˆãƒ©ã‚¹ãƒˆèª¿æ•´ãƒ‡ãƒ¼ã‚¿(ä¸‹ä½4ãƒ“ãƒƒãƒˆ)
 	waitLcd(1);
-	lcdCMD(0x56);	// Power/ICON/Contrast control	: ¸ˆ³‰ñ˜H—LŒøAƒRƒ“ƒgƒ‰ƒXƒg’²®ƒf[ƒ^(ãˆÊ2ƒrƒbƒg)
+	lcdCMD(0x56);	// Power/ICON/Contrast control	: æ˜‡åœ§å›è·¯æœ‰åŠ¹ã€ã‚³ãƒ³ãƒˆãƒ©ã‚¹ãƒˆèª¿æ•´ãƒ‡ãƒ¼ã‚¿(ä¸Šä½2ãƒ“ãƒƒãƒˆ)
 	waitLcd(1);
-	lcdCMD(0x6c);	// Follower control     	: ƒtƒHƒƒA‰ñ˜H‚ğONA‘•—¦‚Ì’²®‚ğs‚¤
+	lcdCMD(0x6c);	// Follower control     	: ãƒ•ã‚©ãƒ­ã‚¢å›è·¯ã‚’ONã€å¢—å¹…ç‡ã®èª¿æ•´ã‚’è¡Œã†
 	waitLcd(200);
-	lcdCMD(0x38);	// function set         	: Šg’£ƒRƒ}ƒ“ƒh‚ğİ’è‚ğ–³Œø‚É‚·‚é
+	lcdCMD(0x38);	// function set         	: æ‹¡å¼µã‚³ãƒãƒ³ãƒ‰ã‚’è¨­å®šã‚’ç„¡åŠ¹ã«ã™ã‚‹
 	waitLcd(1);
-	lcdCMD(0x0c);	// display ON/OFF control      	: ‰æ–Ê•\¦‚ÍONEƒJ[ƒ\ƒ‹•\¦‚ÍOFFEƒJ[ƒ\ƒ‹“_–Å‚ÍOFF
+	lcdCMD(0x0c);	// display ON/OFF control      	: ç”»é¢è¡¨ç¤ºã¯ONãƒ»ã‚«ãƒ¼ã‚½ãƒ«è¡¨ç¤ºã¯OFFãƒ»ã‚«ãƒ¼ã‚½ãƒ«ç‚¹æ»…ã¯OFF
 	waitLcd(1);
-	lcdCMD(0x01);	// Clear Display 		: ‰æ–Ê‘S‘Ì‚É20H‚Ì½Íß°½‚Å•\¦A¶°¿Ù‚Ícol=0,row=0‚ÉˆÚ“®
+	lcdCMD(0x01);	// Clear Display 		: ç”»é¢å…¨ä½“ã«20Hã®ï½½ï¾ï¾Ÿï½°ï½½ã§è¡¨ç¤ºã€ï½¶ï½°ï½¿ï¾™ã¯col=0,row=0ã«ç§»å‹•
 	waitLcd(2);
 }
 //////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ lcdLocate
-// ˆ—ŠT—v     ‰t»ƒJ[ƒ\ƒ‹ˆÚ“®
-// ˆø”         x , y
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å lcdLocate
+// å‡¦ç†æ¦‚è¦     æ¶²æ™¶ã‚«ãƒ¼ã‚½ãƒ«ç§»å‹•
+// å¼•æ•°         x , y
+// æˆ»ã‚Šå€¤       ãªã—
 //////////////////////////////////////////////////////////////////////////
 static void lcdLocate( int x, int y )
 {
     volatile unsigned char work = 0x80;
 
-    // x‚ÌŒvZ
+    // xã®è¨ˆç®—
     work += x;
 
-    // y‚ÌŒvZ
+    // yã®è¨ˆç®—
     if( y == 1 ) {
         work += 0x40;
     } else if( y == 2 ) {
@@ -98,40 +98,40 @@ static void lcdLocate( int x, int y )
         work += 0x54;
     }
 
-    // ƒJ[ƒ\ƒ‹ˆÚ“®
+    // ã‚«ãƒ¼ã‚½ãƒ«ç§»å‹•
     lcdCMD(work);
 }
 //////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ lcdShowProcess
-// ˆ—ŠT—v     ‰t»•\¦ˆ—
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ‚È‚µ
-// ƒƒ‚         ‚±‚ÌŠÖ”‚ÍŠ„‚è‚İ‚Å1ms‚²‚Æ‚ÉÀs‚µ‚Ä‚­‚¾‚³‚¢
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å lcdShowProcess
+// å‡¦ç†æ¦‚è¦     æ¶²æ™¶è¡¨ç¤ºå‡¦ç†
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
+// ãƒ¡ãƒ¢         ã“ã®é–¢æ•°ã¯å‰²ã‚Šè¾¼ã¿ã§1msã”ã¨ã«å®Ÿè¡Œã—ã¦ãã ã•ã„
 //////////////////////////////////////////////////////////////////////////
 void lcdShowProcess( void )
 {
     switch( lcdMode2 ) {
-    case 1: // ƒf[ƒ^XV‚³‚ê‚½‚©ƒ`ƒFƒbƒN
+    case 1: // ãƒ‡ãƒ¼ã‚¿æ›´æ–°ã•ã‚ŒãŸã‹ãƒã‚§ãƒƒã‚¯
     	if( lcdRefreshFlag ) {
     		lcdRefreshFlag = 0;
     		lcdMode2 = 2;
 	}
         break;
 
-    case 2: // ˆÊ’u‰Šú‰»
+    case 2: // ä½ç½®åˆæœŸåŒ–
 	lcdNowLocate = 0;
     	lcdLocate( 0, 0 );
 	lcdMode2 = 3;
         break;
 
-    case 3: // ‰üsˆÊ’u‚ÌŠm”F 
+    case 3: // æ”¹è¡Œä½ç½®ã®ç¢ºèª 
 	if( lcdNowLocate % LCD_MAX_X == 0 ) {
     		lcdLocate( 0, lcdNowLocate / LCD_MAX_X );
 	}
 	lcdMode2 = 4;
         break;
 
-    case 4: // ƒf[ƒ^•\¦ˆ—
+    case 4: // ãƒ‡ãƒ¼ã‚¿è¡¨ç¤ºå‡¦ç†
 	lcdPut(buffLcdData[ lcdNowLocate++ ]);
 	if( lcdNowLocate >= LCD_MAX_X * LCD_MAX_Y ) {
 		lcdMode2 = 1;
@@ -146,10 +146,10 @@ void lcdShowProcess( void )
     }
 }
 //////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ lcdPrintf
-// ˆ—ŠT—v     ‰t»‚Ö•\¦ •\¦ˆÊ’u‚Í‰ß‹‚É•\¦‚µ‚½ˆÊ’u‚ÌŸ‚©‚ç
-// ˆø”         printf‚Æ“¯‚¶
-// –ß‚è’l       ³íFo—Í‚µ‚½•¶š—ñ ˆÙíF•‰‚Ì”
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å lcdPrintf
+// å‡¦ç†æ¦‚è¦     æ¶²æ™¶ã¸è¡¨ç¤º è¡¨ç¤ºä½ç½®ã¯éå»ã«è¡¨ç¤ºã—ãŸä½ç½®ã®æ¬¡ã‹ã‚‰
+// å¼•æ•°         printfã¨åŒã˜
+// æˆ»ã‚Šå€¤       æ­£å¸¸æ™‚ï¼šå‡ºåŠ›ã—ãŸæ–‡å­—åˆ— ç•°å¸¸æ™‚ï¼šè² ã®æ•°
 //////////////////////////////////////////////////////////////////////////
 int lcdPrintf(char *format, ...)
 {
@@ -162,7 +162,7 @@ int lcdPrintf(char *format, ...)
     va_end(argptr);
 
     if( ret > 0 ) {
-        // vsprintf‚ª³í‚È‚ç‰t»ƒoƒbƒtƒ@‚Ö“]‘—
+        // vsprintfãŒæ­£å¸¸ãªã‚‰æ¶²æ™¶ãƒãƒƒãƒ•ã‚¡ã¸è»¢é€
         p = buffLcdData2;
         while( *p ) {
             buffLcdData[lcdBuffPosition++] = *p++;
@@ -175,10 +175,10 @@ int lcdPrintf(char *format, ...)
     return ret;
 }
 //////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ lcdPosition
-// ˆ—ŠT—v     ‰t»‚Ì•\¦ˆÊ’uw’è
-// ˆø”         ‰¡ˆÊ’u , cˆÊ’u
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å lcdPosition
+// å‡¦ç†æ¦‚è¦     æ¶²æ™¶ã®è¡¨ç¤ºä½ç½®æŒ‡å®š
+// å¼•æ•°         æ¨ªä½ç½® , ç¸¦ä½ç½®
+// æˆ»ã‚Šå€¤       ãªã—
 //////////////////////////////////////////////////////////////////////////
 void lcdPosition(char x ,char y)
 {
@@ -188,10 +188,10 @@ void lcdPosition(char x ,char y)
     lcdBuffPosition = x + y * LCD_MAX_X;
 }
 //////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ lcdPrintf
-// ˆ—ŠT—v     ‰t»‚Ö•\¦ •\¦ˆÊ’u‚Í‰ß‹‚É•\¦‚µ‚½ˆÊ’u‚ÌŸ‚©‚ç
-// ˆø”         printf‚Æ“¯‚¶
-// –ß‚è’l       ³íFo—Í‚µ‚½•¶š—ñ ˆÙíF•‰‚Ì”
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å lcdPrintf
+// å‡¦ç†æ¦‚è¦     æ¶²æ™¶ã¸è¡¨ç¤º è¡¨ç¤ºä½ç½®ã¯éå»ã«è¡¨ç¤ºã—ãŸä½ç½®ã®æ¬¡ã‹ã‚‰
+// å¼•æ•°         printfã¨åŒã˜
+// æˆ»ã‚Šå€¤       æ­£å¸¸æ™‚ï¼šå‡ºåŠ›ã—ãŸæ–‡å­—åˆ— ç•°å¸¸æ™‚ï¼šè² ã®æ•°
 //////////////////////////////////////////////////////////////////////////
 int lcdRowPrintf(char step, char *format, ...)
 {
@@ -210,7 +210,7 @@ int lcdRowPrintf(char step, char *format, ...)
     va_end(argptr);
 
     if( ret > 0 ) {
-        // vsprintf‚ª³í‚È‚ç‰t»ƒoƒbƒtƒ@‚Ö“]‘—
+        // vsprintfãŒæ­£å¸¸ãªã‚‰æ¶²æ™¶ãƒãƒƒãƒ•ã‚¡ã¸è»¢é€
         p = buffLcdData2;
         while( *p ) {
             buffLcdData[lcdBuffPosition++] = *p++;

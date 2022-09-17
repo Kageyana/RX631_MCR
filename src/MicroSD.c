@@ -1,39 +1,39 @@
-//====================================//
-// ƒCƒ“ƒNƒ‹[ƒh
+ï»¿//====================================//
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //====================================//
 #include "microSD.h"
 //====================================//
-// ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾
+//ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€
 //====================================//
-// ƒ^ƒCƒ}ŠÖ˜A
-unsigned int			cnt_log = 0;				// ƒƒO˜R‚êŠm”F—pƒJƒEƒ“ƒg
+// ã‚¿ã‚¤ãƒé–¢é€£
+unsigned int			cnt_log = 0;			// // ãƒ­ã‚°æ¼ã‚Œç¢ºèªç”¨ã‚«ã‚¦ãƒ³ãƒˆ
 
-static unsigned char	msdlibBuff[512 + 128];	// ˆê•ÛŠÇƒoƒbƒtƒ@
-static volatile short	msdlibMode;				// ó‘Ô
-volatile short			msdlibCnt;				// ‘‚«‚İ”
-static volatile unsigned char*	msdlibWrite;	// ‘‚«‚İƒf[ƒ^‚ÌƒAƒhƒŒƒX
-volatile char					msdlibError;	// ƒGƒ‰[”Ô†
-static volatile unsigned int	msdSize;		// microSD‚ÌƒTƒCƒY(kB’PˆÊ)
-static volatile short			modeSector;		// 1:ƒZƒNƒ^w’èƒ‚[ƒh 0:ƒAƒhƒŒƒX
-volatile unsigned char			interrupt_msd_send_data = 0;	// ‘—Mƒtƒ‰ƒO
+static unsigned char			msdlibBuff[512 + 128];		// ä¸€æ™‚ä¿ç®¡ãƒãƒƒãƒ•ã‚¡
+static volatile short			msdlibMode;				// çŠ¶æ…‹
+volatile short				msdlibCnt;					// æ›¸ãè¾¼ã¿æ•°
+static volatile unsigned char*	msdlibWrite;				// æ›¸ãè¾¼ã¿ãƒ‡ãƒ¼ã‚¿ã®ã‚¢ãƒ‰ãƒ¬ã‚¹
+volatile char				msdlibError;				// ã‚¨ãƒ©ãƒ¼ç•ªå·
+static volatile unsigned int		msdSize;					// microSDã®ã‚µã‚¤ã‚º(kBå˜ä½)
+static volatile short			modeSector;				// 1:ã‚»ã‚¯ã‚¿æŒ‡å®šãƒ¢ãƒ¼ãƒ‰ 0:ã‚¢ãƒ‰ãƒ¬ã‚¹
+volatile unsigned char			interrupt_msd_send_data = 0;	// é€ä¿¡ãƒ•ãƒ©ã‚°
 
-// microSDŠÖ˜A
-signed char			msdBuff[ 512 ];		// ˆê•Û‘¶ƒoƒbƒtƒ@
-short				msdBuffaddress;		// ˆê‹L˜^ƒoƒbƒtƒ@‘ƒAƒhƒŒƒX
-short				msdFlag = 0;		// 1:ƒf[ƒ^‹L˜^ 0:‹L˜^‚µ‚È‚¢
-short				msdTimer;			// æ“¾ŠÔŠuŒvZ—p
-unsigned int		msdStartaddress;	// ‹L˜^ŠJnƒAƒhƒŒƒX
-unsigned int		msdEndaddress;		// ‹L˜^I—¹ƒAƒhƒŒƒX
-unsigned int		msdWorkaddress;		// ì‹Æ—pƒAƒhƒŒƒX
-unsigned int		msdWorkaddress2;	// ì‹Æ—pƒAƒhƒŒƒX2
-signed char 		*msdBuffPointa;		// RAM•Û‘¶ƒoƒbƒtƒ@—pƒ|ƒCƒ“ƒ^
-unsigned int 		msdaddrBuff[25];	// MicroSDƒJ[ƒh‚ÌÅI‘‚«‚İƒAƒhƒŒƒX•Û‘¶—p
+// microSDé–¢é€£
+signed char		msdBuff[ 512 ];		// ä¸€æ™‚ä¿å­˜ãƒãƒƒãƒ•ã‚¡
+short				msdBuffaddress;		// ä¸€æ™‚è¨˜éŒ²ãƒãƒƒãƒ•ã‚¡æ›¸è¾¼ã‚¢ãƒ‰ãƒ¬ã‚¹
+short				msdFlag = 0;		// 1:ãƒ‡ãƒ¼ã‚¿è¨˜éŒ² 0:è¨˜éŒ²ã—ãªã„
+short				msdTimer;			// å–å¾—é–“éš”è¨ˆç®—ç”¨
+unsigned int		msdStartaddress;	// è¨˜éŒ²é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹
+unsigned int		msdEndaddress;		// è¨˜éŒ²çµ‚äº†ã‚¢ãƒ‰ãƒ¬ã‚¹
+unsigned int		msdWorkaddress;	// ä½œæ¥­ç”¨ã‚¢ãƒ‰ãƒ¬ã‚¹
+unsigned int		msdWorkaddress2;	// ä½œæ¥­ç”¨ã‚¢ãƒ‰ãƒ¬ã‚¹2
+signed char 		*msdBuffPointa;		// RAMä¿å­˜ãƒãƒƒãƒ•ã‚¡ç”¨ãƒã‚¤ãƒ³ã‚¿
+unsigned int 		msdaddrBuff[25];	// MicroSDã‚«ãƒ¼ãƒ‰ã®æœ€çµ‚æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹ä¿å­˜ç”¨
                                         
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ msd_write
-// ˆ—ŠT—v     microSD 1ƒoƒCƒg‘‚«‚İ
-// ˆø”         char ƒf[ƒ^
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å msd_write
+// å‡¦ç†æ¦‚è¦     microSD 1ãƒã‚¤ãƒˆæ›¸ãè¾¼ã¿
+// å¼•æ•°         char ãƒ‡ãƒ¼ã‚¿
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////
 void msd_write( unsigned char data )
 {
@@ -42,10 +42,10 @@ void msd_write( unsigned char data )
 	SPI_SEND
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ msd_read
-// ˆ—ŠT—v     microSD 1ƒoƒCƒg“Ç‚İ‚İ
-// ˆø”         ‚È‚µ
-// –ß‚è’l       char ƒf[ƒ^
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å msd_read
+// å‡¦ç†æ¦‚è¦     microSD 1ãƒã‚¤ãƒˆèª­ã¿è¾¼ã¿
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       char ãƒ‡ãƒ¼ã‚¿
 ///////////////////////////////////////////////////////////////////////////
 unsigned char msd_read( void )
 {
@@ -60,10 +60,10 @@ unsigned char msd_read( void )
 	return  ret;
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ msd_CMD
-// ˆ—ŠT—v     ƒRƒ}ƒ“ƒh‘—M
-// ˆø”         ƒRƒ}ƒ“ƒhAˆø”1,ˆø”2,ˆø”3,ˆø”4,CRC
-// –ß‚è’l       microSD‚©‚ç‚Ì–ß‚è’l
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å msd_CMD
+// å‡¦ç†æ¦‚è¦     ã‚³ãƒãƒ³ãƒ‰é€ä¿¡
+// å¼•æ•°         ã‚³ãƒãƒ³ãƒ‰ã€å¼•æ•°1,å¼•æ•°2,å¼•æ•°3,å¼•æ•°4,CRC
+// æˆ»ã‚Šå€¤       microSDã‹ã‚‰ã®æˆ»ã‚Šå€¤
 ///////////////////////////////////////////////////////////////////////////
 unsigned char msd_CMD ( unsigned char cmd, unsigned char arg1, unsigned char arg2,
 			unsigned char arg3, unsigned char arg4, unsigned char crc )
@@ -80,22 +80,22 @@ unsigned char msd_CMD ( unsigned char cmd, unsigned char arg1, unsigned char arg
 	msd_write ( arg4 );
 	msd_write ( crc );
 	
-	// ƒŒƒXƒ|ƒ“ƒX‚ª•Ô‚Á‚Ä‚­‚é‚Ü‚Å‚Ü‚Â
+	// ãƒ¬ã‚¹ãƒãƒ³ã‚¹ãŒè¿”ã£ã¦ãã‚‹ã¾ã§å¾…ã¤
 	cnt_retry = 1500;
 	while ( --cnt_retry ) {
-		MSD_CS_TERMINAL_HIGH		// CS’[q‚ğHIGH‚É‚·‚é
-		MSD_CS_TERMINAL_LOW		// CS’[q‚ğLOW‚É‚·‚é
+		MSD_CS_TERMINAL_HIGH		// CSç«¯å­ã‚’HIGHã«ã™ã‚‹
+		MSD_CS_TERMINAL_LOW		// CSç«¯å­ã‚’LOWã«ã™ã‚‹
 		
 		ret = msd_read();
-		if ( ret != 0xff ) break;	// 0xffˆÈŠO‚ÅI—¹
+		if ( ret != 0xff ) break;	// 0xffä»¥å¤–ã§çµ‚äº†
 	}
 	return ret;
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ initMicroSD
-// ˆ—ŠT—v     MicroSD‚Ì‰Šú‰»
-// ˆø”         ‚È‚µ
-// –ß‚è’l       0:‰Šú‰»¬Œ÷	1ˆÈã:‰Šú‰»¸”s
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å initMicroSD
+// å‡¦ç†æ¦‚è¦     MicroSDã®åˆæœŸåŒ–
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       0:åˆæœŸåŒ–æˆåŠŸ	1ä»¥ä¸Š:åˆæœŸåŒ–å¤±æ•—
 ///////////////////////////////////////////////////////////////////////////
 char initMicroSD ( void )
 {
@@ -108,10 +108,10 @@ char initMicroSD ( void )
 		if ( sd_sw == 0 ) {
 			switch ( pattern_intimsd ) {
 				case 1:
-					MSD_CS_TERMINAL_HIGH			// CS’[q‚ğHIGH‚É‚·‚é
+					MSD_CS_TERMINAL_HIGH			// CSç«¯å­ã‚’HIGHã«ã™ã‚‹
 					
 					for ( i = 0; i < 10; i++) {
-						receive = msd_read();		// 80ƒNƒƒbƒN(ƒ_ƒ~[ƒf[ƒ^10ƒoƒCƒg)‚ğ‘—‚é
+						receive = msd_read();		// 80ã‚¯ãƒ­ãƒƒã‚¯(ãƒ€ãƒŸãƒ¼ãƒ‡ãƒ¼ã‚¿10ãƒã‚¤ãƒˆ)ã‚’é€ã‚‹
 					}
 					
 					printf("Dumydata send\n");
@@ -119,11 +119,11 @@ char initMicroSD ( void )
 					break;
 					
 				case 2:
-					MSD_CS_TERMINAL_LOW			// CS’[q‚ğLOW‚É‚·‚é
+					MSD_CS_TERMINAL_LOW			// CSç«¯å­ã‚’LOWã«ã™ã‚‹
 					
 					i = 0;
 					do {
-						// CMD0‘—M
+						// CMD0é€ä¿¡
 						receive = msd_CMD( 0x40, 0x00, 0x00, 0x00, 0x00, 0x95 );
 						
 						if ( i >= 10 ) {
@@ -132,7 +132,7 @@ char initMicroSD ( void )
 							break;
 						}
 						i++;
-					} while ( ( receive & 0xfe ) != 0x0 );	// 0x01‚ğóM‚·‚ê‚ÎSDƒJ[ƒh‚ÍƒAƒCƒhƒ‹ó‘Ô
+					} while ( ( receive & 0xfe ) != 0x0 );	// 0x01ã‚’å—ä¿¡ã™ã‚Œã°SDã‚«ãƒ¼ãƒ‰ã¯ã‚¢ã‚¤ãƒ‰ãƒ«çŠ¶æ…‹
 					
 					pattern_intimsd = 3;
 					break;
@@ -141,7 +141,7 @@ char initMicroSD ( void )
 					printf("CMD0 send\n");
 					i = 0;
 					do {
-						// CMD8‘—M
+						// CMD8é€ä¿¡
 						receive = msd_CMD( 0x48, 0x00, 0x00, 0x01, 0xaa, 0x87 );
 						
 						i++;
@@ -152,7 +152,7 @@ char initMicroSD ( void )
 						}
 					} while ( receive == 0xff );
 						
-					// R7ƒŒƒXƒ|ƒ“ƒXc‚è‚ğæ“¾
+					// R7ãƒ¬ã‚¹ãƒãƒ³ã‚¹æ®‹ã‚Šã‚’å–å¾—
 					for ( i = 0; i < 5; i++ ) {
 						response_register[ i ] = msd_read();
 					}
@@ -170,7 +170,7 @@ char initMicroSD ( void )
 					printf("CMD8 send\n");
 					i = 0;
 					do {
-						// CMD58‘—M
+						// CMD58é€ä¿¡
 						receive = msd_CMD( 0x7a, 0x40, 0x00, 0x00, 0x00, 0xaf );
 						
 						i++;
@@ -181,7 +181,7 @@ char initMicroSD ( void )
 						}
 					} while ( receive != 0x01 );
 						
-					// R3ƒŒƒXƒ|ƒ“ƒXc‚è‚ğæ“¾
+					// R3ãƒ¬ã‚¹ãƒãƒ³ã‚¹æ®‹ã‚Šã‚’å–å¾—
 					for ( i = 0; i < 6; i++ ) {
 						response_register[ i ] = msd_read();
 					}
@@ -193,9 +193,9 @@ char initMicroSD ( void )
 					printf("CMD58 send\n");
 					i = 0;
 					do {
-						// CMD55‘—M
+						// CMD55é€ä¿¡
 						receive = msd_CMD( 0x77, 0x00, 0x00, 0x00, 0x00, 0x65 );
-						// ACMD41‘—M
+						// ACMD41é€ä¿¡
 						receive = msd_CMD( 0x69, 0x40, 0x00, 0x00, 0x00, 0x77 );
 						
 						i++;
@@ -213,7 +213,7 @@ char initMicroSD ( void )
 					printf("CMD41 send\n");
 					i = 0;
 					do {
-						// CMD58‘—M
+						// CMD58é€ä¿¡
 						receive = msd_CMD( 0x7a, 0x40, 0x00, 0x00, 0x00, 0xaf );
 						
 						if ( i >= 10 ) {
@@ -224,7 +224,7 @@ char initMicroSD ( void )
 						i++;
 					} while ( receive != 0x00 );
 						
-					// R3ƒŒƒXƒ|ƒ“ƒXc‚è‚ğæ“¾
+					// R3ãƒ¬ã‚¹ãƒãƒ³ã‚¹æ®‹ã‚Šã‚’å–å¾—
 					for ( i = 0; i < 6; i++ ) {
 						response_register[ i ] = msd_read();
 					}
@@ -239,15 +239,15 @@ char initMicroSD ( void )
 						
 				case 7:
 					printf("CMD58 send\n");
-					// CSDæ“¾
+					// CSDå–å¾—
 					receive = getMicroSD_CSD( response_register );
 					if ( !receive ) {
 						ret = 8;
 						printf("CSD error\n");
 						break;
 					}
-					// —e—ÊŒvZ
-					// SDHC‚Ìê‡
+					// å®¹é‡è¨ˆç®—
+					// SDHCã®å ´åˆ
 					msdSize   = ( ( unsigned short )response_register[7]&0x3f) << 16;
 					msdSize  |=  ( unsigned short )response_register[8] << 8;
 					msdSize  |=  ( unsigned short )response_register[9];
@@ -258,7 +258,7 @@ char initMicroSD ( void )
 					break;
 						
 				case 8:
-					MSD_CS_TERMINAL_HIGH		// CS’[q‚ğHIGH‚É‚·‚é
+					MSD_CS_TERMINAL_HIGH		// CSç«¯å­ã‚’HIGHã«ã™ã‚‹
 					pattern_intimsd = 9;
 					break;
 			}
@@ -277,10 +277,10 @@ char initMicroSD ( void )
 	return ret;
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ getMicroSD_CSD
-// ˆ—ŠT—v     microSD Card Specific Dataæ“¾
-// ˆø”         signed char *“Ç‚İ‚İ”z—ñ(16ƒoƒCƒgˆÈã)
-// –ß‚è’l       true:³í false:ƒGƒ‰[
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å getMicroSD_CSD
+// å‡¦ç†æ¦‚è¦     microSD Card Specific Dataå–å¾—
+// å¼•æ•°         signed char *èª­ã¿è¾¼ã¿é…åˆ—(16ãƒã‚¤ãƒˆä»¥ä¸Š)
+// æˆ»ã‚Šå€¤       true:æ­£å¸¸ false:ã‚¨ãƒ©ãƒ¼
 ///////////////////////////////////////////////////////////////////////////
 bool getMicroSD_CSD( volatile unsigned char *p )
 {
@@ -288,9 +288,9 @@ bool getMicroSD_CSD( volatile unsigned char *p )
 	volatile short receive, i;
 	
 	ret = true;
-	MSD_CS_TERMINAL_LOW			// CS’[q‚ğLOW‚É‚·‚é
+	MSD_CS_TERMINAL_LOW			// CSç«¯å­ã‚’LOWã«ã™ã‚‹
 	
-	// CMD9‘—M
+	// CMD9é€ä¿¡
 	receive = msd_CMD( 0x49, 0x00, 0x00, 0x00, 0x00, 0xaf );
 	
 	i = 0;
@@ -306,38 +306,38 @@ bool getMicroSD_CSD( volatile unsigned char *p )
 	
 	*p++ = receive;
 	
-	// CSD“Ç‚İ‚İ
+	// CSDèª­ã¿è¾¼ã¿
 	for ( i = 1; i < 16; i++ ) {
 		*p++ = msd_read();
 	}
 	
-	// ƒ_ƒ~[ƒŠ[ƒh
+	// ãƒ€ãƒŸãƒ¼ãƒªãƒ¼ãƒ‰
 	msd_read();
 	msd_read();
 	
-	// ƒ_ƒ~[ƒNƒƒbƒN‘—M
+	// ãƒ€ãƒŸãƒ¼ã‚¯ãƒ­ãƒƒã‚¯é€ä¿¡
 	msd_write( 0xff );
-	MSD_CS_TERMINAL_HIGH			// CS’[q‚ğHIGH‚É‚·‚é
+	MSD_CS_TERMINAL_HIGH			// CSç«¯å­ã‚’HIGHã«ã™ã‚‹
 	return ret;
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ readMicroSD
-// ˆ—ŠT—v     microSD‚©‚çƒf[ƒ^“Ç‚İ‚İ(512ƒoƒCƒg)
-// ˆø”         unsigned int	ƒAƒhƒŒƒX
-//		signed char	*“Ç‚İ‚Ş”z—ñ‚ÌƒAƒhƒŒƒX
-// –ß‚è’l       0:³í 1ˆÈã:ƒGƒ‰[
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å readMicroSD
+// å‡¦ç†æ¦‚è¦     microSDã‹ã‚‰ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿(512ãƒã‚¤ãƒˆ)
+// å¼•æ•°         unsigned int	ã‚¢ãƒ‰ãƒ¬ã‚¹
+//		signed char	*èª­ã¿è¾¼ã‚€é…åˆ—ã®ã‚¢ãƒ‰ãƒ¬ã‚¹
+// æˆ»ã‚Šå€¤       0:æ­£å¸¸ 1ä»¥ä¸Š:ã‚¨ãƒ©ãƒ¼
 ///////////////////////////////////////////////////////////////////////////
 char readMicroSD ( unsigned int address, signed char *read )
 {
 	volatile short            i, receive;
 	volatile unsigned char  a1, a2, a3, a4, pattern_msd_read = 1, ret = 0;
 	
-	if( msdlibMode != 0 ) {             // •Ê‚Èì‹Æ’†‚È‚çƒGƒ‰[
+	if( msdlibMode != 0 ) {             // åˆ¥ã®ä½œæ¥­ä¸­ãªã‚‰ã‚¨ãƒ©ãƒ¼
 		return 1;
 	}
 	msdlibMode = 1;
 	
-	// SDHC‚È‚çƒAƒhƒŒƒX¨ƒZƒNƒ^”Ô†‚É•ÏŠ·
+	// SDHCãªã‚‰ã‚¢ãƒ‰ãƒ¬ã‚¹â†’ã‚»ã‚¯ã‚¿ç•ªå·ã«å¤‰æ›
 	address >>= 9;
 	
 	a1 = ( unsigned char )( ( address&0xff000000 ) >> 24 );
@@ -348,23 +348,23 @@ char readMicroSD ( unsigned int address, signed char *read )
 	while ( ret < 1 && pattern_msd_read <= 3 ) {
 		switch ( pattern_msd_read ) {
 			case 1:
-				MSD_CS_TERMINAL_HIGH		// CS’[q‚ğHIGH‚É‚·‚é
-				msd_write( 0xff );		// ƒ_ƒ~[ƒNƒƒbƒN‘—M
-				MSD_CS_TERMINAL_LOW		// CS’[q‚ğLOW‚É‚·‚é
-				msd_write( 0xff );		// ƒ_ƒ~[ƒNƒƒbƒN‘—M
+				MSD_CS_TERMINAL_HIGH		// CSç«¯å­ã‚’HIGHã«ã™ã‚‹
+				msd_write( 0xff );			// ãƒ€ãƒŸãƒ¼ã‚¯ãƒ­ãƒƒã‚¯é€ä¿¡
+				MSD_CS_TERMINAL_LOW		// CSç«¯å­ã‚’LOWã«ã™ã‚‹
+				msd_write( 0xff );			// ãƒ€ãƒŸãƒ¼ã‚¯ãƒ­ãƒƒã‚¯é€ä¿¡
 				pattern_msd_read = 2;
 				break;
 			
 			case 2:
-				// CMD17‘—M
+				// CMD17é€ä¿¡
 				receive = msd_CMD( 0x51, a1, a2, a3, a4, 0xff );
 				
-				// ƒŒƒXƒ|ƒ“ƒXŠm”F
+				// ãƒ¬ã‚¹ãƒãƒ³ã‚¹ç¢ºèª
 				if ( receive != 0x00 ) {
 					ret = 1;
 					break;
 				}
-				// 0xfe‚©Šm”F
+				// 0xfeã‹ç¢ºèª
 				i = 0;
 				do {
 					receive = msd_read();
@@ -379,12 +379,12 @@ char readMicroSD ( unsigned int address, signed char *read )
 				break;
 				
 			case 3:
-				// ƒf[ƒ^“Ç‚İ‚İ
+				// ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿
 				for ( i = 0; i < 512; i++ ) {
 					*read++ = msd_read();
 				}
 				
-				// CRC 2ƒoƒCƒg“Ç‚İ‚İ
+				// CRC 2ãƒã‚¤ãƒˆèª­ã¿è¾¼ã¿
 				msd_read();
 				msd_read();
 				
@@ -393,12 +393,12 @@ char readMicroSD ( unsigned int address, signed char *read )
 		}
 	}
 	
-	msd_write( 0xff );			// ƒ_ƒ~[ƒNƒƒbƒN‘—M
-	MSD_CS_TERMINAL_HIGH			// CS’[q‚ğHIGH‚É‚·‚é
-	msdlibMode = ( ret != 0 ) ? 99 : 0;	// ‰Šú‰»ƒGƒ‰[‚È‚ç99‚ğƒZƒbƒg
+	msd_write( 0xff );				// ãƒ€ãƒŸãƒ¼ã‚¯ãƒ­ãƒƒã‚¯é€ä¿¡
+	MSD_CS_TERMINAL_HIGH			// CSç«¯å­ã‚’HIGHã«ã™ã‚‹
+	msdlibMode = ( ret != 0 ) ? 99 : 0;	// åˆæœŸåŒ–ã‚¨ãƒ©ãƒ¼ãªã‚‰99ã‚’ã‚»ãƒƒãƒˆ
 	
 	if ( ret == 0 ) {
-		//printf("“Ç‚İ‚İŠ®—¹\n");
+		//printf("èª­ã¿è¾¼ã¿å®Œäº†\n");
 	} else if ( ret == 1 ) {
 		printf("CMD17 error\n");
 	} else if ( ret == 2 ) {
@@ -408,18 +408,18 @@ char readMicroSD ( unsigned int address, signed char *read )
 	return ret;
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ writeMicroSD
-// ˆ—ŠT—v     microSD‘‚«‚İ(512ƒoƒCƒg)
-// ˆø”         unsigned int	ƒAƒhƒŒƒX
-//		signed char	*‘‚«‚Ş”z—ñ‚ÌƒAƒhƒŒƒX
-// –ß‚è’l       0:³í 1ˆÈã:ƒGƒ‰[
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å writeMicroSD
+// å‡¦ç†æ¦‚è¦     microSDæ›¸ãè¾¼ã¿(512ãƒã‚¤ãƒˆ)
+// å¼•æ•°         unsigned int	ã‚¢ãƒ‰ãƒ¬ã‚¹
+//		signed char	*æ›¸ãè¾¼ã‚€é…åˆ—ã®ã‚¢ãƒ‰ãƒ¬ã‚¹
+// æˆ»ã‚Šå€¤       0:æ­£å¸¸ 1ä»¥ä¸Š:ã‚¨ãƒ©ãƒ¼
 ///////////////////////////////////////////////////////////////////////////
 char writeMicroSD ( unsigned int address, signed char *write )
 {
 	volatile short            i, receive;
 	volatile unsigned char  a1, a2, a3, a4, pattern_msd_write = 1, ret = 0;
 	
-	if( msdlibMode != 0 ) {             // •Ê‚Èì‹Æ’†‚È‚çƒGƒ‰[
+	if( msdlibMode != 0 ) {             // åˆ¥ã®ä½œæ¥­ä¸­ãªã‚‰ã‚¨ãƒ©ãƒ¼
 		return 1;
 	}
 	msdlibMode = 1;
@@ -427,16 +427,16 @@ char writeMicroSD ( unsigned int address, signed char *write )
 	while ( ret < 1 && pattern_msd_write <= 4 ) {
 		switch ( pattern_msd_write ) {
 			case 1:
-				// SDHC‚È‚çƒAƒhƒŒƒX¨ƒZƒNƒ^”Ô†‚É•ÏŠ·
+				// SDHCãªã‚‰ã‚¢ãƒ‰ãƒ¬ã‚¹â†’ã‚»ã‚¯ã‚¿ç•ªå·ã«å¤‰æ›
 				address >>= 9;
 				
-				MSD_CS_TERMINAL_LOW		// CS’[q‚ğLOW‚É‚·‚é
+				MSD_CS_TERMINAL_LOW		// CSç«¯å­ã‚’LOWã«ã™ã‚‹
 				
 				pattern_msd_write = 2;
 				break;
 			
 			case 2:
-				// CMD24‘—M
+				// CMD24é€ä¿¡
 				a1 = ( unsigned char )( ( address&0xff000000 ) >> 24 );
 				a2 = ( unsigned char )( ( address&0x00ff0000 ) >> 16 );
 				a3 = ( unsigned char )( ( address&0x0000ff00 ) >>  8 );
@@ -444,21 +444,21 @@ char writeMicroSD ( unsigned int address, signed char *write )
 				
 				receive = msd_CMD( 0x58, a1, a2, a3, a4, 0x00 );
 				
-				// ƒŒƒXƒ|ƒ“ƒXŠm”F
+				// ãƒ¬ã‚¹ãƒãƒ³ã‚¹ç¢ºèª
 				if ( ( receive & 0x1f ) != 0x00 ) {
 					ret = 1;
 					break;
 				}
-				// 1ƒoƒCƒgŠÔ‚ğ‹ó‚¯‚é
+				// 1ãƒã‚¤ãƒˆæ™‚é–“ã‚’ç©ºã‘ã‚‹
 				receive = msd_read();
 				
 				pattern_msd_write = 3;
 				break;
 				
 			case 3:
-				// ŠJn‡}
+				// é–‹å§‹åˆå›³
 				msd_write( 0xfe );
-				// ƒf[ƒ^‘—M
+				// ãƒ‡ãƒ¼ã‚¿é€ä¿¡
 				/*for ( i=0; i<512; i++ ) {
 					msd_write( *write++ );
 				}*/
@@ -467,7 +467,7 @@ char writeMicroSD ( unsigned int address, signed char *write )
 					msd_write( *write++ );
 					i++;
 				}
-				// CRC‘—M
+				// CRCé€ä¿¡
 				msd_write( 0xff );
 				msd_write( 0xff );
 				
@@ -475,18 +475,18 @@ char writeMicroSD ( unsigned int address, signed char *write )
 				break;
 				
 			case 4:
-				// ƒŒƒXƒ|ƒ“ƒX“Ç‚İ‚İ
+				// ãƒ¬ã‚¹ãƒãƒ³ã‚¹èª­ã¿è¾¼ã¿
 				receive = msd_read();
 				receive &= 0x1f;
 				
 				if ( receive == 0x05 ) {
-					ret = 0;        // ‘‚«‚İ³íI—¹
+					ret = 0;        // æ›¸ãè¾¼ã¿æ­£å¸¸çµ‚äº†
 				} else if ( receive == 0x0d ) {
-					ret = 2;       // ‘‚«‚İƒGƒ‰[
+					ret = 2;      // æ›¸ãè¾¼ã¿ã‚¨ãƒ©ãƒ¼
 				} else {
-					ret = 3;       // ‚»‚êˆÈŠO‚ÌƒGƒ‰[
+					ret = 3;       // ãã‚Œä»¥å¤–ã®ã‚¨ãƒ©ãƒ¼
 				}
-				// busyó‘Ô‚ªI‚í‚é‚Ü‚Å‘Ò‚Â
+				// busyçŠ¶æ…‹ãŒçµ‚ã‚ã‚‹ã¾ã§å¾…ã¤
 				/*for ( i=0; i<10000; i++ ) {
 					if( msd_read() != 0x00 ) break;
 				}*/
@@ -500,14 +500,14 @@ char writeMicroSD ( unsigned int address, signed char *write )
 		}
 	}
 	
-	// ƒ_ƒ~[ƒNƒƒbƒN‘—M
+	// ãƒ€ãƒŸãƒ¼ã‚¯ãƒ­ãƒƒã‚¯é€ä¿¡
 	msd_write( 0xff );
 	
-	MSD_CS_TERMINAL_HIGH			// CS’[q‚ğHIGH‚É‚·‚é
-	msdlibMode = (ret != 0) ? 99 : 0;	// ‰Šú‰»ƒGƒ‰[‚È‚ç99‚ğƒZƒbƒg
+	MSD_CS_TERMINAL_HIGH			// CSç«¯å­ã‚’HIGHã«ã™ã‚‹
+	msdlibMode = (ret != 0) ? 99 : 0;	// åˆæœŸåŒ–ã‚¨ãƒ©ãƒ¼ãªã‚‰99ã‚’ã‚»ãƒƒãƒˆ
 	
 	if ( ret == 0 ) {
-		//printf("‘‚«‚İ³íI—¹\n");
+		//printf("æ›¸ãè¾¼ã¿æ­£å¸¸çµ‚äº†\n");
 	} else if ( ret == 1 ) {
 		printf("CMD24 error\n");
 	} else if ( ret == 2 ) {
@@ -519,17 +519,17 @@ char writeMicroSD ( unsigned int address, signed char *write )
 	return ret;
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ eraseMicroSD
-// ˆ—ŠT—v     microSD‚Ìƒf[ƒ^ƒCƒŒ[ƒX(0x00‘‚«‚İ)
-// ˆø”         unsigned int	ŠJnƒAƒhƒŒƒX , I—¹ƒAƒhƒŒƒX
-// –ß‚è’l       0:³í 1ˆÈã:ƒGƒ‰[
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å eraseMicroSD
+// å‡¦ç†æ¦‚è¦     microSDã®ãƒ‡ãƒ¼ã‚¿ã‚¤ãƒ¬ãƒ¼ã‚¹(0x00æ›¸ãè¾¼ã¿)
+// å¼•æ•°         unsigned int	é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹ , çµ‚äº†ã‚¢ãƒ‰ãƒ¬ã‚¹
+// æˆ»ã‚Šå€¤       0:æ­£å¸¸ 1ä»¥ä¸Š:ã‚¨ãƒ©ãƒ¼
 ///////////////////////////////////////////////////////////////////////////
 char eraseMicroSD( unsigned int st_address, unsigned int ed_address )
 {
 	volatile short		i, j, receive;
 	volatile unsigned char	a1, a2, a3, a4, pattern_msd_erase = 1, ret = 0;
 	
-	if( msdlibMode != 0 ) {             // •Ê‚Èì‹Æ’†‚È‚çƒGƒ‰[
+	if( msdlibMode != 0 ) {             // åˆ¥ã®ä½œæ¥­ä¸­ãªã‚‰ã‚¨ãƒ©ãƒ¼
 		return 1;
 	}
 	msdlibMode = 1;
@@ -537,17 +537,17 @@ char eraseMicroSD( unsigned int st_address, unsigned int ed_address )
 	while ( ret < 1 && pattern_msd_erase <= 4 ) {
 		switch ( pattern_msd_erase ) {
 			case 1:
-				// SDHC‚È‚çƒAƒhƒŒƒX¨ƒZƒNƒ^”Ô†‚É•ÏŠ·
+				// SDHCãªã‚‰ã‚¢ãƒ‰ãƒ¬ã‚¹â†’ã‚»ã‚¯ã‚¿ç•ªå·ã«å¤‰æ›
 				st_address >>= 9;
 				ed_address >>= 9;
 				
-				MSD_CS_TERMINAL_LOW	// CS’[q‚ğLOW‚É‚·‚é
+				MSD_CS_TERMINAL_LOW	// CSç«¯å­ã‚’LOWã«ã™ã‚‹
 				
 				pattern_msd_erase = 2;
 				break;
 			
 			case 2:
-				// CMD32‘—M(ƒCƒŒ[ƒXŠJnƒAƒhƒŒƒX‚ÌƒZƒbƒg)
+				// CMD32é€ä¿¡(ã‚¤ãƒ¬ãƒ¼ã‚¹é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹ã®ã‚»ãƒƒãƒˆ)
 				a1 = ( unsigned char )( ( st_address&0xff000000 ) >> 24 );
 				a2 = ( unsigned char )( ( st_address&0x00ff0000 ) >> 16 );
 				a3 = ( unsigned char )( ( st_address&0x0000ff00 ) >>  8 );
@@ -555,7 +555,7 @@ char eraseMicroSD( unsigned int st_address, unsigned int ed_address )
 				
 				receive = msd_CMD( 0x60, a1, a2, a3, a4, 0xff );
 				
-				// ƒŒƒXƒ|ƒ“ƒXŠm”F
+				// ãƒ¬ã‚¹ãƒãƒ³ã‚¹ç¢ºèª
 				if ( receive != 0x00 ) {
 					ret = 1;
 					break;
@@ -565,10 +565,10 @@ char eraseMicroSD( unsigned int st_address, unsigned int ed_address )
 				break;
 				
 			case 3:
-				// ƒEƒFƒCƒg
+				// ã‚¦ã‚§ã‚¤ãƒˆ
 				for( j=0; j<10000; j++ );
 				
-				// CMD33‘—M(ƒCƒŒ[ƒXI—¹ƒAƒhƒŒƒX‚ÌƒZƒbƒg)
+				// CMD33é€ä¿¡(ã‚¤ãƒ¬ãƒ¼ã‚¹çµ‚äº†ã‚¢ãƒ‰ãƒ¬ã‚¹ã®ã‚»ãƒƒãƒˆ)
 				a1 = (unsigned char)( (ed_address&0xff000000) >> 24);
 				a2 = (unsigned char)( (ed_address&0x00ff0000) >> 16);
 				a3 = (unsigned char)( (ed_address&0x0000ff00) >>  8);
@@ -576,7 +576,7 @@ char eraseMicroSD( unsigned int st_address, unsigned int ed_address )
 				
 				receive = msd_CMD( 0x61, a1, a2, a3, a4, 0xff );
 				
-				// ƒŒƒXƒ|ƒ“ƒXŠm”F
+				// ãƒ¬ã‚¹ãƒãƒ³ã‚¹ç¢ºèª
 				if( receive != 0x00 ) {
 					ret = 2;
 					break;
@@ -586,19 +586,19 @@ char eraseMicroSD( unsigned int st_address, unsigned int ed_address )
 				break;
 				
 			case 4:
-				// ƒEƒFƒCƒg
+				// ã‚¦ã‚§ã‚¤ãƒˆ
 				for( j=0; j<10000; j++ );
 				
-				// CMD38‘—M(ƒCƒŒ[ƒX)
+				// CMD38é€ä¿¡(ã‚¤ãƒ¬ãƒ¼ã‚¹)
 				receive = msd_CMD( 0x66, 0, 0, 0, 0, 0xff );
 				
-				// ƒŒƒXƒ|ƒ“ƒXŠm”F
+				// ãƒ¬ã‚¹ãƒãƒ³ã‚¹ç¢ºèª
 				if( receive != 0x00 ) {
 					ret = 3;
 					break;
 				}
 				
-				// busyó‘Ô‚ªI‚í‚é‚Ü‚Å‘Ò‚Â
+				// busyçŠ¶æ…‹ãŒçµ‚ã‚ã‚‹ã¾ã§å¾…ã¤
 				for( i=0; i<10000; i++ ) {
 					if( msd_read() != 0x00 ) break;
 				}
@@ -608,28 +608,28 @@ char eraseMicroSD( unsigned int st_address, unsigned int ed_address )
 		}
 	}
 	
-	// ƒEƒFƒCƒg
+	// ã‚¦ã‚§ã‚¤ãƒˆ
 	for( j = 0; j < 10000; j++ );
 	
-	msd_write( 0xff );		// ƒ_ƒ~[ƒNƒƒbƒN‘—M
-	MSD_CS_TERMINAL_HIGH		// CS’[q‚ğHIGH‚É‚·‚é
+	msd_write( 0xff );			// ãƒ€ãƒŸãƒ¼ã‚¯ãƒ­ãƒƒã‚¯é€ä¿¡
+	MSD_CS_TERMINAL_HIGH		// CSç«¯å­ã‚’HIGHã«ã™ã‚‹
 	
-	// ƒCƒŒ[ƒXŒãA‚P‰ñƒ_ƒ~[ƒ‰ƒCƒg
+	// ã‚¤ãƒ¬ãƒ¼ã‚¹å¾Œã€ï¼‘å›ãƒ€ãƒŸãƒ¼ãƒ©ã‚¤ãƒˆ
 	if ( ret == 0 ) {
-		for ( i=0; i<512; i++ ) msdlibBuff[i] = 0;   // ƒoƒbƒtƒ@ƒNƒŠƒA
+		for ( i=0; i<512; i++ ) msdlibBuff[i] = 0;   // ãƒãƒƒãƒ•ã‚¡ã‚¯ãƒªã‚¢
 		msdlibMode = 0;
 		receive = writeMicroSD( st_address, ( signed char* )msdlibBuff );
 		if ( receive != 0x00 ) {
-			// ‘‚«‚İ‚Å‚«‚¸
-			// ‚½‚Ü‚ÉƒGƒ‰[‚ğ•Ô‚·microSD‚ª‚ ‚é‚ªA³í‚È‚æ‚¤‚È‚Ì‚Å
-			// ƒGƒ‰[‚Í–³‹‚µ‚Ä‚¨‚­
+			// æ›¸ãè¾¼ã¿ã§ããš
+			// ãŸã¾ã«ã‚¨ãƒ©ãƒ¼ã‚’è¿”ã™microSDãŒã‚ã‚‹ãŒã€æ­£å¸¸ãªã‚ˆã†ãªã®ã§
+			// ã‚¨ãƒ©ãƒ¼ã¯ç„¡è¦–ã—ã¦ãŠã
 			//ret = 44;
 		}
 	}
-	msdlibMode = (ret != 0) ? 99 : 0;   // ‰Šú‰»ƒGƒ‰[‚È‚ç99‚ğƒZƒbƒg
+	msdlibMode = (ret != 0) ? 99 : 0;   // åˆæœŸåŒ–ã‚¨ãƒ©ãƒ¼ãªã‚‰99ã‚’ã‚»ãƒƒãƒˆ
 	
 	if ( ret == 0 ) {
-		//printf("ƒCƒŒ[ƒY³íI—¹\n");
+		//printf("ã‚¤ãƒ¬ãƒ¼ã‚ºæ­£å¸¸çµ‚äº†\n");
 	} else if ( ret == 1 ) {
 		printf("CMD32 error\n");
 	} else if ( ret == 2 ) {
@@ -641,41 +641,41 @@ char eraseMicroSD( unsigned int st_address, unsigned int ed_address )
 	return ret;
 }
 /////////////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ setMicroSDdata
-// ˆ—ŠT—v     microSD‚Éƒf[ƒ^ƒZƒbƒg
-// ˆø”         microSD‚É‘‚«‚Şƒf[ƒ^‚Ì‚ ‚é”z—ñ
-// –ß‚è’l       12:³í‚ÉI—¹ ‚»‚êˆÈŠO:‘‚«‚İ’†‚Å¡‰ñ‚ÌƒZƒbƒg‚Í–³Œø
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å setMicroSDdata
+// å‡¦ç†æ¦‚è¦     microSDã«ãƒ‡ãƒ¼ã‚¿ã‚»ãƒƒãƒˆ
+// å¼•æ•°         microSDã«æ›¸ãè¾¼ã‚€ãƒ‡ãƒ¼ã‚¿ã®ã‚ã‚‹é…åˆ—
+// æˆ»ã‚Šå€¤       12:æ­£å¸¸ã«çµ‚äº† ãã‚Œä»¥å¤–:æ›¸ãè¾¼ã¿ä¸­ã§ä»Šå›ã®ã‚»ãƒƒãƒˆã¯ç„¡åŠ¹
 /////////////////////////////////////////////////////////////////////////////////
 char setMicroSDdata( signed char *p )
 {	
 	volatile short i = 0;
 	
-	if( msdlibMode != 11) {				// Œ»İ‘‚«‚İˆ—’†‚©?
+	if( msdlibMode != 11) {				// ç¾åœ¨æ›¸ãè¾¼ã¿å‡¦ç†ä¸­ã‹?
 		return msdlibMode;
 	} else {
-		// 512ƒoƒCƒg msdlibBuff‚Ö“]‘—
+		// 512ãƒã‚¤ãƒˆ msdlibBuffã¸è»¢é€
 		memcpy( msdlibBuff, p, 512 );
 		
 		msdlibBuff[512] = 0xff;
 		msdlibBuff[513] = 0xff;
 		
-		msdlibCnt = 514;			// ƒoƒbƒtƒ@‘‚«‚İ”
+		msdlibCnt = 514;			// ãƒãƒƒãƒ•ã‚¡æ›¸ãè¾¼ã¿æ•°
 		msdlibWrite = msdlibBuff;
 		
-		msd_write( 0xfc );			// 1ŒÂ‚¾‚¯‘—M(c‚è‚ÍŠ„‚İ‚Å)
+		msd_write( 0xfc );			// 1å€‹ã ã‘é€ä¿¡(æ®‹ã‚Šã¯å‰²è¾¼ã¿ã§)
 		interrupt_msd_send_data = 1;
-		//R_PG_Timer_StartCount_CMT_U1_C2(); 	// ƒJƒEƒ“ƒgƒXƒ^[ƒg
+		//R_PG_Timer_StartCount_CMT_U1_C2(); 	// ã‚«ã‚¦ãƒ³ãƒˆã‚¹ã‚¿ãƒ¼ãƒˆ
 		
 		
-		msdlibMode = 12;			// microSDProcess ˆ—ŠJn
+		msdlibMode = 12;			// microSDProcess å‡¦ç†é–‹å§‹
 		return msdlibMode;
 	}
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ microSDProcessStart
-// ˆ—ŠT—v     microSDProcessŠJnˆ—
-// ˆø”         microSD‚Ì‘‚«‚İƒAƒhƒŒƒX
-// –ß‚è’l       0:³í‚ÉI—¹ ‚»‚êˆÈŠO:Šù‚É‘‚«‚İ’†
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å microSDProcessStart
+// å‡¦ç†æ¦‚è¦     microSDProcessé–‹å§‹å‡¦ç†
+// å¼•æ•°         microSDã®æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹
+// æˆ»ã‚Šå€¤       0:æ­£å¸¸ã«çµ‚äº† ãã‚Œä»¥å¤–:æ—¢ã«æ›¸ãè¾¼ã¿ä¸­
 ///////////////////////////////////////////////////////////////////////////
 char microSDProcessStart( unsigned int address )
 {
@@ -684,127 +684,127 @@ char microSDProcessStart( unsigned int address )
 	volatile unsigned char  a1, a2, a3, a4;
 	
 	if( msdlibMode != 0 ) {
-		// Šù‚Éˆ—’†
+		// æ—¢ã«å‡¦ç†ä¸­
 		ret = 1;
 		return ret;
 	} else {
-		// SDHC‚È‚çƒAƒhƒŒƒX¨ƒZƒNƒ^”Ô†‚É•ÏŠ·
+		// SDHCãªã‚‰ã‚¢ãƒ‰ãƒ¬ã‚¹â†’ã‚»ã‚¯ã‚¿ç•ªå·ã«å¤‰æ›
 		address >>= 9;
 		
-		// microSD‚É‘‚«‚İƒAƒhƒŒƒXƒZƒbƒg
+		// microSDã«æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚»ãƒƒãƒˆ
 		a1 = (unsigned char)( (address&0xff000000) >> 24);
 		a2 = (unsigned char)( (address&0x00ff0000) >> 16);
 		a3 = (unsigned char)( (address&0x0000ff00) >>  8);
 		a4 = (unsigned char)(  address&0x000000ff       );
 		
-		MSD_CS_TERMINAL_LOW	// CS’[q‚ğLOW‚É‚·‚é
+		MSD_CS_TERMINAL_LOW	// CSç«¯å­ã‚’LOWã«ã™ã‚‹
 		
-		// CMD25‘—M
+		// CMD25é€ä¿¡
 		receive = msd_CMD( 0x59, a1, a2, a3, a4, 0xff );
 		
-		// ƒŒƒXƒ|ƒ“ƒXŠm”F
+		// ãƒ¬ã‚¹ãƒãƒ³ã‚¹ç¢ºèª
 		if( ( receive & 0x80 ) != 0x00 ) {
-			ret = 2;                        // ƒZƒbƒg‚Å‚«‚¸ 
-			MSD_CS_TERMINAL_HIGH		// CS’[q‚ğHIGH‚É‚·‚é
+			ret = 2;                        		// ã‚»ãƒƒãƒˆã§ããš 
+			MSD_CS_TERMINAL_HIGH		// CSç«¯å­ã‚’HIGHã«ã™ã‚‹
 		} else {
 			printf("CMD25 send\n");
-			msdlibMode = 11;                // ƒZƒbƒgŠ®—¹
+			msdlibMode = 11;               	// ã‚»ãƒƒãƒˆå®Œäº†
 		}
 	}
 	return ret;
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ microSDProcessEnd
-// ˆ—ŠT—v     microSDProcessI—¹ˆ—
-// ˆø”         microSD‚Ì‘‚«‚İƒAƒhƒŒƒX
-// –ß‚è’l       0:³í‚ÉI—¹ ‚»‚êˆÈŠO:Šù‚É‘‚«‚İ’†
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å microSDProcessEnd
+// å‡¦ç†æ¦‚è¦     microSDProcessçµ‚äº†å‡¦ç†
+// å¼•æ•°         microSDã®æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹
+// æˆ»ã‚Šå€¤       0:æ­£å¸¸ã«çµ‚äº† ãã‚Œä»¥å¤–:æ—¢ã«æ›¸ãè¾¼ã¿ä¸­
 ///////////////////////////////////////////////////////////////////////////
 char microSDProcessEnd( void )
 {
 	volatile char ret = 1;
 	
 	if( msdlibMode == 11 ) {
-		msdlibMode = 21;                // I—¹ˆ—ƒZƒbƒg
+		msdlibMode = 21;		// çµ‚äº†å‡¦ç†ã‚»ãƒƒãƒˆ
 	} else if( msdlibMode == 0 ) {
-		ret = 0;                        // I—¹
+		ret = 0;				// çµ‚äº†
 	}
 	
 	return ret;
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ microSDProcess							//
-// ˆ—ŠT—v     microSD@ŠÔŒ‡‘‚«‚İˆ—					//
-// ˆø”         ‚È‚µ									//
-// –ß‚è’l       ‚È‚µ									//
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å microSDProcess
+// å‡¦ç†æ¦‚è¦     microSDã€€é–“æ¬ æ›¸ãè¾¼ã¿å‡¦ç†
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////
 void microSDProcess( void )
 {
 	volatile short receive;
 	
-	// microSD msdprintfŠÖ”ˆ—(1ms‚²‚Æ‚ÉÀs)
+	// microSD msdprintfé–¢æ•°å‡¦ç†(1msã”ã¨ã«å®Ÿè¡Œ)
 	//microSDprintfProcess();
 	
 	switch( msdlibMode ) {
 		case 0:
-			// ŠJn‘O‚Ì‘Ò‹@
+			// é–‹å§‹å‰ã®å¾…æ©Ÿ
 			break;
 			
 		case 1:
-			// •Ê‚Èì‹Æ’†
+			// åˆ¥ã®ä½œæ¥­ä¸­
 			break;
 		
 		case 11:
-			// ŠJnŒã‚Ì‘Ò‹@@‰½‚à‚¹‚¸
+			// é–‹å§‹å¾Œã®å¾…æ©Ÿã€€ä½•ã‚‚ã›ãš
 			break;
 		
 		case 12:
-			// ‘—MŠ„‚è‚İ‚ÅmicroSD‚Éƒf[ƒ^‘‚«‚İ’†
+			// é€ä¿¡å‰²ã‚Šè¾¼ã¿ã§microSDã«ãƒ‡ãƒ¼ã‚¿æ›¸ãè¾¼ã¿ä¸­
 			if( msdlibCnt <= 0 ) {
 				msdlibMode = 14;
 			}
 			break;
 		
 		case 13:
-			// ÅŒã‚Ìƒf[ƒ^‘—‚é‚Ü‚Å‘Ò‚Â
+			// æœ€å¾Œã®ãƒ‡ãƒ¼ã‚¿é€ã‚‹ã¾ã§å¾…ã¤
 			/*if( ri_u1c1 == 1 ) {
-				i = u1rb;                   // ƒ_ƒ~[ƒŠ[ƒh
+				i = u1rb;                   // ãƒ€ãƒŸãƒ¼ãƒªãƒ¼ãƒ‰
 				msdlibMode = 14;
 			}*/
 			break;
 		
 		case 14:
-			// I—¹ˆ—
-			// ƒŒƒXƒ|ƒ“ƒX“Ç‚İ‚İ
+			// çµ‚äº†å‡¦ç†
+			// ãƒ¬ã‚¹ãƒãƒ³ã‚¹èª­ã¿è¾¼ã¿
 			receive = msd_read();
 			receive &= 0x1f;
 		
 			if( receive == 0x05 ) {
-				msdlibError = 2;            // ‘‚«‚İ³íI—¹
+				msdlibError = 2;            // æ›¸ãè¾¼ã¿æ­£å¸¸çµ‚äº†
 				msdlibMode = 15;
 			} else if( receive == 0xc ) {
-				msdlibError = 3;            // ‘‚«‚İƒGƒ‰[
+				msdlibError = 3;            // æ›¸ãè¾¼ã¿ã‚¨ãƒ©ãƒ¼
 				msdlibMode = 31;
 			} else {
-				msdlibError = 4;            // ‚»‚êˆÈŠO‚ÌƒGƒ‰[
+				msdlibError = 4;            // ãã‚Œä»¥å¤–ã®ã‚¨ãƒ©ãƒ¼
 				msdlibMode = 31;
 			}
 			break;
 		
 		case 15:
-			// busyó‘Ô‚ªI‚í‚é‚Ü‚Å‘Ò‚Â
+			// busyçŠ¶æ…‹ãŒçµ‚ã‚ã‚‹ã¾ã§å¾…ã¤
 			if( msd_read() != 0x00 ) {
 				msdlibMode = 11;
 			}
 			break;
 	
 		case 21:
-			// I—¹ˆ—
+			// çµ‚äº†å‡¦ç†
 			msd_write( 0xfd );
 			msdlibMode = 22;
 			break;
 	
 		case 22:
-			// busyó‘Ô‚ªI‚í‚é‚Ü‚Å‘Ò‚Â
+			// busyçŠ¶æ…‹ãŒçµ‚ã‚ã‚‹ã¾ã§å¾…ã¤
 			if( msd_read() != 0x00 ) {
 				msdlibMode = 31;
 			}
@@ -812,40 +812,40 @@ void microSDProcess( void )
 		
 		case 31:
 			// CS="1"
-			msd_write( 0xff );		// ƒ_ƒ~[ƒNƒƒbƒN‘—M
-			MSD_CS_TERMINAL_LOW		// CS’[q‚ğLOW‚É‚·‚é
-			msdlibMode = 32;		// ˆ—I—¹
+			msd_write( 0xff );			// ãƒ€ãƒŸãƒ¼ã‚¯ãƒ­ãƒƒã‚¯é€ä¿¡
+			MSD_CS_TERMINAL_LOW		// CSç«¯å­ã‚’LOWã«ã™ã‚‹
+			msdlibMode = 32;			// å‡¦ç†çµ‚äº†
 			msdlibCnt = 10;
 			break;
 
 		case 32:
 			msdlibCnt--;
 			if( msdlibCnt == 0 ) {
-				msdlibMode = 0;             // ˆ—I—¹
+				msdlibMode = 0;             // å‡¦ç†çµ‚äº†
 			}
 			break;
 		
 		case 99:
-			// ‰Šú‰»ƒGƒ‰[
+			// åˆæœŸåŒ–ã‚¨ãƒ©ãƒ¼
 			break;
 	}
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ checkMicroSDProcess
-// ˆ—ŠT—v     microSD@ŠÔŒ‡‘‚«‚İˆ—‚ÌI—¹ƒ`ƒFƒbƒN
-// ˆø”         ‚È‚µ
-// –ß‚è’l       0:ˆ—–³‚µ 11:ŠJnŒã‚Ì‘Ò‹@ ‚»‚êˆÈŠO:ˆ—’†
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å checkMicroSDProcess
+// å‡¦ç†æ¦‚è¦     microSDã€€é–“æ¬ æ›¸ãè¾¼ã¿å‡¦ç†ã®çµ‚äº†ãƒã‚§ãƒƒã‚¯
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       0:å‡¦ç†ç„¡ã— 11:é–‹å§‹å¾Œã®å¾…æ©Ÿ ãã‚Œä»¥å¤–:å‡¦ç†ä¸­
 ///////////////////////////////////////////////////////////////////////////
 char checkMicroSDProcess( void )
 {
 	return msdlibMode;
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ msd_send_data
-// ˆ—ŠT—v     ‘‚«‚İƒf[ƒ^‚ğMicroSD‚É‘—M
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ‚È‚µ
-// ƒƒ‚		10us‚²‚Æ‚ÉÀs‚³‚¹‚é
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å msd_send_data
+// å‡¦ç†æ¦‚è¦     æ›¸ãè¾¼ã¿ãƒ‡ãƒ¼ã‚¿ã‚’MicroSDã«é€ä¿¡
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
+// ãƒ¡ãƒ¢		10usã”ã¨ã«å®Ÿè¡Œã•ã›ã‚‹
 ///////////////////////////////////////////////////////////////////////////
 void msd_send_data (void)
 {	
@@ -860,56 +860,56 @@ void msd_send_data (void)
 	}
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ init_log
-// ˆ—ŠT—v     ‘‚«‚İ€”õ
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å init_log
+// å‡¦ç†æ¦‚è¦     æ›¸ãè¾¼ã¿æº–å‚™
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////
 void init_log ( void )
 {
 	volatile char ret, pattern_inti_log = 0;
 	
-	// microSD ‘‚«‚İŠJnƒAƒhƒŒƒX
-	// 512‚Ì”{”‚Éİ’è‚·‚é
+	// microSD æ›¸ãè¾¼ã¿é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹
+	// 512ã®å€æ•°ã«è¨­å®šã™ã‚‹
 	msdStartaddress = msdaddrBuff[0] + 1;
-	// I—¹ƒAƒhƒŒƒX‚ª‰Šú’l‚Ìê‡ŠJnƒAƒhƒŒƒX‚ğ0‚É‚·‚é
+	// çµ‚äº†ã‚¢ãƒ‰ãƒ¬ã‚¹ãŒåˆæœŸå€¤ã®å ´åˆé–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’0ã«ã™ã‚‹
 	if ( msdStartaddress == MSD_ENDADDRESS + 1 || msdStartaddress >= 4000000000 ) msdStartaddress = 0;
-	// microSD ‘‚«‚İI—¹ƒAƒhƒŒƒX
-	// ‘‚«‚İ‚µ‚½‚¢ŠÔ[ms] : x = 10[ms] : 64ƒoƒCƒg(•Û‘¶ƒoƒCƒg”)
-	// 5000ms‚È‚çAx = 5000 * 64 / 10 = 32000
-	// Œ‹‰Ê‚Í512‚Ì”{”‚É‚È‚é‚æ‚¤‚ÉŒJ‚èã‚°‚·‚éB‚æ‚Á‚ÄA32256‚É‚·‚éB
+	// microSD æ›¸ãè¾¼ã¿çµ‚äº†ã‚¢ãƒ‰ãƒ¬ã‚¹
+	// æ›¸ãè¾¼ã¿ã—ãŸã„æ™‚é–“[ms] : x = 10[ms] : 64ãƒã‚¤ãƒˆ(ä¿å­˜ãƒã‚¤ãƒˆæ•°)
+	// 5000msãªã‚‰ã€x = 5000 * 64 / 10 = 32000
+	// çµæœã¯512ã®å€æ•°ã«ãªã‚‹ã‚ˆã†ã«ç¹°ã‚Šä¸Šã’ã™ã‚‹ã€‚ã‚ˆã£ã¦ã€32256ã«ã™ã‚‹ã€‚
 	// msdEndaddressBuff = RecodeTime * Data_Size / WriteTime
 	// msdEndaddressBuff = ( 512 - ( msdEndaddressBuff % 512 ) ) + msdEndaddressBuff;
 	
 	msdEndaddress = MSD_ENDADDRESS;
-	msdEndaddress += msdStartaddress;   // ƒXƒ^[ƒg•ª‘«‚·
+	msdEndaddress += msdStartaddress;  // ã‚¹ã‚¿ãƒ¼ãƒˆåˆ†è¶³ã™
 	printf("msdStartaddress = %d\n", msdStartaddress);
 	printf("msdEndaddress = %d\n", msdEndaddress);
 	
 	while ( pattern_inti_log < 2 ) {
 		switch ( pattern_inti_log ) {
 			case 0:
-				// microSDƒNƒŠƒA
+				// microSDã‚¯ãƒªã‚¢
 				ret = eraseMicroSD( msdStartaddress, msdEndaddress - 1 );
 				if( ret != 0x00 ) {
-					printf( "\nmicroSD Erase Error!!\n" );  // ƒGƒ‰[
+					printf( "\nmicroSD Erase Error!!\n" );  // ã‚¨ãƒ©ãƒ¼
 					break;
 				}
 				pattern_inti_log = 1;
 				break;
 				
 			case 1:
-				// microSDProcessŠJnˆ—
+				// microSDProcessé–‹å§‹å‡¦ç†
 				ret = microSDProcessStart( msdStartaddress );
 			        if( ret != 0x00 ) {
-					printf( "\nmicroSD microSDProcess Error!!\n" );  // ƒGƒ‰[
+					printf( "\nmicroSD microSDProcess Error!!\n" );  // ã‚¨ãƒ©ãƒ¼
 					break;
 				}
 				msdBuffaddress = 0;
 				msdWorkaddress = msdStartaddress;
 				
 				flashDataBuff[ 0 ] = msdStartaddress >> 16;
-				flashDataBuff[ 1 ] = msdStartaddress & 0xffff;	// ŠJnƒAƒhƒŒƒX
+				flashDataBuff[ 1 ] = msdStartaddress & 0xffff;	// é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹
 				writeFlashData( MSD_STARTAREA, MSD_ENDAREA, MSD_DATA, 2 );
 				
 				pattern_inti_log = 2;
@@ -918,10 +918,10 @@ void init_log ( void )
 	} 
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ msdEndLog
-// ˆ—ŠT—v     ƒƒO‚ÌI—¹ˆ—
-// ˆø”         ‚È‚µ
-// –ß‚è’l       0:³í‚ÉI—¹ 1:ˆÙíI—¹
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å msdEndLog
+// å‡¦ç†æ¦‚è¦     ãƒ­ã‚°ã®çµ‚äº†å‡¦ç†
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       0:æ­£å¸¸ã«çµ‚äº† 1:ç•°å¸¸çµ‚äº†
 ///////////////////////////////////////////////////////////////////////////
 char msdEndLog ( void )
 {
@@ -930,10 +930,10 @@ char msdEndLog ( void )
 	while ( pattern_msdend < 2 ) {
 	switch( pattern_msdend ) {
 		case 0:
-				// ÅŒã‚Ìƒf[ƒ^‚ª‘‚«‚Ü‚ê‚é‚Ü‚Å‘Ò‚Â
+				// æœ€å¾Œã®ãƒ‡ãƒ¼ã‚¿ãŒæ›¸ãè¾¼ã¾ã‚Œã‚‹ã¾ã§å¾…ã¤
 				if ( checkMicroSDProcess() == 11 ) {
-					msdFlag = 0;			// ƒƒO‹L˜^I—¹
-					microSDProcessEnd();	// microSDProcessI—¹ˆ—
+					msdFlag = 0;			// ãƒ­ã‚°è¨˜éŒ²çµ‚äº†
+					microSDProcessEnd();	// microSDProcessçµ‚äº†å‡¦ç†
 					pattern_msdend = 1;
 					break;
 				} else if ( checkMicroSDProcess() == 0 ) {
@@ -943,11 +943,11 @@ char msdEndLog ( void )
 				break;
 				
 			case 1:
-				// I—¹ˆ—‚ªI‚í‚é‚Ü‚Å‘Ò‚Â
+				// çµ‚äº†å‡¦ç†ãŒçµ‚ã‚ã‚‹ã¾ã§å¾…ã¤
 				if ( checkMicroSDProcess() == 0 ) {
-					// MicroSDÅI‘‚«‚İƒAƒhƒŒƒX•Û‘¶
+					// MicroSDæœ€çµ‚æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹ä¿å­˜
 					flashDataBuff[ 0 ] = msdWorkaddress >> 16;
-					flashDataBuff[ 1 ] = msdWorkaddress & 0xffff;	// I—¹ƒAƒhƒŒƒX
+					flashDataBuff[ 1 ] = msdWorkaddress & 0xffff;	// çµ‚äº†ã‚¢ãƒ‰ãƒ¬ã‚¹
 					writeFlashData( MSD_STARTAREA, MSD_ENDAREA, MSD_DATA, 2 );
 					pattern_msdend = 2;
 					break;
@@ -959,10 +959,10 @@ char msdEndLog ( void )
 	return pattern_msdend - 2;
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ sendLog
-// ˆ—ŠT—v     ƒf[ƒ^‚ğˆê•Û‘¶”z—ñ‚É“]‘—
-// ˆø”         c:charŒ^•Ï”‚ÌŒÂ” s:shortŒ^•Ï”‚ÌŒÂ” i:intŒ^•Ï”‚ÌŒÂ”
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å sendLog
+// å‡¦ç†æ¦‚è¦     ãƒ‡ãƒ¼ã‚¿ã‚’ä¸€æ™‚ä¿å­˜é…åˆ—ã«è»¢é€
+// å¼•æ•°         c:charå‹å¤‰æ•°ã®å€‹æ•° s:shortå‹å¤‰æ•°ã®å€‹æ•° i:intå‹å¤‰æ•°ã®å€‹æ•°
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////
 void sendLog (char c, char s, char i, ...) {
 	va_list args;
@@ -972,7 +972,7 @@ void sendLog (char c, char s, char i, ...) {
 	if( msdTimer == WRITINGTIME ) {
 		msdTimer = 0;
 		msdBuffPointa = msdBuff + msdBuffaddress;
-		// ‚±‚±‚©‚ç‹L˜^
+		// ã“ã“ã‹ã‚‰è¨˜éŒ²
 		va_start( args, i );
 		for ( count = 0; count < c; count++ ) send_Char( va_arg( args, char )	);
 		for ( count = 0; count < s; count++ ) send_ShortToChar( va_arg( args, short ) );
@@ -1000,9 +1000,9 @@ void sendLog (char c, char s, char i, ...) {
 		send_uIntToChar 	(	enc1			);
 		send_ShortToChar 	(	cnt_log		);
 		*/
-		// ‚±‚±‚Ü‚Å
+		// ã“ã“ã¾ã§
 		cnt_log += WRITINGTIME;
-		msdBuffaddress += DATA_BYTE;       // RAM‚Ì‹L˜^ƒAƒhƒŒƒX‚ğŸ‚Ö
+		msdBuffaddress += DATA_BYTE;       // RAMã®è¨˜éŒ²ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’æ¬¡ã¸
 		if( msdBuffaddress >= 512 ) {
 			msdBuffaddress = 0;
 			setMicroSDdata( msdBuff ); 
@@ -1014,10 +1014,10 @@ void sendLog (char c, char s, char i, ...) {
 	}
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ msd_sendToPC
-// ˆ—ŠT—v     PC‚Öƒf[ƒ^“]‘—
-// ˆø”         ‚È
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å msd_sendToPC
+// å‡¦ç†æ¦‚è¦     PCã¸ãƒ‡ãƒ¼ã‚¿è»¢é€
+// å¼•æ•°         ãª
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////
 void msd_sendToPC ( void )
 {
@@ -1033,7 +1033,7 @@ void msd_sendToPC ( void )
 		switch ( pattern_send ) {		
 			case 1:
 				i = 0;
-				// ƒ^ƒCƒgƒ‹
+				// ã‚¿ã‚¤ãƒˆãƒ«
 				printf(	"Time[ms],"		);
 				printf(	"pattern,"			);
 				printf(	"MotorPwm,"		);
@@ -1059,16 +1059,16 @@ void msd_sendToPC ( void )
 				printf(	"cnt_log[ms]"		);
 				printf("\n");
 				
-				msdEndaddress = msdWorkaddress2;	// “Ç‚İ‚İI—¹ƒAƒhƒŒƒX
-				msdWorkaddress = msdWorkaddress;	// “Ç‚İ‚İŠJnƒAƒhƒŒƒX
+				msdEndaddress = msdWorkaddress2;	// èª­ã¿è¾¼ã¿çµ‚äº†ã‚¢ãƒ‰ãƒ¬ã‚¹
+				msdWorkaddress = msdWorkaddress;	// èª­ã¿è¾¼ã¿é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹
 				
 				pattern_send = 2;
 				break;
 				
 			case 2:
-				// microSD‚æ‚èƒf[ƒ^“Ç‚İ‚İ
+				// microSDã‚ˆã‚Šãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿
 				if( msdWorkaddress >= msdEndaddress ) {
-					// ‘‚«‚İI—¹ƒAƒhƒŒƒX‚É‚È‚Á‚½‚çAI‚í‚è
+					// æ›¸ãè¾¼ã¿çµ‚äº†ã‚¢ãƒ‰ãƒ¬ã‚¹ã«ãªã£ãŸã‚‰ã€çµ‚ã‚ã‚Š
 					//printf( "End.\n" );
 					pattern_send = 4;
 					break;
@@ -1076,21 +1076,21 @@ void msd_sendToPC ( void )
 				ret = readMicroSD( msdWorkaddress , msdBuff );
 				
 				if( ret != 0x00 ) {
-					// “Ç‚İ‚İƒGƒ‰[
+					// èª­ã¿è¾¼ã¿ã‚¨ãƒ©ãƒ¼
 					printf( "\nmicroSD Read Error!!\n" );
 					pattern_send = 4;
 					break;
 				} else {
-					// ƒGƒ‰[‚È‚µ
-					msdWorkaddress += 512;		// microSD‚ÌƒAƒhƒŒƒX‚ğ+512‚·‚é
-					msdBuffaddress = 0;			// ”z—ñ‚©‚ç‚Ì“Ç‚İ‚İˆÊ’u‚ğ0‚É
+					// ã‚¨ãƒ©ãƒ¼ãªã—
+					msdWorkaddress += 512;		// microSDã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’+512ã™ã‚‹
+					msdBuffaddress = 0;			// é…åˆ—ã‹ã‚‰ã®èª­ã¿è¾¼ã¿ä½ç½®ã‚’0ã«
 					pattern_send = 3;
 					break;
 				}
 				break;
 				
 			case 3:
-				// ƒf[ƒ^“]‘—
+				// ãƒ‡ãƒ¼ã‚¿è»¢é€
 				printf("%5d,", i);
 				printf("%5d,", msdBuff[ msdBuffaddress + 0 ]);	// pattern
 				printf("%5d,", msdBuff[ msdBuffaddress + 1 ]);	// motorPwm
@@ -1127,20 +1127,20 @@ void msd_sendToPC ( void )
 	}
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ send_Char
-// ˆ—ŠT—v     charŒ^•Ï”‚ğmsdBuff‚É‘—‚é
-// ˆø”         •ÏŠ·‚·‚écharŒ^•Ï”
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å send_Char
+// å‡¦ç†æ¦‚è¦     charå‹å¤‰æ•°ã‚’msdBuffã«é€ã‚‹
+// å¼•æ•°         å¤‰æ›ã™ã‚‹charå‹å¤‰æ•°
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////
 void send_Char ( char data )
 {
 	*msdBuffPointa++ = data;
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ ShortToChar
-// ˆ—ŠT—v     shortŒ^•Ï”‚ğcharŒ^‚É•ÏŠ·‚µ‚ÄmsdBuff‚É‘—‚é
-// ˆø”         •ÏŠ·‚·‚éshortŒ^•Ï”
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å ShortToChar
+// å‡¦ç†æ¦‚è¦     shortå‹å¤‰æ•°ã‚’charå‹ã«å¤‰æ›ã—ã¦msdBuffã«é€ã‚‹
+// å¼•æ•°         å¤‰æ›ã™ã‚‹shortå‹å¤‰æ•°
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////
 void send_ShortToChar ( short data )
 {
@@ -1148,10 +1148,10 @@ void send_ShortToChar ( short data )
 	*msdBuffPointa++ = data & 0xff;
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ uintToChar
-// ˆ—ŠT—v     unsigned intŒ^•Ï”‚ğcharŒ^‚É•ÏŠ·‚µ‚ÄmsdBuff‚É‘—‚é
-// ˆø”         •ÏŠ·‚·‚éunsigned intŒ^•Ï”
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å uintToChar
+// å‡¦ç†æ¦‚è¦     unsigned intå‹å¤‰æ•°ã‚’charå‹ã«å¤‰æ›ã—ã¦msdBuffã«é€ã‚‹
+// å¼•æ•°         å¤‰æ›ã™ã‚‹unsigned intå‹å¤‰æ•°
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////
 void send_uIntToChar ( unsigned int data )
 {
@@ -1161,10 +1161,10 @@ void send_uIntToChar ( unsigned int data )
 	*msdBuffPointa++ = data & 0x000000ff;
 }
 ///////////////////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ CharToShort
-// ˆ—ŠT—v     unsigned charŒ^•Ï”‚ğshortŒ^‚É•ÏŠ·‚·‚é
-// ˆø”         data:•ÏŠ·‚·‚ésigned charŒ^•Ï”	offsetaddress: MicroSD“à‚Ì‡”Ô
-// –ß‚è’l       •ÏŠ·‚µ‚½shortŒ^
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å CharToShort
+// å‡¦ç†æ¦‚è¦     unsigned charå‹å¤‰æ•°ã‚’shortå‹ã«å¤‰æ›ã™ã‚‹
+// å¼•æ•°         data:å¤‰æ›ã™ã‚‹signed charå‹å¤‰æ•°	offsetaddress: MicroSDå†…ã®é †ç•ª
+// æˆ»ã‚Šå€¤       å¤‰æ›ã—ãŸshortå‹
 ///////////////////////////////////////////////////////////////////////////////////////
 short CharToShort( unsigned char offsetaddress )
 {
@@ -1176,10 +1176,10 @@ short CharToShort( unsigned char offsetaddress )
 	return s;				
 }
 ///////////////////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ CharTouInt
-// ˆ—ŠT—v     unsigned charŒ^•Ï”‚ğunsigned intŒ^‚É•ÏŠ·‚·‚é
-// ˆø”         data:•ÏŠ·‚·‚ésigned charŒ^•Ï”	offsetaddress: MicroSD“à‚Ì‡”Ô
-// –ß‚è’l       •ÏŠ·‚µ‚½unsigned intŒ^
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å CharTouInt
+// å‡¦ç†æ¦‚è¦     unsigned charå‹å¤‰æ•°ã‚’unsigned intå‹ã«å¤‰æ›ã™ã‚‹
+// å¼•æ•°         data:å¤‰æ›ã™ã‚‹signed charå‹å¤‰æ•°	offsetaddress: MicroSDå†…ã®é †ç•ª
+// æˆ»ã‚Šå€¤       å¤‰æ›ã—ãŸunsigned intå‹
 ///////////////////////////////////////////////////////////////////////////////////////
 unsigned int CharTouInt( unsigned char offsetaddress )
 {

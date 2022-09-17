@@ -1,24 +1,24 @@
-//==========================//
-// ƒCƒ“ƒNƒ‹[ƒh
+ï»¿//==========================//
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //==========================//
 #include "ICM20648.h"
 //==========================//
-// ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€
 //==========================//
-volatile int16_t	xa, ya, za; // ‰Á‘¬“x(16bitƒf[ƒ^)
-volatile int16_t	xg, yg, zg;	// Šp‰Á‘¬“x(16bitƒf[ƒ^)
+volatile int16_t	xa, ya, za; // åŠ é€Ÿåº¦(16bitãƒ‡ãƒ¼ã‚¿)
+volatile int16_t	xg, yg, zg;	// è§’åŠ é€Ÿåº¦(16bitãƒ‡ãƒ¼ã‚¿)
 volatile uint8_t	who_am_i,ret,imuflag;
-volatile int16_t	offset[3] = { 0,0,0 };	// ƒIƒtƒZƒbƒg’l
+volatile int16_t	offset[3] = { 0,0,0 };	// ã‚ªãƒ•ã‚»ãƒƒãƒˆå€¤
 volatile char 	caribration;
 
-double 		TurningAngleIMU;	// yaw²Šp“x
-double		RollAngleIMU;		// RollŠp“x
-double 		PichAngleIMU;		// PichŠp“x
+double 		TurningAngleIMU;	// yawè»¸è§’åº¦
+double		RollAngleIMU;		// Rollè§’åº¦
+double 		PichAngleIMU;		// Pichè§’åº¦
 /////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ readByte
-// ˆ—ŠT—v     ƒNƒƒXƒ‰ƒCƒ“ŒŸ’m
-// ˆø”         ‚È‚µ
-// –ß‚è’l       0:ƒNƒƒXƒ‰ƒCƒ“‚È‚µ 1:‚ ‚è
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å readByte
+// å‡¦ç†æ¦‚è¦     ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³æ¤œçŸ¥
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       0:ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³ãªã— 1:ã‚ã‚Š
 ////////////////////////////////////////////////////////////////////
 uint8_t readByte( uint8_t reg ) {
 	uint8_t ret[1],val[1],dummy[1];
@@ -32,10 +32,10 @@ uint8_t readByte( uint8_t reg ) {
 	return val[0];
 }
 /////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ writeByte
-// ˆ—ŠT—v     ƒNƒƒXƒ‰ƒCƒ“ŒŸ’m
-// ˆø”         ‚È‚µ
-// –ß‚è’l       0:ƒNƒƒXƒ‰ƒCƒ“‚È‚µ 1:‚ ‚è
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å writeByte
+// å‡¦ç†æ¦‚è¦     ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³æ¤œçŸ¥
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       0:ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³ãªã— 1:ã‚ã‚Š
 ////////////////////////////////////////////////////////////////////
 void writeByte( uint8_t reg, uint8_t val )  {
 	uint8_t ret[1],dummy[1],val2[1];
@@ -48,10 +48,10 @@ void writeByte( uint8_t reg, uint8_t val )  {
 	CS_SET;
 }
 /////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ readArry
-// ˆ—ŠT—v     ƒNƒƒXƒ‰ƒCƒ“ŒŸ’m
-// ˆø”         ‚È‚µ
-// –ß‚è’l       0:ƒNƒƒXƒ‰ƒCƒ“‚È‚µ 1:‚ ‚è
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å readArry
+// å‡¦ç†æ¦‚è¦     ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³æ¤œçŸ¥
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       0:ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³ãªã— 1:ã‚ã‚Š
 ////////////////////////////////////////////////////////////////////
 void readArry( uint8_t reg, char *val ) {
 	uint8_t ret[1],dummy[1];
@@ -64,33 +64,33 @@ void readArry( uint8_t reg, char *val ) {
 	
 }
 /////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ checkCrossLine
-// ˆ—ŠT—v     ƒNƒƒXƒ‰ƒCƒ“ŒŸ’m
-// ˆø”         ‚È‚µ
-// –ß‚è’l       0:ƒNƒƒXƒ‰ƒCƒ“‚È‚µ 1:‚ ‚è
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å checkCrossLine
+// å‡¦ç†æ¦‚è¦     ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³æ¤œçŸ¥
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       0:ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³ãªã— 1:ã‚ã‚Š
 ////////////////////////////////////////////////////////////////////
 uint8_t initIMU() {
 
 	
-	who_am_i = readByte(0x00);	//IMU“®ìŠm”F@0xE0‚ª‘—‚ç‚ê‚Ä‚­‚ê‚Î‚¨‚‹
+	who_am_i = readByte(0x00);	//IMUå‹•ä½œç¢ºèªã€€0xE0ãŒé€ã‚‰ã‚Œã¦ãã‚Œã°ãŠï½‹
 	if ( who_am_i == 0xE0 ) {
 		ret = 1;
-		writeByte(PWR_MGMT_1,0x01);	//PWR_MGMT_1	ƒXƒŠ[ƒvÓ°ÄŞ‰ğœ
-		writeByte(USER_CTRL,0x10);		//USER_CTRL	”X‹@”\–³Œø@SPIonly
+		writeByte(PWR_MGMT_1,0x01);	//PWR_MGMT_1	ã‚¹ãƒªãƒ¼ãƒ—ï¾“ï½°ï¾„ï¾è§£é™¤
+		writeByte(USER_CTRL,0x10);		//USER_CTRL	è«¸ã€…æ©Ÿèƒ½ç„¡åŠ¹ã€€SPIonly
 		writeByte(REG_BANK_SEL,0x20);	//USER_BANK2
-		writeByte(GYRO_CONFIG_1,0x04);	//ƒŒƒ“ƒW}1000dps
-		//2:1 GYRO_FS_SEL[1:0] 00:}250	01:}500 10:}1000 11:}2000
-		writeByte(ACCEL_CONFIG,0x04);	//ƒŒƒ“ƒW}8g
-		//2:1 ACCEL_FS_SEL[1:0] 00:}2	01:}4 10:}8 11:}16
+		writeByte(GYRO_CONFIG_1,0x04);	//ãƒ¬ãƒ³ã‚¸Â±1000dps
+		//2:1 GYRO_FS_SEL[1:0] 00:Â±250	01:Â±500 10:Â±1000 11:Â±2000
+		writeByte(ACCEL_CONFIG,0x04);	//ãƒ¬ãƒ³ã‚¸Â±8g
+		//2:1 ACCEL_FS_SEL[1:0] 00:Â±2	01:Â±4 10:Â±8 11:Â±16
 		writeByte(REG_BANK_SEL,0x00);	//USER_BANK0
 	}
 	return ret;
 }
 /////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ checkCrossLine
-// ˆ—ŠT—v     ƒNƒƒXƒ‰ƒCƒ“ŒŸ’m
-// ˆø”         ‚È‚µ
-// –ß‚è’l       0:ƒNƒƒXƒ‰ƒCƒ“‚È‚µ 1:‚ ‚è
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å checkCrossLine
+// å‡¦ç†æ¦‚è¦     ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³æ¤œçŸ¥
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       0:ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³ãªã— 1:ã‚ã‚Š
 ////////////////////////////////////////////////////////////////////
 void caribrateIMU(void)
 {
@@ -128,10 +128,10 @@ void caribrateIMU(void)
 	//START_CMT_C0
 }
 /////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ checkCrossLine
-// ˆ—ŠT—v     ƒNƒƒXƒ‰ƒCƒ“ŒŸ’m
-// ˆø”         ‚È‚µ
-// –ß‚è’l       0:ƒNƒƒXƒ‰ƒCƒ“‚È‚µ 1:‚ ‚è
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å checkCrossLine
+// å‡¦ç†æ¦‚è¦     ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³æ¤œçŸ¥
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       0:ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³ãªã— 1:ã‚ã‚Š
 ////////////////////////////////////////////////////////////////////
 void readGyroData() {
 	char val[6];
@@ -149,10 +149,10 @@ void readGyroData() {
 	else		zg -= offset[2];*/
 }
 /////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ checkCrossLine
-// ˆ—ŠT—v     ƒNƒƒXƒ‰ƒCƒ“ŒŸ’m
-// ˆø”         ‚È‚µ
-// –ß‚è’l       0:ƒNƒƒXƒ‰ƒCƒ“‚È‚µ 1:‚ 
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å checkCrossLine
+// å‡¦ç†æ¦‚è¦     ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³æ¤œçŸ¥
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       0:ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³ãªã— 1:ã‚
 ////////////////////////////////////////////////////////////////////
 void readAccelData() {
 	char val[6];
@@ -163,49 +163,49 @@ void readAccelData() {
 	za = ((int16_t)val[4] << 8) | ((int16_t)val[5]);
 }
 /////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ getTurningAngleIMU
-// ˆ—ŠT—v   	IMU‚©‚çù‰ñŠp“x‚ÌŒvZ
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å getTurningAngleIMU
+// å‡¦ç†æ¦‚è¦   	IMUã‹ã‚‰æ—‹å›è§’åº¦ã®è¨ˆç®—
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
 /////////////////////////////////////////////////////////////////////
 void getTurningAngleIMU(void)
 {
 	double angularVelocity_zg;
 	int intzg;
 	
-	angularVelocity_zg = (double)(zg) / GYROLSB;	// IMU‚Ìƒf[ƒ^‚ğŠp‘¬“x[deg/s]‚É•ÏŠ·
+	angularVelocity_zg = (double)(zg) / GYROLSB;	// IMUã®ãƒ‡ãƒ¼ã‚¿ã‚’è§’é€Ÿåº¦[deg/s]ã«å¤‰æ›
 	
 	TurningAngleIMU += angularVelocity_zg * DELTATIMU;
 	
 }
 /////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ getRollAngleIMU
-// ˆ—ŠT—v   	IMU‚©‚çƒ[ƒ‹Šp“x‚ÌŒvZ
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å getRollAngleIMU
+// å‡¦ç†æ¦‚è¦   	IMUã‹ã‚‰ãƒ­ãƒ¼ãƒ«è§’åº¦ã®è¨ˆç®—
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
 /////////////////////////////////////////////////////////////////////
 void getRollAngleIMU(void)
 {
 	double angularVelocity_yg;
 	int intyg;
 	
-	angularVelocity_yg = (double)(yg) / GYROLSB;	// IMU‚Ìƒf[ƒ^‚ğŠp‘¬“x[deg/s]‚É•ÏŠ·
+	angularVelocity_yg = (double)(yg) / GYROLSB;	// IMUã®ãƒ‡ãƒ¼ã‚¿ã‚’è§’é€Ÿåº¦[deg/s]ã«å¤‰æ›
 	
 	RollAngleIMU -= angularVelocity_yg * DELTATIMU;
 	
 }
 /////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ getPichAngleIMU
-// ˆ—ŠT—v     IMU‚©‚çƒsƒbƒ`Šp“x‚ÌŒvZ
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å getPichAngleIMU
+// å‡¦ç†æ¦‚è¦     IMUã‹ã‚‰ãƒ”ãƒƒãƒè§’åº¦ã®è¨ˆç®—
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
 /////////////////////////////////////////////////////////////////////
 void getPichAngleIMU( void )
 {
 	double angularVelocity_xg;
 	int intxg;
 	
-	angularVelocity_xg = (double)(xg) / GYROLSB;	// IMU‚Ìƒf[ƒ^‚ğŠp‘¬“x[deg/s]‚É•ÏŠ·
+	angularVelocity_xg = (double)(xg) / GYROLSB;	// IMUã®ãƒ‡ãƒ¼ã‚¿ã‚’è§’é€Ÿåº¦[deg/s]ã«å¤‰æ›
 	
 	PichAngleIMU -= angularVelocity_xg * DELTATIMU;
 	

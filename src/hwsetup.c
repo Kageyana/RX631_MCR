@@ -1,4 +1,4 @@
-/************************************************************************
+ï»¿/************************************************************************
 *
 * Device     : RX/RX600/RX63N,RX631
 *
@@ -27,7 +27,7 @@
 
 extern void HardwareSetup(void);
 
-// IDƒR[ƒhÝ’è(45ffffffffffffffffffffffffffffff)
+// IDã‚³ãƒ¼ãƒ‰è¨­å®š(45ffffffffffffffffffffffffffffff)
 #pragma address id_code=0xffffffa0 // ID codes (Default)
 const unsigned long id_code[4] = {
         0x45ffffff,
@@ -38,38 +38,38 @@ const unsigned long id_code[4] = {
 
 void HardwareSetup(void)
 {
-	R_PG_IO_PORT_SetPortNotAvailable();	// ‘¶Ý‚µ‚È‚¢ƒ|[ƒg‚ðÝ’è
-	R_PG_Clock_WaitSet(0.01); 		// ƒNƒƒbƒN‚ðÝ’è‚µ0.01•bŒã‚ÉƒNƒƒbƒNƒ\[ƒXØ‚è‘Ö‚¦
+	R_PG_IO_PORT_SetPortNotAvailable();	// å­˜åœ¨ã—ãªã„ãƒãƒ¼ãƒˆã‚’è¨­å®š
+	R_PG_Clock_WaitSet(0.01); 		// ã‚¯ãƒ­ãƒƒã‚¯ã‚’è¨­å®šã—0.01ç§’å¾Œã«ã‚¯ãƒ­ãƒƒã‚¯ã‚½ãƒ¼ã‚¹åˆ‡ã‚Šæ›¿ãˆ
 	
-	SET_MTU_C0		// ƒ}ƒ‹ƒ`ƒtƒ@ƒ“ƒNƒVƒ‡ƒ“ƒ^ƒCƒ}‚ðÝ’è
+	SET_MTU_C0		// ãƒžãƒ«ãƒãƒ•ã‚¡ãƒ³ã‚¯ã‚·ãƒ§ãƒ³ã‚¿ã‚¤ãƒžã‚’è¨­å®š
 	SET_MTU_C1
 	SET_MTU_C2
 	SET_MTU_C3
 	SET_MTU_C4
 	
 	SET_SCI_C2
-	SET_SCI_MSD		// ƒVƒŠƒAƒ‹I/Oƒ`ƒƒƒlƒ‹‚ðÝ’è(SPI microSd)
-	initSCI1( RATE_230400 );		// ƒVƒŠƒAƒ‹I/Oƒ`ƒƒƒlƒ‹‚ðÝ’è(UART)
-	SET_SCI_LCD 		// ƒVƒŠƒAƒ‹I/Oƒ`ƒƒƒlƒ‹‚ðÝ’è(I2C)
+	SET_SCI_MSD		// ã‚·ãƒªã‚¢ãƒ«I/Oãƒãƒ£ãƒãƒ«ã‚’è¨­å®š(SPI microSd)
+	initSCI1( RATE_230400 );		// ã‚·ãƒªã‚¢ãƒ«I/Oãƒãƒ£ãƒãƒ«ã‚’è¨­å®š(UART)
+	SET_SCI_LCD 		// ã‚·ãƒªã‚¢ãƒ«I/Oãƒãƒ£ãƒãƒ«ã‚’è¨­å®š(I2C)
 	
-	SET_CMT_C0		// ƒRƒ“ƒyƒAƒ}ƒbƒ`ƒ^ƒCƒ}‚ðÝ’è(ch0)
-	SET_CMT_MSD		// ƒRƒ“ƒyƒAƒ}ƒbƒ`ƒ^ƒCƒ}‚ðÝ’è(ch2)
+	SET_CMT_C0		// ã‚³ãƒ³ãƒšã‚¢ãƒžãƒƒãƒã‚¿ã‚¤ãƒžã‚’è¨­å®š(ch0)
+	SET_CMT_MSD		// ã‚³ãƒ³ãƒšã‚¢ãƒžãƒƒãƒã‚¿ã‚¤ãƒžã‚’è¨­å®š(ch2)
 	
-	initIO();			// IOƒ|[ƒg‚Ì‰Šú‰»
+	initIO();			// IOãƒãƒ¼ãƒˆã®åˆæœŸåŒ–
 	
-	SET_ADC			// 12ƒrƒbƒgA/DƒRƒ“ƒo[ƒ^(S12AD0)‚ðÝ’è
+	SET_ADC			// 12ãƒ“ãƒƒãƒˆA/Dã‚³ãƒ³ãƒãƒ¼ã‚¿(S12AD0)ã‚’è¨­å®š
 	
-	START_MTU		// MTU0,1,2,3,4‚ÌƒJƒEƒ“ƒgŠJŽn
+	START_MTU		// MTU0,1,2,3,4ã®ã‚«ã‚¦ãƒ³ãƒˆé–‹å§‹
 	
-	START_ADC		// A/D•ÏŠ·ŠJŽn
-	START_CMT_C0 	// ƒJƒEƒ“ƒgƒXƒ^[ƒg(ch0)
-	START_CMT_MSD 	// ƒJƒEƒ“ƒgƒXƒ^[ƒg(ch2)
+	START_ADC		// A/Då¤‰æ›é–‹å§‹
+	START_CMT_C0 	// ã‚«ã‚¦ãƒ³ãƒˆã‚¹ã‚¿ãƒ¼ãƒˆ(ch0)
+	START_CMT_MSD 	// ã‚«ã‚¦ãƒ³ãƒˆã‚¹ã‚¿ãƒ¼ãƒˆ(ch2)
 	
-	/*----------0:brake@1:stop----------*/	
-	R_PG_IO_PORT_Write_PE4( 0 );	//¶‘Oƒ‚[ƒ^
-	R_PG_IO_PORT_Write_PA0( 0 );	//‰E‘Oƒ‚[ƒ^
-	R_PG_IO_PORT_Write_PC5( 0 );	//¶Œãƒ‚[ƒ^
-	R_PG_IO_PORT_Write_PB4( 0 );	//‰EŒãƒ‚[ƒ^
-	R_PG_IO_PORT_Write_PE6( 1 );	//ƒT[ƒ{ƒ‚[ƒ^
-	R_PG_IO_PORT_Write_PC3( 1 );	//ƒ‰ƒ“ƒT[ƒ‚[ƒ^
+	/*----------0:brakeã€€1:stop----------*/	
+	R_PG_IO_PORT_Write_PE4( 0 );	//å·¦å‰ãƒ¢ãƒ¼ã‚¿
+	R_PG_IO_PORT_Write_PA0( 0 );	//å³å‰ãƒ¢ãƒ¼ã‚¿
+	R_PG_IO_PORT_Write_PC5( 0 );	//å·¦å¾Œãƒ¢ãƒ¼ã‚¿
+	R_PG_IO_PORT_Write_PB4( 0 );	//å³å¾Œãƒ¢ãƒ¼ã‚¿
+	R_PG_IO_PORT_Write_PE6( 1 );	//ã‚µãƒ¼ãƒœãƒ¢ãƒ¼ã‚¿
+	R_PG_IO_PORT_Write_PC3( 1 );	//ãƒ©ãƒ³ã‚µãƒ¼ãƒ¢ãƒ¼ã‚¿
 }

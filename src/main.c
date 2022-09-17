@@ -1,5 +1,5 @@
-//====================================//
-// ƒCƒ“ƒNƒ‹[ƒh
+ï»¿//====================================//
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //====================================//
 #include "io.h"
 #include "mtu.h"
@@ -13,30 +13,30 @@
 #include "ICM20648.h"
 #include "MemorryTrace.h"
 //====================================//
-// ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€
 //====================================//
-// ‘–sƒpƒ^[ƒ“ŠÖ˜A
-char		pattern = 0;	// ƒpƒ^[ƒ“”Ô†
+// èµ°è¡Œãƒ‘ã‚¿ãƒ¼ãƒ³é–¢é€£
+char		pattern = 0;	// ãƒ‘ã‚¿ãƒ¼ãƒ³ç•ªå·
 
-// ƒ‚[ƒhŠÖ˜A
-char		modeCurve;		// ƒJ[ƒu”»’è	0:ƒJ[ƒuˆÈŠO	1:ƒJ[ƒu‘–s’†
-char		modeError;		// 0: ’Êí‘–s 1:‹——£’â~ 2:ƒZƒ“ƒT‘S“” 3:ƒZƒ“ƒT‘SÁ“” 4:ƒGƒ“ƒR[ƒ_’â~ 5:ƒWƒƒƒCƒ”½‰
-char 		modeAutoMotor;	// 0: switch•¶‚ÅƒT[ƒ{A‹ì“®ƒ‚[ƒ^‚ÌPWMo—Í‚ğw’è‚·‚é 1: TimerŠÖ”“à‚Å©“®“I‚ÉPWMo—Í‚ğÀs
+// ãƒ¢ãƒ¼ãƒ‰é–¢é€£
+char		modeCurve;		// ã‚«ãƒ¼ãƒ–åˆ¤å®š	0:ã‚«ãƒ¼ãƒ–ä»¥å¤–	1:ã‚«ãƒ¼ãƒ–èµ°è¡Œä¸­
+char		modeError;		// 0: é€šå¸¸èµ°è¡Œ 1:è·é›¢åœæ­¢ 2:ã‚»ãƒ³ã‚µå…¨ç¯ 3:ã‚»ãƒ³ã‚µå…¨æ¶ˆç¯ 4:ã‚¨ãƒ³ã‚³ãƒ¼ãƒ€åœæ­¢ 5:ã‚¸ãƒ£ã‚¤ãƒ­åå¿œ
+char 		modeAutoMotor;	// 0: switchæ–‡ã§ã‚µãƒ¼ãƒœã€é§†å‹•ãƒ¢ãƒ¼ã‚¿ã®PWMå‡ºåŠ›ã‚’æŒ‡å®šã™ã‚‹ 1: Timeré–¢æ•°å†…ã§è‡ªå‹•çš„ã«PWMå‡ºåŠ›ã‚’å®Ÿè¡Œ
 
-// ƒ^ƒCƒ}ŠÖ˜A
-// 1msƒ^ƒCƒ}
-unsigned int 		cnt1;		// ‘–s—pƒ^ƒCƒ}ƒJƒEƒ“ƒg
-unsigned short	 	cntOut1;	// ƒR[ƒXƒAƒEƒg”»’è—pƒ^ƒCƒ}
-unsigned short	 	cntOut2;	// ƒR[ƒXƒAƒEƒg”»’è—pƒ^ƒCƒ}2
-unsigned short	 	cntOut3;	// ƒR[ƒXƒAƒEƒg”»’è—pƒ^ƒCƒ}3
-unsigned short	 	cntOut4;	// ƒR[ƒXƒAƒEƒg”»’è—pƒ^ƒCƒ}4
-static char			Timer10;	// 1msƒJƒEƒ“ƒg—p
+// ã‚¿ã‚¤ãƒé–¢é€£
+// 1msã‚¿ã‚¤ãƒ
+unsigned int 		cnt1;		// èµ°è¡Œç”¨ã‚¿ã‚¤ãƒã‚«ã‚¦ãƒ³ãƒˆ
+unsigned short	 	cntOut1;	// ã‚³ãƒ¼ã‚¹ã‚¢ã‚¦ãƒˆåˆ¤å®šç”¨ã‚¿ã‚¤ãƒ
+unsigned short	 	cntOut2;	// ã‚³ãƒ¼ã‚¹ã‚¢ã‚¦ãƒˆåˆ¤å®šç”¨ã‚¿ã‚¤ãƒ2
+unsigned short	 	cntOut3;	// ã‚³ãƒ¼ã‚¹ã‚¢ã‚¦ãƒˆåˆ¤å®šç”¨ã‚¿ã‚¤ãƒ3
+unsigned short	 	cntOut4;	// ã‚³ãƒ¼ã‚¹ã‚¢ã‚¦ãƒˆåˆ¤å®šç”¨ã‚¿ã‚¤ãƒ4
+static char			Timer10;	// 1msã‚«ã‚¦ãƒ³ãƒˆç”¨
 //====================================//
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //====================================//
 void initParameter ( bool lcd );
 //====================================//
-// ƒƒCƒ“ƒvƒƒOƒ‰ƒ€
+// ãƒ¡ã‚¤ãƒ³ãƒ—ãƒ­ã‚°ãƒ©ãƒ 
 //====================================//
 void main(void){
 	char		countdown = 0x0;
@@ -45,31 +45,31 @@ void main(void){
 	unsigned int ui;
 	
 	//=================================//
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	//=================================//
-	ledOut(0); 		// LEDÁ“”
-	L_Sen_ON;		// ƒZƒ“ƒT“_“”
-	intiLcd();		// LCD‰Šú‰»
+	ledOut(0); 		// LEDæ¶ˆç¯
+	L_Sen_ON;		// ã‚»ãƒ³ã‚µç‚¹ç¯
+	intiLcd();		// LCDåˆæœŸåŒ–
 	
-	motorPwmOut(0, 0, 0, 0);	// ƒ‚[ƒ^[’â~
+	motorPwmOut(0, 0, 0, 0);	// ãƒ¢ãƒ¼ã‚¿ãƒ¼åœæ­¢
 	servoPwmOut( 0 );
 	
-	modePushcart = 0;		// è‰Ÿ‚µƒ‚[ƒhoff
-	modeSlope = 0;			// ã‚èâƒ`ƒFƒbƒN
-	modeAngle = 0;			// ”’üƒgƒŒ[ƒX
-	modeAutoMotor = 0;		// ©“®PWMo—Í’â~
-	start = 0;				// ƒQ[ƒgƒXƒ^[ƒg
+	modePushcart = 0;		// æ‰‹æŠ¼ã—ãƒ¢ãƒ¼ãƒ‰off
+	modeSlope = 0;			// ä¸Šã‚Šå‚ãƒã‚§ãƒƒã‚¯
+	modeAngle = 0;			// ç™½ç·šãƒˆãƒ¬ãƒ¼ã‚¹
+	modeAutoMotor = 0;		// è‡ªå‹•PWMå‡ºåŠ›åœæ­¢
+	start = 0;				// ã‚²ãƒ¼ãƒˆã‚¹ã‚¿ãƒ¼ãƒˆ
 	
-	//IMU‰Šú‰»
+	//IMUåˆæœŸåŒ–
 	initIMU();
-	// ƒtƒ‰ƒbƒVƒ…‰Šú‰»
-	// ƒf[ƒ^ƒtƒ‰ƒbƒVƒ…‚©‚ç‘O‰ñƒpƒ‰ƒ[ƒ^‚ğ“Ç‚İ‚Ş
+	// ãƒ•ãƒ©ãƒƒã‚·ãƒ¥åˆæœŸåŒ–
+	// ãƒ‡ãƒ¼ã‚¿ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã‹ã‚‰å‰å›ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’èª­ã¿è¾¼ã‚€
 	if( !initFlash() ) readFlashSetup( 1, 1, 1 ,1 ,1 ,1 ,1);
-	// MicroSDƒJ[ƒh‰Šú‰»
+	// MicroSDã‚«ãƒ¼ãƒ‰åˆæœŸåŒ–
 	if( !initMicroSD() ) msdset = 1;
 	else msdset = 0;
 
-	// “dŒ¹“dˆ³‚ÌŠm”F
+	// é›»æºé›»åœ§ã®ç¢ºèª
 	if (Voltage < LOWVOLTAGE ) {
 		cnt1=0;
 		while( cnt1 < 1500){
@@ -97,95 +97,95 @@ void main(void){
 		__setpsw_i();
 		if( pattern >= 11 && pattern <= 99 ) {
 			if( !modePushcart ) {		
-				// è‰Ÿ‚µƒ‚[ƒhOFF
-				if( cnt1 >= 100 ) {		// “®‚«o‚µ‚Ä‚©‚ç
-					if ( EncoderTotal >= ( PALSE_METER * stopping_meter ) ) { // ‹——£’´‰ß‚Ìê‡
+				// æ‰‹æŠ¼ã—ãƒ¢ãƒ¼ãƒ‰OFF
+				if( cnt1 >= 100 ) {		// å‹•ãå‡ºã—ã¦ã‹ã‚‰
+					if ( EncoderTotal >= ( PALSE_METER * stopping_meter ) ) { // è·é›¢è¶…éã®å ´åˆ
 						modeError = 1;
-					} else if ( cntOut1 >= STOP_SENSOR1 ) {	// ƒZƒ“ƒT‘S“”
+					} else if ( cntOut1 >= STOP_SENSOR1 ) {	// ã‚»ãƒ³ã‚µå…¨ç¯
 						modeError = 2;
-					} else if ( cntOut2 >= STOP_SENSOR2 ) {	// ƒZƒ“ƒT‘SÁ“”
+					} else if ( cntOut2 >= STOP_SENSOR2 ) {	// ã‚»ãƒ³ã‚µå…¨æ¶ˆç¯
 						modeError = 3;
-					} else if ( cntOut3 >= STOP_ENCODER ) {	// ƒGƒ“ƒR[ƒ_’â~(‚Ğ‚Á‚­‚è•Ô‚Á‚½H)
+					} else if ( cntOut3 >= STOP_ENCODER ) {	// ã‚¨ãƒ³ã‚³ãƒ¼ãƒ€åœæ­¢(ã²ã£ãã‚Šè¿”ã£ãŸï¼Ÿ)
 						modeError = 4;
-					} else if( cntOut4 >= STOP_GYRO ) {	// ƒ}ƒCƒiƒX‚Ì‰Á‘¬“xŒŸ’m(ƒR[ƒX‚©‚ç—‚¿‚½H)
+					} else if( cntOut4 >= STOP_GYRO ) {	// ãƒã‚¤ãƒŠã‚¹ã®åŠ é€Ÿåº¦æ¤œçŸ¥(ã‚³ãƒ¼ã‚¹ã‹ã‚‰è½ã¡ãŸï¼Ÿ)
 						modeError = 5;	
 					}
-					// // Buletooth‚ÅŠO•”‚©‚ç’â~
+					// // Buletoothã§å¤–éƒ¨ã‹ã‚‰åœæ­¢
 					// if ( stopWord == 1 ) {
 					// 	modeError = 6;
 					// }
-					// ˆê’èŠÔ‚Å’â~
+					// ä¸€å®šæ™‚é–“ã§åœæ­¢
 					// if( cntStable >= STOP_COUNT ) {
 					// 	modeError = 7;
 					// }
 					if (modeError > 0) {
 						pattern = 101;
 						modeAutoMotor = 0;
-						ui = cnt1;	// ‘–sŠÔæ“¾
+						ui = cnt1;	// èµ°è¡Œæ™‚é–“å–å¾—
 						LEDR_OFF;
 						LEDG_OFF;
 						LEDB_OFF;
 					}
 				}
 			} else {			
-				// è‰Ÿ‚µƒ‚[ƒhON
+				// æ‰‹æŠ¼ã—ãƒ¢ãƒ¼ãƒ‰ON
 
-				// ‹——£‘ª’è
+				// è·é›¢æ¸¬å®š
 				// lcdRowPrintf(UPROW, "mm%4.1f", (double)EncoderTotal/PALSE_MILLIMETER);
 				// lcdRowPrintf(LOWROW, " %7d", EncoderTotal);
 
 				lcdRowPrintf(UPROW, "now  %3d", pattern);
 				lcdRowPrintf(LOWROW, " %7d", enc1);
 			}
-			// ƒXƒCƒbƒ`‚Å’â~
+			// ã‚¹ã‚¤ãƒƒãƒã§åœæ­¢
 			if ( cnt1 >= 1000 && taswGet() == SW_PUSH ) {
 				modeError = 6;
 				pattern = 101;
 			}
 		} else if ( pattern >= 100 ) {
 			modeLCD = 1;
-			// ‘¬“xƒQƒCƒ“’²®—p
+			// é€Ÿåº¦ã‚²ã‚¤ãƒ³èª¿æ•´ç”¨
 			// lcdRowPrintf(UPROW, "TIME%4d", cntStable);
 			// lcdRowPrintf(LOWROW, "%6.1f", (double)encStable/PALSE_MILLIMETER);
 
-			// ƒGƒ‰[ƒ‚[ƒhŠm”F
+			// ã‚¨ãƒ©ãƒ¼ãƒ¢ãƒ¼ãƒ‰ç¢ºèª
 			lcdRowPrintf(UPROW, "MODE   %1d", modeError);
 			lcdRowPrintf(LOWROW, "    %4d",angleAfter);
 		}
 		
 	switch( pattern ) {
 		//-------------------------------------------------------------------
-		// y000zƒXƒ^[ƒgˆ—
+		// ã€000ã€‘ã‚¹ã‚¿ãƒ¼ãƒˆå‡¦ç†
 		//-------------------------------------------------------------------
 		case 0:
-			// ƒXƒ^[ƒg‘Oİ’è
+			// ã‚¹ã‚¿ãƒ¼ãƒˆå‰è¨­å®š
 			setup();
 			if ( start && !modePushcart ) {
-				demo = 0;		// ƒfƒ‚ƒ‚[ƒh‰ğœ
-				modeAngle = 0;	// ”’üƒgƒŒ[ƒX
-				Int = 0;			// Ï•ªƒŠƒZƒbƒg
-				txt= txtData;		// óM”z—ñƒŠƒZƒbƒg
-				cntByte = 0;		// óMƒJƒEƒ“ƒgƒŠƒZƒbƒg
+				demo = 0;		// ãƒ‡ãƒ¢ãƒ¢ãƒ¼ãƒ‰è§£é™¤
+				modeAngle = 0;	// ç™½ç·šãƒˆãƒ¬ãƒ¼ã‚¹
+				Int = 0;			// ç©åˆ†ãƒªã‚»ãƒƒãƒˆ
+				txt= txtData;		// å—ä¿¡é…åˆ—ãƒªã‚»ãƒƒãƒˆ
+				cntByte = 0;		// å—ä¿¡ã‚«ã‚¦ãƒ³ãƒˆãƒªã‚»ãƒƒãƒˆ
 				
-				if ( msdset ) init_log();	// ƒƒO‹L˜^€”õ
+				if ( msdset ) init_log();	// ãƒ­ã‚°è¨˜éŒ²æº–å‚™
 				
-				if ( !fixSpeed ) writeFlashBeforeStart(1, 0, 1, 1, 1, 1);	// ‘¬“xƒpƒ‰ƒ[ƒ^‚ğƒf[ƒ^ƒtƒ‰ƒbƒVƒ…‚É•Û‘¶
-				else writeFlashBeforeStart(0, 0, 1, 1, 1, 1);		// ‘¬“xƒpƒ‰ƒ[ƒ^ˆÈŠO‚ğ•Û‘¶
+				if ( !fixSpeed ) writeFlashBeforeStart(1, 0, 1, 1, 1, 1);	// é€Ÿåº¦ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’ãƒ‡ãƒ¼ã‚¿ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã«ä¿å­˜
+				else writeFlashBeforeStart(0, 0, 1, 1, 1, 1);		// é€Ÿåº¦ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ä»¥å¤–ã‚’ä¿å­˜
 				
 				//if (IMUSet) caribrateIMU();
 				
-				waitLcd(500);		// 500ms‘Ò‚Â
+				waitLcd(500);		// 500mså¾…ã¤
 				cnt1 = 0;
 				pattern = 1;
 				break;
 			} else if ( start && modePushcart ) {
-				// è‰Ÿ‚µƒ‚[ƒh‚Ìê‡‚·‚®‚É’ÊíƒgƒŒ[ƒX
-				if ( msdset ) init_log();	// ƒƒO‹L˜^€”õ
+				// æ‰‹æŠ¼ã—ãƒ¢ãƒ¼ãƒ‰ã®å ´åˆã™ãã«é€šå¸¸ãƒˆãƒ¬ãƒ¼ã‚¹
+				if ( msdset ) init_log();	// ãƒ­ã‚°è¨˜éŒ²æº–å‚™
 				
-				// ”’üƒgƒŒ[ƒX—pPIDƒQƒCƒ“•Û‘¶
-				// Šp“x§Œä—pPIDƒQƒCƒ“•Û‘¶
+				// ç™½ç·šãƒˆãƒ¬ãƒ¼ã‚¹ç”¨PIDã‚²ã‚¤ãƒ³ä¿å­˜
+				// è§’åº¦åˆ¶å¾¡ç”¨PIDã‚²ã‚¤ãƒ³ä¿å­˜
 				writeFlashBeforeStart(0, 0, 1, 1, 0, 0);
-				// •Ï”‰Šú‰»
+				// å¤‰æ•°åˆæœŸåŒ–
 				initParameter( 1 );
 				break;
 			}
@@ -194,9 +194,9 @@ void main(void){
 		case 1:
 			servoPwmOut( ServoPwm );
 			if ( start == START_COUNT ) {
-				// ƒJƒEƒ“ƒgƒ_ƒEƒ“ƒXƒ^[ƒg
+				// ã‚«ã‚¦ãƒ³ãƒˆãƒ€ã‚¦ãƒ³ã‚¹ã‚¿ãƒ¼ãƒˆ
 				if ( cnt1 >= 3000 ) {	
-					// •Ï”‰Šú‰»
+					// å¤‰æ•°åˆæœŸåŒ–
 					initParameter( 0 );
 					break;
 				} else if ( !(cnt1 % 1000) ) {
@@ -205,7 +205,7 @@ void main(void){
 					break;
 				}
 			} else if ( start == START_GATE ) {
-				// ƒXƒ^[ƒgƒQ[ƒgŠJ•úƒXƒ^[ƒg
+				// ã‚¹ã‚¿ãƒ¼ãƒˆã‚²ãƒ¼ãƒˆé–‹æ”¾ã‚¹ã‚¿ãƒ¼ãƒˆ
 				pattern = 2;
 				break;
 			}
@@ -213,13 +213,13 @@ void main(void){
 			
 		case 2:
 			servoPwmOut( ServoPwm );
-			// ƒXƒ^[ƒgƒo[ŠJ•Â‘Ò‚¿
+			// ã‚¹ã‚¿ãƒ¼ãƒˆãƒãƒ¼é–‹é–‰å¾…ã¡
 			if ( !startbar_get() ) {
-				// •Ï”‰Šú‰»
+				// å¤‰æ•°åˆæœŸåŒ–
 				initParameter( 0 );
 				break;
 			}
-			// LED“_–Åˆ—
+			// LEDç‚¹æ»…å‡¦ç†
 			if ( cnt1 >= 2000 ) cnt1 = 0;
 			if ( cnt1 < 1000 ) {
 				ledOut( LED_R );
@@ -228,39 +228,39 @@ void main(void){
 			}
 			break;
 		//-------------------------------------------------------------------
-		// y010zƒgƒŒ[ƒXˆ—
+		// ã€010ã€‘ãƒˆãƒ¬ãƒ¼ã‚¹å‡¦ç†
 		//-------------------------------------------------------------------
 		case 11:
 			targetSpeed = speed_straight * SPEED_CURRENT;
 			i = getServoAngle();
 			ledOut( 0x00 );
 			
-			// ƒNƒƒXƒ‰ƒCƒ“ƒ`ƒFƒbƒN
+			// ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³ãƒã‚§ãƒƒã‚¯
 			if ( checkCrossLine() ) {
 				enc1 = 0;
 				pattern = 21;
 				break;
 			}
-			// ‰Eƒn[ƒtƒ‰ƒCƒ“ƒ`ƒFƒbƒN
+			// å³ãƒãƒ¼ãƒ•ãƒ©ã‚¤ãƒ³ãƒã‚§ãƒƒã‚¯
 	   		if ( checkRightLine() ) {
 				enc1 = 0;
 				pattern = 51;
 				break;
 			}
-			// ¶ƒn[ƒtƒ‰ƒCƒ“ƒ`ƒFƒbƒN
+			// å·¦ãƒãƒ¼ãƒ•ãƒ©ã‚¤ãƒ³ãƒã‚§ãƒƒã‚¯
 	   		if ( checkLeftLine() ) {
 				enc1 = 0;
 				pattern = 61;
 				break;
 			}
-			// â“¹ƒ`ƒFƒbƒN
+			// å‚é“ãƒã‚§ãƒƒã‚¯
 			/*if ( EncoderTotal >= 5609 ) {
 				if( checkSlope() == 1 || checkSlope() == -1 ) {
 					pattern = 71;
 					break;
 				}
 			}*/
-			// ƒJ[ƒuƒ`ƒFƒbƒN
+			// ã‚«ãƒ¼ãƒ–ãƒã‚§ãƒƒã‚¯
 			if ( i >=  CURVE_R600_START || i <= -CURVE_R600_START ) {
 				enc1 = 0;
 				modeCurve = 1;
@@ -270,12 +270,12 @@ void main(void){
 			break;
 			
 		case 12:
-			// ƒJ[ƒuƒuƒŒ[ƒL
+			// ã‚«ãƒ¼ãƒ–ãƒ–ãƒ¬ãƒ¼ã‚­
 			targetSpeed = speed_curve_brake * SPEED_CURRENT;
 			ledOut( LED_R );
 			i = getServoAngle();
 			
-			if ( enc1 > encMM( 60 ) ) {		// 60mmi‚Ş
+			if ( enc1 > encMM( 60 ) ) {		// 60mmé€²ã‚€
 				enc1 = 0;
 				TurningAngleEnc = 0;
 				TurningAngleIMU = 0;
@@ -283,25 +283,25 @@ void main(void){
 				break;
 			}
 			
-			// ƒNƒƒXƒ‰ƒCƒ“ƒ`ƒFƒbƒN
+			// ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³ãƒã‚§ãƒƒã‚¯
 			if ( checkCrossLine() ) {
 				enc1 = 0;
 				pattern = 21;
 				break;
 			}
-			// ‰Eƒn[ƒtƒ‰ƒCƒ“ƒ`ƒFƒbƒN
+			// å³ãƒãƒ¼ãƒ•ãƒ©ã‚¤ãƒ³ãƒã‚§ãƒƒã‚¯
 	   		if ( checkRightLine() ) {
 				enc1 = 0;
 				pattern = 51;
 				break;
 			}
-			// ¶ƒn[ƒtƒ‰ƒCƒ“ƒ`ƒFƒbƒN
+			// å·¦ãƒãƒ¼ãƒ•ãƒ©ã‚¤ãƒ³ãƒã‚§ãƒƒã‚¯
 	   		if ( checkLeftLine() ) {
 				enc1 = 0;
 				pattern = 61;
 				break;
 			}
-			// â“¹ƒ`ƒFƒbƒN
+			// å‚é“ãƒã‚§ãƒƒã‚¯
 			/*if ( EncoderTotal >= 5609 ) {
 				if ( checkSlope() == 1 || checkSlope() == -1 ) {
 					pattern = 71;
@@ -313,7 +313,7 @@ void main(void){
 				pattern = 16;
 				break;
 			}
-			// ’¼üƒ`ƒFƒbƒN
+			// ç›´ç·šãƒã‚§ãƒƒã‚¯
 			if ( i <  CURVE_R600_START && i > -CURVE_R600_START ) {
 				enc1 = 0;
 				pattern = 11;
@@ -322,42 +322,42 @@ void main(void){
 			break;
 			
 		case 13:
-			// R600ƒJ[ƒu‘–s
+			// R600ã‚«ãƒ¼ãƒ–èµ°è¡Œ
 			targetSpeed = speed_curve_r600 * SPEED_CURRENT;
 			i = getServoAngle();
 			
-			// ƒNƒƒXƒ‰ƒCƒ“ƒ`ƒFƒbƒN
+			// ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³ãƒã‚§ãƒƒã‚¯
 			if ( checkCrossLine() ) {
 				enc1 = 0;
 				pattern = 21;
 				break;
       			}
-			// ‰Eƒn[ƒtƒ‰ƒCƒ“ƒ`ƒFƒbƒN
+			// å³ãƒãƒ¼ãƒ•ãƒ©ã‚¤ãƒ³ãƒã‚§ãƒƒã‚¯
 	   		if ( checkRightLine() ) {
 				enc1 = 0;
 				pattern = 51;
 				break;
 			}
-			// ¶ƒn[ƒtƒ‰ƒCƒ“ƒ`ƒFƒbƒN
+			// å·¦ãƒãƒ¼ãƒ•ãƒ©ã‚¤ãƒ³ãƒã‚§ãƒƒã‚¯
 	   		if ( checkLeftLine() ) {
 				enc1 = 0;
 				pattern = 61;
 				break;
 			}
-			// â“¹ƒ`ƒFƒbƒN
+			// å‚é“ãƒã‚§ãƒƒã‚¯
 			/*if ( EncoderTotal >= 5609 ) {
 				if ( checkSlope() == 1 || checkSlope() == -1 ) {
 					pattern = 71;
 					break;
 				}
 			}*/
-			// R450ƒ`ƒFƒbƒN
+			// R450ãƒã‚§ãƒƒã‚¯
 			if ( i >= CURVE_R450_START || i <= -CURVE_R450_START ) {
 				enc1 = 0;
 				pattern = 14;
 				break;
 			}
-			// ƒJ[ƒuŒp‚¬–Úƒ`ƒFƒbƒN
+			// ã‚«ãƒ¼ãƒ–ç¶™ãç›®ãƒã‚§ãƒƒã‚¯
 			if ( i <  CURVE_R600_START && i > -CURVE_R600_START ) {
 				enc1 = 0;
 				pattern = 15;
@@ -366,29 +366,29 @@ void main(void){
 			break;
 			
 		case 14:
-			// R450ƒJ[ƒu‘–s
+			// R450ã‚«ãƒ¼ãƒ–èµ°è¡Œ
 			targetSpeed = speed_curve_r450 * SPEED_CURRENT;
 			i = getServoAngle();
 			
-			// ƒNƒƒXƒ‰ƒCƒ“ƒ`ƒFƒbƒN
+			// ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³ãƒã‚§ãƒƒã‚¯
 			if ( checkCrossLine() ) {
 				enc1 = 0;
 				pattern = 21;
 				break;
       			}
-			// ‰Eƒn[ƒtƒ‰ƒCƒ“ƒ`ƒFƒbƒN
+			// å³ãƒãƒ¼ãƒ•ãƒ©ã‚¤ãƒ³ãƒã‚§ãƒƒã‚¯
 	   		if ( checkRightLine() ) {
 				enc1 = 0;
 				pattern = 51;
 				break;
 			}
-			// ¶ƒn[ƒtƒ‰ƒCƒ“ƒ`ƒFƒbƒN
+			// å·¦ãƒãƒ¼ãƒ•ãƒ©ã‚¤ãƒ³ãƒã‚§ãƒƒã‚¯
 	   		if ( checkLeftLine() ) {
 				enc1 = 0;
 				pattern = 61;
 				break;
 			}
-			// R600ƒ`ƒFƒbƒN
+			// R600ãƒã‚§ãƒƒã‚¯
 			if ( i < CURVE_R450_START && i > -CURVE_R450_START ) {
 				enc1 = 0;
 				pattern = 13;
@@ -397,43 +397,43 @@ void main(void){
 			break;
 		
 		case 15:
-			// ƒJ[ƒuŒp‚¬–Ú‘–s
+			// ã‚«ãƒ¼ãƒ–ç¶™ãç›®èµ°è¡Œ
 			targetSpeed = speed_curve_straight * SPEED_CURRENT;
 			i = getServoAngle();
 			
-			if ( enc1 >= encMM( 300 ) ) {		// 300mmi‚Ş
+			if ( enc1 >= encMM( 300 ) ) {		// 300mmé€²ã‚€
 				enc1 = 0;
 				modeCurve = 0;
 				pattern = 11;
 				break;
 			}
 			
-			// ƒNƒƒXƒ‰ƒCƒ“ƒ`ƒFƒbƒN
+			// ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³ãƒã‚§ãƒƒã‚¯
 			if ( checkCrossLine() ) {
 				enc1 = 0;
 				pattern = 21;
 				break;
       			}
-			// ‰Eƒn[ƒtƒ‰ƒCƒ“ƒ`ƒFƒbƒN
+			// å³ãƒãƒ¼ãƒ•ãƒ©ã‚¤ãƒ³ãƒã‚§ãƒƒã‚¯
    			if ( checkRightLine() ) {
 				enc1 = 0;
 				pattern = 51;
 				break;
 			}
-			// ¶ƒn[ƒtƒ‰ƒCƒ“ƒ`ƒFƒbƒN
+			// å·¦ãƒãƒ¼ãƒ•ãƒ©ã‚¤ãƒ³ãƒã‚§ãƒƒã‚¯
    			if ( checkLeftLine() ) {
 				enc1 = 0;
 				pattern = 61;
 				break;
 			}
-			// â“¹ƒ`ƒFƒbƒN
+			// å‚é“ãƒã‚§ãƒƒã‚¯
 			/*if ( EncoderTotal >= 5609 ) {
 				if ( checkSlope() == 1 || checkSlope() == -1 ) {
 					pattern = 71;
 					break;
 				}
 			}*/
-			// ƒJ[ƒuƒ`ƒFƒbƒN
+			// ã‚«ãƒ¼ãƒ–ãƒã‚§ãƒƒã‚¯
 			if( i >=  CURVE_R600_START || i <= - CURVE_R600_START ) {
 				enc1 = 0;
 				pattern = 13;
@@ -446,13 +446,13 @@ void main(void){
 			
 			break;
 		//-------------------------------------------------------------------
-		//y020zƒNƒ‰ƒ“ƒNŒŸoˆ—
+		//ã€020ã€‘ã‚¯ãƒ©ãƒ³ã‚¯æ¤œå‡ºå‡¦ç†
 		//-------------------------------------------------------------------
 		case 21:
 			targetSpeed = speed_crossline* SPEED_CURRENT;
 			ledOut( LED_G );
 			
-			if( enc1 > encMM( 90 ) ) {		// 60mmi‚Ş
+			if( enc1 > encMM( 90 ) ) {		// 60mmé€²ã‚€
 				enc1 = 0;
 				pattern = 22;
 				break;
@@ -462,7 +462,7 @@ void main(void){
 		case 22:
 			targetSpeed = speed_ckank_trace * SPEED_CURRENT;
 			
-			// ‰EƒNƒ‰ƒ“ƒNƒ`ƒFƒbƒN
+			// å³ã‚¯ãƒ©ãƒ³ã‚¯ãƒã‚§ãƒƒã‚¯
 			if( sensor_inp() ==  0x3 ) {
 				enc1 = 0;
 				ledOut( LED_R | LED_G);
@@ -473,7 +473,7 @@ void main(void){
 				pattern = 31;
 				break;
 			}
-			// ¶ƒNƒ‰ƒ“ƒNƒ`ƒFƒbƒN
+			// å·¦ã‚¯ãƒ©ãƒ³ã‚¯ãƒã‚§ãƒƒã‚¯
 			if( sensor_inp() ==  0x6 ) {
 				enc1 = 0;
 				ledOut( LED_G | LED_B );
@@ -487,7 +487,7 @@ void main(void){
 			
 	        break;
 		//-------------------------------------------------------------------
-		//y030z‰EƒNƒ‰ƒ“ƒNˆ—
+		//ã€030ã€‘å³ã‚¯ãƒ©ãƒ³ã‚¯å‡¦ç†
 		//-------------------------------------------------------------------
 		case 31:
 			SetAngle = angle_rightclank;
@@ -496,7 +496,7 @@ void main(void){
 			if (sensor_inp() == 0x2 && enc1 >= encMM( 50 ) ) {
 				y1 = getLinePositionNow( getServoAngle(), TurningAngleIMU);
 				enc1 = 0;
-				Int = 0;			// Ï•ªƒŠƒZƒbƒg
+				Int = 0;			// ç©åˆ†ãƒªã‚»ãƒƒãƒˆ
 				pattern = 33;
 				break;
 			}
@@ -515,24 +515,24 @@ void main(void){
 			break;
 			
 		case 34:
-			// Šp“xˆÛ
-			SetAngle = -angleAfter * DEG2AD;	// ƒ‰ƒCƒ“‚©‚ç‚ÌŠp“x10‹
+			// è§’åº¦ç¶­æŒ
+			SetAngle = -angleAfter * DEG2AD;	// ãƒ©ã‚¤ãƒ³ã‹ã‚‰ã®è§’åº¦10Â°
 			targetSpeed = speed_rightclank_curve * SPEED_CURRENT;
 			
 			if( sensor_inp() == 0x2 && enc1 >= encMM( 100 ) ) {
 				enc1 = 0;
 				modeAngle = 0;
-				Int = 0;			// Ï•ªƒŠƒZƒbƒg
+				Int = 0;			// ç©åˆ†ãƒªã‚»ãƒƒãƒˆ
 				pattern = 35;
 				break;
 			}
 			break;
 			
 		case 35:
-			// •œ‹A
+			// å¾©å¸°
 			targetSpeed = speed_rightclank_escape * SPEED_CURRENT;
 
-			if( enc1 >= encMM( 600 ) ) {		// ˆÀ’è‚·‚é‚Ü‚Å‘Ò‚Â(600mm)
+			if( enc1 >= encMM( 600 ) ) {		// å®‰å®šã™ã‚‹ã¾ã§å¾…ã¤(600mm)
 				enc1 = 0;
 				ledOut( 0x0 );
 				pattern = 11;
@@ -540,7 +540,7 @@ void main(void){
 			}
 			break;
 		//-------------------------------------------------------------------
-		//y040z¶ƒNƒ‰ƒ“ƒNˆ—
+		//ã€040ã€‘å·¦ã‚¯ãƒ©ãƒ³ã‚¯å‡¦ç†
 		//-------------------------------------------------------------------
 		case 41:
 			SetAngle = angle_leftclank;
@@ -549,7 +549,7 @@ void main(void){
 			if (sensor_inp() == 0x2 && enc1 >= encMM( 50 ) ) {
 				y1 = getLinePositionNow( getServoAngle(), TurningAngleIMU);
 				enc1 = 0;
-				Int = 0;			// Ï•ªƒŠƒZƒbƒg
+				Int = 0;			// ç©åˆ†ãƒªã‚»ãƒƒãƒˆ
 				pattern = 43;
 				break;
 			}
@@ -568,24 +568,24 @@ void main(void){
 			break;
 			
 		case 44:
-			// Šp“xˆÛ
-			SetAngle = angleAfter * DEG2AD;	// ƒ‰ƒCƒ“‚©‚ç‚ÌŠp“x10‹
+			// è§’åº¦ç¶­æŒ
+			SetAngle = angleAfter * DEG2AD;	// ãƒ©ã‚¤ãƒ³ã‹ã‚‰ã®è§’åº¦10Â°
 			targetSpeed = speed_leftclank_curve * SPEED_CURRENT;
 			
 			if( sensor_inp() == 0x2 && enc1 >= encMM( 100 ) ) {
 				enc1 = 0;
 				modeAngle = 0;
-				Int = 0;			// Ï•ªƒŠƒZƒbƒg
+				Int = 0;			// ç©åˆ†ãƒªã‚»ãƒƒãƒˆ
 				pattern = 45;
 				break;
 			}
 			break;
 			
 		case 45:
-			// •œ‹A
+			// å¾©å¸°
 			targetSpeed = speed_leftclank_escape * SPEED_CURRENT;
 
-			if( enc1 >= encMM( 600 ) ) {		// ˆÀ’è‚·‚é‚Ü‚Å‘Ò‚Â(600mm)
+			if( enc1 >= encMM( 600 ) ) {		// å®‰å®šã™ã‚‹ã¾ã§å¾…ã¤(600mm)
 				enc1 = 0;
 				ledOut( 0x0 );
 				pattern = 11;
@@ -593,7 +593,7 @@ void main(void){
 			}
 			break;
 		//-------------------------------------------------------------------
-		//y050z‰EƒŒ[ƒ“ƒ`ƒFƒ“ƒWˆ—
+		//ã€050ã€‘å³ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸å‡¦ç†
 		//-------------------------------------------------------------------
 		case 51:
 			targetSpeed = speed_halfine * SPEED_CURRENT;
@@ -601,12 +601,12 @@ void main(void){
 			if( enc1 > encMM( 60 ) ) {
 				enc1 = 0;
 				modeAngle = 0;
-				Int = 0;			// Ï•ªƒŠƒZƒbƒg
+				Int = 0;			// ç©åˆ†ãƒªã‚»ãƒƒãƒˆ
 				pattern = 52;
 				break;
 			}
 			
-			if( checkCrossLine() ) {		// ƒNƒƒXƒ‰ƒCƒ“ƒ`ƒFƒbƒN
+			if( checkCrossLine() ) {		// ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³ãƒã‚§ãƒƒã‚¯
 				enc1 = 0;
 				pattern = 21;
 				break;
@@ -644,7 +644,7 @@ void main(void){
 				enc1 = 0;
 				modeAngle = 0;
 				modeAutoMotor = 0;
-				Int = 0;			// Ï•ªƒŠƒZƒbƒg
+				Int = 0;			// ç©åˆ†ãƒªã‚»ãƒƒãƒˆ
 				pattern = 55;
 				break;
 			}
@@ -674,7 +674,7 @@ void main(void){
 			}
 			break;
 		//-------------------------------------------------------------------
-		//y060z¶ƒŒ[ƒ“ƒ`ƒFƒ“ƒWˆ—
+		//ã€060ã€‘å·¦ãƒ¬ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸å‡¦ç†
 		//-------------------------------------------------------------------
 		case 61:
 			targetSpeed = speed_halfine * SPEED_CURRENT;
@@ -682,11 +682,11 @@ void main(void){
 			if( enc1 > encMM( 60 ) ) {
 				enc1 = 0;
 				modeAngle = 0;
-				Int = 0;			// Ï•ªƒŠƒZƒbƒg
+				Int = 0;			// ç©åˆ†ãƒªã‚»ãƒƒãƒˆ
 				pattern = 62;
 				break;
 			}
-			if( checkCrossLine() ) {		// ƒNƒƒXƒ‰ƒCƒ“ƒ`ƒFƒbƒN
+			if( checkCrossLine() ) {		// ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³ãƒã‚§ãƒƒã‚¯
 				enc1 = 0;
 				pattern = 21;
 				break;
@@ -724,7 +724,7 @@ void main(void){
 				enc1 = 0;
 				modeAngle = 0;
 				modeAutoMotor = 0;
-				Int = 0;			// Ï•ªƒŠƒZƒbƒg
+				Int = 0;			// ç©åˆ†ãƒªã‚»ãƒƒãƒˆ
 				pattern = 65;
 				break;
 			}
@@ -754,21 +754,21 @@ void main(void){
 			}
 			break;
 		//-------------------------------------------------------------------
-		//y070zâ“¹ˆ—
+		//ã€070ã€‘å‚é“å‡¦ç†
 		//-------------------------------------------------------------------
 		case 71:
-			// ŒëŒŸ’m”»’f
-			// –Ú•W‘¬“x•Ï‚¦‚È‚¢
+			// èª¤æ¤œçŸ¥åˆ¤æ–­
+			// ç›®æ¨™é€Ÿåº¦å¤‰ãˆãªã„
 			if( checkSlope() == 1 ) {
 				if( modeSlope == 0 ) {
-					// ã‚èn‚ß
+					// ä¸Šã‚Šå§‹ã‚
 					modeSlope = 1;
 					enc1 = 0;
 					ledOut( LED_R | LED_B );
 					pattern = 72;
 					break;
 				} else if ( modeSlope == 2 && enc_slope >= encMM( 600 ) ) {
-					// ‰º‚èI‚í‚è
+					// ä¸‹ã‚Šçµ‚ã‚ã‚Š
 					modeSlope = 3;
 					enc1 = 0;
 					ledOut( LED_R | LED_G | LED_B);
@@ -781,7 +781,7 @@ void main(void){
 				}
 			} else if ( checkSlope() == -1 ) {
 				if( modeSlope == 1 && enc_slope >= encMM( 1000 ) ) {
-					// ã‚èI‚í‚èA‰º‚èn‚ß
+					// ä¸Šã‚Šçµ‚ã‚ã‚Šã€ä¸‹ã‚Šå§‹ã‚
 					modeSlope = 2;
 					enc1 = 0;
 					pattern = 75;
@@ -800,7 +800,7 @@ void main(void){
 			break;
 			
 		case 72:
-			// â’¸“_‚Ü‚Å‘–s
+			// å‚é ‚ç‚¹ã¾ã§èµ°è¡Œ
 			targetSpeed = speed_slope_trace * SPEED_CURRENT;
 			
 			if( enc1 >= encMM( 1200 ) ) {
@@ -811,7 +811,7 @@ void main(void){
 			break;
 			
 		case 73:
-			// ã‚èâI“_ƒuƒŒ[ƒL ‘S—ÍƒuƒŒ[ƒL
+			// ä¸Šã‚Šå‚çµ‚ç‚¹ãƒ–ãƒ¬ãƒ¼ã‚­ å…¨åŠ›ãƒ–ãƒ¬ãƒ¼ã‚­
 			targetSpeed = 0;
 
 			if( enc1 >= encMM( 50 ) ) {
@@ -822,7 +822,7 @@ void main(void){
 			break;
 			
 		case 74:
-			// ‰º‚èâI“_ƒuƒŒ[ƒL
+			// ä¸‹ã‚Šå‚çµ‚ç‚¹ãƒ–ãƒ¬ãƒ¼ã‚­
 			targetSpeed = speed_slope_brake * SPEED_CURRENT;
 			if( enc1 >= encMM( 40 ) ) {
 				enc1 = 0;
@@ -832,7 +832,7 @@ void main(void){
 			break;
 			
 		case 75:
-			// ƒWƒƒƒCƒƒZƒ“ƒT‚ªˆÀ’è‚·‚é‚Ü‚Å“Ç‚İ”ò‚Î‚µ
+			// ã‚¸ãƒ£ã‚¤ãƒ­ã‚»ãƒ³ã‚µãŒå®‰å®šã™ã‚‹ã¾ã§èª­ã¿é£›ã°ã—
 			targetSpeed = speed_slope_trace * SPEED_CURRENT;
 			
 			if( enc1 >= encMM( 150 ) ) {
@@ -843,26 +843,26 @@ void main(void){
 			break;
 			
 		case 76:
-			// ƒWƒƒƒCƒƒZƒ“ƒT‚ªˆÀ’è‚·‚é‚Ü‚Å“Ç‚İ”ò‚Î‚µ
+			// ã‚¸ãƒ£ã‚¤ãƒ­ã‚»ãƒ³ã‚µãŒå®‰å®šã™ã‚‹ã¾ã§èª­ã¿é£›ã°ã—
 			if ( modeSlope == 3 ) {
 				targetSpeed = speed_straight * SPEED_CURRENT;
 			} else {
 				targetSpeed = speed_slope_trace * SPEED_CURRENT;
 			}
 			
-			// ƒNƒƒXƒ‰ƒCƒ“ƒ`ƒFƒbƒN
+			// ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³ãƒã‚§ãƒƒã‚¯
 			if( checkCrossLine() ) {
 				enc1 = 0;
 				pattern = 21;
 				break;
       			}
-			// ‰Eƒn[ƒtƒ‰ƒCƒ“ƒ`ƒFƒbƒN
+			// å³ãƒãƒ¼ãƒ•ãƒ©ã‚¤ãƒ³ãƒã‚§ãƒƒã‚¯
    			if( checkRightLine() ) {
 				enc1 = 0;
 				pattern = 51;
 				break;
 			}
-			// ¶ƒn[ƒtƒ‰ƒCƒ“ƒ`ƒFƒbƒN
+			// å·¦ãƒãƒ¼ãƒ•ãƒ©ã‚¤ãƒ³ãƒã‚§ãƒƒã‚¯
    			if( checkLeftLine() ) {
 				enc1 = 0;
 				pattern = 61;
@@ -892,10 +892,10 @@ void main(void){
 			}
 			break;
 		//-------------------------------------------------------------------
-		//y100z’â~ˆ—
+		//ã€100ã€‘åœæ­¢å‡¦ç†
 		//-------------------------------------------------------------------
 		case 101:
-			// Œ¸‘¬ˆ—
+			// æ¸›é€Ÿå‡¦ç†
 			servoPwmOut( ServoPwm );
 			targetSpeed = 0;
 			motorPwmOut(motorPwm, motorPwm, motorPwm, motorPwm);
@@ -908,20 +908,20 @@ void main(void){
 			break;
 			
 		case 102:
-			// Ô‘Ì’â~ˆ—
+			// è»Šä½“åœæ­¢å‡¦ç†
 			servoPwmOut( ServoPwm );
 			motorPwmOut(0, 0, 0, 0);
 			
 			if( Encoder <= 5 && Encoder >= -1 ) {
 				servoPwmOut( 0 );
-				R_PG_IO_PORT_Write_PE6( 0 );	//ƒT[ƒ{ƒ‚[ƒ^ freeƒ‚[ƒh
+				R_PG_IO_PORT_Write_PE6( 0 );	//ã‚µãƒ¼ãƒœãƒ¢ãƒ¼ã‚¿ freeãƒ¢ãƒ¼ãƒ‰
 				if( msdset == 1 ) {
-					// microSD‚Ì“®ì‚ª—LŒø‚È‚Æ‚«
+					// microSDã®å‹•ä½œãŒæœ‰åŠ¹ãªã¨ã
 					pattern = 103;
 					cnt1 = 0;
 					break;
 				} else {
-					// microSD‚Ì“®ì‚ª–³Œø‚È‚Æ‚«
+					// microSDã®å‹•ä½œãŒç„¡åŠ¹ãªã¨ã
 					pattern = 106;
 					break;
 				}
@@ -929,26 +929,26 @@ void main(void){
 			break;
 			
 		case 103:
-			// ÅŒã‚Ìƒf[ƒ^‚ª‘‚«‚Ü‚ê‚é‚Ü‚Å‘Ò‚Â
-			if ( cnt1 <= 1000 ) {	// 1000ms‘Ò‚Â
+			// æœ€å¾Œã®ãƒ‡ãƒ¼ã‚¿ãŒæ›¸ãè¾¼ã¾ã‚Œã‚‹ã¾ã§å¾…ã¤
+			if ( cnt1 <= 1000 ) {	// 1000mså¾…ã¤
 				if( checkMicroSDProcess() == 11 ) {
-					msdFlag = 0;			// ƒƒO‹L˜^I—¹
-					microSDProcessEnd();    // microSDProcessI—¹ˆ—
+					msdFlag = 0;			// ãƒ­ã‚°è¨˜éŒ²çµ‚äº†
+					microSDProcessEnd();    // microSDProcessçµ‚äº†å‡¦ç†
 					pattern = 104;
 					break;
 				}
-			} else {			// 1000msˆÈãŒo‰ß‚µ‚½‚ç‘‚«‚İ‚ğ‹­§I—¹
+			} else {			// 1000msä»¥ä¸ŠçµŒéã—ãŸã‚‰æ›¸ãè¾¼ã¿ã‚’å¼·åˆ¶çµ‚äº†
 				pattern = 106;
 				break;
 			}
 			break;
 			
 		case 104:
-			// microSD‚Ì‘‚«‚İI—¹ˆ—‚ªI‚í‚é‚Ü‚Å‘Ò‚Â
+			// microSDã®æ›¸ãè¾¼ã¿çµ‚äº†å‡¦ç†ãŒçµ‚ã‚ã‚‹ã¾ã§å¾…ã¤
 			if( checkMicroSDProcess() == 0 ) {
-				// MicroSDÅI‘‚«‚İƒAƒhƒŒƒX•Û‘¶
+				// MicroSDæœ€çµ‚æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹ä¿å­˜
 				flashDataBuff[ 0 ] = msdWorkaddress >> 16;
-				flashDataBuff[ 1 ] = msdWorkaddress & 0xffff;	// I—¹ƒAƒhƒŒƒX
+				flashDataBuff[ 1 ] = msdWorkaddress & 0xffff;	// çµ‚äº†ã‚¢ãƒ‰ãƒ¬ã‚¹
 				writeFlashData( MSD_STARTAREA, MSD_ENDAREA, MSD_DATA, 2 );
 				pattern = 105;
 				break;
@@ -956,8 +956,8 @@ void main(void){
 			break;
 			
 		case 105:
-			// microSD‘‚«‚İ¬Œ÷
-			// LED“_–Åˆ—
+			// microSDæ›¸ãè¾¼ã¿æˆåŠŸ
+			// LEDç‚¹æ»…å‡¦ç†
 			if( cnt1 >= 200 ) cnt1 = 0;
 			if( cnt1 < 100 ) {
 				LEDB_ON;
@@ -967,8 +967,8 @@ void main(void){
 			break;
 			
 		case 106:
-			// mMicroSD‘‚«‚İ¸”s
-			// LED“_–Åˆ—
+			// mMicroSDæ›¸ãè¾¼ã¿å¤±æ•—
+			// LEDç‚¹æ»…å‡¦ç†
 			if( cnt1 >= 200 ) cnt1 = 0;
 			if( cnt1 < 100 ) {
 				LEDR_ON;
@@ -985,27 +985,27 @@ void main(void){
 	} // end of "while ( 1 )"
 }
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ Timer
-// ˆ—ŠT—v     1ms‚²‚Æ‚Éƒ^ƒCƒ}Š„‚è‚İ
-// ˆø”         ‚È‚µ
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å Timer
+// å‡¦ç†æ¦‚è¦     1msã”ã¨ã«ã‚¿ã‚¤ãƒå‰²ã‚Šè¾¼ã¿
+// å¼•æ•°         ãªã—
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////
 void Timer (void) {
-	__setpsw_i();	// ‘½dŠ„‚è‚İ‹–‰Â
+	__setpsw_i();	// å¤šé‡å‰²ã‚Šè¾¼ã¿è¨±å¯
 
-	//@ƒ^ƒCƒ}ƒJƒEƒ“ƒg
+	//ã€€ã‚¿ã‚¤ãƒã‚«ã‚¦ãƒ³ãƒˆ
 	if ( pattern >= 11 ) {
 		if ( pattern <= 99 ) {
-			if ( pattern != 21 ) {				// ƒNƒƒXƒ‰ƒCƒ“’Ê‰ß‚Í–³‹
-				if ( sensor_inp() == 0x7 || sensor_inp() == 0x5 ) {	// ƒZƒ“ƒT‘S“”
+			if ( pattern != 21 ) {				// ã‚¯ãƒ­ã‚¹ãƒ©ã‚¤ãƒ³é€šéæ™‚ã¯ç„¡è¦–
+				if ( sensor_inp() == 0x7 || sensor_inp() == 0x5 ) {	// ã‚»ãƒ³ã‚µå…¨ç¯
 					cntOut1++;	
 				} else {
 					cntOut1 = 0;
 				}
 			}
-			if ( sensor_inp() == 0x0 && pattern != 53 && pattern != 63 ) cntOut2++;	// ƒZƒ“ƒT‘SÁ“”
+			if ( sensor_inp() == 0x0 && pattern != 53 && pattern != 63 ) cntOut2++;	// ã‚»ãƒ³ã‚µå…¨æ¶ˆç¯
 			else cntOut2 = 0;
-			if ( Encoder <= 1 && Encoder >= -1 ) cntOut3++;		// ƒGƒ“ƒR[ƒ_’â~(‚Ğ‚Á‚­‚è•Ô‚Á‚½H)
+			if ( Encoder <= 1 && Encoder >= -1 ) cntOut3++;		// ã‚¨ãƒ³ã‚³ãƒ¼ãƒ€åœæ­¢(ã²ã£ãã‚Šè¿”ã£ãŸï¼Ÿ)
 			else cntOut3 = 0;
 			if ( (short)RollAngleIMU >= 5 || (short)RollAngleIMU <= -5 ) cntOut4++;
 			else	cntOut4 = 0;
@@ -1019,29 +1019,29 @@ void Timer (void) {
 	cnt1++;
 	cntGyro++;
 			
-	// LCD•\¦
+	// LCDè¡¨ç¤º
 	if ( modeLCD ) lcdShowProcess();
 
-	// ƒGƒ“ƒR[ƒ_ƒJƒEƒ“ƒgæ“¾
+	// ã‚¨ãƒ³ã‚³ãƒ¼ãƒ€ã‚«ã‚¦ãƒ³ãƒˆå–å¾—
 	getEncoder();
-	// ‘¬“xƒQƒCƒ“’²®—p
+	// é€Ÿåº¦ã‚²ã‚¤ãƒ³èª¿æ•´ç”¨
 	// if (pattern > 10 && pattern < 100) stableSpeedDistance();
 
-	// PID§Œä’lZo
-	if ( modeAngle ) servoControlAngle();	// Šp“x
-	else servoControlTrace();		// ”’ü
-	motorControl();		// ƒ‚[ƒ^
+	// PIDåˆ¶å¾¡å€¤ç®—å‡º
+	if ( modeAngle ) servoControlAngle();	// è§’åº¦
+	else servoControlTrace();		// ç™½ç·š
+	motorControl();		// ãƒ¢ãƒ¼ã‚¿
 
-	// ‘–s’†‚ÌPWMo—Í
+	// èµ°è¡Œä¸­ã®PWMå‡ºåŠ›
 	if ( modeAutoMotor ) {
-		if ( modeAngle ) servoPwmOut( ServoPwm2 );	// Šp“x
-		else servoPwmOut( ServoPwm );	// ”’ü
+		if ( modeAngle ) servoPwmOut( ServoPwm2 );	// è§’åº¦
+		else servoPwmOut( ServoPwm );	// ç™½ç·š
 		if (!modePushcart) {
-			diff( motorPwm ); // ‹ì“®—Öƒ‚[ƒ^PWMo—Í
+			diff( motorPwm ); // é§†å‹•è¼ªãƒ¢ãƒ¼ã‚¿PWMå‡ºåŠ›
 		}
 	}
 	
-	// MicroSD‘‚«‚İ
+	// MicroSDæ›¸ãè¾¼ã¿
 	microSDProcess();
 	if ( msdFlag ) sendLog( 8, 9, 3
 					// char
@@ -1071,15 +1071,15 @@ void Timer (void) {
 	
 	Timer10++;
 	
-	// ’ÊM
-	// ‰Á‘¬“x‹y‚ÑŠp‘¬“x‚ğæ“¾
+	// é€šä¿¡
+	// åŠ é€Ÿåº¦åŠã³è§’é€Ÿåº¦ã‚’å–å¾—
 	
 		
-	// 10‚‚²‚Æ‚ÉÀs
+	// 10ï½ã”ã¨ã«å®Ÿè¡Œ
 	switch ( Timer10 ) {	
 	case 1:
-		getSwitch();		// ƒXƒCƒbƒ`“Ç‚İ‚İ
-		getVoltage();		// “dŒ¹“dˆ³æ“¾
+		getSwitch();		// ã‚¹ã‚¤ãƒƒãƒèª­ã¿è¾¼ã¿
+		getVoltage();		// é›»æºé›»åœ§å–å¾—
 		break;
 	case 2:
 		readGyroData();
@@ -1114,24 +1114,24 @@ void Timer (void) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹–¼ initParameter
-// ˆ—ŠT—v     •Ï”‚Ì‰Šú‰»
-// ˆø”         lcd: 1 lcd•\¦  0 lcd”ñ•\¦
-// –ß‚è’l       ‚È‚µ
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å initParameter
+// å‡¦ç†æ¦‚è¦     å¤‰æ•°ã®åˆæœŸåŒ–
+// å¼•æ•°         lcd: 1 lcdè¡¨ç¤º  0 lcdéè¡¨ç¤º
+// æˆ»ã‚Šå€¤       ãªã—
 ///////////////////////////////////////////////////////////////////////////
 void initParameter ( bool lcd ) {
-	cntmpattern2 = 0;	// ‹L˜^‘–sƒJƒEƒ“ƒgƒŠƒZƒbƒg
-	EncoderTotal = 10;	// ‘‘–s‹——£
-	cnt1 = 0;			// ƒ^ƒCƒ}ƒŠƒZƒbƒg
-	enc1 = 0;			// ‹æŠÔ‹——£ƒŠƒZƒbƒg
-	modeLCD = lcd;		// LCD•\¦OFF
-	modeAutoMotor = 1; // PWMo—Í
-	msdFlag = 1;		// ƒf[ƒ^‹L˜^ŠJn
-	targetSpeed = speed_straight * SPEED_CURRENT; // –Ú•W‘¬“xİ’è
+	cntmpattern2 = 0;	// è¨˜éŒ²èµ°è¡Œã‚«ã‚¦ãƒ³ãƒˆãƒªã‚»ãƒƒãƒˆ
+	EncoderTotal = 10;	// ç·èµ°è¡Œè·é›¢
+	cnt1 = 0;			// ã‚¿ã‚¤ãƒãƒªã‚»ãƒƒãƒˆ
+	enc1 = 0;			// åŒºé–“è·é›¢ãƒªã‚»ãƒƒãƒˆ
+	modeLCD = lcd;		// LCDè¡¨ç¤ºOFF
+	modeAutoMotor = 1; // PWMå‡ºåŠ›
+	msdFlag = 1;		// ãƒ‡ãƒ¼ã‚¿è¨˜éŒ²é–‹å§‹
+	targetSpeed = speed_straight * SPEED_CURRENT; // ç›®æ¨™é€Ÿåº¦è¨­å®š
 	
-	// Šp“xÏZ’lƒŠƒZƒbƒg
+	// è§’åº¦ç©ç®—å€¤ãƒªã‚»ãƒƒãƒˆ
 	TurningAngleIMU = 0;
 	RollAngleIMU = 0;
 	PichAngleIMU = 0;
-	pattern = 11;		// ’Êí‘–s
+	pattern = 11;		// é€šå¸¸èµ°è¡Œ
 }

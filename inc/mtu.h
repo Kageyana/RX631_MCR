@@ -1,56 +1,56 @@
-#ifndef MTU_H_
+ï»¿#ifndef MTU_H_
 #define MTU_H_
 //====================================//
-// ƒCƒ“ƒNƒ‹[ƒh
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //====================================//
 #include "R_PG_IGC-P8080_v1.h"
 //====================================//
-// ƒVƒ“ƒ{ƒ‹’è‹`
+// ã‚·ãƒ³ãƒœãƒ«å®šç¾©
 //====================================//
-#define SERVO_CENTER		2045		// ƒT[ƒ{ƒZƒ“ƒ^[‚ÌAD’l
-#define SERVO_LIMIT		1500		// ƒT[ƒ{ƒŠƒ~ƒbƒgAD’l}
-#define TGR_MOTOR			1582		// ƒWƒFƒlƒ‰ƒ‹ƒŒƒWƒXƒ^‰Šú’l(‹ì“®ƒ‚[ƒ^) TGRA‰Šú’l-1
-#define TGR_SERVO			1582		// ƒWƒFƒlƒ‰ƒ‹ƒŒƒWƒXƒ^‰Šú’l(ƒT[ƒ{)	 TGRA‰Šú’l-1
-#define PALSE_METER		14590	    // 1m‚Ìƒpƒ‹ƒX
-#define PALSE_MILLIMETER	14.59F	    // 1mm‚Ìƒpƒ‹ƒX
-#define SPEED_CURRENT		15		    // 1m/s‚Ì@1ms‚Ìƒpƒ‹ƒX
-/*************************************** ©“®¶¬ŠÖ” *************************************/
-//ƒZƒ“ƒTLED
+#define SERVO_CENTER		2045		// ã‚µãƒ¼ãƒœã‚»ãƒ³ã‚¿ãƒ¼ã®ADå€¤
+#define SERVO_LIMIT		1500		// ã‚µãƒ¼ãƒœãƒªãƒŸãƒƒãƒˆADå€¤Â±
+#define TGR_MOTOR			1582		// ã‚¸ã‚§ãƒãƒ©ãƒ«ãƒ¬ã‚¸ã‚¹ã‚¿åˆæœŸå€¤(é§†å‹•ãƒ¢ãƒ¼ã‚¿) TGRAåˆæœŸå€¤-1
+#define TGR_SERVO			1582		// ã‚¸ã‚§ãƒãƒ©ãƒ«ãƒ¬ã‚¸ã‚¹ã‚¿åˆæœŸå€¤(ã‚µãƒ¼ãƒœ)	 TGRAåˆæœŸå€¤-1
+#define PALSE_METER		14590	    // 1mã®ãƒ‘ãƒ«ã‚¹
+#define PALSE_MILLIMETER	14.59F	    // 1mmã®ãƒ‘ãƒ«ã‚¹
+#define SPEED_CURRENT		15		    // 1m/sã®æ™‚ã€€1msã®ãƒ‘ãƒ«ã‚¹
+/*************************************** è‡ªå‹•ç”Ÿæˆé–¢æ•° *************************************/
+//ã‚»ãƒ³ã‚µLED
 #define L_Sen_ON		R_PG_Timer_SetTGR_D_MTU_U0_C4( TGR_MOTOR+2 );
 #define L_Sen_OFF		R_PG_Timer_SetTGR_D_MTU_U0_C4( 0 );
-// ƒGƒ“ƒR[ƒ_
-#define ENCODER_COUNT	R_PG_Timer_GetCounterValue_MTU_U0_C1( &cnt_Encoder );	// ƒJƒEƒ“ƒgæ“¾
-// ƒ‚[ƒ^
-// MTU‰Šú‰»(PWM‹@”\AƒGƒ“ƒR[ƒ_
+// ã‚¨ãƒ³ã‚³ãƒ¼ãƒ€
+#define ENCODER_COUNT	R_PG_Timer_GetCounterValue_MTU_U0_C1( &cnt_Encoder );	// ã‚«ã‚¦ãƒ³ãƒˆå–å¾—
+// ãƒ¢ãƒ¼ã‚¿
+// MTUåˆæœŸåŒ–(PWMæ©Ÿèƒ½ã€ã‚¨ãƒ³ã‚³ãƒ¼ãƒ€
 #define SET_MTU_C0	R_PG_Timer_Set_MTU_U0_C0();		// ch0
 #define SET_MTU_C1	R_PG_Timer_Set_MTU_U0_C1();		// ch1
 #define SET_MTU_C2	R_PG_Timer_Set_MTU_U0_C2();		// ch2
 #define SET_MTU_C3	R_PG_Timer_Set_MTU_U0_C3();		// ch3
 #define SET_MTU_C4	R_PG_Timer_Set_MTU_U0_C4();		// ch4
-// MTU0,1,2,3,4‚ÌƒJƒEƒ“ƒgŠJn
+// MTU0,1,2,3,4ã®ã‚«ã‚¦ãƒ³ãƒˆé–‹å§‹
 #define START_MTU		R_PG_Timer_SynchronouslyStartCount_MTU_U0( 1, 1, 1, 1, 1);
 
-// ¶‘O—Ö
-#define DIR_FL_FOR		R_PG_IO_PORT_Write_PE3( 1 );		// ƒ‚[ƒ^‰ñ“]•ûŒü(³“])
-#define DIR_FL_REV		R_PG_IO_PORT_Write_PE3( 0 );		// ƒ‚[ƒ^‰ñ“]•ûŒü(‹t“]j
-#define PWM_FL_OUT	R_PG_Timer_SetTGR_B_MTU_U0_C4( abs(pwmfl) );	// PWMo—Í
-// ‰E‘O—Ö
+// å·¦å‰è¼ª
+#define DIR_FL_FOR		R_PG_IO_PORT_Write_PE3( 1 );		// ãƒ¢ãƒ¼ã‚¿å›è»¢æ–¹å‘(æ­£è»¢)
+#define DIR_FL_REV		R_PG_IO_PORT_Write_PE3( 0 );		// ãƒ¢ãƒ¼ã‚¿å›è»¢æ–¹å‘(é€†è»¢ï¼‰
+#define PWM_FL_OUT	R_PG_Timer_SetTGR_B_MTU_U0_C4( abs(pwmfl) );	// PWMå‡ºåŠ›
+// å³å‰è¼ª
 #define DIR_FR_FOR		R_PG_IO_PORT_Write_PE7( 0 );
 #define DIR_FR_REV		R_PG_IO_PORT_Write_PE7( 1 );
 #define PWM_FR_OUT	R_PG_Timer_SetTGR_B_MTU_U0_C0( abs(pwmfr) );
-// ¶Œã—Ö
+// å·¦å¾Œè¼ª
 #define DIR_RL_FOR		R_PG_IO_PORT_Write_PC4( 1 );
 #define DIR_RL_REV		R_PG_IO_PORT_Write_PC4( 0 );
 #define PWM_RL_OUT	R_PG_Timer_SetTGR_B_MTU_U0_C3( abs(pwmrl) );
-// ‰EŒã—Ö
+// å³å¾Œè¼ª
 #define DIR_RR_FOR		R_PG_IO_PORT_Write_PB2( 0 );
 #define DIR_RR_REV		R_PG_IO_PORT_Write_PB2( 1 );
 #define PWM_RR_OUT	R_PG_Timer_SetTGR_B_MTU_U0_C2( abs(pwmrr) );
-// ƒT[ƒ{1
+// ã‚µãƒ¼ãƒœ1
 #define DIR_SERVO_FOR		R_PG_IO_PORT_Write_PE5( 1 );
 #define DIR_SERVO_REV		R_PG_IO_PORT_Write_PE5( 0 );
 #define PWM_SERVO_OUT		R_PG_Timer_SetTGR_D_MTU_U0_C0( abs(pwm) );
-// ƒT[ƒ{2
+// ã‚µãƒ¼ãƒœ2
 #define DIR_LANCER_FOR		R_PG_IO_PORT_Write_PC2( 0 );
 #define DIR_LANCER_REV		R_PG_IO_PORT_Write_PC2( 1 );
 #define PWM_LANCER_OUT	R_PG_Timer_SetTGR_D_MTU_U0_C3( abs(pwml) );
@@ -58,30 +58,30 @@
 /******************************************************************************************/
 
 //====================================//
-// ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€
 //====================================//
-// ƒGƒ“ƒR[ƒ_ŠÖ˜A
-extern unsigned int	EncoderTotal;	// ‘‘–s‹——£
-extern signed short	Encoder;		// 1ms‚²‚Æ‚Ìƒpƒ‹ƒX
-extern unsigned int	enc1;		// ‘–s—p‹——£ƒJƒEƒ“ƒg
-extern unsigned int	enc_slope;		// âã‹——£ƒJƒEƒ“ƒg
+// ã‚¨ãƒ³ã‚³ãƒ¼ãƒ€é–¢é€£
+extern unsigned int	EncoderTotal;	// ç·èµ°è¡Œè·é›¢
+extern signed short	Encoder;		// 1msã”ã¨ã®ãƒ‘ãƒ«ã‚¹
+extern unsigned int	enc1;		// èµ°è¡Œç”¨è·é›¢ã‚«ã‚¦ãƒ³ãƒˆ
+extern unsigned int	enc_slope;		// å‚ä¸Šè·é›¢ã‚«ã‚¦ãƒ³ãƒˆ
 
-// ƒ‚[ƒ^[ŠÖ˜A
-extern signed char	accele_fR;		// ‰E‘Oƒ‚[ƒ^[PWM’l
-extern signed char	accele_fL;		// ¶‘Oƒ‚[ƒ^[PWM’l
-extern signed char	accele_rR;		// ‰EŒãƒ‚[ƒ^[PWM’l
-extern signed char	accele_rL;		// ¶Œãƒ‚[ƒ^[PWM’l
-extern signed char	sPwm;		// ƒT[ƒ{ƒ‚[ƒ^[PWM’l
+// ãƒ¢ãƒ¼ã‚¿ãƒ¼é–¢é€£
+extern signed char	accele_fR;		// å³å‰ãƒ¢ãƒ¼ã‚¿ãƒ¼PWMå€¤
+extern signed char	accele_fL;		// å·¦å‰ãƒ¢ãƒ¼ã‚¿ãƒ¼PWMå€¤
+extern signed char	accele_rR;		// å³å¾Œãƒ¢ãƒ¼ã‚¿ãƒ¼PWMå€¤
+extern signed char	accele_rL;		// å·¦å¾Œãƒ¢ãƒ¼ã‚¿ãƒ¼PWMå€¤
+extern signed char	sPwm;		// ã‚µãƒ¼ãƒœãƒ¢ãƒ¼ã‚¿ãƒ¼PWMå€¤
 
 //====================================//
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //====================================//
-// ƒGƒ“ƒR[ƒ_ŠÖ˜A
+// ã‚¨ãƒ³ã‚³ãƒ¼ãƒ€é–¢é€£
 void getEncoder (void);
 
-// ƒ‚[ƒ^[ŠÖ˜A
+// ãƒ¢ãƒ¼ã‚¿ãƒ¼é–¢é€£
 void motorPwmOut( signed char accelefL, signed char accelefR, signed char accelerL, signed char accelerR );
-// ƒT[ƒ{ŠÖ˜A
+// ã‚µãƒ¼ãƒœé–¢é€£
 void servoPwmOut( signed char pwm );
 
 #endif // MTU_H_

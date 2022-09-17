@@ -1,7 +1,7 @@
-#ifndef SETUP_H_
+ï»¿#ifndef SETUP_H_
 #define SETUP_H_
 //======================================//
-// ƒCƒ“ƒNƒ‹[ƒh
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //======================================//
 #include "io.h"
 #include "mtu.h"
@@ -15,7 +15,7 @@
 #include "MemorryTrace.h"
 #include <stdio.h>
 //======================================//
-// ƒVƒ“ƒ{ƒ‹’è‹`
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€
 //======================================//
 #define UD	0
 #define LR	1
@@ -24,23 +24,23 @@
 #define START_GATE		2
 
 //======================================//
-// ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€
 //======================================//
-// ƒpƒ^[ƒ“ŠÖ˜A
+// ãƒ‘ã‚¿ãƒ¼ãƒ³é–¢é€£
 extern char		start;
 
-// ƒ^ƒCƒ}ŠÖ˜A
+// ã‚¿ã‚¤ãƒé–¢é€£
 extern unsigned short 	cntSetup1;
 extern unsigned short 	cntSetup2;
 extern unsigned short 	cntSetup3;	
-extern short		cntSwitchUD;	// ƒXƒCƒbƒ`’·‰Ÿ‚µ”»’è—p‰E
-extern short		cntSwitchLR;	// ƒXƒCƒbƒ`’·‰Ÿ‚µ”»’è—p¶
+extern short		cntSwitchUD;	// ã‚¹ã‚¤ãƒƒãƒé•·æŠ¼ã—åˆ¤å®šç”¨å³
+extern short		cntSwitchLR;	// ã‚¹ã‚¤ãƒƒãƒé•·æŠ¼ã—åˆ¤å®šç”¨å·¦
 
-// ƒpƒ‰ƒ[ƒ^ŠÖ˜A
+// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿é–¢é€£
 extern char fixSpeed;
 
 //======================================//
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //======================================//
 void setup(void);
 char fixSpeedSetting ( void );

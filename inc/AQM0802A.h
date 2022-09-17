@@ -1,40 +1,40 @@
-#ifndef I2C_LCD_H_
+ï»¿#ifndef I2C_LCD_H_
 #define I2C_LCD_H_
 //====================================//
-// ƒCƒ“ƒNƒ‹[ƒh 
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ 
 //====================================//
 #include "R_PG_IGC-P8080_v1.h"
 #include "sci.h"
 #include <stdio.h>
 #include <stdarg.h>
 //====================================//
-// ƒVƒ“ƒ{ƒ‹’è‹`
+// ã‚·ãƒ³ãƒœãƒ«å®šç¾©
 //====================================//
-// ƒXƒŒ[ƒuƒAƒhƒŒƒX
+// ã‚¹ãƒ¬ãƒ¼ãƒ–ã‚¢ãƒ‰ãƒ¬ã‚¹
 #define LCD_SLAVEADDRESS	0x007c
-// ‰t»ŠÖ˜A•Ï”
-#define LCD_MAX_X	17		// •\¦•¶š” ‰¡ 16 or 20
-#define LCD_MAX_Y	2		// •\¦•¶š” c  2 or  4
-#define RSBIT0		0x00	// ƒRƒ}ƒ“ƒh‘—Mƒrƒbƒg
-#define RSBIT1		0x40	// ƒf[ƒ^‘—Mƒrƒbƒg
-#define UPROW       0       // 1s–Ú
-#define LOWROW      1       // 2s–Ú
+// æ¶²æ™¶é–¢é€£å¤‰æ•°
+#define LCD_MAX_X	17		// è¡¨ç¤ºæ–‡å­—æ•° æ¨ª 16 or 20
+#define LCD_MAX_Y	2		// è¡¨ç¤ºæ–‡å­—æ•° ç¸¦  2 or  4
+#define RSBIT0		0x00	// ã‚³ãƒãƒ³ãƒ‰é€ä¿¡ãƒ“ãƒƒãƒˆ
+#define RSBIT1		0x40	// ãƒ‡ãƒ¼ã‚¿é€ä¿¡ãƒ“ãƒƒãƒˆ
+#define UPROW       0       // 1è¡Œç›®
+#define LOWROW      1       // 2è¡Œç›®
 
-#define CLOCK		96		// “®ìü”g”[MHz]
+#define CLOCK		96		// å‹•ä½œå‘¨æ³¢æ•°[MHz]
 
-/******************************** ©“®¶¬ŠÖ” *********************************/
-#define 	SET_SCI_LCD	R_PG_SCI_Set_C9();	// I2C‰Šú‰»
+/******************************** è‡ªå‹•ç”Ÿæˆé–¢æ•° *********************************/
+#define 	SET_SCI_LCD	R_PG_SCI_Set_C9();	// I2CåˆæœŸåŒ–
 #define 	I2C_LCD_SEND	R_PG_SCI_I2CMode_Send_C9(0, LCD_SLAVEADDRESS, word, 2);
 #define	    I2C_LCD_READ	R_PG_SCI_I2CMode_Send_C9(0, LCD_SLAVEADDRESS, Command, 2);
 /***************************************************************************/
 //====================================//
-// ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€
 //====================================//
 
 //====================================//
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //====================================//
-// LCDŠÖ˜A
+// LCDé–¢é€£
 void waitLcd ( short waitTime );
 void lcdShowProcess ( void );
 void lcdPosition ( char x ,char y );

@@ -1,46 +1,46 @@
-//====================================//
-// ÉCÉìÉNÉãÅ[Éh
+Ôªø//====================================//
+// „Ç§„É≥„ÇØ„É´„Éº„Éâ
 //====================================//
 #include "mtu.h"
 //====================================//
-// ÉOÉçÅ[ÉoÉãïœêîÇÃêÈåæ
+// „Ç∞„É≠„Éº„Éê„É´Â§âÊï∞„ÅÆÂÆ£Ë®Ä
 //====================================//
-// ÉGÉìÉRÅ[É_ä÷òA
-static unsigned short 	cnt_Encoder;	// ÉGÉìÉRÅ[É_ílÇÃäiî[êÊ
-static unsigned short	encbuff;		// ëOâÒÇÃÉGÉìÉRÅ[É_íl
-short					Encoder;			// 1msÇ≤Ç∆ÇÃÉpÉãÉX
-unsigned int			EncoderTotal;		// ëçëñçsãóó£
-unsigned int			enc1;				// ëñçsópãóó£ÉJÉEÉìÉg
-unsigned int			enc_slope;			// ç‚è„ãóó£ÉJÉEÉìÉg
-// ÉÇÅ[É^Å[ä÷òA
-signed char		accele_fR;		// âEëOÉÇÅ[É^Å[PWMíl
-signed char		accele_fL;		// ç∂ëOÉÇÅ[É^Å[PWMíl
-signed char		accele_rR;		// âEå„ÉÇÅ[É^Å[PWMíl
-signed char		accele_rL;		// ç∂å„ÉÇÅ[É^Å[PWMíl
-signed char		sPwm;			// ÉTÅ[É{ÉÇÅ[É^Å[PWMíl
+// „Ç®„É≥„Ç≥„Éº„ÉÄÈñ¢ÈÄ£
+static unsigned short 	cnt_Encoder;	// „Ç®„É≥„Ç≥„Éº„ÉÄÂÄ§„ÅÆÊ†ºÁ¥çÂÖà
+static unsigned short	encbuff;		// ÂâçÂõû„ÅÆ„Ç®„É≥„Ç≥„Éº„ÉÄÂÄ§
+short					Encoder;			// 1ms„Åî„Å®„ÅÆ„Éë„É´„Çπ
+unsigned int			EncoderTotal;		// Á∑èËµ∞Ë°åË∑ùÈõ¢
+unsigned int			enc1;				// Ëµ∞Ë°åÁî®Ë∑ùÈõ¢„Ç´„Ç¶„É≥„Éà
+unsigned int			enc_slope;			// ÂùÇ‰∏äË∑ùÈõ¢„Ç´„Ç¶„É≥„Éà
+// „É¢„Éº„Çø„ÉºÈñ¢ÈÄ£
+signed char		accele_fR;		// Âè≥Ââç„É¢„Éº„Çø„ÉºPWMÂÄ§
+signed char		accele_fL;		// Â∑¶Ââç„É¢„Éº„Çø„ÉºPWMÂÄ§
+signed char		accele_rR;		// Âè≥Âæå„É¢„Éº„Çø„ÉºPWMÂÄ§
+signed char		accele_rL;		// Â∑¶Âæå„É¢„Éº„Çø„ÉºPWMÂÄ§
+signed char		sPwm;			// „Çµ„Éº„Éú„É¢„Éº„Çø„ÉºPWMÂÄ§
 /////////////////////////////////////////////////////////////////////////////////
-// ÉÇÉWÉÖÅ[Éãñº getEncoder
-// èàóùäTóv     ÉGÉìÉRÅ[É_ÇÃÉJÉEÉìÉgÇéÊìæÇµêœéZÇ∑ÇÈ(1msÇ≤Ç∆Ç…é¿çs)
-// à¯êî         Ç»Çµ
-// ñﬂÇËíl       Ç»Çµ
+// „É¢„Ç∏„É•„Éº„É´Âêç getEncoder
+// Âá¶ÁêÜÊ¶ÇË¶Å     „Ç®„É≥„Ç≥„Éº„ÉÄ„ÅÆ„Ç´„Ç¶„É≥„Éà„ÇíÂèñÂæó„ÅóÁ©çÁÆó„Åô„Çã(1ms„Åî„Å®„Å´ÂÆüË°å)
+// ÂºïÊï∞         „Å™„Åó
+// Êàª„ÇäÂÄ§       „Å™„Åó
 /////////////////////////////////////////////////////////////////////////////////
 void getEncoder (void)
 {
-	ENCODER_COUNT			// ÉGÉìÉRÅ[É_ÉJÉEÉìÉgíléÊìæ
-	Encoder = cnt_Encoder - encbuff;// åªç›ínÇ©ÇÁ1msëOÇÃílÇà¯Ç¢Çƒ1msä‘ÇÃÉJÉEÉìÉgÇåvéZ
+	ENCODER_COUNT			// „Ç®„É≥„Ç≥„Éº„ÉÄ„Ç´„Ç¶„É≥„ÉàÂÄ§ÂèñÂæó
+	Encoder = cnt_Encoder - encbuff;// ÁèæÂú®Âú∞„Åã„Çâ1msÂâç„ÅÆÂÄ§„ÇíÂºï„ÅÑ„Å¶1msÈñì„ÅÆ„Ç´„Ç¶„É≥„Éà„ÇíË®àÁÆó
 	
-	// êœéZ
+	// Á©çÁÆó
 	EncoderTotal += Encoder;
 	enc1 += Encoder;
 	enc_slope += Encoder;
 	
-	encbuff = cnt_Encoder;	// éüâÒÇÕÇ±ÇÃílÇ™1msëOÇÃílÇ∆Ç»ÇÈ
+	encbuff = cnt_Encoder;	// Ê¨°Âõû„ÅØ„Åì„ÅÆÂÄ§„Åå1msÂâç„ÅÆÂÄ§„Å®„Å™„Çã
 }
 ///////////////////////////////////////////////////////////////////////////
-// ÉÇÉWÉÖÅ[Éãñº motor_f
-// èàóùäTóv     ÉÇÅ[É^Å[ÇÃPWMÇÃïœçX
-// à¯êî         accelefL, accelefR(PWMÇ1Å`100%Ç≈éwíË)
-// ñﬂÇËíl       Ç»
+// „É¢„Ç∏„É•„Éº„É´Âêç motor_f
+// Âá¶ÁêÜÊ¶ÇË¶Å     „É¢„Éº„Çø„Éº„ÅÆPWM„ÅÆÂ§âÊõ¥
+// ÂºïÊï∞         accelefL, accelefR(PWM„Çí1ÔΩû100%„ÅßÊåáÂÆö)
+// Êàª„ÇäÂÄ§       „Å™
 ///////////////////////////////////////////////////////////////////////////
 void motorPwmOut( signed char accelefL, signed char accelefR, signed char accelerL, signed char accelerR )
 {
@@ -56,62 +56,62 @@ void motorPwmOut( signed char accelefL, signed char accelefR, signed char accele
 	pwmrl = TGR_MOTOR * accelerL / 100;
 	pwmrr = TGR_MOTOR * accelerR / 100;
 	
-	// ç∂ëOó÷
+	// Â∑¶ÂâçËº™
 	if( accelefL >= 0) DIR_FL_FOR
 	else DIR_FL_REV
 	if ( accelefL == 100 || accelefL == -100 )pwmfl = TGR_MOTOR + 2;
 	PWM_FL_OUT
 	
-	// âEëOó÷
+	// Âè≥ÂâçËº™
 	if( accelefR >= 0) DIR_FR_FOR
 	else DIR_FR_REV
 	if ( accelefR == 100 || accelefR == -100 ) pwmfr = TGR_MOTOR + 2;
 	PWM_FR_OUT
 
-	// ç∂å„ó÷
+	// Â∑¶ÂæåËº™
 	if( accelerL >= 0 ) DIR_RL_FOR
 	else DIR_RL_REV
 	if ( accelerL == 100 || accelerL == -100 ) pwmrl = TGR_MOTOR + 2;
 	PWM_RL_OUT
 	
-	// âEå„ó÷
+	// Âè≥ÂæåËº™
 	if( accelerR >= 0 ) DIR_RR_FOR
 	else DIR_RR_REV
 	if ( accelerR == 100 || accelerR == -100 ) pwmrr = TGR_MOTOR + 2;
 	PWM_RR_OUT
 }
 ///////////////////////////////////////////////////////////////////////////
-// ÉÇÉWÉÖÅ[Éãñº servoPwmOut
-// èàóùäTóv     îíê¸ÉgÉåÅ[ÉXéûÉTÅ[É{ÇÃPWMÇÃïœçX
-// à¯êî         spwm
-// ñﬂÇËíl       Ç»Çµ
+// „É¢„Ç∏„É•„Éº„É´Âêç servoPwmOut
+// Âá¶ÁêÜÊ¶ÇË¶Å     ÁôΩÁ∑ö„Éà„É¨„Éº„ÇπÊôÇ„Çµ„Éº„Éú„ÅÆPWM„ÅÆÂ§âÊõ¥
+// ÂºïÊï∞         spwm
+// Êàª„ÇäÂÄ§       „Å™„Åó
 ///////////////////////////////////////////////////////////////////////////
 void servoPwmOut( signed char servopwm )
 {
 	uint16_t pwm;
 	short angle;
 	
-	sPwm = servopwm;		// ÉçÉOópïœêîÇ…ë„ì¸
-	//servopwm = -servopwm;		// âÒì]ï˚å¸ÇïœÇ¶ÇÈ
+	sPwm = servopwm;		// „É≠„Ç∞Áî®Â§âÊï∞„Å´‰ª£ÂÖ•
+	//servopwm = -servopwm;		// ÂõûËª¢ÊñπÂêë„ÇíÂ§â„Åà„Çã
 	
-	// ÉTÅ[É{ÉäÉ~ÉbÉgêßå‰
+	// „Çµ„Éº„Éú„É™„Éü„ÉÉ„ÉàÂà∂Âæ°
 	angle = getServoAngle();
 	
-	// äpìxÇ…ÇÊÇÈÉäÉ~ÉbÉgêßå‰
+	// ËßíÂ∫¶„Å´„Çà„Çã„É™„Éü„ÉÉ„ÉàÂà∂Âæ°
 	if ( angle >= SERVO_LIMIT ) servopwm = -15;
 	if ( angle <= -SERVO_LIMIT ) servopwm = 15;
 	
-	// É|ÉeÉìÉVÉáÉìÉÅÅ[É^Å[Ç™äOÇÍÇƒÇ¢ÇΩÇÁêßå‰ÇµÇ»Ç¢
+	// „Éù„ÉÜ„É≥„Ç∑„Éß„É≥„É°„Éº„Çø„Éº„ÅåÂ§ñ„Çå„Å¶„ÅÑ„Åü„ÇâÂà∂Âæ°„Åó„Å™„ÅÑ
 	if ( angle > SERVO_LIMIT + 100 ) servopwm = 0;
 	if ( angle < -SERVO_LIMIT - 100 ) servopwm = 0;
 
 	pwm = (uint16_t)TGR_SERVO * servopwm / 100;
-	// ÉTÅ[É{ÉÇÅ[É^êßå‰
+	// „Çµ„Éº„Éú„É¢„Éº„ÇøÂà∂Âæ°
 	if( servopwm > 0) {				
-		// ê≥ì]
+		// Ê≠£Ëª¢
 		DIR_SERVO_FOR
 	} else {				
-		// ãtì]
+		// ÈÄÜËª¢
 		pwm = -pwm;
 		DIR_SERVO_REV
 	}
