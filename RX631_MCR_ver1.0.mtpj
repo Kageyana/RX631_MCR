@@ -1,9 +1,9 @@
 ﻿<CubeSuiteProject>
-  <ProductVersion>9.07.00.00</ProductVersion>
+  <ProductVersion>9.12.00.00</ProductVersion>
   <Class Guid="68f4a651-b9cd-473b-a595-b00447132ffa">
     <Instance Guid="00000000-0000-0000-0000-000000000000">
       <FormatVersion>2.0</FormatVersion>
-      <FileVersion>9.7</FileVersion>
+      <FileVersion>9.12</FileVersion>
       <ProjectGuid>d5919fa7-d93b-491b-a42e-a57f5ba93bbc</ProjectGuid>
       <ProjectItemGuid>d63f1c04-42fa-48f0-b2c8-6bb13a31af6a</ProjectItemGuid>
       <FileCategoryGuid>7ff8e335-17df-495e-93d5-351f931b4786</FileCategoryGuid>
@@ -882,7 +882,7 @@
   </Class>
   <Class Guid="3a79707d-5977-45f7-ac11-19c35e333132">
     <Instance Guid="3a79707d-5977-45f7-ac11-19c35e333132">
-      <DataFormatVersion>1.6</DataFormatVersion>
+      <DataFormatVersion>1.7</DataFormatVersion>
       <BuildModeCount>1</BuildModeCount>
       <BuildMode0>RABlAGYAYQB1AGwAdABCAHUAaQBsAGQA</BuildMode0>
       <BatchBuildFlag0>False</BatchBuildFlag0>
@@ -1008,20 +1008,21 @@
       <SetAllBuildModeValue-DefaultValue>False</SetAllBuildModeValue-DefaultValue>
       <AsmOptionDefine-DefaultValue />
       <COptionDefine-DefaultValue />
-      <DependencyFileExistCheckingType-DefaultValue>Rebuild</DependencyFileExistCheckingType-DefaultValue>
       <GeneralOptionFpu-DefaultValue>Fpu</GeneralOptionFpu-DefaultValue>
+      <GeneralOptionGroupMessages-DefaultValue>False</GeneralOptionGroupMessages-DefaultValue>
       <GeneralOptionNousePidRegister-DefaultValue>True</GeneralOptionNousePidRegister-DefaultValue>
       <LinkOptionConvertFolder-DefaultValue>%BuildModeName%</LinkOptionConvertFolder-DefaultValue>
       <LinkOptionOptimize-DefaultValue>None</LinkOptionOptimize-DefaultValue>
       <AsmOptionDebug-DefaultValue>True</AsmOptionDebug-DefaultValue>
       <COptionDebug-DefaultValue>True</COptionDebug-DefaultValue>
-      <EnsureCompatibilityOfPathAndLinkageOrder-DefaultValue>False</EnsureCompatibilityOfPathAndLinkageOrder-DefaultValue>
+      <DependencyFileExistCheckingType-DefaultValue>Rebuild</DependencyFileExistCheckingType-DefaultValue>
       <GeneralOptionDpfpu-DefaultValue>Nodpfpu</GeneralOptionDpfpu-DefaultValue>
       <LinkOptionConvertFileName-DefaultValue>%ProjectName%.mot</LinkOptionConvertFileName-DefaultValue>
       <LinkOptionOptimizeSymbolDelete-DefaultValue>False</LinkOptionOptimizeSymbolDelete-DefaultValue>
       <PreBuildCommands-DefaultValue />
       <AsmOptionGoptimize-DefaultValue>False</AsmOptionGoptimize-DefaultValue>
       <COptionOptimize-DefaultValue>Level2</COptionOptimize-DefaultValue>
+      <EnsureCompatibilityOfPathAndLinkageOrder-DefaultValue>False</EnsureCompatibilityOfPathAndLinkageOrder-DefaultValue>
       <GeneralOptionEndian-DefaultValue>Little</GeneralOptionEndian-DefaultValue>
       <LinkOptionMultiConvertFileName-DefaultValue />
       <LinkOptionOptimizeSameCode-DefaultValue>False</LinkOptionOptimizeSameCode-DefaultValue>
@@ -1061,8 +1062,9 @@
       <GeneralOptionBaseAddressRegister-DefaultValue>None</GeneralOptionBaseAddressRegister-DefaultValue>
       <GeneralOptionPatch-DefaultValue>None</GeneralOptionPatch-DefaultValue>
       <GeneralOptionSaveAcc-DefaultValue>False</GeneralOptionSaveAcc-DefaultValue>
+      <GeneralOptionNoSaveTfu-DefaultValue>True</GeneralOptionNoSaveTfu-DefaultValue>
       <IsLockedByUser>True</IsLockedByUser>
-      <TimeTagModified--0>-8585109878183360397</TimeTagModified--0>
+      <TimeTagModified--0>-8584752181231268662</TimeTagModified--0>
       <BuildMode-0>DefaultBuild</BuildMode-0>
       <Memo-0 />
       <OutputMessageFormat-0>%TargetFiles%</OutputMessageFormat-0>
@@ -1081,14 +1083,15 @@
       <GeneralOptionEnableParallelBuilding-0>False</GeneralOptionEnableParallelBuilding-0>
       <GeneralOptionOutputFolder-0>%BuildModeName%</GeneralOptionOutputFolder-0>
       <GeneralOptionPid-0>None</GeneralOptionPid-0>
-      <DependencyFileExistCheckingType-0>Rebuild</DependencyFileExistCheckingType-0>
       <GeneralOptionFpu-0>Fpu</GeneralOptionFpu-0>
+      <GeneralOptionGroupMessages-0>False</GeneralOptionGroupMessages-0>
       <GeneralOptionNousePidRegister-0>True</GeneralOptionNousePidRegister-0>
       <LinkOptionConvertFolder-0>%BuildModeName%</LinkOptionConvertFolder-0>
-      <EnsureCompatibilityOfPathAndLinkageOrder-0>False</EnsureCompatibilityOfPathAndLinkageOrder-0>
+      <DependencyFileExistCheckingType-0>Rebuild</DependencyFileExistCheckingType-0>
       <GeneralOptionDpfpu-0>Nodpfpu</GeneralOptionDpfpu-0>
       <LinkOptionConvertFileName-0>%ProjectName%.mot</LinkOptionConvertFileName-0>
       <AsmOptionGoptimize-0>False</AsmOptionGoptimize-0>
+      <EnsureCompatibilityOfPathAndLinkageOrder-0>False</EnsureCompatibilityOfPathAndLinkageOrder-0>
       <GeneralOptionEndian-0>Little</GeneralOptionEndian-0>
       <LinkOptionMultiConvertFileName-0 />
       <AsmOptionListFile-0>False</AsmOptionListFile-0>
@@ -1121,7 +1124,8 @@
       <GeneralOptionBaseAddressRegister-0>None</GeneralOptionBaseAddressRegister-0>
       <GeneralOptionPatch-0>None</GeneralOptionPatch-0>
       <GeneralOptionSaveAcc-0>False</GeneralOptionSaveAcc-0>
-      <LastCompilerVersion-0>V3.04.00</LastCompilerVersion-0>
+      <GeneralOptionNoSaveTfu-0>True</GeneralOptionNoSaveTfu-0>
+      <LastCompilerVersion-0>V3.06.00</LastCompilerVersion-0>
     </Instance>
     <Instance Guid="95a63257-4aa7-40c0-a74a-7991543b099b">
       <COptionLangC-DefaultValue>C</COptionLangC-DefaultValue>
@@ -1527,8 +1531,7 @@ SmartManual Docs\RX631
       <LinkOptionOutputFolder-DefaultValue>%BuildModeName%</LinkOptionOutputFolder-DefaultValue>
       <LinkOptionRecordS-DefaultValue>None</LinkOptionRecordS-DefaultValue>
       <LinkOptionShowReference-DefaultValue>False</LinkOptionShowReference-DefaultValue>
-      <LinkOptionSystemLibrary-DefaultValue />
-      <LinkOptionBinary-DefaultValue />
+      <LinkOptionUseSystemLibraries-DefaultValue>True</LinkOptionUseSystemLibraries-DefaultValue>
       <LinkOptionChangeMessageInformation-DefaultValue>None</LinkOptionChangeMessageInformation-DefaultValue>
       <LinkOptionContiguousSection-DefaultValue />
       <LinkOptionDividedConvertFile-DefaultValue>False</LinkOptionDividedConvertFile-DefaultValue>
@@ -1539,38 +1542,42 @@ D_2=R_2
 </LinkOptionRom-DefaultValue>
       <LinkOptionSameSize-DefaultValue>1E</LinkOptionSameSize-DefaultValue>
       <LinkOptionShowXreference-DefaultValue>False</LinkOptionShowXreference-DefaultValue>
+      <LinkOptionSystemLibrary-DefaultValue />
+      <LinkOptionBinary-DefaultValue />
       <LinkOptionChangeMessageInformationNumber-DefaultValue />
       <LinkOptionConvertFolder-DefaultValue>%BuildModeName%</LinkOptionConvertFolder-DefaultValue>
-      <LinkOptionDefine-DefaultValue />
       <LinkOptionMap-DefaultValue>False</LinkOptionMap-DefaultValue>
       <LinkOptionOptimizeShortFormat-DefaultValue>False</LinkOptionOptimizeShortFormat-DefaultValue>
       <LinkOptionShowTotalSize-DefaultValue>False</LinkOptionShowTotalSize-DefaultValue>
       <LinkOptionChangeMessageWarning-DefaultValue>None</LinkOptionChangeMessageWarning-DefaultValue>
       <LinkOptionConvertFileName-DefaultValue>%ProjectName%.mot</LinkOptionConvertFileName-DefaultValue>
-      <LinkOptionEntry-DefaultValue>False</LinkOptionEntry-DefaultValue>
+      <LinkOptionDefine-DefaultValue />
       <LinkOptionMessage-DefaultValue>NoMessage</LinkOptionMessage-DefaultValue>
       <LinkOptionOptimizeBranch-DefaultValue>False</LinkOptionOptimizeBranch-DefaultValue>
-      <LinkOptionShowVector-DefaultValue>False</LinkOptionShowVector-DefaultValue>
+      <LinkOptionShowStruct-DefaultValue>False</LinkOptionShowStruct-DefaultValue>
+      <LinkOptionAllowOptimizeEntryBlock-DefaultValue>False</LinkOptionAllowOptimizeEntryBlock-DefaultValue>
       <LinkOptionChangeMessageWarningNumber-DefaultValue />
-      <LinkOptionEntryPoint-DefaultValue />
+      <LinkOptionEntry-DefaultValue>False</LinkOptionEntry-DefaultValue>
       <LinkOptionMsgUnused-DefaultValue>False</LinkOptionMsgUnused-DefaultValue>
       <LinkOptionMultiConvertFileName-DefaultValue />
-      <LinkOptionShowRelocationAttribute-DefaultValue>False</LinkOptionShowRelocationAttribute-DefaultValue>
-      <LinkOptionSymbolForbid-DefaultValue />
+      <LinkOptionShowVector-DefaultValue>False</LinkOptionShowVector-DefaultValue>
       <LinkOptionChangeMessageError-DefaultValue>None</LinkOptionChangeMessageError-DefaultValue>
+      <LinkOptionEntryPoint-DefaultValue />
       <LinkOptionNoMessageErrorNumber-DefaultValue />
+      <LinkOptionShowRelocationAttribute-DefaultValue>False</LinkOptionShowRelocationAttribute-DefaultValue>
+      <LinkOptionSpace-DefaultValue>None</LinkOptionSpace-DefaultValue>
+      <LinkOptionSymbolForbid-DefaultValue />
+      <LinkOptionChangeMessageErrorNumber-DefaultValue />
       <LinkOptionNoPrelink-DefaultValue>Auto</LinkOptionNoPrelink-DefaultValue>
+      <LinkOptionPadding-DefaultValue>False</LinkOptionPadding-DefaultValue>
       <LinkOptionSameCodeForbid-DefaultValue />
       <LinkOptionShowCFI-DefaultValue>False</LinkOptionShowCFI-DefaultValue>
-      <LinkOptionSpace-DefaultValue>None</LinkOptionSpace-DefaultValue>
-      <LinkOptionChangeMessageErrorNumber-DefaultValue />
-      <LinkOptionPadding-DefaultValue>False</LinkOptionPadding-DefaultValue>
-      <LinkOptionSectionForbid-DefaultValue />
       <LinkOptionSpaceValue-DefaultValue>FF</LinkOptionSpaceValue-DefaultValue>
-      <LinkOptionAbsoluteForbid-DefaultValue />
       <LinkOptionByteCount-DefaultValue>False</LinkOptionByteCount-DefaultValue>
       <LinkOptionHide-DefaultValue>False</LinkOptionHide-DefaultValue>
+      <LinkOptionSectionForbid-DefaultValue />
       <LinkOptionVectN-DefaultValue />
+      <LinkOptionAbsoluteForbid-DefaultValue />
       <LinkOptionByteCountValue-DefaultValue>FF</LinkOptionByteCountValue-DefaultValue>
       <LinkOptionTotalSize-DefaultValue>False</LinkOptionTotalSize-DefaultValue>
       <LinkOptionVect-DefaultValue />
@@ -1626,8 +1633,7 @@ D_2=R_2
       <LinkOptionOutputFolder-0>%BuildModeName%</LinkOptionOutputFolder-0>
       <LinkOptionRecordS-0>None</LinkOptionRecordS-0>
       <LinkOptionShowReference-0>False</LinkOptionShowReference-0>
-      <LinkOptionSystemLibrary-0 />
-      <LinkOptionBinary-0 />
+      <LinkOptionUseSystemLibraries-0>True</LinkOptionUseSystemLibraries-0>
       <LinkOptionChangeMessageInformation-0>None</LinkOptionChangeMessageInformation-0>
       <LinkOptionContiguousSection-0 />
       <LinkOptionDividedConvertFile-0>False</LinkOptionDividedConvertFile-0>
@@ -1638,38 +1644,42 @@ D_2=R_2
 </LinkOptionRom-0>
       <LinkOptionSameSize-0>1E</LinkOptionSameSize-0>
       <LinkOptionShowXreference-0>False</LinkOptionShowXreference-0>
+      <LinkOptionSystemLibrary-0 />
+      <LinkOptionBinary-0 />
       <LinkOptionChangeMessageInformationNumber-0 />
       <LinkOptionConvertFolder-0>%BuildModeName%</LinkOptionConvertFolder-0>
-      <LinkOptionDefine-0 />
       <LinkOptionMap-0>False</LinkOptionMap-0>
       <LinkOptionOptimizeShortFormat-0>False</LinkOptionOptimizeShortFormat-0>
       <LinkOptionShowTotalSize-0>True</LinkOptionShowTotalSize-0>
       <LinkOptionChangeMessageWarning-0>None</LinkOptionChangeMessageWarning-0>
       <LinkOptionConvertFileName-0>%ProjectName%.mot</LinkOptionConvertFileName-0>
-      <LinkOptionEntry-0>False</LinkOptionEntry-0>
+      <LinkOptionDefine-0 />
       <LinkOptionMessage-0>NoMessage</LinkOptionMessage-0>
       <LinkOptionOptimizeBranch-0>False</LinkOptionOptimizeBranch-0>
-      <LinkOptionShowVector-0>False</LinkOptionShowVector-0>
+      <LinkOptionShowStruct-0>False</LinkOptionShowStruct-0>
+      <LinkOptionAllowOptimizeEntryBlock-0>False</LinkOptionAllowOptimizeEntryBlock-0>
       <LinkOptionChangeMessageWarningNumber-0 />
-      <LinkOptionEntryPoint-0 />
+      <LinkOptionEntry-0>False</LinkOptionEntry-0>
       <LinkOptionMsgUnused-0>False</LinkOptionMsgUnused-0>
       <LinkOptionMultiConvertFileName-0 />
-      <LinkOptionShowRelocationAttribute-0>False</LinkOptionShowRelocationAttribute-0>
-      <LinkOptionSymbolForbid-0 />
+      <LinkOptionShowVector-0>False</LinkOptionShowVector-0>
       <LinkOptionChangeMessageError-0>None</LinkOptionChangeMessageError-0>
+      <LinkOptionEntryPoint-0 />
       <LinkOptionNoMessageErrorNumber-0 />
+      <LinkOptionShowRelocationAttribute-0>False</LinkOptionShowRelocationAttribute-0>
+      <LinkOptionSpace-0>None</LinkOptionSpace-0>
+      <LinkOptionSymbolForbid-0 />
+      <LinkOptionChangeMessageErrorNumber-0 />
       <LinkOptionNoPrelink-0>Auto</LinkOptionNoPrelink-0>
+      <LinkOptionPadding-0>False</LinkOptionPadding-0>
       <LinkOptionSameCodeForbid-0 />
       <LinkOptionShowCFI-0>False</LinkOptionShowCFI-0>
-      <LinkOptionSpace-0>None</LinkOptionSpace-0>
-      <LinkOptionChangeMessageErrorNumber-0 />
-      <LinkOptionPadding-0>False</LinkOptionPadding-0>
-      <LinkOptionSectionForbid-0 />
       <LinkOptionSpaceValue-0>FF</LinkOptionSpaceValue-0>
-      <LinkOptionAbsoluteForbid-0 />
       <LinkOptionByteCount-0>False</LinkOptionByteCount-0>
       <LinkOptionHide-0>False</LinkOptionHide-0>
+      <LinkOptionSectionForbid-0 />
       <LinkOptionVectN-0 />
+      <LinkOptionAbsoluteForbid-0 />
       <LinkOptionByteCountValue-0>FF</LinkOptionByteCountValue-0>
       <LinkOptionTotalSize-0>False</LinkOptionTotalSize-0>
       <LinkOptionVect-0 />
@@ -1739,6 +1749,7 @@ D_2=R_2
       <HexOptionCrcType-DefaultValue>Ccitt</HexOptionCrcType-DefaultValue>
       <HexOptionCrcInitialValue-DefaultValue />
       <HexOptionCrcEndian-DefaultValue>None</HexOptionCrcEndian-DefaultValue>
+      <HexOptionCrcOperations-DefaultValue />
       <HexOptionVerboseCrc-DefaultValue>False</HexOptionVerboseCrc-DefaultValue>
       <HexOptionEndRecord-DefaultValue>None</HexOptionEndRecord-DefaultValue>
       <LinkOptionS9-DefaultValue>False</LinkOptionS9-DefaultValue>
@@ -1783,6 +1794,7 @@ D_2=R_2
       <HexOptionCrcType-0>Ccitt</HexOptionCrcType-0>
       <HexOptionCrcInitialValue-0 />
       <HexOptionCrcEndian-0>None</HexOptionCrcEndian-0>
+      <HexOptionCrcOperations-0 />
       <HexOptionVerboseCrc-0>False</HexOptionVerboseCrc-0>
       <HexOptionEndRecord-0>None</HexOptionEndRecord-0>
       <LinkOptionS9-0>False</LinkOptionS9-0>
@@ -1931,7 +1943,7 @@ D_2=R_2
       <LbgOptionFloatOrder-DefaultValue>False</LbgOptionFloatOrder-DefaultValue>
       <LbgOptionBranchChaining-DefaultValue>None</LbgOptionBranchChaining-DefaultValue>
       <IsLockedByUser>False</IsLockedByUser>
-      <TimeTagModified--0>-8585109878183340472</TimeTagModified--0>
+      <TimeTagModified--0>-8584752181231243405</TimeTagModified--0>
       <LbgOptionLanguage-0>C</LbgOptionLanguage-0>
       <LbgOptionLibraryMode-0>MakeOptionChanged</LbgOptionLibraryMode-0>
       <LbgOptionLogo-0>False</LbgOptionLogo-0>
@@ -3897,6 +3909,22 @@ D_2=R_2
       <ChannelVariableName14 />
       <ChannelVariableName15 />
       <ChannelVariableName16 />
+      <ChannelVariableName17 />
+      <ChannelVariableName18 />
+      <ChannelVariableName19 />
+      <ChannelVariableName20 />
+      <ChannelVariableName21 />
+      <ChannelVariableName22 />
+      <ChannelVariableName23 />
+      <ChannelVariableName24 />
+      <ChannelVariableName25 />
+      <ChannelVariableName26 />
+      <ChannelVariableName27 />
+      <ChannelVariableName28 />
+      <ChannelVariableName29 />
+      <ChannelVariableName30 />
+      <ChannelVariableName31 />
+      <ChannelVariableName32 />
       <ChannelVariableType1>Auto</ChannelVariableType1>
       <ChannelVariableType2>Auto</ChannelVariableType2>
       <ChannelVariableType3>Auto</ChannelVariableType3>
@@ -3913,6 +3941,22 @@ D_2=R_2
       <ChannelVariableType14>Auto</ChannelVariableType14>
       <ChannelVariableType15>Auto</ChannelVariableType15>
       <ChannelVariableType16>Auto</ChannelVariableType16>
+      <ChannelVariableType17>Auto</ChannelVariableType17>
+      <ChannelVariableType18>Auto</ChannelVariableType18>
+      <ChannelVariableType19>Auto</ChannelVariableType19>
+      <ChannelVariableType20>Auto</ChannelVariableType20>
+      <ChannelVariableType21>Auto</ChannelVariableType21>
+      <ChannelVariableType22>Auto</ChannelVariableType22>
+      <ChannelVariableType23>Auto</ChannelVariableType23>
+      <ChannelVariableType24>Auto</ChannelVariableType24>
+      <ChannelVariableType25>Auto</ChannelVariableType25>
+      <ChannelVariableType26>Auto</ChannelVariableType26>
+      <ChannelVariableType27>Auto</ChannelVariableType27>
+      <ChannelVariableType28>Auto</ChannelVariableType28>
+      <ChannelVariableType29>Auto</ChannelVariableType29>
+      <ChannelVariableType30>Auto</ChannelVariableType30>
+      <ChannelVariableType31>Auto</ChannelVariableType31>
+      <ChannelVariableType32>Auto</ChannelVariableType32>
       <ChannelValuePerGrid1>25.5</ChannelValuePerGrid1>
       <ChannelValuePerGrid2>25.5</ChannelValuePerGrid2>
       <ChannelValuePerGrid3>25.5</ChannelValuePerGrid3>
@@ -3929,6 +3973,22 @@ D_2=R_2
       <ChannelValuePerGrid14>25.5</ChannelValuePerGrid14>
       <ChannelValuePerGrid15>25.5</ChannelValuePerGrid15>
       <ChannelValuePerGrid16>25.5</ChannelValuePerGrid16>
+      <ChannelValuePerGrid17>25.5</ChannelValuePerGrid17>
+      <ChannelValuePerGrid18>25.5</ChannelValuePerGrid18>
+      <ChannelValuePerGrid19>25.5</ChannelValuePerGrid19>
+      <ChannelValuePerGrid20>25.5</ChannelValuePerGrid20>
+      <ChannelValuePerGrid21>25.5</ChannelValuePerGrid21>
+      <ChannelValuePerGrid22>25.5</ChannelValuePerGrid22>
+      <ChannelValuePerGrid23>25.5</ChannelValuePerGrid23>
+      <ChannelValuePerGrid24>25.5</ChannelValuePerGrid24>
+      <ChannelValuePerGrid25>25.5</ChannelValuePerGrid25>
+      <ChannelValuePerGrid26>25.5</ChannelValuePerGrid26>
+      <ChannelValuePerGrid27>25.5</ChannelValuePerGrid27>
+      <ChannelValuePerGrid28>25.5</ChannelValuePerGrid28>
+      <ChannelValuePerGrid29>25.5</ChannelValuePerGrid29>
+      <ChannelValuePerGrid30>25.5</ChannelValuePerGrid30>
+      <ChannelValuePerGrid31>25.5</ChannelValuePerGrid31>
+      <ChannelValuePerGrid32>25.5</ChannelValuePerGrid32>
       <ChannelValueOffset1>0</ChannelValueOffset1>
       <ChannelValueOffset2>0</ChannelValueOffset2>
       <ChannelValueOffset3>0</ChannelValueOffset3>
@@ -3945,6 +4005,22 @@ D_2=R_2
       <ChannelValueOffset14>0</ChannelValueOffset14>
       <ChannelValueOffset15>0</ChannelValueOffset15>
       <ChannelValueOffset16>0</ChannelValueOffset16>
+      <ChannelValueOffset17>0</ChannelValueOffset17>
+      <ChannelValueOffset18>0</ChannelValueOffset18>
+      <ChannelValueOffset19>0</ChannelValueOffset19>
+      <ChannelValueOffset20>0</ChannelValueOffset20>
+      <ChannelValueOffset21>0</ChannelValueOffset21>
+      <ChannelValueOffset22>0</ChannelValueOffset22>
+      <ChannelValueOffset23>0</ChannelValueOffset23>
+      <ChannelValueOffset24>0</ChannelValueOffset24>
+      <ChannelValueOffset25>0</ChannelValueOffset25>
+      <ChannelValueOffset26>0</ChannelValueOffset26>
+      <ChannelValueOffset27>0</ChannelValueOffset27>
+      <ChannelValueOffset28>0</ChannelValueOffset28>
+      <ChannelValueOffset29>0</ChannelValueOffset29>
+      <ChannelValueOffset30>0</ChannelValueOffset30>
+      <ChannelValueOffset31>0</ChannelValueOffset31>
+      <ChannelValueOffset32>0</ChannelValueOffset32>
       <ChannelColor1>c0ff0a4f</ChannelColor1>
       <ChannelColor2>c05be416</ChannelColor2>
       <ChannelColor3>c0056dff</ChannelColor3>
@@ -3961,6 +4037,22 @@ D_2=R_2
       <ChannelColor14>c0317f0c</ChannelColor14>
       <ChannelColor15>c060493e</ChannelColor15>
       <ChannelColor16>c072808e</ChannelColor16>
+      <ChannelColor17>c0ff6666</ChannelColor17>
+      <ChannelColor18>c0ffcc66</ChannelColor18>
+      <ChannelColor19>c066cc66</ChannelColor19>
+      <ChannelColor20>c06666ff</ChannelColor20>
+      <ChannelColor21>c0cc66ff</ChannelColor21>
+      <ChannelColor22>c0ff9900</ChannelColor22>
+      <ChannelColor23>c000aa00</ChannelColor23>
+      <ChannelColor24>c00000ff</ChannelColor24>
+      <ChannelColor25>c0cc00ff</ChannelColor25>
+      <ChannelColor26>c0ff0000</ChannelColor26>
+      <ChannelColor27>c0006600</ChannelColor27>
+      <ChannelColor28>c02222cc</ChannelColor28>
+      <ChannelColor29>c09900cc</ChannelColor29>
+      <ChannelColor30>c0990000</ChannelColor30>
+      <ChannelColor31>c0004400</ChannelColor31>
+      <ChannelColor32>c0663399</ChannelColor32>
     </Instance>
   </Class>
   <Class Guid="2a2c2a43-ecdb-4e88-80bd-e75f3e33db90">
