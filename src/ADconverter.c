@@ -121,7 +121,7 @@ unsigned char sensor_inp(void)
 	
 	if (sensorRR < 350 ) r = 0x1;
 	else r = 0;
-	if (sensorC < 200 ) c = 0x2;
+	if (sensorC < 250 ) c = 0x2;
 	else c = 0;
 	if (sensorLL < 350 ) l = 0x4;
 	else l = 0;

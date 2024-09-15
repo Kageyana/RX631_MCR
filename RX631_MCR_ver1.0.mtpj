@@ -1,9 +1,9 @@
 ﻿<CubeSuiteProject>
-  <ProductVersion>9.06.00.00</ProductVersion>
+  <ProductVersion>9.07.00.00</ProductVersion>
   <Class Guid="68f4a651-b9cd-473b-a595-b00447132ffa">
     <Instance Guid="00000000-0000-0000-0000-000000000000">
       <FormatVersion>2.0</FormatVersion>
-      <FileVersion>9.6</FileVersion>
+      <FileVersion>9.7</FileVersion>
       <ProjectGuid>d5919fa7-d93b-491b-a42e-a57f5ba93bbc</ProjectGuid>
       <ProjectItemGuid>d63f1c04-42fa-48f0-b2c8-6bb13a31af6a</ProjectItemGuid>
       <FileCategoryGuid>7ff8e335-17df-495e-93d5-351f931b4786</FileCategoryGuid>
@@ -839,6 +839,7 @@
   </Class>
   <Class Guid="fb98844b-2c27-4275-9804-f6e63e204da0">
     <Instance Guid="fb98844b-2c27-4275-9804-f6e63e204da0">
+      <TypeOfStorageOfUserSettings>UserMtudFile</TypeOfStorageOfUserSettings>
       <UseStandardLicenseOnly>True</UseStandardLicenseOnly>
       <MemoCount>0</MemoCount>
     </Instance>
@@ -881,7 +882,7 @@
   </Class>
   <Class Guid="3a79707d-5977-45f7-ac11-19c35e333132">
     <Instance Guid="3a79707d-5977-45f7-ac11-19c35e333132">
-      <DataFormatVersion>1.5</DataFormatVersion>
+      <DataFormatVersion>1.6</DataFormatVersion>
       <BuildModeCount>1</BuildModeCount>
       <BuildMode0>RABlAGYAYQB1AGwAdABCAHUAaQBsAGQA</BuildMode0>
       <BatchBuildFlag0>False</BatchBuildFlag0>
@@ -1061,7 +1062,7 @@
       <GeneralOptionPatch-DefaultValue>None</GeneralOptionPatch-DefaultValue>
       <GeneralOptionSaveAcc-DefaultValue>False</GeneralOptionSaveAcc-DefaultValue>
       <IsLockedByUser>True</IsLockedByUser>
-      <TimeTagModified--0>-8585488237818653169</TimeTagModified--0>
+      <TimeTagModified--0>-8585109878183360397</TimeTagModified--0>
       <BuildMode-0>DefaultBuild</BuildMode-0>
       <Memo-0 />
       <OutputMessageFormat-0>%TargetFiles%</OutputMessageFormat-0>
@@ -1120,7 +1121,7 @@
       <GeneralOptionBaseAddressRegister-0>None</GeneralOptionBaseAddressRegister-0>
       <GeneralOptionPatch-0>None</GeneralOptionPatch-0>
       <GeneralOptionSaveAcc-0>False</GeneralOptionSaveAcc-0>
-      <LastCompilerVersion-0>V3.03.00</LastCompilerVersion-0>
+      <LastCompilerVersion-0>V3.04.00</LastCompilerVersion-0>
     </Instance>
     <Instance Guid="95a63257-4aa7-40c0-a74a-7991543b099b">
       <COptionLangC-DefaultValue>C</COptionLangC-DefaultValue>
@@ -1210,52 +1211,53 @@
       <COptionNoMessageErrorNumber-DefaultValue />
       <COptionSectionW-DefaultValue>W</COptionSectionW-DefaultValue>
       <COptionVolatile-DefaultValue>False</COptionVolatile-DefaultValue>
-      <COptionConstCopy-DefaultValue>Auto</COptionConstCopy-DefaultValue>
       <COptionMisra2012RuleNumberIgnore-DefaultValue />
       <COptionNoMessageErrorNumber2-DefaultValue />
       <COptionNostuffB-DefaultValue>False</COptionNostuffB-DefaultValue>
-      <COptionConstDiv-DefaultValue>Auto</COptionConstDiv-DefaultValue>
+      <COptionTypeSizeAccessVolatile-DefaultValue>False</COptionTypeSizeAccessVolatile-DefaultValue>
+      <COptionConstCopy-DefaultValue>Auto</COptionConstCopy-DefaultValue>
       <COptionMisra2012RuleNumberRequiredAdd-DefaultValue />
       <COptionNoWarning-DefaultValue />
       <COptionNostuffD-DefaultValue>False</COptionNostuffD-DefaultValue>
       <COptionChangeMessageInformation-DefaultValue>No</COptionChangeMessageInformation-DefaultValue>
-      <COptionLibrary-DefaultValue>Intrinsic</COptionLibrary-DefaultValue>
+      <COptionConstDiv-DefaultValue>Auto</COptionConstDiv-DefaultValue>
       <COptionMisra2012RuleNumberRequiredRemove-DefaultValue />
       <COptionNostuffC-DefaultValue>False</COptionNostuffC-DefaultValue>
       <COptionChangeMessageInformationNumber-DefaultValue />
       <COptionIgnoreFilesMisra-DefaultValue />
+      <COptionLibrary-DefaultValue>Intrinsic</COptionLibrary-DefaultValue>
       <COptionNostuffW-DefaultValue>False</COptionNostuffW-DefaultValue>
-      <COptionTfu-DefaultValue>Intrinsic</COptionTfu-DefaultValue>
       <COptionChangeMessageInformationNumber2-DefaultValue />
       <COptionCheckLanguageExtension-DefaultValue>False</COptionCheckLanguageExtension-DefaultValue>
       <COptionInstalign-DefaultValue>Noinstalign</COptionInstalign-DefaultValue>
-      <COptionScope-DefaultValue>Auto</COptionScope-DefaultValue>
+      <COptionTfu-DefaultValue>Intrinsic</COptionTfu-DefaultValue>
       <COptionAvoidCrossBoundaryPrefetch-DefaultValue>False</COptionAvoidCrossBoundaryPrefetch-DefaultValue>
       <COptionChangeMessageWarning-DefaultValue>No</COptionChangeMessageWarning-DefaultValue>
       <COptionMisraIntermodule-DefaultValue>False</COptionMisraIntermodule-DefaultValue>
-      <COptionSchedule-DefaultValue>Auto</COptionSchedule-DefaultValue>
+      <COptionScope-DefaultValue>Auto</COptionScope-DefaultValue>
       <COptionChangeMessageWarningNumber-DefaultValue />
-      <COptionMap-DefaultValue>NoMap</COptionMap-DefaultValue>
       <COptionNouseDiv-DefaultValue>True</COptionNouseDiv-DefaultValue>
+      <COptionSchedule-DefaultValue>Auto</COptionSchedule-DefaultValue>
       <COptionChangeMessageWarningNumber2-DefaultValue />
       <COptionInsertNopWithLabel-DefaultValue>False</COptionInsertNopWithLabel-DefaultValue>
-      <COptionIntermodule-DefaultValue>None</COptionIntermodule-DefaultValue>
-      <COptionApproxdiv-DefaultValue>False</COptionApproxdiv-DefaultValue>
+      <COptionMap-DefaultValue>NoMap</COptionMap-DefaultValue>
       <COptionChangeMessageError-DefaultValue>No</COptionChangeMessageError-DefaultValue>
       <COptionInsertNopWithLabelParameters-DefaultValue />
+      <COptionIntermodule-DefaultValue>None</COptionIntermodule-DefaultValue>
+      <COptionApproxdiv-DefaultValue>False</COptionApproxdiv-DefaultValue>
       <COptionChangeMessageErrorNumber-DefaultValue />
-      <COptionEnableRegister-DefaultValue>False</COptionEnableRegister-DefaultValue>
       <COptionOutcode-DefaultValue>Sjis</COptionOutcode-DefaultValue>
       <COptionChangeMessageErrorNumber2-DefaultValue />
-      <COptionSimpleFloatConv-DefaultValue>False</COptionSimpleFloatConv-DefaultValue>
+      <COptionEnableRegister-DefaultValue>False</COptionEnableRegister-DefaultValue>
       <COptionFileInlinePath-DefaultValue />
+      <COptionSimpleFloatConv-DefaultValue>False</COptionSimpleFloatConv-DefaultValue>
+      <COptionComment-DefaultValue>False</COptionComment-DefaultValue>
       <COptionFpu-DefaultValue>Fpu</COptionFpu-DefaultValue>
       <COptionAlias-DefaultValue>False</COptionAlias-DefaultValue>
-      <COptionComment-DefaultValue>False</COptionComment-DefaultValue>
-      <COptionAlias2-DefaultValue>Auto</COptionAlias2-DefaultValue>
       <COptionCheck-DefaultValue>No</COptionCheck-DefaultValue>
-      <COptionFloatOrder-DefaultValue>False</COptionFloatOrder-DefaultValue>
+      <COptionAlias2-DefaultValue>Auto</COptionAlias2-DefaultValue>
       <COptionIncode-DefaultValue>Sjis</COptionIncode-DefaultValue>
+      <COptionFloatOrder-DefaultValue>False</COptionFloatOrder-DefaultValue>
       <COptionBranchChaining-DefaultValue>None</COptionBranchChaining-DefaultValue>
       <IsLockedByUser>False</IsLockedByUser>
       <TimeTagModified--0>-8586199067434231325</TimeTagModified--0>
@@ -1394,48 +1396,49 @@ SmartManual Docs\RX631
       <COptionNoMessageErrorNumber-0 />
       <COptionSectionW-0>W</COptionSectionW-0>
       <COptionVolatile-0>False</COptionVolatile-0>
-      <COptionConstCopy-0>Auto</COptionConstCopy-0>
       <COptionMisra2012RuleNumberIgnore-0 />
       <COptionNostuffB-0>False</COptionNostuffB-0>
-      <COptionConstDiv-0>Auto</COptionConstDiv-0>
+      <COptionTypeSizeAccessVolatile-0>False</COptionTypeSizeAccessVolatile-0>
+      <COptionConstCopy-0>Auto</COptionConstCopy-0>
       <COptionMisra2012RuleNumberRequiredAdd-0 />
       <COptionNoWarning-0 />
       <COptionNostuffD-0>False</COptionNostuffD-0>
       <COptionChangeMessageInformation-0>No</COptionChangeMessageInformation-0>
-      <COptionLibrary-0>Intrinsic</COptionLibrary-0>
+      <COptionConstDiv-0>Auto</COptionConstDiv-0>
       <COptionMisra2012RuleNumberRequiredRemove-0 />
       <COptionNostuffC-0>False</COptionNostuffC-0>
       <COptionChangeMessageInformationNumber-0 />
       <COptionIgnoreFilesMisra-0 />
+      <COptionLibrary-0>Intrinsic</COptionLibrary-0>
       <COptionNostuffW-0>False</COptionNostuffW-0>
-      <COptionTfu-0>Intrinsic</COptionTfu-0>
       <COptionCheckLanguageExtension-0>False</COptionCheckLanguageExtension-0>
       <COptionInstalign-0>Noinstalign</COptionInstalign-0>
-      <COptionScope-0>Auto</COptionScope-0>
+      <COptionTfu-0>Intrinsic</COptionTfu-0>
       <COptionAvoidCrossBoundaryPrefetch-0>False</COptionAvoidCrossBoundaryPrefetch-0>
       <COptionChangeMessageWarning-0>No</COptionChangeMessageWarning-0>
       <COptionMisraIntermodule-0>False</COptionMisraIntermodule-0>
-      <COptionSchedule-0>Auto</COptionSchedule-0>
+      <COptionScope-0>Auto</COptionScope-0>
       <COptionChangeMessageWarningNumber-0 />
-      <COptionMap-0>NoMap</COptionMap-0>
       <COptionNouseDiv-0>True</COptionNouseDiv-0>
+      <COptionSchedule-0>Auto</COptionSchedule-0>
       <COptionInsertNopWithLabel-0>False</COptionInsertNopWithLabel-0>
-      <COptionIntermodule-0>None</COptionIntermodule-0>
-      <COptionApproxdiv-0>False</COptionApproxdiv-0>
+      <COptionMap-0>NoMap</COptionMap-0>
       <COptionChangeMessageError-0>No</COptionChangeMessageError-0>
       <COptionInsertNopWithLabelParameters-0 />
+      <COptionIntermodule-0>None</COptionIntermodule-0>
+      <COptionApproxdiv-0>False</COptionApproxdiv-0>
       <COptionChangeMessageErrorNumber-0 />
-      <COptionEnableRegister-0>False</COptionEnableRegister-0>
       <COptionOutcode-0>Sjis</COptionOutcode-0>
-      <COptionSimpleFloatConv-0>False</COptionSimpleFloatConv-0>
+      <COptionEnableRegister-0>False</COptionEnableRegister-0>
       <COptionFileInlinePath-0 />
+      <COptionSimpleFloatConv-0>False</COptionSimpleFloatConv-0>
+      <COptionComment-0>False</COptionComment-0>
       <COptionFpu-0>Fpu</COptionFpu-0>
       <COptionAlias-0>False</COptionAlias-0>
-      <COptionComment-0>False</COptionComment-0>
-      <COptionAlias2-0>Auto</COptionAlias2-0>
       <COptionCheck-0>No</COptionCheck-0>
-      <COptionFloatOrder-0>False</COptionFloatOrder-0>
+      <COptionAlias2-0>Auto</COptionAlias2-0>
       <COptionIncode-0>Sjis</COptionIncode-0>
+      <COptionFloatOrder-0>False</COptionFloatOrder-0>
       <COptionBranchChaining-0>None</COptionBranchChaining-0>
     </Instance>
     <Instance Guid="5ad1746c-d03e-4610-a91f-aaa4fb37bc10">
@@ -1718,10 +1721,10 @@ D_2=R_2
       <HexOptionChangeMessageWarningNumber-DefaultValue />
       <HexOptionFixRecordLengthAndAlignValue-DefaultValue>1</HexOptionFixRecordLengthAndAlignValue-DefaultValue>
       <HexOptionChangeMessageError-DefaultValue>None</HexOptionChangeMessageError-DefaultValue>
-      <LinkOptionByteCount-DefaultValue>False</LinkOptionByteCount-DefaultValue>
+      <HexOptionFixRecordLengthAndAlignValue2-DefaultValue>1</HexOptionFixRecordLengthAndAlignValue2-DefaultValue>
       <HexOptionChangeMessageErrorNumber-DefaultValue />
+      <LinkOptionByteCount-DefaultValue>False</LinkOptionByteCount-DefaultValue>
       <LinkOptionByteCountValue-DefaultValue>FF</LinkOptionByteCountValue-DefaultValue>
-      <LinkOptionCrc-DefaultValue>None</LinkOptionCrc-DefaultValue>
       <LinkOptionOtherAdditionalOptionsForConvertFile-DefaultValue />
       <HexOptionCommandLine-DefaultValue>-end
 -input=%BuildModeName%\%ProjectName%.abs
@@ -1729,6 +1732,7 @@ D_2=R_2
 -output=%BuildModeName%\%ProjectName%.mot
 -exit
 </HexOptionCommandLine-DefaultValue>
+      <LinkOptionCrc-DefaultValue>None</LinkOptionCrc-DefaultValue>
       <LinkOptionCrc2-DefaultValue>False</LinkOptionCrc2-DefaultValue>
       <LinkOptionCrcOutputAddress-DefaultValue>0</LinkOptionCrcOutputAddress-DefaultValue>
       <LinkOptionCrcCalculationRange-DefaultValue />
@@ -1761,10 +1765,10 @@ D_2=R_2
       <HexOptionChangeMessageWarningNumber-0 />
       <HexOptionFixRecordLengthAndAlignValue-0>1</HexOptionFixRecordLengthAndAlignValue-0>
       <HexOptionChangeMessageError-0>None</HexOptionChangeMessageError-0>
-      <LinkOptionByteCount-0>False</LinkOptionByteCount-0>
+      <HexOptionFixRecordLengthAndAlignValue2-0>1</HexOptionFixRecordLengthAndAlignValue2-0>
       <HexOptionChangeMessageErrorNumber-0 />
+      <LinkOptionByteCount-0>False</LinkOptionByteCount-0>
       <LinkOptionByteCountValue-0>FF</LinkOptionByteCountValue-0>
-      <LinkOptionCrc-0>None</LinkOptionCrc-0>
       <LinkOptionOtherAdditionalOptionsForConvertFile-0 />
       <HexOptionCommandLine-0>-end
 -input=%BuildModeName%\%ProjectName%.abs
@@ -1772,6 +1776,7 @@ D_2=R_2
 -output=%BuildModeName%\%ProjectName%.mot
 -exit
 </HexOptionCommandLine-0>
+      <LinkOptionCrc-0>None</LinkOptionCrc-0>
       <LinkOptionCrc2-0>False</LinkOptionCrc2-0>
       <LinkOptionCrcOutputAddress-0>0</LinkOptionCrcOutputAddress-0>
       <LinkOptionCrcCalculationRange-0 />
@@ -1897,27 +1902,28 @@ D_2=R_2
       <LbgOptionHeadIos-DefaultValue>False</LbgOptionHeadIos-DefaultValue>
       <LbgOptionSectionL-DefaultValue>L</LbgOptionSectionL-DefaultValue>
       <LbgOptionVolatile-DefaultValue>False</LbgOptionVolatile-DefaultValue>
-      <LbgOptionConstCopy-DefaultValue>Auto</LbgOptionConstCopy-DefaultValue>
       <LbgOptionHeadNew-DefaultValue>True</LbgOptionHeadNew-DefaultValue>
       <LbgOptionSectionW-DefaultValue>W</LbgOptionSectionW-DefaultValue>
-      <LbgOptionConstDiv-DefaultValue>Auto</LbgOptionConstDiv-DefaultValue>
+      <LbgOptionTypeSizeAccessVolatile-DefaultValue>False</LbgOptionTypeSizeAccessVolatile-DefaultValue>
+      <LbgOptionConstCopy-DefaultValue>Auto</LbgOptionConstCopy-DefaultValue>
       <LbgOptionHeadComplex-DefaultValue>False</LbgOptionHeadComplex-DefaultValue>
       <LbgOptionNostuffB-DefaultValue>False</LbgOptionNostuffB-DefaultValue>
+      <LbgOptionConstDiv-DefaultValue>Auto</LbgOptionConstDiv-DefaultValue>
       <LbgOptionHeadString-DefaultValue>False</LbgOptionHeadString-DefaultValue>
-      <LbgOptionLibrary-DefaultValue>Intrinsic</LbgOptionLibrary-DefaultValue>
       <LbgOptionNostuffD-DefaultValue>False</LbgOptionNostuffD-DefaultValue>
       <LbgOptionHeadComplexH-DefaultValue>False</LbgOptionHeadComplexH-DefaultValue>
+      <LbgOptionLibrary-DefaultValue>Intrinsic</LbgOptionLibrary-DefaultValue>
       <LbgOptionNostuffC-DefaultValue>False</LbgOptionNostuffC-DefaultValue>
-      <LbgOptionScope-DefaultValue>Auto</LbgOptionScope-DefaultValue>
       <LbgOptionHeadFenvH-DefaultValue>False</LbgOptionHeadFenvH-DefaultValue>
       <LbgOptionNostuffW-DefaultValue>False</LbgOptionNostuffW-DefaultValue>
-      <LbgOptionSchedule-DefaultValue>Auto</LbgOptionSchedule-DefaultValue>
-      <LbgOptionApproxdiv-DefaultValue>False</LbgOptionApproxdiv-DefaultValue>
+      <LbgOptionScope-DefaultValue>Auto</LbgOptionScope-DefaultValue>
       <LbgOptionHeadInttypesH-DefaultValue>False</LbgOptionHeadInttypesH-DefaultValue>
       <LbgOptionInstalign-DefaultValue>Noinstalign</LbgOptionInstalign-DefaultValue>
+      <LbgOptionSchedule-DefaultValue>Auto</LbgOptionSchedule-DefaultValue>
+      <LbgOptionApproxdiv-DefaultValue>False</LbgOptionApproxdiv-DefaultValue>
       <LbgOptionAvoidCrossBoundaryPrefetch-DefaultValue>False</LbgOptionAvoidCrossBoundaryPrefetch-DefaultValue>
-      <LbgOptionEnableRegister-DefaultValue>False</LbgOptionEnableRegister-DefaultValue>
       <LbgOptionHeadWcharH-DefaultValue>False</LbgOptionHeadWcharH-DefaultValue>
+      <LbgOptionEnableRegister-DefaultValue>False</LbgOptionEnableRegister-DefaultValue>
       <LbgOptionHeadWctypeH-DefaultValue>False</LbgOptionHeadWctypeH-DefaultValue>
       <LbgOptionNouseDiv-DefaultValue>True</LbgOptionNouseDiv-DefaultValue>
       <LbgOptionSimpleFloatConv-DefaultValue>False</LbgOptionSimpleFloatConv-DefaultValue>
@@ -1925,7 +1931,7 @@ D_2=R_2
       <LbgOptionFloatOrder-DefaultValue>False</LbgOptionFloatOrder-DefaultValue>
       <LbgOptionBranchChaining-DefaultValue>None</LbgOptionBranchChaining-DefaultValue>
       <IsLockedByUser>False</IsLockedByUser>
-      <TimeTagModified--0>-8585488237818628601</TimeTagModified--0>
+      <TimeTagModified--0>-8585109878183340472</TimeTagModified--0>
       <LbgOptionLanguage-0>C</LbgOptionLanguage-0>
       <LbgOptionLibraryMode-0>MakeOptionChanged</LbgOptionLibraryMode-0>
       <LbgOptionLogo-0>False</LbgOptionLogo-0>
@@ -1970,27 +1976,28 @@ D_2=R_2
       <LbgOptionHeadIos-0>False</LbgOptionHeadIos-0>
       <LbgOptionSectionL-0>L</LbgOptionSectionL-0>
       <LbgOptionVolatile-0>False</LbgOptionVolatile-0>
-      <LbgOptionConstCopy-0>Auto</LbgOptionConstCopy-0>
       <LbgOptionHeadNew-0>True</LbgOptionHeadNew-0>
       <LbgOptionSectionW-0>W</LbgOptionSectionW-0>
-      <LbgOptionConstDiv-0>Auto</LbgOptionConstDiv-0>
+      <LbgOptionTypeSizeAccessVolatile-0>False</LbgOptionTypeSizeAccessVolatile-0>
+      <LbgOptionConstCopy-0>Auto</LbgOptionConstCopy-0>
       <LbgOptionHeadComplex-0>False</LbgOptionHeadComplex-0>
       <LbgOptionNostuffB-0>False</LbgOptionNostuffB-0>
+      <LbgOptionConstDiv-0>Auto</LbgOptionConstDiv-0>
       <LbgOptionHeadString-0>False</LbgOptionHeadString-0>
-      <LbgOptionLibrary-0>Intrinsic</LbgOptionLibrary-0>
       <LbgOptionNostuffD-0>False</LbgOptionNostuffD-0>
       <LbgOptionHeadComplexH-0>False</LbgOptionHeadComplexH-0>
+      <LbgOptionLibrary-0>Intrinsic</LbgOptionLibrary-0>
       <LbgOptionNostuffC-0>False</LbgOptionNostuffC-0>
-      <LbgOptionScope-0>Auto</LbgOptionScope-0>
       <LbgOptionHeadFenvH-0>False</LbgOptionHeadFenvH-0>
       <LbgOptionNostuffW-0>False</LbgOptionNostuffW-0>
-      <LbgOptionSchedule-0>Auto</LbgOptionSchedule-0>
-      <LbgOptionApproxdiv-0>False</LbgOptionApproxdiv-0>
+      <LbgOptionScope-0>Auto</LbgOptionScope-0>
       <LbgOptionHeadInttypesH-0>False</LbgOptionHeadInttypesH-0>
       <LbgOptionInstalign-0>Noinstalign</LbgOptionInstalign-0>
+      <LbgOptionSchedule-0>Auto</LbgOptionSchedule-0>
+      <LbgOptionApproxdiv-0>False</LbgOptionApproxdiv-0>
       <LbgOptionAvoidCrossBoundaryPrefetch-0>False</LbgOptionAvoidCrossBoundaryPrefetch-0>
-      <LbgOptionEnableRegister-0>False</LbgOptionEnableRegister-0>
       <LbgOptionHeadWcharH-0>False</LbgOptionHeadWcharH-0>
+      <LbgOptionEnableRegister-0>False</LbgOptionEnableRegister-0>
       <LbgOptionHeadWctypeH-0>False</LbgOptionHeadWctypeH-0>
       <LbgOptionNouseDiv-0>True</LbgOptionNouseDiv-0>
       <LbgOptionSimpleFloatConv-0>False</LbgOptionSimpleFloatConv-0>

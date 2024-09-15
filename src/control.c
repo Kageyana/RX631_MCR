@@ -97,7 +97,7 @@ char 	kp3_buff, ki3_buff, kd3_buff;
 ///////////////////////////////////////////////////////////////////////////
 bool checkCrossLine( void )
 {
-	if ( sensor_inp() == 0x7 ) return true;
+	if ( sensor_inp() == 0x7 || sensor_inp() == 0x5) return true;
 	else return false;
 }
 ///////////////////////////////////////////////////////////////////////////

@@ -1040,12 +1040,12 @@ char fixSpeedSetting ( void )
 		ret = 1;
 	} else if ( setting_3meter == 1 ) {
 		speed_straight		= 30;
-		speed_curve_brake	= 30;
+		speed_curve_brake	= 25;
 		speed_curve_r600	= 30;
 		speed_curve_r450	= 30;
 		speed_curve_straight	= 30;
 		
-		speed_crossline		= 25;
+		speed_crossline		= 20;
 		speed_ckank_trace	= 16;
 		speed_rightclank_curve	= 16;
 		speed_rightclank_escape	= 30;

@@ -105,7 +105,8 @@ char initMicroSD ( void )
 	
 	while ( ret == 0 && pattern_intimsd <= 8 ) {
 		GET_SDSWITCH;
-		if ( sd_sw == 0 ) {
+		// if ( sd_sw == 0 ) {
+		if ( 1 ) {
 			switch ( pattern_intimsd ) {
 				case 1:
 					MSD_CS_TERMINAL_HIGH			// CS’[Žq‚ðHIGH‚É‚·‚é

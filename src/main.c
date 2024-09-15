@@ -104,7 +104,7 @@ void main(void){
 					} else if ( cntOut1 >= STOP_SENSOR1 ) {	// センサ全灯
 						modeError = 2;
 					} else if ( cntOut2 >= STOP_SENSOR2 ) {	// センサ全消灯
-						modeError = 3;
+						//modeError = 3;
 					} else if ( cntOut3 >= STOP_ENCODER ) {	// エンコーダ停止(ひっくり返った？)
 						modeError = 4;
 					} else if( cntOut4 >= STOP_GYRO ) {	// マイナスの加速度検知(コースから落ちた？)

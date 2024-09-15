@@ -28,25 +28,25 @@
 
 #define M_PI        3.141592
 // 緊急停止
-#define	STOPPING_METER		   62		// 停止距離
+#define	STOPPING_METER		   36		// 停止距離
 
 // 各セクションでの目標速度　x/10[m/s]
-#define SPEED_STRAIGHT			32	// 通常トレース
+#define SPEED_STRAIGHT			38	// 通常トレース
 #define SPEED_CURVE_BRAKE		25	// カーブブレーキ
-#define SPEED_CURVE_R600		28	// R600カーブ速度
-#define SPEED_CURVE_R450		25	// R450カーブ速度
-#define SPEED_CURVE_STRAIGHT		28	// S字カーブ直線速度
+#define SPEED_CURVE_R600		36	// R600カーブ速度
+#define SPEED_CURVE_R450		32	// R450カーブ速度
+#define SPEED_CURVE_STRAIGHT		37	// S字カーブ直線速度
 
 #define SPEED_CROSSLINE			22	// クロスライン進入速度
-#define SPEED_CLANK_TRACE		25	// クランク進入速度
+#define SPEED_CLANK_TRACE		32	// クランク進入速度
 #define SPEED_RIGHTCLANK_CURVE		18	// 右クランク旋回速度
 #define SPEED_RIGHTCLANK_ESCAPE		36	// 右クランク復帰速度
 #define SPEED_LEFTCLANK_CURVE		18	// 左クランク旋回速度
 #define SPEED_LEFTCLANK_ESCAPE		36	// 左クランク復帰速度
 
-#define SPEED_HALFLINE			30	// ハーフライン進入速度
-#define SPEED_RIGHTCHANGE_TRACE	    	46	// 右レーンチェンジ進入速度
-#define SPEED_RIGHTCHANGE_CURVE	    	46	// 右レーンチェンジ旋回速度
+#define SPEED_HALFLINE				30	// ハーフライン進入速度
+#define SPEED_RIGHTCHANGE_TRACE	    46	// 右レーンチェンジ進入速度
+#define SPEED_RIGHTCHANGE_CURVE	    46	// 右レーンチェンジ旋回速度
 #define SPEED_RIGHTCHANGE_ESCAPE	46	// 右レーンチェンジ復帰速度
 #define SPEED_LEFTCHANGE_TRACE		46	// 左レーンチェンジ進入速度
 #define SPEED_LEFTCHANGE_CURVE		46	// 左レーンチェンジ旋回速度
@@ -73,9 +73,9 @@
 #define VOLTAGELIM 10.5 // 出力最大電圧
 #define VOLTAGELIMTRACE 7.0 // 出力最大電圧
 //白線トレース
-#define KP		23
+#define KP		20
 #define KI		0
-#define KD		53
+#define KD		68
 
 // 角度制御
 #define KP2		2
